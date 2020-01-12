@@ -1,0 +1,17 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+
+proxy:
+    upload-artifacts: yes
+    logs: yes
+            
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+  build:
+    commands:
+      - cd website && npm install && npm run build
+      - cd ../cdk && npm install && npm run build && npm run cdk synth && npm run deploy
