@@ -1,5 +1,7 @@
-# AWS CDK / Angular CLI Starter
-This is a starter with AWS CDK and Angular packaged together in a way that you can deploy the starter angular cli application to s3 with no chamges
+# AWS S3 / Angular Website Pattern
+This is a starter with AWS CDK and Angular packaged together in a way that you can deploy the starter angular cli application to s3 with no changes
+
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/spa-deploy-arch.png)
 
 ## How To Use
 If you have aws configured locally or you are in cloud9 this is as simple as running two commands (assuming your terminal starts at the README.md level):
