@@ -18,7 +18,7 @@ This can be found in the blog folder. This is just the initial site that is crea
 - npm run test
 
 ### CDK S3 Deploy Infrastructure (/cdk)
-This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder.
+This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder. This uses the JSII Construct - https://www.npmjs.com/package/cdk-spa-deploy
 
 #### Useful Commands
 
