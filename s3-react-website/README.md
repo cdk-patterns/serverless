@@ -1,5 +1,5 @@
-# AWS S3 / Angular Website Pattern
-This is a starter with AWS CDK and Angular packaged together in a way that you can deploy the starter angular cli application to s3 with no changes
+# AWS S3 / React Website Pattern
+This is a starter with AWS CDK and React packaged together in a way that you can deploy the starter React application to s3 with no changes
 
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/spa-deploy-arch.png)
 
@@ -10,14 +10,13 @@ If you have aws configured locally or you are in cloud9 this is as simple as run
 
 ## Project Structure
 
-### Angular Starter website (/website)
-This can be found in the blog folder. This is just the initial site that is created on ng init.
+### React website (/website)
+This can be found in the website folder. This is just the initial site that is created on npx create-react-app.
 
 #### Some Commands
 - npm install
 - npm run build
 - npm run start
-- npm run test
 
 ### CDK S3 Deploy Infrastructure (/cdk)
 This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder. This uses the JSII Construct - https://www.npmjs.com/package/cdk-spa-deploy
