@@ -21,6 +21,9 @@
     "typescript": "~3.7.2"
   },
   "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.21.1",
+    "@aws-cdk/aws-dynamodb": "^1.21.1",
+    "@aws-cdk/aws-lambda": "^1.21.1",
     "@aws-cdk/core": "^1.21.1",
     "source-map-support": "^0.5.16"
   }
