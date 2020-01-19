@@ -1,8 +1,8 @@
-# Welcome to your CDK TypeScript project!
+# The Simple Webservice
 
-This is a blank project for TypeScript development with CDK.
+This is an example CDK stack to deploy The Simple Webservice stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#simplewebservice
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/arch.png)
 
 ## Useful commands
 
