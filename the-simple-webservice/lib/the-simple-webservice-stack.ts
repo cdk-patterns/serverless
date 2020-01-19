@@ -22,6 +22,9 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     }
     });
 
+     // grant the lambda role read/write permissions to our table
+     table.grantReadWriteData(hello);
+
     // defines an API Gateway REST API resource backed by our "hello" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: hello
