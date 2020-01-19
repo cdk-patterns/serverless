@@ -2,6 +2,8 @@
 
 This is an example CDK stack to deploy The Simple Webservice stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#simplewebservice
 
+Most of this code was borrowed from https://www.cdkworkshop.com
+
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-simple-webservice/img/arch.png)
 
 ## Useful commands
