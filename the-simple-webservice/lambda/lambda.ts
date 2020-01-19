@@ -17,5 +17,16 @@ exports.handler = async function(event:any) {
   console.log('inserted counter for '+ event.path);
 
   // return response back to upstream caller
-  return {'status': 'success'};
+  return sendRes(200, 'You have connected with the Lambda!');
+};
+
+const sendRes = (status:number, body:string) => {
+  var response = {
+    statusCode: status,
+    headers: {
+      "Content-Type": "text/html"
+    },
+    body: body
+  };
+  return response;
 };
