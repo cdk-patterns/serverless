@@ -13,7 +13,7 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     });
 
      // defines an AWS Lambda resource
-     const hello = new lambda.Function(this, 'HelloHandler', {
+     const dynamoLambda = new lambda.Function(this, 'HelloHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambda'),  // code loaded from the "lambda" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
@@ -23,11 +23,11 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     });
 
      // grant the lambda role read/write permissions to our table
-     table.grantReadWriteData(hello);
+     table.grantReadWriteData(dynamoLambda);
 
-    // defines an API Gateway REST API resource backed by our "hello" function.
+    // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
-      handler: hello
+      handler: dynamoLambda
     });
   }
 }
