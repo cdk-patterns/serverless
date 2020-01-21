@@ -18,5 +18,18 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 * [The Simple Webservice](/the-simple-webservice/README.md)
 
+## Pattern Usage
+
+All Patterns should support the same commands so you can just run:
+
+* `git clone https://github.com/cdk-patterns/serverless.git`
+* `cd {pattern-name}`
+* `npm i` - install the dependencies
+* `npm run build` - build the project
+* `npm run test` - run the unit tests
+* `npm run deploy` - deploy the pattern into your AWS account&#42;
+
+&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request.
