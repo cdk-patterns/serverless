@@ -22,7 +22,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 
 ## Pattern Usage
 
-All Patterns should support the same commands so you can just run:
+All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
 
 * `git clone https://github.com/cdk-patterns/serverless.git`
 * `cd {pattern-name}`
