@@ -2,7 +2,13 @@
 
 This is intended to be a repo containing all of the official AWS Serverless architecture patterns built with CDK for developers to use.
 
-Follow @CdkPatterns on twitter for live discussion / new pattern announcements
+Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new pattern announcements. I plan to add a new pattern weekly so check back regularly!
+
+## New to AWS CDK?
+
+* To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
+* To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
+
 
 ## Website Deploys
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
