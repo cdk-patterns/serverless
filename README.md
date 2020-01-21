@@ -9,12 +9,12 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
 
-
-## Website Deploys
+## Patterns
+### Website Deploys
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
 
-## Jeremy Daly Patterns
+### Jeremy Daly Patterns
 These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 * [The Simple Webservice](/the-simple-webservice/README.md)
 
