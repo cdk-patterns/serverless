@@ -19,7 +19,7 @@ This can be found in the website folder. This is just the initial site that is c
 - npm run start
 
 ### CDK S3 Deploy Infrastructure (/cdk)
-This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder. This uses the JSII Construct - https://www.npmjs.com/package/cdk-spa-deploy
+This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your react website in the website folder. This uses the JSII Construct - https://www.npmjs.com/package/cdk-spa-deploy
 
 The inital setup here doesn't use cloudfront but the cdk-spa-deploy module details how easy it is to add it and a custom domain
 
