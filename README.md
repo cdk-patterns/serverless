@@ -16,7 +16,9 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 
 ### Jeremy Daly Patterns
 These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
-* [The Simple Webservice](/the-simple-webservice/README.md)
+
+#### [The Simple Webservice](/the-simple-webservice/README.md)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
 
 ## Pattern Usage
 
