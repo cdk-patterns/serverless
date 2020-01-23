@@ -26,6 +26,7 @@ export class TheScalableWebhookStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambda" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
+      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
     }
     });
@@ -49,9 +50,14 @@ export class TheScalableWebhookStack extends cdk.Stack {
     })
     
     //RDS
-    let secret = Secret.fromSecretAttributes(this, 'SamplePassword', {
-    secretArn: 'arn:aws:secretsmanager:{region}:{organisation-id}:secret:ImportedSecret-sample',
-    });
+    let secret = new Secret(this, 'secret', {
+        description: 'rds password',
+        secretName: 'rds-password',
+        generateSecretString: {
+            excludePunctuation: true,
+            excludeCharacters: '/@" '
+        }
+    })
     
     let mySQLRDSInstance = new DatabaseInstance(this, 'mysql-rds-instance', {
         engine: DatabaseInstanceEngine.MYSQL,
