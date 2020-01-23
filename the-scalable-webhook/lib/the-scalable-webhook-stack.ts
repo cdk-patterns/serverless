@@ -4,12 +4,15 @@ import apigw = require('@aws-cdk/aws-apigateway');
 import sns = require('@aws-cdk/aws-sns');
 import subs = require('@aws-cdk/aws-sns-subscriptions');
 import sqs = require('@aws-cdk/aws-sqs');
+import {DatabaseInstance, DatabaseInstanceEngine, StorageType} from '@aws-cdk/aws-rds';
+import {ISecret, Secret} from '@aws-cdk/aws-secretsmanager';
+import {InstanceClass, InstanceSize, InstanceType, Peer, SubnetType, Vpc} from "@aws-cdk/aws-ec2";
 
 export class TheScalableWebhookStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-     // defines an AWS Lambda resource
+     // defines an AWS Lambda resource to publish to our queue
      const sqsPublishLambda = new lambda.Function(this, 'SQSPublishLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas/publish'),  // code loaded from the "lambda" directory
@@ -17,8 +20,17 @@ export class TheScalableWebhookStack extends cdk.Stack {
       environment: {
     }
     });
+    
+    // defines an AWS Lambda resource to pull from our queue
+     const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
+      code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambda" directory
+      handler: 'lambda.handler',                // file is "lambda", function is "handler"
+      environment: {
+    }
+    });
 
-    // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
+    // defines an API Gateway REST API resource backed by our "sqsPublishLambda" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: sqsPublishLambda
     });
@@ -31,5 +43,32 @@ export class TheScalableWebhookStack extends cdk.Stack {
     const topic = new sns.Topic(this, 'RDSPublishTopic');
 
     topic.addSubscription(new subs.SqsSubscription(queue));
+    
+    const vpc = new Vpc(this, 'TheVPC', {
+       cidr: "10.0.0.0/16"
+    })
+    
+    //RDS
+    let secret = Secret.fromSecretAttributes(this, 'SamplePassword', {
+    secretArn: 'arn:aws:secretsmanager:{region}:{organisation-id}:secret:ImportedSecret-sample',
+    });
+    
+    let mySQLRDSInstance = new DatabaseInstance(this, 'mysql-rds-instance', {
+        engine: DatabaseInstanceEngine.MYSQL,
+        instanceClass: InstanceType.of(InstanceClass.T2, InstanceSize.SMALL),
+        vpc,
+        vpcPlacement: {subnetType: SubnetType.PRIVATE},
+        storageEncrypted: true,
+        multiAz: false,
+        autoMinorVersionUpgrade: false,
+        allocatedStorage: 25,
+        storageType: StorageType.GP2,
+        backupRetention: cdk.Duration.days(3),
+        deletionProtection: false,
+        masterUsername: 'Admin',
+        databaseName: 'webhook',
+        masterUserPassword: secret.secretValue,
+        port: 3306
+    });
   }
 }
