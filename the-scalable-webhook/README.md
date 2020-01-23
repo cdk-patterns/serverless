@@ -8,7 +8,7 @@ sure that your serverless resource doesn&apos;t scale up to an amount that it DO
 This is done by putting a queue between them and having a lambda with a throttled concurrency policy pull items off the queue and communicate with your 
 serverless resource at a rate it can handle.
 
-![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-scalable-webhook/img/arch.png)
+![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-scalable-webhook/img/architecture.png)
 
 ## Useful commands
 
