@@ -7,7 +7,7 @@ exports.handler = async function(event:any) {
   return sendRes(200, 'You have connected with the Lambda!');
 };
 
-const sendRes = (status:number, body:string) => {
+let sendRes = (status:number, body:string) => {
   var response = {
     statusCode: status,
     headers: {

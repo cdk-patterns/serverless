@@ -23,6 +23,9 @@
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.22.0",
     "@aws-cdk/aws-lambda": "^1.22.0",
+    "@aws-cdk/aws-sns": "^1.22.0",
+    "@aws-cdk/aws-sns-subscriptions": "^1.22.0",
+    "@aws-cdk/aws-sqs": "^1.22.0",
     "@aws-cdk/core": "^1.22.0",
     "source-map-support": "^0.5.16"
   }
