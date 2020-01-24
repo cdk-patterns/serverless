@@ -4,6 +4,7 @@ import apigw = require('@aws-cdk/aws-apigateway');
 import sns = require('@aws-cdk/aws-sns');
 import subs = require('@aws-cdk/aws-sns-subscriptions');
 import sqs = require('@aws-cdk/aws-sqs');
+import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import {DatabaseInstance, DatabaseInstanceEngine, StorageType} from '@aws-cdk/aws-rds';
 import {ISecret, Secret} from '@aws-cdk/aws-secretsmanager';
 import {InstanceClass, InstanceSize, InstanceType, Peer, SubnetType, Vpc} from "@aws-cdk/aws-ec2";
@@ -85,11 +86,12 @@ export class TheScalableWebhookStack extends cdk.Stack {
       reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
         queueURL: queue.queueUrl
-      }
+      },
     });
-
     queue.grantConsumeMessages(sqsSubscribeLambda);
+    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
 
+  
     /**
      * API Gateway Proxy
      * Used to expose the webhook through a URL
