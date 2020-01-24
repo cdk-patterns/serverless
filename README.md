@@ -21,7 +21,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
 
 #### [The Scalable Webhook](/the-scalable-webhook/README.md)
-![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-scalable-webhook/img/arch.png)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/arch.png)
 
 ## Pattern Usage
 
