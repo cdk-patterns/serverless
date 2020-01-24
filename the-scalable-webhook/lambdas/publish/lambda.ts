@@ -9,35 +9,25 @@ exports.handler = async function(event:any) {
   var params = {
     DelaySeconds: 10,
     MessageAttributes: {
-      "Title": {
-        DataType: "String",
-        StringValue: "The Whistler"
-      },
-      "Author": {
-        DataType: "String",
-        StringValue: "John Grisham"
-      },
-      "WeeksOn": {
-        DataType: "Number",
-        StringValue: "6"
-      }
     },
-    MessageBody: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
-    // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
-    // MessageId: "Group1",  // Required for FIFO queues
+    MessageBody: "hello from "+event.path,
     QueueUrl: process.env.queueURL
   };
+
+  let response;
 
   await sqs.sendMessage(params, function(err:any, data:any) {
     if (err) {
       console.log("Error", err);
+      response = sendRes(500, err)
     } else {
       console.log("Success", data.MessageId);
+      response = sendRes(200, 'You have added a message to the queue! Message ID is '+data.MessageId)
     }
   }).promise();
 
   // return response back to upstream caller
-  return sendRes(200, 'You have added a message to the queue!');
+  return response;
 };
 
 let sendRes = (status:number, body:string) => {

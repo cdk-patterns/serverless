@@ -84,6 +84,7 @@ export class TheScalableWebhookStack extends cdk.Stack {
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
+        queueURL: queue.queueUrl
       }
     });
 
