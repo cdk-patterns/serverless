@@ -16,7 +16,8 @@ serverless resource at a rate it can handle.
 
 When you deploy this you will have an API Gateway where any url is routed through to the publish lambda. If you modify the url from / to say /hello this url will be sent as a message via sqs to a lambda
 which will insert "hello from /hello" into dynamodb as a message. You can track the progress of your message at every stage through cloudwatch as logs are printed, you can view the contents of
-dynamo in the console and the contents of sqs in the console.
+dynamo in the console and the contents of sqs in the console. You should also notice that SQS can include duplicate messages but in those instances you don't get two identical records in DynamoDB as 
+we used an id we generated in the message as the key
 
 ## Useful commands
 
