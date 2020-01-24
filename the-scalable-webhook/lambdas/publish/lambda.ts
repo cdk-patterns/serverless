@@ -11,7 +11,8 @@ exports.handler = async function(event:any) {
     MessageAttributes: {
     },
     MessageBody: "hello from "+event.path,
-    QueueUrl: process.env.queueURL
+    QueueUrl: process.env.queueURL,
+    MessageDeduplicationId: new Date().getTime()
   };
 
   let response;
