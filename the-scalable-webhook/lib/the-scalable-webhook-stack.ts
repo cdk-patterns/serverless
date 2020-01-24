@@ -57,10 +57,6 @@ export class TheScalableWebhookStack extends cdk.Stack {
       visibilityTimeout: cdk.Duration.seconds(300)
     });
 
-    /*const topic = new sns.Topic(this, 'RDSPublishTopic');
-
-    topic.addSubscription(new subs.SqsSubscription(queue));*/
-
     /**
      * Lambdas
      * Both publisher and subscriber from pattern
