@@ -12,7 +12,7 @@ exports.handler = async function(event:any) {
     },
     MessageBody: "hello from "+event.path,
     QueueUrl: process.env.queueURL,
-    MessageDeduplicationId: new Date().getTime()
+    MessageDeduplicationId: event.path + new Date().getTime()
   };
 
   let response;
