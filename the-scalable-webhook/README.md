@@ -10,6 +10,8 @@ serverless resource at a rate it can handle.
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-scalable-webhook/img/arch.png)
 
+<strong>NOTE: For this pattern in the construct I have swapped RDS for Dynamodb. Why? Because it is significantly cheaper/faster for developers to deploy and maintain, I also don't think we lose the essense of the pattern with this swap given we still do the pub/sub deduplication via SQS/Lambda and throttle the subscription lambda.</strong>
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
