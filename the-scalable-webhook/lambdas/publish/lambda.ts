@@ -9,10 +9,10 @@ exports.handler = async function(event:any) {
   var params = {
     DelaySeconds: 10,
     MessageAttributes: {
+      MessageDeduplicationId: event.path + new Date().getTime()
     },
     MessageBody: "hello from "+event.path,
     QueueUrl: process.env.queueURL,
-    MessageDeduplicationId: event.path + new Date().getTime()
   };
 
   let response;
