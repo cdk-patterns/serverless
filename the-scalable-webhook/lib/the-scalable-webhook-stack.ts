@@ -13,9 +13,9 @@ export class TheScalableWebhookStack extends cdk.Stack {
     super(scope, id, props);
 
     // Basic VPC Setup (RDS has to be in a VPC)
-    const vpc = new Vpc(this, 'TheVPC', {
+    /*const vpc = new Vpc(this, 'TheVPC', {
       cidr: "10.0.0.0/16"
-    })
+    })*/
 
     /**
      * RDS Database Setup
