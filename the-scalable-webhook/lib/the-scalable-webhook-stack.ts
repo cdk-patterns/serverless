@@ -1,57 +1,25 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
-import sns = require('@aws-cdk/aws-sns');
-import subs = require('@aws-cdk/aws-sns-subscriptions');
 import sqs = require('@aws-cdk/aws-sqs');
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
-import {DatabaseInstance, DatabaseInstanceEngine, StorageType} from '@aws-cdk/aws-rds';
-import {ISecret, Secret} from '@aws-cdk/aws-secretsmanager';
-import {InstanceClass, InstanceSize, InstanceType, Peer, SubnetType, Vpc} from "@aws-cdk/aws-ec2";
+import dynamodb = require('@aws-cdk/aws-dynamodb');
 
 export class TheScalableWebhookStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Basic VPC Setup (RDS has to be in a VPC)
-    /*const vpc = new Vpc(this, 'TheVPC', {
-      cidr: "10.0.0.0/16"
-    })*/
-
     /**
-     * RDS Database Setup
-     * MySQL Database / Auto Generated Password Setup
+     * Dynamo Setup
+     * This is standing in for what is RDS on the diagram due to simpler/cheaper setup
      */
-    /*let secret = new Secret(this, 'secret', {
-      description: 'rds password',
-      secretName: 'rds-password',
-      generateSecretString: {
-          excludePunctuation: true,
-          excludeCharacters: '/@" '
-      }
-    })
-    
-    let mySQLRDSInstance = new DatabaseInstance(this, 'mysql-rds-instance', {
-        engine: DatabaseInstanceEngine.MYSQL,
-        instanceClass: InstanceType.of(InstanceClass.T2, InstanceSize.SMALL),
-        vpc,
-        vpcPlacement: {subnetType: SubnetType.PRIVATE},
-        storageEncrypted: true,
-        multiAz: false,
-        autoMinorVersionUpgrade: false,
-        allocatedStorage: 25,
-        storageType: StorageType.GP2,
-        backupRetention: cdk.Duration.days(3),
-        deletionProtection: false,
-        masterUsername: 'Admin',
-        databaseName: 'webhook',
-        masterUserPassword: secret.secretValue,
-        port: 3306
-    });*/
+    const table = new dynamodb.Table(this, 'Messages', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+    });
 
     /**
      * Queue Setup
-     * SNS/SQS creation
+     * SQS creation
      */
     const queue = new sqs.Queue(this, 'RDSPublishQueue', {
       visibilityTimeout: cdk.Duration.seconds(300)
@@ -81,11 +49,13 @@ export class TheScalableWebhookStack extends cdk.Stack {
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
-        queueURL: queue.queueUrl
+        queueURL: queue.queueUrl,
+        tableName: table.tableName
       },
     });
     queue.grantConsumeMessages(sqsSubscribeLambda);
     sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
+    table.grantReadWriteData(sqsSubscribeLambda);
 
   
     /**
