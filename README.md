@@ -37,4 +37,4 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
 ## Contributing
-I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request.
+I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
