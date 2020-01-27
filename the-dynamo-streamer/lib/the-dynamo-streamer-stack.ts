@@ -9,23 +9,31 @@ export class TheDynamoStreamerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    //DynamoDB Table
+    /**
+     * DynamoDB Creation
+     * Streaming is enabled to send the whole new object down the pipe
+     */
     const table = new dynamodb.Table(this, 'TheDynamoStreamer', {
       partitionKey: { name: 'message', type: dynamodb.AttributeType.STRING },
       stream: dynamodb.StreamViewType.NEW_IMAGE
     });
     
-    // defines an AWS Lambda resource to pull from our stream
+    /**
+     * Lambda Dynamo Stream Subscriber Creation
+     */
     const dynamoStreamSubscriberLambda = new lambda.Function(this, 'dynamoStreamSubscriberLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       environment: {
-        tableName: table.tableName
       },
     });
+    // subscribe our lambda to the stream
     dynamoStreamSubscriberLambda.addEventSource(new DynamoEventSource(table, {startingPosition: lambda.StartingPosition.LATEST}));
 
+    /**
+     * API Gateway Creation
+     */
     let gateway = new apigw.RestApi(this, 'DynamoStreamerAPI', {
       deployOptions: {
         metricsEnabled: true,
@@ -35,39 +43,38 @@ export class TheDynamoStreamerStack extends cdk.Stack {
       }
     });
 
+    //Give our gateway permissions to interact with dynamodb
     let apigwDynamoRole = new iam.Role(this, 'DefaultLambdaHanderRole', {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
     });
-
     table.grantReadWriteData(apigwDynamoRole);
     
+    //Because this isn't a proxy integration, we need to define our response model
     const responseModel = gateway.addModel('ResponseModel', {
       contentType: 'application/json',
       modelName: 'ResponseModel',
       schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'pollResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'message': { 'type': apigw.JsonSchemaType.STRING } } }
     });
 
+    //Create an endpoint '/InsertItem' which accepts a JSON payload on a POST verb
     gateway.root.addResource('InsertItem')
       .addMethod('POST', new apigw.Integration({
-        type: apigw.IntegrationType.AWS,
+        type: apigw.IntegrationType.AWS, //native aws integration
         integrationHttpMethod: "POST",
-        uri: 'arn:aws:apigateway:us-east-1:dynamodb:action/PutItem',
+        uri: 'arn:aws:apigateway:us-east-1:dynamodb:action/PutItem', // This is how we setup a dynamo insert operation.
         options: {
           credentialsRole: apigwDynamoRole,
           requestTemplates: {
-          // You can define a mapping that will build a payload for your integration, based
-          //  on the integration parameters that you have specified
+          // This is the VTL to transform our incoming JSON to a Dynamo Insert query
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
           'application/json': JSON.stringify({"TableName": table.tableName, "Item": {"message": { "S": "$input.path('$.message')"}}})
         },
         integrationResponses: [
           {
-            // Successful response from the Lambda function, no filter defined
-            //  - the selectionPattern filter only tests the error message
             // We will set the response status code to 200
             statusCode: "200",
             responseTemplates: {
-              // This template takes the "message" result from the Lambda function, adn embeds it in a JSON response
+              // Just respond with a generic message
               // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
               'application/json': JSON.stringify({ message: 'item added to db'})
             }
@@ -76,7 +83,7 @@ export class TheDynamoStreamerStack extends cdk.Stack {
         }
       }),
       {
-        methodResponses: [
+        methodResponses: [ //We need to define what models are allowed on our method response
           {
             // Successful response from the integration
             statusCode: '200',
