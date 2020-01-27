@@ -36,6 +36,8 @@ This is from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
+<br /><hr /><br />
+
 ## Pattern Usage
 
 All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
