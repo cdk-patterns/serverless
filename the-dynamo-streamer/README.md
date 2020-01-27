@@ -1,8 +1,8 @@
-# Welcome to your CDK TypeScript project!
+# The Dynamo Streamer
 
-This is a blank project for TypeScript development with CDK.
+This is from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
 ## Useful commands
 
