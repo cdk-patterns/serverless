@@ -24,7 +24,7 @@ export class TheDynamoStreamerStack extends cdk.Stack {
         tableName: table.tableName
       },
     });
-    dynamoStreamSubscriberLambda.addEventSource(new DynamoEventSource(table, {startingPosition: 0}));
+    dynamoStreamSubscriberLambda.addEventSource(new DynamoEventSource(table, {startingPosition: lambda.StartingPosition.LATEST}));
 
     // grant the lambda role read/write permissions to our table
     //table.grantReadWriteData(dynamoLambda);
