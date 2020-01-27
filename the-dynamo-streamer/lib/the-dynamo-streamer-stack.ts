@@ -71,7 +71,7 @@ export class TheDynamoStreamerStack extends cdk.Stack {
         },
         integrationResponses: [
           {
-            // We will set the response status code to 200
+            // Tells APIGW which response to use based on the returned code from the service
             statusCode: "200",
             responseTemplates: {
               // Just respond with a generic message
