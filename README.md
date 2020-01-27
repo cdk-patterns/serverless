@@ -10,7 +10,9 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
 
 ## Patterns
-### Website Deploys
+### Website Deploys ([@nideveloper](https://twitter.com/nideveloper))
+These are built using https://www.npmjs.com/package/cdk-spa-deploy
+
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
 
