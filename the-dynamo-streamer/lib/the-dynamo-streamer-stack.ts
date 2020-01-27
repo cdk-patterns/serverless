@@ -27,7 +27,12 @@ export class TheDynamoStreamerStack extends cdk.Stack {
     //table.grantReadWriteData(dynamoLambda);
 
     let gateway = new apigw.RestApi(this, 'DynamoStreamerAPI', {
-
+      deployOptions: {
+        metricsEnabled: true,
+        loggingLevel: apigw.MethodLoggingLevel.INFO,
+        dataTraceEnabled: true,
+        stageName: 'prod'
+      }
     });
 
     let apigwDynamoRole = new iam.Role(this, 'DefaultLambdaHanderRole', {
@@ -35,15 +40,58 @@ export class TheDynamoStreamerStack extends cdk.Stack {
     });
 
     table.grantReadWriteData(apigwDynamoRole);
+    
+    const responseModel = gateway.addModel('ResponseModel', {
+      contentType: 'application/json',
+      modelName: 'ResponseModel',
+      schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'pollResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'message': { 'type': apigw.JsonSchemaType.STRING } } }
+    });
 
-    gateway.root.addProxy({
-       defaultIntegration: new apigw.Integration({
-         type: apigw.IntegrationType.AWS,
-         uri: 'arn:aws:apigateway:us-east-1:DynamoDB:action/PutItem',
-         options: {
-           credentialsRole: apigwDynamoRole
-         }
-       })
-     })
+    gateway.root.addResource('InsertItem')
+      .addMethod('POST', new apigw.Integration({
+        type: apigw.IntegrationType.AWS,
+        integrationHttpMethod: "POST",
+        uri: 'arn:aws:apigateway:us-east-1:dynamodb:action/PutItem',
+        options: {
+          credentialsRole: apigwDynamoRole,
+          requestTemplates: {
+          // You can define a mapping that will build a payload for your integration, based
+          //  on the integration parameters that you have specified
+          // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+          'application/json': JSON.stringify({"TableName": table.tableName, "Item": {"message": { "S": "$input.path('$.message')"}}})
+        },
+        integrationResponses: [
+          {
+            // Successful response from the Lambda function, no filter defined
+            //  - the selectionPattern filter only tests the error message
+            // We will set the response status code to 200
+            statusCode: "200",
+            responseTemplates: {
+              // This template takes the "message" result from the Lambda function, adn embeds it in a JSON response
+              // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+              'application/json': JSON.stringify({ message: 'item added to db'})
+            }
+          }
+        ]
+        }
+      }),
+      {
+        methodResponses: [
+          {
+            // Successful response from the integration
+            statusCode: '200',
+            // Define what parameters are allowed or not
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true
+            },
+            // Validate the schema on the response
+            responseModels: {
+              'application/json': responseModel
+            }
+          }
+        ]
+      })
   }
 }
