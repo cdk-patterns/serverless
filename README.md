@@ -14,6 +14,8 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
 
+<br /><hr /><br />
+
 ### Jeremy Daly Patterns ([@jeremy_daly](https://twitter.com/jeremy_daly))
 These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
@@ -24,6 +26,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
 
 <br /><hr /><br />
+
 ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
 
 #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
