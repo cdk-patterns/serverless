@@ -34,7 +34,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
 
 #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-This is from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
+This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
