@@ -10,24 +10,21 @@ export class TheDynamoStreamerStack extends cdk.Stack {
     super(scope, id, props);
 
     //DynamoDB Table
-    const table = new dynamodb.Table(this, 'Hits', {
-      partitionKey: { name: 'message', type: dynamodb.AttributeType.STRING }
+    const table = new dynamodb.Table(this, 'TheDynamoStreamer', {
+      partitionKey: { name: 'message', type: dynamodb.AttributeType.STRING },
+      stream: dynamodb.StreamViewType.NEW_IMAGE
     });
     
     // defines an AWS Lambda resource to pull from our stream
-    const dynamoStreamSubscriberLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+    const dynamoStreamSubscriberLambda = new lambda.Function(this, 'dynamoStreamSubscriberLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
-      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
         tableName: table.tableName
       },
     });
     dynamoStreamSubscriberLambda.addEventSource(new DynamoEventSource(table, {startingPosition: lambda.StartingPosition.LATEST}));
-
-    // grant the lambda role read/write permissions to our table
-    //table.grantReadWriteData(dynamoLambda);
 
     let gateway = new apigw.RestApi(this, 'DynamoStreamerAPI', {
       deployOptions: {
