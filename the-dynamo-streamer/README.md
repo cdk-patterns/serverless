@@ -1,6 +1,6 @@
 # The Dynamo Streamer
 
-This is from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
+This pattern was taken from from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
 "When thinking about #Serverless architectures, consider how much of your processing can happen AFTER the data is saved. Thinking asynchronously can lead to greater resiliency and often, less code."
 
