@@ -3,6 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import iam = require('@aws-cdk/aws-iam');
+import { DynamoEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 export class TheDynamoStreamerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -12,16 +13,18 @@ export class TheDynamoStreamerStack extends cdk.Stack {
     const table = new dynamodb.Table(this, 'Hits', {
       partitionKey: { name: 'message', type: dynamodb.AttributeType.STRING }
     });
-
-     // defines an AWS Lambda resource
-     /*const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
+    
+    // defines an AWS Lambda resource to pull from our stream
+    const dynamoStreamSubscriberLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda'),  // code loaded from the "lambda" directory
+      code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
+      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
-        HITS_TABLE_NAME: table.tableName
-    }
-    });*/
+        tableName: table.tableName
+      },
+    });
+    dynamoStreamSubscriberLambda.addEventSource(new DynamoEventSource(table, {startingPosition: 0}));
 
     // grant the lambda role read/write permissions to our table
     //table.grantReadWriteData(dynamoLambda);
