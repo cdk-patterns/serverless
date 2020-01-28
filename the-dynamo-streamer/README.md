@@ -14,7 +14,7 @@ After deployment you will have an API Gateway with one endpint (/InsertItem) tha
 `{ "message": "hello" }`
 
 ### Example Request
-![Postman](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/postman.png)
+![Postman](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/request.png)
 
 ## Useful commands
 
