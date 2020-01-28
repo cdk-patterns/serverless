@@ -6,6 +6,16 @@ This pattern was taken from from this [Tweet](https://twitter.com/edjgeek/status
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
+## How To Test Pattern
+
+After deployment you will have an API Gateway with one endpint (/InsertItem) that takes an application/json payload via POST. It will insert the contents of the message field into DynamoDB where that new event will be streamed to a Lambda that will print the contents to the console. To see the full flow you need to look in the AWS Console and look in DynamoDB and the Lambda Cloudwatch logs
+
+### JSON Payload Format
+`{ "message": "hello" }`
+
+### Example Request
+![Postman](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/postman.png)
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
