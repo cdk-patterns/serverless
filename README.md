@@ -10,11 +10,17 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
 
 ## Patterns
-### Website Deploys
+### Matt Coulter Patterns ([@nideveloper](https://twitter.com/nideveloper))
+
+#### Single Page Application S3 Website Deploy
+These are built using https://www.npmjs.com/package/cdk-spa-deploy
+
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
 
-### Jeremy Daly Patterns
+<br /><hr /><br />
+
+### Jeremy Daly Patterns ([@jeremy_daly](https://twitter.com/jeremy_daly))
 These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
 #### [The Simple Webservice](/the-simple-webservice/README.md)
@@ -22,6 +28,17 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 
 #### [The Scalable Webhook](/the-scalable-webhook/README.md)
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+
+<br /><hr /><br />
+
+### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
+
+#### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
+
+![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+<br /><hr /><br />
 
 ## Pattern Usage
 
