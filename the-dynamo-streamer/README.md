@@ -2,6 +2,8 @@
 
 This pattern was taken from from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
+This is a variation on [The Simple Webservice](../the-simple-webservice/README.md) pattern only instead of a lambda being connected to the apigateway, the dynamodb is connected directly and the api gateway uses templates to transform the incoming message to insert the data. The lambda that listens for events coming from dynamo can be used to do data transforms after insertion meaning if an error occurs you lose no data.
+
 "When thinking about #Serverless architectures, consider how much of your processing can happen AFTER the data is saved. Thinking asynchronously can lead to greater resiliency and often, less code."
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
