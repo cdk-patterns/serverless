@@ -4,6 +4,8 @@ This is intended to be a repo containing all of the official AWS Serverless arch
 
 Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new pattern announcements. I plan to add a new pattern weekly so check back regularly!
 
+Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not AWS
+
 ## New to AWS CDK?
 
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
