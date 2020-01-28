@@ -85,6 +85,18 @@ test('API Gateway Method + VTL Created', () => {
                 "application/json": "{\"message\":\"item added to db\"}"
               },
               "StatusCode": "200"
+            },
+            {
+              "ResponseParameters": {
+                "method.response.header.Content-Type": "'application/json'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Credentials": "'true'"
+              },
+              "ResponseTemplates": {
+                "application/json": "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+              },
+              "SelectionPattern": "^\[BadRequest\].*",
+              "StatusCode": "400"
             }
           ],
           "RequestTemplates": {
@@ -111,6 +123,14 @@ test('API Gateway Method + VTL Created', () => {
           "method.response.header.Access-Control-Allow-Credentials": true
         },
         "StatusCode": "200"
+      },
+      {
+        "ResponseParameters": {
+          "method.response.header.Content-Type": true,
+          "method.response.header.Access-Control-Allow-Origin": true,
+          "method.response.header.Access-Control-Allow-Credentials": true
+        },
+        "StatusCode": "400"
       }
     ]
   }
