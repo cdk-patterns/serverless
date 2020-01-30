@@ -49,7 +49,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
 This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
-![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
 <br /><hr /><br />
 
@@ -64,7 +64,7 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 * [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
 * [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
 
-![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/img/building-enterprise-arch.jpg)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-arch.jpg)
 
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
