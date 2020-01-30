@@ -53,6 +53,8 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
+<br /><hr /><br />
+
 ## External Patterns
 
 ### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md)
