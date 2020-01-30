@@ -53,5 +53,12 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
+## External Patterns
+
+### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
+Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
+
+![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/img/building-enterprise-arch.jpg)
+
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
