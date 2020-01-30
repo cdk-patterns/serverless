@@ -55,7 +55,9 @@ This was taken from this [Tweet](https://twitter.com/edjgeek/status/122022787251
 
 ## External Patterns
 
-### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md)
+### AWS Examples
+
+#### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md) by Geoffroy Rollat
 
 
 Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
