@@ -9,6 +9,19 @@ Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
 
+## Pattern Usage
+
+All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
+
+* `git clone https://github.com/cdk-patterns/serverless.git`
+* `cd {pattern-name}`
+* `npm i` - install the dependencies
+* `npm run build` - build the project
+* `npm run test` - run the unit tests
+* `npm run deploy` - deploy the pattern into your AWS account&#42;
+
+&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+
 ## Patterns
 ### Matt Coulter Patterns ([@nideveloper](https://twitter.com/nideveloper))
 
@@ -37,21 +50,6 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
-
-<br /><hr /><br />
-
-## Pattern Usage
-
-All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
-
-* `git clone https://github.com/cdk-patterns/serverless.git`
-* `cd {pattern-name}`
-* `npm i` - install the dependencies
-* `npm run build` - build the project
-* `npm run test` - run the unit tests
-* `npm run deploy` - deploy the pattern into your AWS account&#42;
-
-&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
 <br /><hr /><br />
 
