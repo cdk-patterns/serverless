@@ -66,7 +66,7 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 * [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
 * [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-arch.jpg)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
 
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
