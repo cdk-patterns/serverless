@@ -11,6 +11,19 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
 
+## Pattern Usage
+
+All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
+
+* `git clone https://github.com/cdk-patterns/serverless.git`
+* `cd {pattern-name}`
+* `npm i` - install the dependencies
+* `npm run build` - build the project
+* `npm run test` - run the unit tests
+* `npm run deploy` - deploy the pattern into your AWS account&#42;
+
+&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+
 ## Patterns
 ### Matt Coulter Patterns ([@nideveloper](https://twitter.com/nideveloper))
 
@@ -38,22 +51,22 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
 This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
 
-![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/arch.jpg)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
 <br /><hr /><br />
 
-## Pattern Usage
+## External Patterns
 
-All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
+### AWS Examples
 
-* `git clone https://github.com/cdk-patterns/serverless.git`
-* `cd {pattern-name}`
-* `npm i` - install the dependencies
-* `npm run build` - build the project
-* `npm run test` - run the unit tests
-* `npm run deploy` - deploy the pattern into your AWS account&#42;
+#### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md) by Geoffroy Rollat
 
-&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+
+Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
+* [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
+* [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
+
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-arch.jpg)
 
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
