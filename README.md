@@ -55,8 +55,12 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 
 ## External Patterns
 
-### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
+### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md)
+
+
 Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
+* [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
+* [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
 
 ![Architecture](https://raw.githubusercontent.com/nideveloper/serverless/master/img/building-enterprise-arch.jpg)
 
