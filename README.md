@@ -10,6 +10,7 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
+* Visit the [Hey CDK &quot;How To&quot; series](https://garbe.io/blog/2019/09/11/hey-cdk-how-to-migrate/) for some detailed answers
 
 ## Pattern Usage
 
