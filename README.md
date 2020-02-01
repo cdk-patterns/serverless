@@ -33,6 +33,8 @@ These are built using https://www.npmjs.com/package/cdk-spa-deploy
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
 
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.png)
+
 <br /><hr /><br />
 
 ### Jeremy Daly Patterns ([@jeremy_daly](https://twitter.com/jeremy_daly))
