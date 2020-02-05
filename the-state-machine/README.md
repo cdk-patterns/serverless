@@ -1,8 +1,11 @@
-# Welcome to your CDK TypeScript project!
+# The State Machine
 
-This is a blank project for TypeScript development with CDK.
+This is an example CDK stack to deploy The State Machine stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#statemachine
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+
+![Architecture](/img/the-state-machine.png)
+
+After deployment you should have a proxy api gateway where any url hits a lambda which triggers a step function
 
 ## Useful commands
 
