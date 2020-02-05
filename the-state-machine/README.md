@@ -5,6 +5,9 @@ This is an example CDK stack to deploy The State Machine stack described by Jere
 
 ![Architecture](img/the-state-machine.png)
 
+### Stepfunction Logic
+![Architecture](img/statemachine.png)
+
 After deployment you should have a proxy api gateway where any url hits a lambda which triggers a step function
 
 ## Useful commands
