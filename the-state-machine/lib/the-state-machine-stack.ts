@@ -9,33 +9,39 @@ export class TheStateMachineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Step Function definition
-
-    const orderPizzaLambda = new lambda.Function(this, 'orderPizzaLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
-      handler: 'orderPizza.handler'                // file is "lambda", function is "handler"
+    /**
+     * Step Function Starts Here
+     */
+     
+    //The first thing we need to do is see if they are asking for pineapple on a pizza
+    const pineappleCheckLambda = new lambda.Function(this, 'orderPizzaLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,    // execution environment
+      code: lambda.Code.asset('lambdas'),     // code loaded from the "lambda" directory
+      handler: 'orderPizza.handler'           // file is "orderPizza", function is "handler"
     });
 
+    // Step functions are built up of steps, we need to define our first step
     const orderPizza = new sfn.Task(this, 'Order Pizza Job', {
-      task: new tasks.InvokeFunction(orderPizzaLambda),
+      task: new tasks.InvokeFunction(pineappleCheckLambda),
       inputPath: '$.flavour',
-      // Put Lambda's result here in the execution's state object
       resultPath: '$.pineappleAnalysis',
     });
 
+    // Pizza Order failure step defined
     const jobFailed = new sfn.Fail(this, 'Sorry, We Dont add Pineapple', {
       cause: 'Failed To Make Pizza',
       error: 'They asked for Pineapple',
     });
 
+    // If they didnt ask for pineapple let's cook the pizza
     const cookPizza = new sfn.Pass(this, 'Lets make your pizza');
 
+    //Step function definition
     const definition = sfn.Chain
     .start(orderPizza)
-    .next(new sfn.Choice(this, 'With Pineapple?')
+    .next(new sfn.Choice(this, 'With Pineapple?') // Logical choice added to flow
         // Look at the "status" field
-        .when(sfn.Condition.booleanEquals('$.pineappleAnalysis.containsPineapple', true), jobFailed)
+        .when(sfn.Condition.booleanEquals('$.pineappleAnalysis.containsPineapple', true), jobFailed) // Fail for pineapple
         .otherwise(cookPizza));
 
     let stateMachine = new sfn.StateMachine(this, 'StateMachine', {
@@ -47,16 +53,16 @@ export class TheStateMachineStack extends cdk.Stack {
      * Dead Letter Queue Setup
      * SQS creation
      */
-    const queue = new sqs.Queue(this, 'RDSPublishQueue', {
+    const dlq = new sqs.Queue(this, 'stateMachineLambdaDLQ', {
       visibilityTimeout: cdk.Duration.seconds(300)
     });
 
-    // defines an AWS Lambda resource
+    // defines an AWS Lambda resource to connect to our API Gateway
     const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
       handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
-      deadLetterQueue:queue,
+      deadLetterQueue:dlq,
       environment: {
         statemachine_arn: stateMachine.stateMachineArn
       }
@@ -64,6 +70,9 @@ export class TheStateMachineStack extends cdk.Stack {
 
     stateMachine.grantStartExecution(stateMachineLambda);
 
+    /**
+     * Simple API Gateway proxy integration
+     */
     // defines an API Gateway REST API resource backed by our "stateMachineLambda" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: stateMachineLambda
