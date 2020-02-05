@@ -1,5 +1,11 @@
-exports.handler = async function(event:any) {
-    console.log("request:", JSON.stringify(event, undefined, 2));
+exports.handler = async function(flavour:any) {
+    console.log("Requested Pizza :", JSON.stringify(flavour, undefined, 2));
+    
+    let containsPineapple = false;
+    
+    if(flavour == 'pineapple' || flavour =='hawaiian'){
+        containsPineapple = true;
+    }
 
-    return {'type': 'pepperoni'}
+    return {'containsPineapple': containsPineapple}
 }
