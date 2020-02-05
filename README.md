@@ -48,6 +48,9 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 #### [The Scalable Webhook](/the-scalable-webhook/README.md)
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
 
+#### [The State Machine](/the-state-machine/README.md)
+![Architecture](/the-state-machine/img/architecture.png)
+
 <br /><hr /><br />
 
 ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
