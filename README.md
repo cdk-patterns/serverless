@@ -4,10 +4,14 @@ This is intended to be a repo containing all of the official AWS Serverless arch
 
 Follow [@CdkPatterns](https://twitter.com/cdkpatterns) for live discussion / new pattern announcements. I plan to add a new pattern weekly so check back regularly!
 
+Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not AWS
+
 ## New to AWS CDK?
 
 * To learn more visit the [AWS getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * To do a workshop on CDK visit [cdkworkshop.com](https://cdkworkshop.com)
+* Visit the [Hey CDK &quot;How To&quot; series](https://garbe.io/blog/2019/09/11/hey-cdk-how-to-migrate/) for some detailed answers
+* Check out [Awesome CDK](https://github.com/eladb/awesome-cdk) for a curated list of awesome projects related to CDK
 
 ## Pattern Usage
 
@@ -30,6 +34,8 @@ These are built using https://www.npmjs.com/package/cdk-spa-deploy
 
 * [S3 Angular Deploy ](/s3-angular-website/README.md)
 * [S3 React Deploy ](/s3-react-website/README.md)
+
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
 
 <br /><hr /><br />
 
@@ -64,7 +70,7 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 * [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
 * [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-arch.jpg)
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
 
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
