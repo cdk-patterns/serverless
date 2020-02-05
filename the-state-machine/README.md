@@ -8,7 +8,13 @@ This is an example CDK stack to deploy The State Machine stack described by Jere
 ### Stepfunction Logic
 ![Architecture](img/statemachine.png)
 
-After deployment you should have a proxy api gateway where any url hits a lambda which triggers a step function
+
+### Testing It Out
+
+After deployment you should have a proxy api gateway where any url hits a lambda which triggers a step function. You can pass in a queryparameter like '?flavour=pepperoni' or '?flavour=pineapple'.
+
+If you pass in pineapple or hawaiian you should see the step function flow fail when you check it via the console.
+
 
 ## Useful commands
 
