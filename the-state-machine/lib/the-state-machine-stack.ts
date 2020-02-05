@@ -14,7 +14,7 @@ export class TheStateMachineStack extends cdk.Stack {
      */
      
     //The first thing we need to do is see if they are asking for pineapple on a pizza
-    const pineappleCheckLambda = new lambda.Function(this, 'orderPizzaLambdaHandler', {
+    let pineappleCheckLambda = new lambda.Function(this, 'pineappleCheckLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,    // execution environment
       code: lambda.Code.asset('lambdas'),     // code loaded from the "lambda" directory
       handler: 'orderPizza.handler'           // file is "orderPizza", function is "handler"
