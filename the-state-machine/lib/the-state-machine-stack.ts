@@ -19,8 +19,9 @@ export class TheStateMachineStack extends cdk.Stack {
 
     const orderPizza = new sfn.Task(this, 'Order Pizza Job', {
       task: new tasks.InvokeFunction(orderPizzaLambda),
+      inputPath: '$.flavour',
       // Put Lambda's result here in the execution's state object
-      resultPath: '$.type',
+      resultPath: '$.pineappleAnalysis',
     });
 
     const jobFailed = new sfn.Fail(this, 'Sorry, We Dont add Pineapple', {
@@ -34,7 +35,7 @@ export class TheStateMachineStack extends cdk.Stack {
     .start(orderPizza)
     .next(new sfn.Choice(this, 'With Pineapple?')
         // Look at the "status" field
-        .when(sfn.Condition.stringEquals('$.type', 'Pineapple'), jobFailed)
+        .when(sfn.Condition.booleanEquals('$.pineappleAnalysis.containsPineapple', true), jobFailed)
         .otherwise(cookPizza));
 
     let stateMachine = new sfn.StateMachine(this, 'StateMachine', {
