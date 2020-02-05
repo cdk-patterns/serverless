@@ -63,7 +63,7 @@ export class TheStateMachineStack extends cdk.Stack {
 
     stateMachine.grantStartExecution(stateMachineLambda);
 
-    // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
+    // defines an API Gateway REST API resource backed by our "stateMachineLambda" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: stateMachineLambda
     });
