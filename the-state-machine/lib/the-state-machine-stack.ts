@@ -3,6 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
 import sfn = require('@aws-cdk/aws-stepfunctions');
 import tasks = require('@aws-cdk/aws-stepfunctions-tasks');
+import sqs = require('@aws-cdk/aws-sqs');
 
 export class TheStateMachineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -41,11 +42,20 @@ export class TheStateMachineStack extends cdk.Stack {
       timeout: cdk.Duration.minutes(5)
     });
 
+    /**
+     * Dead Letter Queue Setup
+     * SQS creation
+     */
+    const queue = new sqs.Queue(this, 'RDSPublishQueue', {
+      visibilityTimeout: cdk.Duration.seconds(300)
+    });
+
     // defines an AWS Lambda resource
     const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
       handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
+      deadLetterQueue:queue,
       environment: {
         statemachine_arn: stateMachine.stateMachineArn
       }
