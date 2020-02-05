@@ -3,7 +3,7 @@
 This is an example CDK stack to deploy The State Machine stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#statemachine
 
 
-![Architecture](/img/the-state-machine.png)
+![Architecture](img/the-state-machine.png)
 
 After deployment you should have a proxy api gateway where any url hits a lambda which triggers a step function
 
