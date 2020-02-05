@@ -10,13 +10,6 @@ export class TheStateMachineStack extends cdk.Stack {
 
     // Step Function definition
 
-    // defines an AWS Lambda resource
-    const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
-      handler: 'stateMachineLambda.handler'                // file is "lambda", function is "handler"
-    });
-
     const orderPizzaLambda = new lambda.Function(this, 'orderPizzaLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
@@ -43,10 +36,22 @@ export class TheStateMachineStack extends cdk.Stack {
         .when(sfn.Condition.stringEquals('$.type', 'Pineapple'), jobFailed)
         .otherwise(cookPizza));
 
-    new sfn.StateMachine(this, 'StateMachine', {
+    let stateMachine = new sfn.StateMachine(this, 'StateMachine', {
       definition,
       timeout: cdk.Duration.minutes(5)
     });
+
+    // defines an AWS Lambda resource
+    const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
+      code: lambda.Code.asset('lambdas'),  // code loaded from the "lambda" directory
+      handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
+      environment: {
+        statemachine_arn: stateMachine.stateMachineArn
+      }
+    });
+
+    stateMachine.grantStartExecution(stateMachineLambda);
 
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'Endpoint', {
