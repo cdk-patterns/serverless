@@ -2,6 +2,7 @@
 
 This is an example CDK stack to deploy The State Machine stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#statemachine
 
+You would use this pattern if you can do your processing asynchronously and you need to have different flows in your logic.
 
 ![Architecture](img/the-state-machine-arch.png)
 
