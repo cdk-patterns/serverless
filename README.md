@@ -75,5 +75,16 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
 
+### Sebastian Müller ([@sbstjn](https://twitter.com/sbstjn))
+
+#### [React SPA with server-side rendering on AWS Lambda](https://github.com/sbstjn/cra-serverless/blob/master/README.md)
+
+Found via this [tweet](https://twitter.com/sbstjn/status/1225811582061621250?s=20)
+
+* [Tutorial](https://sbstjn.com/serverless-create-react-app-server-side-rendering-ssr-lamda.html)
+* [GitHub Repo](https://github.com/sbstjn/cra-serverless/blob/master/README.md)
+
+![Architecture](/img/serverless-ssr-react-lambda.png)
+
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
