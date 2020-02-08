@@ -13,4 +13,5 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 ## Available Versions
 
  * [TypeScript](typescript/README.md)
+ * [Python](python/README.md)
 
