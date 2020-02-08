@@ -4,10 +4,10 @@ This is an example CDK stack to deploy The State Machine stack described by Jere
 
 You would use this pattern if you can do your processing asynchronously and you need to have different flows in your logic.
 
-![Architecture](img/the-state-machine-arch.png)
+![Architecture](../img/the-state-machine-arch.png)
 
 ### Stepfunction Logic
-![Architecture](img/statemachine.png)
+![Architecture](../img/statemachine.png)
 
 
 ### Testing It Out
