@@ -7,27 +7,28 @@ from aws_cdk import (
 
 
 class TheSimpleWebserviceStack(core.Stack):
-
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         # DynamoDB Table
         table = dynamodb.Table(self, "Hits",
-            partition_key=dynamodb.Attribute(name="path", type=dynamodb.AttributeType.STRING)
-        )
+                               partition_key=dynamodb.Attribute(name="path", type=dynamodb.AttributeType.STRING)
+                               )
 
         # defines an AWS  Lambda resource
-        fn = _lambda.Function(self, "DynamoLambdaHandler",
-            runtime=_lambda.Runtime.NODEJS_12_X,
-            handler="lambda.handler",
-            code=_lambda.Code.from_asset("lambda"),
-            environment={
-                'HITS_TABLE_NAME': table.table_name
-            }
-        )
+        dynamoLambda = _lambda.Function(self, "DynamoLambdaHandler",
+                                        runtime=_lambda.Runtime.NODEJS_12_X,
+                                        handler="lambda.handler",
+                                        code=_lambda.Code.from_asset("lambda"),
+                                        environment={
+                                            'HITS_TABLE_NAME': table.table_name
+                                        }
+                                        )
 
-        table.grant_read_write_data(fn)
+        # grant the lambda role read/write permissions to our table'
+        table.grant_read_write_data(dynamoLambda)
 
+        # defines an API Gateway REST API resource backed by our "dynamoLambda" function.
         apigw.LambdaRestApi(self, 'Endpoint',
-            handler=fn
-        )
+                            handler=dynamoLambda
+                            )
