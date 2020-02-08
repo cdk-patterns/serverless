@@ -1,0 +1,638 @@
+Metadata-Version: 2.1
+Name: aws-cdk.aws-apigateway
+Version: 1.23.0
+Summary: The CDK Construct Library for AWS::ApiGateway
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Typing :: Typed
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: jsii (~=0.21.2)
+Requires-Dist: publication (>=0.0.3)
+Requires-Dist: aws-cdk.aws-certificatemanager (==1.23.0)
+Requires-Dist: aws-cdk.aws-elasticloadbalancingv2 (==1.23.0)
+Requires-Dist: aws-cdk.aws-iam (==1.23.0)
+Requires-Dist: aws-cdk.aws-lambda (==1.23.0)
+Requires-Dist: aws-cdk.core (==1.23.0)
+
+## Amazon API Gateway Construct Library
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![Stability: Stable](https://img.shields.io/badge/stability-Stable-success.svg?style=for-the-badge)
+
+---
+<!--END STABILITY BANNER-->
+
+Amazon API Gateway is a fully managed service that makes it easy for developers
+to publish, maintain, monitor, and secure APIs at any scale. Create an API to
+access data, business logic, or functionality from your back-end services, such
+as applications running on Amazon Elastic Compute Cloud (Amazon EC2), code
+running on AWS Lambda, or any web application.
+
+### Defining APIs
+
+APIs are defined as a hierarchy of resources and methods. `addResource` and
+`addMethod` can be used to build this hierarchy. The root resource is
+`api.root`.
+
+For example, the following code defines an API that includes the following HTTP
+endpoints: `ANY /, GET /books`, `POST /books`, `GET /books/{book_id}`, `DELETE /books/{book_id}`.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+api = apigateway.RestApi(self, "books-api")
+
+api.root.add_method("ANY")
+
+books = api.root.add_resource("books")
+books.add_method("GET")
+books.add_method("POST")
+
+book = books.add_resource("{book_id}")
+book.add_method("GET")
+book.add_method("DELETE")
+```
+
+### AWS Lambda-backed APIs
+
+A very common practice is to use Amazon API Gateway with AWS Lambda as the
+backend integration. The `LambdaRestApi` construct makes it easy:
+
+The following code defines a REST API that routes all requests to the
+specified AWS Lambda function:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+backend = lambda.Function(...)
+apigateway.LambdaRestApi(self, "myapi",
+    handler=backend
+)
+```
+
+You can also supply `proxy: false`, in which case you will have to explicitly
+define the API model:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+backend = lambda.Function(...)
+api = apigateway.LambdaRestApi(self, "myapi",
+    handler=backend,
+    proxy=False
+)
+
+items = api.root.add_resource("items")
+items.add_method("GET")# GET /items
+items.add_method("POST")# POST /items
+
+item = items.add_resource("{item}")
+item.add_method("GET")# GET /items/{item}
+
+# the default integration for methods is "handler", but one can
+# customize this behavior per method or even a sub path.
+item.add_method("DELETE", apigateway.HttpIntegration("http://amazon.com"))
+```
+
+### Integration Targets
+
+Methods are associated with backend integrations, which are invoked when this
+method is called. API Gateway supports the following integrations:
+
+* `MockIntegration` - can be used to test APIs. This is the default
+  integration if one is not specified.
+* `LambdaIntegration` - can be used to invoke an AWS Lambda function.
+* `AwsIntegration` - can be used to invoke arbitrary AWS service APIs.
+* `HttpIntegration` - can be used to invoke HTTP endpoints.
+
+The following example shows how to integrate the `GET /book/{book_id}` method to
+an AWS Lambda function:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+get_book_handler = lambda.Function(...)
+get_book_integration = apigateway.LambdaIntegration(get_book_handler)
+book.add_method("GET", get_book_integration)
+```
+
+Integration options can be optionally be specified:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+get_book_integration = apigateway.LambdaIntegration(get_book_handler,
+    content_handling=apigateway.ContentHandling.CONVERT_TO_TEXT, # convert to base64
+    credentials_passthrough=True
+)
+```
+
+Method options can optionally be specified when adding methods:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+book.add_method("GET", get_book_integration,
+    authorization_type=apigateway.AuthorizationType.IAM,
+    api_key_required=True
+)
+```
+
+The following example shows how to use an API Key with a usage plan:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+hello = lambda.Function(self, "hello",
+    runtime=lambda.Runtime.NODEJS_10_X,
+    handler="hello.handler",
+    code=lambda.Code.from_asset("lambda")
+)
+
+api = apigateway.RestApi(self, "hello-api")
+integration = apigateway.LambdaIntegration(hello)
+
+v1 = api.root.add_resource("v1")
+echo = v1.add_resource("echo")
+echo_method = echo.add_method("GET", integration, api_key_required=True)
+key = api.add_api_key("ApiKey")
+
+plan = api.add_usage_plan("UsagePlan",
+    name="Easy",
+    api_key=key
+)
+
+plan.add_api_stage(
+    stage=api.deployment_stage,
+    throttle=[{
+        "method": echo_method,
+        "throttle": {
+            "rate_limit": 10,
+            "burst_limit": 2
+        }
+    }
+    ]
+)
+```
+
+### Working with models
+
+When you work with Lambda integrations that are not Proxy integrations, you
+have to define your models and mappings for the request, response, and integration.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+hello = lambda.Function(self, "hello",
+    runtime=lambda.Runtime.NODEJS_10_X,
+    handler="hello.handler",
+    code=lambda.Code.from_asset("lambda")
+)
+
+api = apigateway.RestApi(self, "hello-api")
+resource = api.root.add_resource("v1")
+```
+
+You can define more parameters on the integration to tune the behavior of API Gateway
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+integration = LambdaIntegration(hello,
+    proxy=False,
+    request_parameters={
+        # You can define mapping parameters from your method to your integration
+        # - Destination parameters (the key) are the integration parameters (used in mappings)
+        # - Source parameters (the value) are the source request parameters or expressions
+        # @see: https://docs.aws.amazon.com/apigateway/latest/developerguide/request-response-data-mappings.html
+        "integration.request.querystring.who": "method.request.querystring.who"
+    },
+    allow_test_invoke=True,
+    request_templates={
+        # You can define a mapping that will build a payload for your integration, based
+        #  on the integration parameters that you have specified
+        # Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+        "application/json": JSON.stringify(action="sayHello", poll_id="$util.escapeJavaScript($input.params('who'))")
+    },
+    # This parameter defines the behavior of the engine is no suitable response template is found
+    passthrough_behavior=PassthroughBehavior.NEVER,
+    integration_responses=[{
+        # Successful response from the Lambda function, no filter defined
+        #  - the selectionPattern filter only tests the error message
+        # We will set the response status code to 200
+        "status_code": "200",
+        "response_templates": {
+            # This template takes the "message" result from the Lambda function, adn embeds it in a JSON response
+            # Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+            "application/json": JSON.stringify(state="ok", greeting="$util.escapeJavaScript($input.body)")
+        },
+        "response_parameters": {
+            # We can map response parameters
+            # - Destination parameters (the key) are the response parameters (used in mappings)
+            # - Source parameters (the value) are the integration response parameters or expressions
+            "method.response.header._content-_type": "'application/json'",
+            "method.response.header._access-_control-_allow-_origin": "'*'",
+            "method.response.header._access-_control-_allow-_credentials": "'true'"
+        }
+    }, {
+        # For errors, we check if the error message is not empty, get the error data
+        "selection_pattern": "(\n|.)+",
+        # We will set the response status code to 200
+        "status_code": "400",
+        "response_templates": {
+            "application/json": JSON.stringify(state="error", message="$util.escapeJavaScript($input.path('$.errorMessage'))")
+        },
+        "response_parameters": {
+            "method.response.header._content-_type": "'application/json'",
+            "method.response.header._access-_control-_allow-_origin": "'*'",
+            "method.response.header._access-_control-_allow-_credentials": "'true'"
+        }
+    }
+    ]
+)
+```
+
+You can define models for your responses (and requests)
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+# We define the JSON Schema for the transformed valid response
+response_model = api.add_model("ResponseModel",
+    content_type="application/json",
+    model_name="ResponseModel",
+    schema={"$schema": "http://json-schema.org/draft-04/schema#", "title": "pollResponse", "type": "object", "properties": {"state": {"type": "string"}, "greeting": {"type": "string"}}}
+)
+
+# We define the JSON Schema for the transformed error response
+error_response_model = api.add_model("ErrorResponseModel",
+    content_type="application/json",
+    model_name="ErrorResponseModel",
+    schema={"$schema": "http://json-schema.org/draft-04/schema#", "title": "errorResponse", "type": "object", "properties": {"state": {"type": "string"}, "message": {"type": "string"}}}
+)
+```
+
+And reference all on your method definition.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+# If you want to define parameter mappings for the request, you need a validator
+validator = api.add_request_validator("DefaultValidator",
+    validate_request_body=False,
+    validate_request_parameters=True
+)
+resource.add_method("GET", integration,
+    # We can mark the parameters as required
+    request_parameters={
+        "method.request.querystring.who": True
+    },
+    # We need to set the validator for ensuring they are passed
+    request_validator=validator,
+    method_responses=[{
+        # Successful response from the integration
+        "status_code": "200",
+        # Define what parameters are allowed or not
+        "response_parameters": {
+            "method.response.header._content-_type": True,
+            "method.response.header._access-_control-_allow-_origin": True,
+            "method.response.header._access-_control-_allow-_credentials": True
+        },
+        # Validate the schema on the response
+        "response_models": {
+            "application/json": response_model
+        }
+    }, {
+        # Same thing for the error responses
+        "status_code": "400",
+        "response_parameters": {
+            "method.response.header._content-_type": True,
+            "method.response.header._access-_control-_allow-_origin": True,
+            "method.response.header._access-_control-_allow-_credentials": True
+        },
+        "response_models": {
+            "application/json": error_response_model
+        }
+    }
+    ]
+)
+```
+
+#### Default Integration and Method Options
+
+The `defaultIntegration` and `defaultMethodOptions` properties can be used to
+configure a default integration at any resource level. These options will be
+used when defining method under this resource (recursively) with undefined
+integration or options.
+
+> If not defined, the default integration is `MockIntegration`. See reference
+> documentation for default method options.
+
+The following example defines the `booksBackend` integration as a default
+integration. This means that all API methods that do not explicitly define an
+integration will be routed to this AWS Lambda function.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+books_backend = apigateway.LambdaIntegration(...)
+api = apigateway.RestApi(self, "books",
+    default_integration=books_backend
+)
+
+books = api.root.add_resource("books")
+books.add_method("GET")# integrated with `booksBackend`
+books.add_method("POST")# integrated with `booksBackend`
+
+book = books.add_resource("{book_id}")
+book.add_method("GET")
+```
+
+### Proxy Routes
+
+The `addProxy` method can be used to install a greedy `{proxy+}` resource
+on a path. By default, this also installs an `"ANY"` method:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+proxy = resource.add_proxy(
+    default_integration=LambdaIntegration(handler),
+
+    # "false" will require explicitly adding methods on the `proxy` resource
+    any_method=True
+)
+```
+
+### Authorizers
+
+API Gateway [supports several different authorization types](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html)
+that can be used for controlling access to your REST APIs.
+
+#### IAM-based authorizer
+
+The following CDK code provides 'excecute-api' permission to an IAM user, via IAM policies, for the 'GET' method on the `books` resource:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+get_books = books.add_method("GET", apigateway.HttpIntegration("http://amazon.com"),
+    authorization_type=apigateway.AuthorizationType.IAM
+)
+
+iam_user.attach_inline_policy(iam.Policy(self, "AllowBooks",
+    statements=[
+        iam.PolicyStatement(
+            actions=["execute-api:Invoke"],
+            effect=iam.Effect.Allow,
+            resources=[get_books.method_arn()]
+        )
+    ]
+))
+```
+
+#### Lambda-based token authorizer
+
+API Gateway also allows [lambda functions to be used as authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html).
+
+This module provides support for token-based Lambda authorizers. When a client makes a request to an API's methods configured with such
+an authorizer, API Gateway calls the Lambda authorizer, which takes the caller's identity as input and returns an IAM policy as output.
+A token-based Lambda authorizer (also called a token authorizer) receives the caller's identity in a bearer token, such as
+a JSON Web Token (JWT) or an OAuth token.
+
+API Gateway interacts with the authorizer Lambda function handler by passing input and expecting the output in a specific format.
+The event object that the handler is called with contains the `authorizationToken` and the `methodArn` from the request to the
+API Gateway endpoint. The handler is expected to return the `principalId` (i.e. the client identifier) and a `policyDocument` stating
+what the client is authorizer to perform.
+See https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html for a detailed specification on
+inputs and outputs of the lambda handler.
+
+The following code attaches a token-based Lambda authorizer to the 'GET' Method of the Book resource:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+auth_fn = lambda.Function(self, "booksAuthorizerLambda")
+
+auth = apigateway.TokenAuthorizer(self, "booksAuthorizer",
+    function=auth_fn
+)
+
+books.add_method("GET", apigateway.HttpIntegration("http://amazon.com"),
+    authorizer=auth
+)
+```
+
+By default, the `TokenAuthorizer` looks for the authorization token in the request header with the key 'Authorization'. This can,
+however, be modified by changing the `identitySource` property.
+
+Authorizers can also be passed via the `defaultMethodOptions` property within the `RestApi` construct or the `Method` construct. Unless
+explicitly overridden, the specified defaults will be applied across all `Method`s across the `RestApi` or across all `Resource`s,
+depending on where the defaults were specified.
+
+### Deployments
+
+By default, the `RestApi` construct will automatically create an API Gateway
+[Deployment](https://docs.aws.amazon.com/apigateway/api-reference/resource/deployment/) and a "prod" [Stage](https://docs.aws.amazon.com/apigateway/api-reference/resource/stage/) which represent the API configuration you
+defined in your CDK app. This means that when you deploy your app, your API will
+be have open access from the internet via the stage URL.
+
+The URL of your API can be obtained from the attribute `restApi.url`, and is
+also exported as an `Output` from your stack, so it's printed when you `cdk deploy` your app:
+
+```
+$ cdk deploy
+...
+books.booksapiEndpointE230E8D5 = https://6lyktd4lpk.execute-api.us-east-1.amazonaws.com/prod/
+```
+
+To disable this behavior, you can set `{ deploy: false }` when creating your
+API. This means that the API will not be deployed and a stage will not be
+created for it. You will need to manually define a `apigateway.Deployment` and
+`apigateway.Stage` resources.
+
+Use the `deployOptions` property to customize the deployment options of your
+API.
+
+The following example will configure API Gateway to emit logs and data traces to
+AWS CloudWatch for all API calls:
+
+> By default, an IAM role will be created and associated with API Gateway to
+> allow it to write logs and metrics to AWS CloudWatch unless `cloudWatchRole` is
+> set to `false`.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+api = apigateway.RestApi(self, "books",
+    deploy_options={
+        "logging_level": apigateway.MethodLoggingLevel.INFO,
+        "data_trace_enabled": True
+    }
+)
+```
+
+#### Deeper dive: invalidation of deployments
+
+API Gateway deployments are an immutable snapshot of the API. This means that we
+want to automatically create a new deployment resource every time the API model
+defined in our CDK app changes.
+
+In order to achieve that, the AWS CloudFormation logical ID of the
+`AWS::ApiGateway::Deployment` resource is dynamically calculated by hashing the
+API configuration (resources, methods). This means that when the configuration
+changes (i.e. a resource or method are added, configuration is changed), a new
+logical ID will be assigned to the deployment resource. This will cause
+CloudFormation to create a new deployment resource.
+
+By default, old deployments are *deleted*. You can set `retainDeployments: true`
+to allow users revert the stage to an old deployment manually.
+
+### Custom Domains
+
+To associate an API with a custom domain, use the `domainName` configuration when
+you define your API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+api = apigw.RestApi(self, "MyDomain",
+    domain_name={
+        "domain_name": "example.com",
+        "certificate": acm_certificate_for_example_com
+    }
+)
+```
+
+This will define a `DomainName` resource for you, along with a `BasePathMapping`
+from the root of the domain to the deployment stage of the API. This is a common
+set up.
+
+To route domain traffic to an API Gateway API, use Amazon Route 53 to create an
+alias record. An alias record is a Route 53 extension to DNS. It's similar to a
+CNAME record, but you can create an alias record both for the root domain, such
+as `example.com`, and for subdomains, such as `www.example.com`. (You can create
+CNAME records only for subdomains.)
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+route53.ARecord(self, "CustomDomainAliasRecord",
+    zone=hosted_zone_for_example_com,
+    target=route53.RecordTarget.from_alias(route53_targets.ApiGateway(api))
+)
+```
+
+You can also define a `DomainName` resource directly in order to customize the default behavior:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+apigw.DomainName(self, "custom-domain",
+    domain_name="example.com",
+    certificate=acm_certificate_for_example_com,
+    endpoint_type=apigw.EndpointType.EDGE
+)
+```
+
+Once you have a domain, you can map base paths of the domain to APIs.
+The following example will map the URL https://example.com/go-to-api1
+to the `api1` API and https://example.com/boom to the `api2` API.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+domain.add_base_path_mapping(api1, base_path="go-to-api1")
+domain.add_base_path_mapping(api2, base_path="boom")
+```
+
+NOTE: currently, the mapping will always be assigned to the APIs
+`deploymentStage`, which will automatically assigned to the latest API
+deployment. Raise a GitHub issue if you require more granular control over
+mapping base paths to stages.
+
+If you don't specify `basePath`, all URLs under this domain will be mapped
+to the API, and you won't be able to map another API to the same domain:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+domain.add_base_path_mapping(api)
+```
+
+This can also be achieved through the `mapping` configuration when defining the
+domain as demonstrated above.
+
+If you wish to setup this domain with an Amazon Route53 alias, use the `route53_targets.ApiGatewayDomain`:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+route53.ARecord(self, "CustomDomainAliasRecord",
+    zone=hosted_zone_for_example_com,
+    target=route53.RecordTarget.from_alias(route53_targets.ApiGatewayDomain(domain_name))
+)
+```
+
+### Cross Origin Resource Sharing (CORS)
+
+[Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) is a mechanism
+that uses additional HTTP headers to tell browsers to give a web application
+running at one origin, access to selected resources from a different origin. A
+web application executes a cross-origin HTTP request when it requests a resource
+that has a different origin (domain, protocol, or port) from its own.
+
+You can add the CORS [preflight](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Preflighted_requests) OPTIONS HTTP method to any API resource via the `defaultCorsPreflightOptions` option or by calling the `addCorsPreflight` on a specific resource.
+
+The following example will enable CORS for all methods and all origins on all resources of the API:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+apigateway.RestApi(self, "api",
+    default_cors_preflight_options={
+        "allow_origins": apigateway.Cors.ALL_ORIGINS,
+        "allow_methods": apigateway.Cors.ALL_METHODS
+    }
+)
+```
+
+The following example will add an OPTIONS method to the `myResource` API resource, which
+only allows GET and PUT HTTP requests from the origin https://amazon.com.
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+my_resource.add_cors_preflight(
+    allow_origins=["https://amazon.com"],
+    allow_methods=["GET", "PUT"]
+)
+```
+
+See the
+[`CorsOptions`](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-apigateway.CorsOptions.html)
+API reference for a detailed list of supported configuration options.
+
+You can specify defaults this at the resource level, in which case they will be applied to the entire resource sub-tree:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+subtree = resource.add_resource("subtree",
+    default_cors_preflight_options={
+        "allow_origins": ["https://amazon.com"]
+    }
+)
+```
+
+This means that all resources under `subtree` (inclusive) will have a preflight
+OPTIONS added to them.
+
+See [#906](https://github.com/aws/aws-cdk/issues/906) for a list of CORS
+features which are not yet supported.
+
+## APIGateway v2
+
+APIGateway v2 APIs are now moved to its own package named `aws-apigatewayv2`. For backwards compatibility, existing
+APIGateway v2 "CFN resources" (such as `CfnApi`) that were previously exported as part of this package, are still
+exported from here and have been marked deprecated. However, updates to these CloudFormation resources, such as new
+properties and new resource types will not be available.
+
+Move to using `aws-apigatewayv2` to get the latest APIs and updates.
+
+---
+
+
+This module is part of the [AWS Cloud Development Kit](https://github.com/aws/aws-cdk) project.
+
+

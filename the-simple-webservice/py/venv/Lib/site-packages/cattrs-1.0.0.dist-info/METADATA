@@ -1,0 +1,312 @@
+Metadata-Version: 2.1
+Name: cattrs
+Version: 1.0.0
+Summary: Composable complex class support for attrs.
+Home-page: https://github.com/Tinche/cattrs
+Author: Tin Tvrtković
+Author-email: tinchester@gmail.com
+License: MIT license
+Keywords: cattrs
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Dist: attrs (>=17.3)
+Requires-Dist: functools32 (>=3.2.3) ; python_version < "3.0"
+Requires-Dist: singledispatch (>=3.4.0.3) ; python_version < "3.0"
+Requires-Dist: enum34 (>=1.1.6) ; python_version < "3.0"
+Requires-Dist: typing (>=3.5.3) ; python_version < "3.0"
+Provides-Extra: dev
+Requires-Dist: bumpversion ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: watchdog ; extra == 'dev'
+Requires-Dist: flake8 ; extra == 'dev'
+Requires-Dist: tox ; extra == 'dev'
+Requires-Dist: coverage ; extra == 'dev'
+Requires-Dist: Sphinx ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: hypothesis ; extra == 'dev'
+Requires-Dist: pendulum ; extra == 'dev'
+
+======
+cattrs
+======
+
+
+.. image:: https://img.shields.io/pypi/v/cattrs.svg
+        :target: https://pypi.python.org/pypi/cattrs
+
+.. image:: https://img.shields.io/travis/Tinche/cattrs.svg
+        :target: https://travis-ci.org/Tinche/cattrs
+
+.. image:: https://readthedocs.org/projects/cattrs/badge/?version=latest
+        :target: https://cattrs.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/pyversions/cattrs.svg
+        :target: https://github.com/Tinche/cattrs
+        :alt: Supported Python versions
+
+.. image:: https://codecov.io/gh/Tinche/cattrs/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/Tinche/cattrs
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/ambv/black
+
+
+----
+
+``cattrs`` is an open source Python library for structuring and unstructuring
+data. ``cattrs`` works best with ``attrs`` classes and the usual Python
+collections, but other kinds of classes are supported by manually registering
+converters.
+
+Python has a rich set of powerful, easy to use, built-in data types like
+dictionaries, lists and tuples. These data types are also the lingua franca
+of most data serialization libraries, for formats like json, msgpack, yaml or
+toml.
+
+Data types like this, and mappings like ``dict`` s in particular, represent
+unstructured data. Your data is, in all likelihood, structured: not all
+combinations of field names are values are valid inputs to your programs. In
+Python, structured data is better represented with classes and enumerations.
+``attrs`` is an excellent library for declaratively describing the structure of
+your data, and validating it.
+
+When you're handed unstructured data (by your network, file system, database...),
+``cattrs`` helps to convert this data into structured data. When you have to
+convert your structured data into data types other libraries can handle,
+``cattrs`` turns your classes and enumerations into dictionaries, integers and
+strings.
+
+Here's a simple taste. The list containing a float, an int and a string
+gets converted into a tuple of three ints.
+
+    >>> import cattr
+    >>> from typing import Tuple
+    >>>
+    >>> cattr.structure([1.0, 2, "3"], Tuple[int, int, int])
+    (1, 2, 3)
+
+``cattrs`` works well with ``attrs`` classes out of the box.
+
+    >>> import attr, cattr
+    >>>
+    >>> @attr.s(slots=True, frozen=True)  # It works with normal classes too.
+    ... class C:
+    ...     a = attr.ib()
+    ...     b = attr.ib()
+    ...
+    >>> instance = C(1, 'a')
+    >>> cattr.unstructure(instance)
+    {'a': 1, 'b': 'a'}
+    >>> cattr.structure({'a': 1, 'b': 'a'}, C)
+    C(a=1, b='a')
+
+Here's a much more complex example, involving ``attrs`` classes with type
+metadata.
+
+    >>> from enum import unique, Enum
+    >>> from typing import List, Optional, Sequence, Union
+    >>> from cattr import structure, unstructure
+    >>> import attr
+    >>>
+    >>> @unique
+    ... class CatBreed(Enum):
+    ...     SIAMESE = "siamese"
+    ...     MAINE_COON = "maine_coon"
+    ...     SACRED_BIRMAN = "birman"
+    ...
+    >>> @attr.s
+    ... class Cat:
+    ...     breed: CatBreed = attr.ib()
+    ...     names: Sequence[str] = attr.ib()
+    ...
+    >>> @attr.s
+    ... class DogMicrochip:
+    ...     chip_id = attr.ib()
+    ...     time_chipped: float = attr.ib()
+    ...
+    >>> @attr.s
+    ... class Dog:
+    ...     cuteness: int = attr.ib()
+    ...     chip: Optional[DogMicrochip] = attr.ib()
+    ...
+    >>> p = unstructure([Dog(cuteness=1, chip=DogMicrochip(chip_id=1, time_chipped=10.0)),
+    ...                  Cat(breed=CatBreed.MAINE_COON, names=('Fluffly', 'Fluffer'))])
+    ...
+    >>> print(p)
+    [{'cuteness': 1, 'chip': {'chip_id': 1, 'time_chipped': 10.0}}, {'breed': 'maine_coon', 'names': ('Fluffly', 'Fluffer')}]
+    >>> print(structure(p, List[Union[Dog, Cat]]))
+    [Dog(cuteness=1, chip=DogMicrochip(chip_id=1, time_chipped=10.0)), Cat(breed=<CatBreed.MAINE_COON: 'maine_coon'>, names=['Fluffly', 'Fluffer'])]
+
+Consider unstructured data a low-level representation that needs to be converted
+to structured data to be handled, and use ``structure``. When you're done,
+``unstructure`` the data to its unstructured form and pass it along to another
+library or module. Use `attrs type metadata <http://attrs.readthedocs.io/en/stable/examples.html#types>`_
+to add type metadata to attributes, so ``cattrs`` will know how to structure and
+destructure them.
+
+* Free software: MIT license
+* Documentation: https://cattrs.readthedocs.io.
+* Python versions supported: 2.7, 3.5 and up.
+
+
+Features
+--------
+
+* Converts structured data into unstructured data, recursively:
+
+  * ``attrs`` classes are converted into dictionaries in a way similar to ``attr.asdict``, or into tuples in a way similar to ``attr.astuple``.
+  * Enumeration instances are converted to their values.
+  * Other types are let through without conversion. This includes types such as
+    integers, dictionaries, lists and instances of non-``attrs`` classes.
+  * Custom converters for any type can be registered using ``register_unstructure_hook``.
+
+* Converts unstructured data into structured data, recursively, according to
+  your specification given as a type. The following types are supported:
+
+  * ``typing.Optional[T]``.
+  * ``typing.List[T]``, ``typing.MutableSequence[T]``, ``typing.Sequence[T]`` (converts to a list).
+  * ``typing.Tuple`` (both variants, ``Tuple[T, ...]`` and ``Tuple[X, Y, Z]``).
+  * ``typing.MutableSet[T]``, ``typing.Set[T]`` (converts to a set).
+  * ``typing.FrozenSet[T]`` (converts to a frozenset).
+  * ``typing.Dict[K, V]``, ``typing.MutableMapping[K, V]``, ``typing.Mapping[K, V]`` (converts to a dict).
+  * ``attrs`` classes with simple attributes and the usual ``__init__``.
+
+    * Simple attributes are attributes that can be assigned unstructured data,
+      like numbers, strings, and collections of unstructured data.
+
+  * All `attrs` classes with the usual ``__init__``, if their complex attributes
+    have type metadata.
+  * ``typing.Union`` s of supported ``attrs`` classes, given that all of the classes
+    have a unique field.
+  * ``typing.Union`` s of anything, given that you provide a disambiguation
+    function for it.
+  * Custom converters for any type can be registered using ``register_structure_hook``.
+
+Credits
+-------
+
+Major credits to Hynek Schlawack for creating attrs_ and its predecessor,
+characteristic_.
+
+``cattrs`` is tested with Hypothesis_, by David R. MacIver.
+
+``cattrs`` is benchmarked using perf_, by Victor Stinner.
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _attrs: https://github.com/hynek/attrs
+.. _characteristic: https://github.com/hynek/characteristic
+.. _Hypothesis: http://hypothesis.readthedocs.io/en/latest/
+.. _perf: https://github.com/haypo/perf
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
+
+
+=======
+History
+=======
+
+1.0.0 (2019-12-27)
+------------------
+* ``attrs`` classes with private attributes can now be structured by default.
+* Structuring from dictionaries is now more lenient: extra keys are ignored.
+* ``cattrs`` has improved type annotations for use with Mypy.
+* Unstructuring sets and frozensets now works properly.
+
+0.9.1 (2019-10-26)
+------------------
+* Python 3.8 support.
+
+0.9.0 (2018-07-22)
+------------------
+* Python 3.7 support.
+
+0.8.1 (2018-06-19)
+------------------
+* The disambiguation function generator now supports unions of ``attrs`` classes and NoneType.
+
+0.8.0 (2018-04-14)
+------------------
+* Distribution fix.
+
+0.7.0 (2018-04-12)
+------------------
+* Removed the undocumented ``Converter.unstruct_strat`` property setter.
+* | Removed the ability to set the ``Converter.structure_attrs`` instance field.
+  | As an alternative, create a new ``Converter``::
+  |
+  | .. code-block:: python
+  |
+  |  >>> converter = cattr.Converter(unstruct_strat=cattr.UnstructureStrategy.AS_TUPLE)
+* Some micro-optimizations were applied; a ``structure(unstructure(obj))`` roundtrip
+  is now up to 2 times faster.
+
+0.6.0 (2017-12-25)
+------------------
+* Packaging fixes.
+  (`#17 <https://github.com/Tinche/cattrs/pull/17>`_)
+
+0.5.0 (2017-12-11)
+------------------
+* structure/unstructure now supports using functions as well as classes for deciding the appropriate function.
+* added `Converter.register_structure_hook_func`, to register a function instead of a class for determining handler func.
+* added `Converter.register_unstructure_hook_func`, to register a function instead of a class for determining handler func.
+* vendored typing is no longer needed, nor provided.
+* Attributes with default values can now be structured if they are missing in the input.
+  (`#15 <https://github.com/Tinche/cattrs/pull/15>`_)
+* | `Optional` attributes can no longer be structured if they are missing in the input.
+  | In other words, this no longer works:
+  |
+  | .. code-block:: python
+  |
+  |    @attr.s
+  |    class A:
+  |        a: Optional[int] = attr.ib()
+  |
+  |    >>> cattr.structure({}, A)
+  |
+* ``cattr.typed`` removed since the functionality is now present in ``attrs`` itself.
+  Replace instances of ``cattr.typed(type)`` with ``attr.ib(type=type)``.
+
+0.4.0 (2017-07-17)
+------------------
+* `Converter.loads` is now `Converter.structure`, and `Converter.dumps` is now `Converter.unstructure`.
+* Python 2.7 is supported.
+* Moved ``cattr.typing`` to ``cattr.vendor.typing`` to support different vendored versions of typing.py for Python 2 and Python 3.
+* Type metadata can be added to ``attrs`` classes using ``cattr.typed``.
+
+
+0.3.0 (2017-03-18)
+------------------
+* Python 3.4 is no longer supported.
+* Introduced ``cattr.typing`` for use with Python versions 3.5.2 and 3.6.0.
+* Minor changes to work with newer versions of ``typing``.
+
+  * Bare Optionals are not supported any more (use ``Optional[Any]``).
+
+* Attempting to load unrecognized classes will result in a ValueError, and a helpful message to register a loads hook.
+* Loading ``attrs`` classes is now documented.
+* The global converter is now documented.
+* ``cattr.loads_attrs_fromtuple`` and ``cattr.loads_attrs_fromdict`` are now exposed.
+
+
+0.2.0 (2016-10-02)
+------------------
+* Tests and documentation.
+
+0.1.0 (2016-08-13)
+------------------
+* First release on PyPI.
+
+

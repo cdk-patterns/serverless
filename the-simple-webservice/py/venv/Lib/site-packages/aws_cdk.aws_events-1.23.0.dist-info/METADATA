@@ -1,0 +1,180 @@
+Metadata-Version: 2.1
+Name: aws-cdk.aws-events
+Version: 1.23.0
+Summary: AWS CloudWatch Events Construct Library
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Typing :: Typed
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: jsii (~=0.21.2)
+Requires-Dist: publication (>=0.0.3)
+Requires-Dist: aws-cdk.aws-iam (==1.23.0)
+Requires-Dist: aws-cdk.core (==1.23.0)
+
+## Amazon CloudWatch Events Construct Library
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![Stability: Stable](https://img.shields.io/badge/stability-Stable-success.svg?style=for-the-badge)
+
+---
+<!--END STABILITY BANNER-->
+
+Amazon CloudWatch Events delivers a near real-time stream of system events that
+describe changes in AWS resources. For example, an AWS CodePipeline emits the
+[State
+Change](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/EventTypes.html#codepipeline_event_type)
+event when the pipeline changes it's state.
+
+* **Events**: An event indicates a change in your AWS environment. AWS resources
+  can generate events when their state changes. For example, Amazon EC2
+  generates an event when the state of an EC2 instance changes from pending to
+  running, and Amazon EC2 Auto Scaling generates events when it launches or
+  terminates instances. AWS CloudTrail publishes events when you make API calls.
+  You can generate custom application-level events and publish them to
+  CloudWatch Events. You can also set up scheduled events that are generated on
+  a periodic basis. For a list of services that generate events, and sample
+  events from each service, see [CloudWatch Events Event Examples From Each
+  Supported
+  Service](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/EventTypes.html).
+* **Targets**: A target processes events. Targets can include Amazon EC2
+  instances, AWS Lambda functions, Kinesis streams, Amazon ECS tasks, Step
+  Functions state machines, Amazon SNS topics, Amazon SQS queues, and built-in
+  targets. A target receives events in JSON format.
+* **Rules**: A rule matches incoming events and routes them to targets for
+  processing. A single rule can route to multiple targets, all of which are
+  processed in parallel. Rules are not processed in a particular order. This
+  enables different parts of an organization to look for and process the events
+  that are of interest to them. A rule can customize the JSON sent to the
+  target, by passing only certain parts or by overwriting it with a constant.
+* **EventBuses**: An event bus can receive events from your own custom applications
+  or it can receive events from applications and services created by AWS SaaS partners.
+  See [Creating an Event Bus](https://docs.aws.amazon.com/eventbridge/latest/userguide/create-event-bus.html).
+
+## Rule
+
+The `Rule` construct defines a CloudWatch events rule which monitors an
+event based on an [event
+pattern](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatchEventsandEventPatterns.html)
+and invoke **event targets** when the pattern is matched against a triggered
+event. Event targets are objects that implement the `IRuleTarget` interface.
+
+Normally, you will use one of the `source.onXxx(name[, target[, options]]) -> Rule` methods on the event source to define an event rule associated with
+the specific activity. You can targets either via props, or add targets using
+`rule.addTarget`.
+
+For example, to define an rule that triggers a CodeBuild project build when a
+commit is pushed to the "master" branch of a CodeCommit repository:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+on_commit_rule = repo.on_commit("OnCommit",
+    target=targets.CodeBuildProject(project),
+    branches=["master"]
+)
+```
+
+You can add additional targets, with optional [input
+transformer](https://docs.aws.amazon.com/AmazonCloudWatchEvents/latest/APIReference/API_InputTransformer.html)
+using `eventRule.addTarget(target[, input])`. For example, we can add a SNS
+topic target which formats a human-readable message for the commit.
+
+For example, this adds an SNS topic as a target:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+on_commit_rule.add_target(targets.SnsTopic(topic,
+    message=events.RuleTargetInput.from_text(f"A commit was pushed to the repository {codecommit.ReferenceEvent.repositoryName} on branch {codecommit.ReferenceEvent.referenceName}")
+))
+```
+
+## Scheduling
+
+You can configure a Rule to run on a schedule (cron or rate).
+
+The following example runs a task every day at 4am:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+from aws_cdk.aws_events import Rule, Schedule
+from aws_cdk.aws_events_targets import EcsTask
+
+ecs_task_target = EcsTask(cluster=cluster, task_definition=task_definition)
+
+Rule(self, "ScheduleRule",
+    schedule=Schedule.cron(minute="0", hour="4"),
+    targets=[ecs_task_target]
+)
+```
+
+More details in [ScheduledEvents](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html) documentation page.
+
+## Event Targets
+
+The `@aws-cdk/aws-events-targets` module includes classes that implement the `IRuleTarget`
+interface for various AWS services.
+
+The following targets are supported:
+
+* `targets.CodeBuildProject`: Start an AWS CodeBuild build
+* `targets.CodePipeline`: Start an AWS CodePipeline pipeline execution
+* `targets.EcsTask`: Start a task on an Amazon ECS cluster
+* `targets.LambdaFunction`: Invoke an AWS Lambda function
+* `targets.SnsTopic`: Publish into an SNS topic
+* `targets.SqsQueue`: Send a message to an Amazon SQS Queue
+* `targets.SfnStateMachine`: Trigger an AWS Step Functions state machine
+* `targets.AwsApi`: Make an AWS API call
+
+### Cross-account targets
+
+It's possible to have the source of the event and a target in separate AWS accounts:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+from aws_cdk.core import App, Stack
+import aws_cdk.aws_codebuild as codebuild
+import aws_cdk.aws_codecommit as codecommit
+import aws_cdk.aws_events_targets as targets
+
+app = App()
+
+stack1 = Stack(app, "Stack1", env=Environment(account=account1, region="us-east-1"))
+repo = codecommit.Repository(stack1, "Repository")
+
+stack2 = Stack(app, "Stack2", env=Environment(account=account2, region="us-east-1"))
+project = codebuild.Project(stack2, "Project")
+
+repo.on_commit("OnCommit",
+    target=targets.CodeBuildProject(project)
+)
+```
+
+In this situation, the CDK will wire the 2 accounts together:
+
+* It will generate a rule in the source stack with the event bus of the target account as the target
+* It will generate a rule in the target stack, with the provided target
+* It will generate a separate stack that gives the source account permissions to publish events
+  to the event bus of the target account in the given region,
+  and make sure its deployed before the source stack
+
+**Note**: while events can span multiple accounts, they *cannot* span different regions
+(that is a CloudWatch, not CDK, limitation).
+
+For more information, see the
+[AWS documentation on cross-account events](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatchEvents-CrossAccountEventDelivery.html).
+
+
