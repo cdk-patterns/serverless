@@ -18,11 +18,7 @@ After deployment you will have an API Gateway with one endpint (/InsertItem) tha
 ### Example Request
 ![Postman](https://raw.githubusercontent.com/nideveloper/serverless/master/the-dynamo-streamer/img/request.png)
 
-## Useful commands
+## Available Versions
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `npm run deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
+ * [Python](python/)
