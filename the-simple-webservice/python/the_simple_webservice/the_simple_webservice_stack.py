@@ -17,9 +17,9 @@ class TheSimpleWebserviceStack(core.Stack):
 
         # defines an AWS  Lambda resource
         dynamo_lambda = _lambda.Function(self, "DynamoLambdaHandler",
-                                            runtime=_lambda.Runtime.NODEJS_12_X,
-                                            handler="lambda.handler",
-                                            code=_lambda.Code.from_asset("lambda"),
+                                            runtime=_lambda.Runtime.NODEJS_12_X,    # execution environment
+                                            handler="lambda.handler",               # file is "lambda", function is "handler"
+                                            code=_lambda.Code.from_asset("lambda"), # Code loaded from the lambda dir
                                             environment={
                                                 'HITS_TABLE_NAME': table.table_name
                                             }
