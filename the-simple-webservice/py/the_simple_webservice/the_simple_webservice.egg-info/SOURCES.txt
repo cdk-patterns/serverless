@@ -1,7 +1,0 @@
-README.md
-setup.py
-the_simple_webservice/the_simple_webservice.egg-info/PKG-INFO
-the_simple_webservice/the_simple_webservice.egg-info/SOURCES.txt
-the_simple_webservice/the_simple_webservice.egg-info/dependency_links.txt
-the_simple_webservice/the_simple_webservice.egg-info/requires.txt
-the_simple_webservice/the_simple_webservice.egg-info/top_level.txt
