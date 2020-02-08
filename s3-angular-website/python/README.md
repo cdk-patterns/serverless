@@ -11,7 +11,7 @@ Packaged Architecture:
 ## How To Use
 If you have aws configured locally or you are in cloud9 this is as simple as running two commands (assuming your terminal starts at the README.md level):
 - cd website && npm i && npm run build
-- cd ../cdk && npm i && npm run build && npm run deploy 
+- cd ../cdk && follow readme.md instructions
 
 ## Project Structure
 
