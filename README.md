@@ -15,14 +15,25 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 
 ## Pattern Usage
 
+### TypeScript
 All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
 
 * `git clone https://github.com/cdk-patterns/serverless.git`
-* `cd {pattern-name}`
+* `cd {pattern-name}/typescript`
 * `npm i` - install the dependencies
 * `npm run build` - build the project
 * `npm run test` - run the unit tests
 * `npm run deploy` - deploy the pattern into your AWS account&#42;
+
+&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+
+### Python
+
+* `git clone https://github.com/cdk-patterns/serverless.git`
+* `cd {pattern-name}/python`
+* follow instructions in readme for virtualenv setup etc
+* `cdk synth` - generate a cft from the stack to validate your setup
+* `cdk deploy` - deploy the pattern into your AWS account&#42;
 
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
