@@ -17,11 +17,7 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 If you pass in pineapple or hawaiian you should see the step function flow fail when you check it via the console.
 
 
-## Useful commands
+## Available Versions
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `npm run deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
+ * [Python](python/)
