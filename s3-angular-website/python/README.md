@@ -25,15 +25,11 @@ This can be found in the blog folder. This is just the initial site that is crea
 - npm run test
 
 ### CDK S3 Deploy Infrastructure (/cdk)
-This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder. This uses the JSII Construct - https://www.npmjs.com/package/cdk-spa-deploy
+This can be found in the cdk folder, it sets up an S3 bucket as a website deploy and uploads your angular website in the website folder. This uses the JSII Construct - https://pypi.org/project/cdk-spa-deploy/
 
 The inital setup here doesn't use cloudfront but the cdk-spa-deploy module details how easy it is to add it and a custom domain
 
 #### Useful Commands
 
-- npm run build
-- cpm run cdk synth - outputs a cloudformation in the console
-- npm run deploy - after running build on website folder then you deploy to s3
-
-### buildspec.yml
-I included this incase you want to setup a codebuild resource on aws to build/deploy your project automatically
+- cdk synth - outputs a cloudformation template into the console
+- cdk deploy - deploys to your aws account
