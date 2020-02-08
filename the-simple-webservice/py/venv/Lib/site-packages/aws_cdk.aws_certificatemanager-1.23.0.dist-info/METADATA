@@ -1,0 +1,121 @@
+Metadata-Version: 2.1
+Name: aws-cdk.aws-certificatemanager
+Version: 1.23.0
+Summary: The CDK Construct Library for AWS::CertificateManager
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Typing :: Typed
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: jsii (~=0.21.2)
+Requires-Dist: publication (>=0.0.3)
+Requires-Dist: aws-cdk.aws-cloudformation (==1.23.0)
+Requires-Dist: aws-cdk.aws-iam (==1.23.0)
+Requires-Dist: aws-cdk.aws-lambda (==1.23.0)
+Requires-Dist: aws-cdk.aws-route53 (==1.23.0)
+Requires-Dist: aws-cdk.core (==1.23.0)
+
+## Amazon Certificate Manager Construct Library
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![Stability: Stable](https://img.shields.io/badge/stability-Stable-success.svg?style=for-the-badge)
+
+---
+<!--END STABILITY BANNER-->
+
+This package provides Constructs for provisioning and referencing
+certificates which can be used in CloudFront and ELB.
+
+The following requests a certificate for a given domain:
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+cert = certmgr.Certificate(self, "Certificate",
+    domain_name="example.com"
+)
+```
+
+After requesting a certificate, you will need to prove that you own the
+domain in question before the certificate will be granted. The CloudFormation
+deployment will wait until this verification process has been completed.
+
+Because of this wait time, it's better to provision your certificates
+either in a separate stack from your main service, or provision them
+manually and import them into your CDK application.
+
+The CDK also provides a custom resource which can be used for automatic
+validation if the DNS records for the domain are managed through Route53 (see
+below).
+
+### Email validation
+
+Email-validated certificates (the default) are validated by receiving an
+email on one of a number of predefined domains and following the instructions
+in the email.
+
+See [Validate with Email](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-email.html)
+in the Amazon Certificate Manager User Guide.
+
+### DNS validation
+
+DNS-validated certificates are validated by configuring appropriate DNS
+records for your domain.
+
+See [Validate with DNS](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-dns.html)
+in the Amazon Certificate Manager User Guide.
+
+### Automatic DNS-validated certificates using Route53
+
+The `DnsValidatedCertificateRequest` class provides a Custom Resource by which
+you can request a TLS certificate from AWS Certificate Manager that is
+automatically validated using a cryptographically secure DNS record. For this to
+work, there must be a Route 53 public zone that is responsible for serving
+records under the Domain Name of the requested certificate. For example, if you
+request a certificate for `www.example.com`, there must be a Route 53 public
+zone `example.com` that provides authoritative records for the domain.
+
+Example:
+
+```python
+# Example automatically generated. See https://github.com/aws/jsii/issues/826
+hosted_zone = route53.HostedZone.from_lookup(self, "HostedZone",
+    domain_name="example.com",
+    private_zone=False
+)
+
+certificate = certmgr.DnsValidatedCertificate(self, "TestCertificate",
+    domain_name="test.example.com",
+    hosted_zone=hosted_zone
+)
+```
+
+### Importing
+
+If you want to import an existing certificate, you can do so from its ARN:
+
+```python
+# Example automatically generated without compilation. See https://github.com/aws/jsii/issues/826
+arn = "arn:aws:..."
+certificate = Certificate.from_certificate_arn(self, "Certificate", arn)
+```
+
+### Sharing between Stacks
+
+To share the certificate between stacks in the same CDK application, simply
+pass the `Certificate` object between the stacks.
+
+

@@ -1,0 +1,244 @@
+Metadata-Version: 2.1
+Name: publication
+Version: 0.0.3
+Summary: Publication helps you maintain public-api-friendly modules by preventing unintentional access to private implementation details via introspection.
+Home-page: https://github.com/glyph/publication
+License: UNKNOWN
+Author: Glyph
+Author-email: glyph@twistedmatrix.com
+Description-Content-Type: text/x-rst
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 2
+
+What is this?
+=============
+
+Setting expectations around what APIs you can rely on in a Python
+library is very difficult.
+
+Publication makes it easy.
+
+The Problem
+-----------
+
+As `Hyrum's Law <http://www.hyrumslaw.com>`_ somewhat grimly states,
+
+    | With a sufficient number of users of an API,
+    | it does not matter what you promise in the contract:
+    | all observable behaviors of your system
+    | will be depended on by somebody.
+
+In general, Python famously has a somewhat different philosophical view of this
+reality.  We assume each other to be `responsible users
+<https://github.com/realpython/python-guide/pull/524/files>`_ of the libraries
+we consume.  Mucking with implementation details might break every time you
+upgrade, but it's sufficiently useful for testing, debugging, and
+experimentation that retaining that ability is worth paying the cost.
+
+But, critical to this assumption is that everybody *knows* when they're
+breaking into the "private" area of the library's interface.  Here, there's a
+mismatch of expectations:
+
+- *library authors* write documentation, and then think that users sit down and
+  read the documentation, front to back, and learn about what the "public"
+  interface is by doing so.  they then assume that users will know that they've
+  used private implementation details if they ever deviate from these
+  documented features.
+- *library users* ``pip install`` a thing, open up a REPL, import the module,
+  and discover the library by doing ``dir()`` on the module and its contents,
+  assuming that their program is not using any private implementation details
+  as long as they never had to type ``library._something_private()`` while
+  doing so.  If they ever encounter a traceback they may consult the
+  documentation, briefly, until it is resolved.
+
+Publication makes it possible to align the wildly divergent expectations of
+these groups, so that users can still get the benefits of being able to use
+internal details if they want, but they'll know that they're doing so.  It
+makes the runtime namespace of your module look like the public documentation
+of your library.
+
+How does this look in practice?
+-------------------------------
+
+You, a prospective library author, want to write a library that makes it easy to zorf a sprocket.
+Great! You do, and it looks like this:
+
+.. code:: python
+
+   # sprocket_zorfer.py
+   from sprocket import sprocket_with_name
+   from zorf import zorfable_thing
+
+   def zorf_sprocket_internal(sprocket, zorfulations):
+       ...
+   def compute_zorfulations():
+       ...
+
+   def zorf_sprocket_named(sprocket_name, how_much):
+       sprocket = sprocket_with_name(sprocket_name)
+       zorfulations = compute_zorfulations(how_much)
+       return zorf_sprocket_internal(sprocket, zorfulations)
+
+
+   __all__ = [
+       'zorf_sprocket_named'
+   ]
+
+Your intent here, of course, is that you have exposed a module with a
+single function: ``zorf_sprocket_named``, and everything else is an
+implementation detail. You even said so, explicitly, with ``__all__``.
+Your API documentation says the same.
+
+However, reading reference documentation and cleanly respecting
+conventions is not how working programmers really figure out how to use
+stuff. Your users all do stuff like:
+
+-  Load up an interactive ``python`` interpreter and call ``dir()`` on
+   your module
+-  Install Jupyter and tab-complete their way around your module to find
+   what they want
+-  use the auto-import function in PyCharm to grab some private
+   implementation detail
+
+and, before you know it, you have thousands of users of your library
+with code like
+
+.. code:: python
+
+   from sprocket_zorfer import compute_zorfulations, zorf_sprocket_internal, sprocket_with_name
+
+   sprocket = sprocket_with_name(name)
+   zorf_sprocket_internal(sprocket, compute_zorfulations(7) * 2)
+
+Now you can never change *any* of your implementation details! Worse
+yet, ``sprocket_with_name`` isn’t even your own code; that’s something
+you got from a library! But when someone does
+``import sprocket_zorfer; sprocket_zorfer.<tab>`` in an interactive
+shell, none of that information comes through.
+
+Underscore Paranoia
+-------------------
+
+The convention in Python is that we use ``_`` to indicate private names.
+So when we library authors notice this problem starting to happen, a
+common reaction is to start putting ``_`` in front of *everything* –
+class names, function names, module names – and only explicitly export
+those things that should be public by “moving” them via an import and an
+entry in a public module’s ``__all__``.
+
+However, this has a bunch of disadvantages:
+
+-  Most code inspection tooling and IDEs won’t see that the public name
+   is “moved”, so code exploration just makes it seem like *everything*
+   is an implementation detail now, rather than making it seem like
+   nothing is.
+
+-  All your ``__repr__``\ s now have ugly and inaccurate function and
+   class names in them, at least from the perspective of your users; how
+   are they supposed to know ``zorf_sprocket_named`` is actually defined
+   in ``zorf_sprocket._impl_details.funcs._zorf_sprocket_public`` now?
+   How are they supposed to find the good, public name once they’re
+   looking at the goofy internal one?
+
+-  You constantly need to remember to put *all* of your code in these
+   ugly ``_``-prefixed modules, and educate new contributors as to the
+   risks of creating new modules in your package that are not carefully
+   hidden away from public users.
+
+A Better World
+--------------
+
+What if you could write all your code *as if* it were just regular
+public code, and have all your implementation details and imports
+automatically squirreled away in an underscore namespace so that curious
+coders won’t accidentally find every module you ever imported and every
+temporary helper function you ever defined and think they’re part of the
+permanent public face of your library?
+
+Enter ``publication``.
+
+``publication`` uses the existing convention of ``__all__`` and a little
+runtime hackery to hide everything that you have not marked as
+explicitly public, like so:
+
+.. code:: python
+
+   # sprocket_zorfer.py
+
+   from publication import publish
+
+   from sprocket import sprocket_with_name
+   from zorf import zorfable_thing
+
+   def zorf_sprocket_internal(sprocket, zorfulations):
+       ...
+   def compute_zorfulations():
+       ...
+
+   def zorf_sprocket_named(sprocket_name, how_much):
+       sprocket = sprocket_with_name(sprocket_name)
+       zorfulations = compute_zorfulations(how_much)
+       return zorf_sprocket_internal(sprocket, zorfulations)
+
+
+   __all__ = [
+       'zorf_sprocket_named'
+   ]
+
+   publish()
+
+That’s it! Now, ``from sprocket_zorfer import zorf_sprocket_named``
+works as intended, but
+``from sprocket_zorfer import compute_zorfulations`` is an
+``ImportError``.
+
+But what about…
+---------------
+
+Other modules in my package, like tests, that need to peek at implementation details?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Don’t worry, your code didn’t go anywhere. The original module is still
+available as a special pseudo-module called ``<your_module>._private``.
+In the example above, ``sprocket_zorfer.py``\ ’s tests can still do:
+
+.. code:: python
+
+   from sprocket_zorfer._private import compute_zorfulations
+
+   def test_compute_zorfulations():
+       assert compute_zorfulations(0) > 7
+
+Mypy?
+~~~~~
+
+Your types should *probably* just be part of your published API, if
+you’re expecting that users will need to know about them. But, if there
+are cases which need to be type-checked internally in your library, as
+far as Mypy is concerned, all your private classes are still there. So,
+in the simple case you can just do this:
+
+.. code:: python
+
+   from typing import TYPE_CHECKING
+   if TYPE_CHECKING:
+       from something import T
+
+   def returns_a() -> "T":
+       ...
+
+and in the hopefully very unusual case you need to mix runtime and
+type-checking access to a different module’s private details,
+
+.. code:: python
+
+   from typing import TYPE_CHECKING
+   if TYPE_CHECKING:
+       from something import T
+   else:
+       from something._private import T
+
+   def returns_a() -> A:
+       ...
+

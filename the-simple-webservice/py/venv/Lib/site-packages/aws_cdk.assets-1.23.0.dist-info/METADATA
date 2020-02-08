@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: aws-cdk.assets
+Version: 1.23.0
+Summary: Integration of CDK apps with local assets
+Home-page: https://github.com/aws/aws-cdk
+Author: Amazon Web Services
+License: Apache-2.0
+Project-URL: Source, https://github.com/aws/aws-cdk.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Typing :: Typed
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: jsii (~=0.21.2)
+Requires-Dist: publication (>=0.0.3)
+Requires-Dist: aws-cdk.core (==1.23.0)
+Requires-Dist: aws-cdk.cx-api (==1.23.0)
+
+## AWS CDK Assets
+
+<!--BEGIN STABILITY BANNER-->---
+
+
+![Stability: Experimental](https://img.shields.io/badge/stability-Experimental-important.svg?style=for-the-badge)
+
+> **This is a *developer preview* (public beta) module. Releases might lack important features and might have
+> future breaking changes.**
+>
+> This API is still under active development and subject to non-backward
+> compatible changes or removal in any future version. Use of the API is not recommended in production
+> environments. Experimental APIs are not subject to the Semantic Versioning model.
+
+---
+<!--END STABILITY BANNER-->
+
+This module includes core classes for to CDK assets, used for copying asset
+files to a staging area. Most CDK users should not need to use the classes in
+this package directly.
+
+
