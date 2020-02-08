@@ -29,6 +29,7 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 
 ### Python
 
+* `npm install -g aws-cdk`
 * `git clone https://github.com/cdk-patterns/serverless.git`
 * `cd {pattern-name}/python`
 * follow instructions in readme for virtualenv setup etc
