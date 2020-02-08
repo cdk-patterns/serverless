@@ -19,7 +19,11 @@ which will insert "hello from /hello" into dynamodb as a message. You can track 
 dynamo in the console and the contents of sqs in the console. You should also notice that SQS can include duplicate messages but in those instances you don't get two identical records in DynamoDB as 
 we used an id we generated in the message as the key
 
-## Available Versions
+## Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `npm run deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
