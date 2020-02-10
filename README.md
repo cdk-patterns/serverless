@@ -89,6 +89,12 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
 
+#### [Designing Cloud Native Microservices on AWS (via DDD/EventStormingWorkshop)](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws) by [Kim Kao](https://twitter.com/YiKaiKao)
+
+* [Tutorial / Github](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws)
+
+![Architecture](/img/Coffeeshop-architecture.png)
+
 ### Sebastian Müller ([@sbstjn](https://twitter.com/sbstjn), [@superluminario](https://twitter.com/superluminario))
 
 > Full-featured example project based on [create-react-app](https://create-react-app.dev/) with server-side rendering and continuous deployment.
