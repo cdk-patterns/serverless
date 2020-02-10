@@ -90,6 +90,7 @@ Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
 ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
 
 #### [Designing Cloud Native Microservices on AWS (via DDD/EventStormingWorkshop)](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws) by [Kim Kao](https://twitter.com/YiKaiKao)
+Introduce a fluent way to design cloud native microservices via EventStorming workshop, this is a hands-on workshop. Contains such topics: DDD, Event storming, Specification by example. Including the AWS product : Serverless Lambda , DynamoDB, Fargate, CloudWatch.
 
 * [Tutorial / Github](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws)
 
