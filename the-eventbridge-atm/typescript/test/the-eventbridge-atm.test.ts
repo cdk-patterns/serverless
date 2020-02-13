@@ -126,3 +126,14 @@ test('Consumer 3 Rule Created', () => {
     }
   ));
 });
+
+test('API Gateway Proxy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeAtm.TheEventbridgeAtmStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Resource", {
+    "PathPart": "{proxy+}"
+  }
+  ));
+});
