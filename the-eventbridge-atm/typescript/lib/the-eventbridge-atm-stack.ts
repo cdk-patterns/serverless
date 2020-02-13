@@ -15,7 +15,7 @@ export class TheEventbridgeAtmStack extends cdk.Stack {
     const atmProducerLambda = new lambda.Function(this, 'atmProducerLambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/atmProducer'),
-      handler: 'lambda.lambdaHandler'
+      handler: 'handler.lambdaHandler'
     });
 
     let eventPolicy = new iam.PolicyStatement({
