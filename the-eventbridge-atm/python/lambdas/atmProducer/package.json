@@ -1,0 +1,15 @@
+{
+  "name": "producer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "James Beswick, AWS Serverless",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.606.0"
+  }
+}
