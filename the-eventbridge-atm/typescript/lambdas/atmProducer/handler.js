@@ -29,4 +29,17 @@ exports.lambdaHandler = async (event, context) => {
 
   console.log('--- Response ---')
   console.log(result)  
+
+  return sendRes(200, 'You have sent the events to EventBridge!');
 }
+
+const sendRes = (status, body) => {
+  var response = {
+      statusCode: status,
+      headers: {
+          "Content-Type": "text/html"
+      },
+      body: body
+  };
+  return response;
+};
