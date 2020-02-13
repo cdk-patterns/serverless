@@ -67,6 +67,15 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 
 <br /><hr /><br />
 
+### James Beswick Patterns ([@jbesw](https://twitter.com/jbesw))
+
+#### [The EventBridge ATM](/the-eventbridge-atm/README.md)
+This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)
+
+![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
+
+<br /><hr /><br />
+
 ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
 
 #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
