@@ -6,6 +6,10 @@ In this example, a banking application for automated teller machine (ATM) produc
 
 ![Architecture](img/amazon-eventbridge-custom-application-2.png)
 
+## When You Would Use This Pattern
+
+EventBridge is an awesome centralised service for routing events between various consumers based on rules. You could set up an EventBridge within your domain and then accessing events within that domain is as easy as a rule in EventBridge, this significantly cuts down on the number of coupled interactions you have between your various services.
+
 ## How to test pattern 
 
 After deployment you will have an api gateway where hitting any endpoint triggers the events to be sent to EventBridge defined in lambdas/atmProducer/events.js
