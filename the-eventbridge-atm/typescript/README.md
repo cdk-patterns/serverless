@@ -1,14 +1,24 @@
-# Welcome to your CDK TypeScript project!
+# The EventBridge ATM
 
-This is a blank project for TypeScript development with CDK.
+This is an example CDK stack to deploy the code from this blogpost by [James Beswick](https://twitter.com/jbesw)- https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+In this example, a banking application for automated teller machine (ATM) produces events about transactions. It sends the events to EventBridge, which then uses rules defined by the application to route accordingly. There are three downstream services consuming a subset of these events.
+
+![Architecture](img/amazon-eventbridge-custom-application-2.png)
+
+## How to test pattern 
+
+After deployment you will have an api gateway where hitting any endpoint triggers the events to be sent to EventBridge defined in lambdas/atmProducer/events.js
+
+* All Approved transactions go to consumer 1
+* NY Transactions go to consumer 2
+* Declined transactions go to consumer 3
 
 ## Useful commands
 
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
  * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `npm run deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
