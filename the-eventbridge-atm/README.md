@@ -6,17 +6,15 @@ In this example, a banking application for automated teller machine (ATM) produc
 
 ![Architecture](img/amazon-eventbridge-custom-application-2.png)
 
+## How to test pattern 
+
 After deployment you will have an api gateway where hitting any endpoint triggers the events to be sent to EventBridge defined in lambdas/atmProducer/events.js
 
 * All Approved transactions go to consumer 1
 * NY Transactions go to consumer 2
 * Declined transactions go to consumer 3
 
-## Useful commands
+## Available Versions
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
+ * [Python](python/)
