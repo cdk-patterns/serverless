@@ -29,14 +29,13 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 
 ### Python
 
-* `npm install -g aws-cdk`
 * `git clone https://github.com/cdk-patterns/serverless.git`
 * `cd {pattern-name}/python`
 * `python -m venv .env` - Create a virtual env
 * `source .env/bin/activate` - Activate the virtual env
 * `pip install -r requirements.txt` - Install the dependencies
-* `cdk synth` - generate a cft from the stack to validate your setup
-* `cdk deploy` - deploy the pattern into your AWS account&#42;
+* `npx cdk synth` - generate a cft from the stack to validate your setup
+* `npx cdk deploy` - deploy the pattern into your AWS account&#42;
 
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
