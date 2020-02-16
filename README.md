@@ -19,6 +19,7 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
   <br />
   All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
   <br />
+  
   * `git clone https://github.com/cdk-patterns/serverless.git`
   * `cd {pattern-name}/typescript`
   * `npm i` - install the dependencies
@@ -26,6 +27,7 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
   * `npm run test` - run the unit tests
   * `npm run deploy` - deploy the pattern into your AWS account&#42;
   <br />
+  
   &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 </details>
 <details>
