@@ -14,19 +14,19 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 * Check out [Awesome CDK](https://github.com/eladb/awesome-cdk) for a curated list of awesome projects related to CDK
 
 ## Pattern Usage
+<details>
+  <summary>TypeScript</summary>
+  All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
 
-### TypeScript
-All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
+  * `git clone https://github.com/cdk-patterns/serverless.git`
+  * `cd {pattern-name}/typescript`
+  * `npm i` - install the dependencies
+  * `npm run build` - build the project
+  * `npm run test` - run the unit tests
+  * `npm run deploy` - deploy the pattern into your AWS account&#42;
 
-* `git clone https://github.com/cdk-patterns/serverless.git`
-* `cd {pattern-name}/typescript`
-* `npm i` - install the dependencies
-* `npm run build` - build the project
-* `npm run test` - run the unit tests
-* `npm run deploy` - deploy the pattern into your AWS account&#42;
-
-&#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
-
+  &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
+</details>
 ### Python
 The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail
 
