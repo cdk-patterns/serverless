@@ -2,6 +2,11 @@
 
 This is an example CDK stack to deploy The Scalable Webhook stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#scalablewebhook
 
+An advanced version of this pattern was talked about by [Heitor Lessa](https://twitter.com/heitor_lessa) at re:Invent 2019 as Call me, “Maybe” (Webhook)
+
+* [Youtube Recording](https://www.youtube.com/watch?v=9IYpGTS7Jy0)
+* [Static Slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf)
+
 You would use this pattern when you have a non serverless resource like an RDS DB in direct contact with a serverless resource like a lambda. You need to make
 sure that your serverless resource doesn&apos;t scale up to an amount that it DOS attacks your non serverless resource.
 
