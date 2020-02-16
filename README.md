@@ -18,7 +18,7 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
   <summary>TypeScript</summary>
   <br />
   All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
-  <br />
+  <br /><br />
   
   * `git clone https://github.com/cdk-patterns/serverless.git`
   * `cd {pattern-name}/typescript`
