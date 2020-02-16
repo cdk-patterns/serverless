@@ -14,6 +14,8 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 * Check out [Awesome CDK](https://github.com/eladb/awesome-cdk) for a curated list of awesome projects related to CDK
 
 ## Pattern Usage
+All patterns are available in Typescript and Python so pick your favourite language! Note the Typescript patterns all include unit tests but right now I have not seen a standard python testing approach
+
 <details>
   <summary>TypeScript</summary>
   <br />
@@ -34,7 +36,8 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
   <summary>Python</summary>
   <br />
   The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail
-  <br />
+  <br /><br />
+  
   * `git clone https://github.com/cdk-patterns/serverless.git`
   * `cd {pattern-name}/python`
   * `python -m venv .env` - Create a virtual env
@@ -43,6 +46,7 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
   * `npx cdk synth` - generate a cft from the stack to validate your setup
   * `npx cdk deploy` - deploy the pattern into your AWS account&#42;
   <br />
+  
   &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 </details>
 
