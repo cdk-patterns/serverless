@@ -35,7 +35,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 <details>
   <summary>Python</summary>
   <br />
-  The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail
+  The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail. Then you can just run:
   <br /><br />
   
   * `git clone https://github.com/cdk-patterns/serverless.git`
