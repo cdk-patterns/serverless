@@ -28,6 +28,7 @@ All Patterns (unless otherwise stated in their readme) should support the same c
 &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 
 ### Python
+The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail
 
 * `git clone https://github.com/cdk-patterns/serverless.git`
 * `cd {pattern-name}/python`
