@@ -94,7 +94,6 @@ Resources:
       - dynamoStreamSubscriberLambdaHandlerServiceRole70DB8A47
     Metadata:
       aws:cdk:path: TheDynamoStreamerStack/dynamoStreamSubscriberLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-dynamo-streamer\typescript\lambdas\subscribe
       aws:asset:property: Code
   dynamoStreamSubscriberLambdaHandlerDynamoDBEventSourceTheDynamoStreamerStackTheDynamoStreamerB472C427C1D10245:
     Type: AWS::Lambda::EventSourceMapping

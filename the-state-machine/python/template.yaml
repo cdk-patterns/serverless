@@ -46,7 +46,6 @@ Resources:
       - pineappleCheckLambdaHandlerServiceRoleFC4E3211
     Metadata:
       aws:cdk:path: the-state-machine/pineappleCheckLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-state-machine\python\lambdas
       aws:asset:property: Code
   StateMachineRoleB840431D:
     Type: AWS::IAM::Role
@@ -175,7 +174,6 @@ Resources:
       - stateMachineLambdaHandlerServiceRoleDEB9C06E
     Metadata:
       aws:cdk:path: the-state-machine/stateMachineLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-state-machine\python\lambdas
       aws:asset:property: Code
   EndpointEEF1FD8F:
     Type: AWS::ApiGateway::RestApi
