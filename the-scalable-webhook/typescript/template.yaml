@@ -93,7 +93,6 @@ Resources:
       - SQSPublishLambdaHandlerServiceRole4F9A1044
     Metadata:
       aws:cdk:path: TheScalableWebhookStack/SQSPublishLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-scalable-webhook\typescript\lambdas\publish
       aws:asset:property: Code
   SQSSubscribeLambdaHandlerServiceRoleB6261F09:
     Type: AWS::IAM::Role
@@ -189,7 +188,6 @@ Resources:
       - SQSSubscribeLambdaHandlerServiceRoleB6261F09
     Metadata:
       aws:cdk:path: TheScalableWebhookStack/SQSSubscribeLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-scalable-webhook\typescript\lambdas\subscribe
       aws:asset:property: Code
   SQSSubscribeLambdaHandlerSqsEventSourceTheScalableWebhookStackRDSPublishQueue119E6E347AD14066:
     Type: AWS::Lambda::EventSourceMapping

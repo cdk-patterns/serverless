@@ -153,7 +153,6 @@ Resources:
       - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
     Metadata:
       aws:cdk:path: CdkArticleStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\s3-react-website\typescript\cdk\node_modules\cdk-spa-deploy\node_modules\@aws-cdk\aws-s3-deployment\lambda\bundle.zip
       aws:asset:property: Code
   CDKMetadata:
     Type: AWS::CDK::Metadata

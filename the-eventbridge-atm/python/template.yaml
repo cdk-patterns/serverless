@@ -61,7 +61,6 @@ Resources:
       - atmProducerLambdaServiceRoleEF3D6079
     Metadata:
       aws:cdk:path: the-eventbridge-atm/atmProducerLambda/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-atm\python\lambdas\atmProducer
       aws:asset:property: Code
   atmConsumer1LambdaServiceRole70132707:
     Type: AWS::IAM::Role
@@ -110,7 +109,6 @@ Resources:
       - atmConsumer1LambdaServiceRole70132707
     Metadata:
       aws:cdk:path: the-eventbridge-atm/atmConsumer1Lambda/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-atm\python\lambdas\atmConsumer
       aws:asset:property: Code
   atmConsumer1LambdaAllowEventRuletheeventbridgeatmatmConsumer1LambdaRule2C6D4EB2074FBF4F:
     Type: AWS::Lambda::Permission
@@ -195,7 +193,6 @@ Resources:
       - atmConsumer2LambdaServiceRole130B888D
     Metadata:
       aws:cdk:path: the-eventbridge-atm/atmConsumer2Lambda/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-atm\python\lambdas\atmConsumer
       aws:asset:property: Code
   atmConsumer2LambdaAllowEventRuletheeventbridgeatmatmConsumer2LambdaRule152F123B99201D8B:
     Type: AWS::Lambda::Permission
@@ -279,7 +276,6 @@ Resources:
       - atmConsumer3LambdaServiceRoleCF9BAEA7
     Metadata:
       aws:cdk:path: the-eventbridge-atm/atmConsumer3Lambda/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-atm\python\lambdas\atmConsumer
       aws:asset:property: Code
   atmConsumer3LambdaAllowEventRuletheeventbridgeatmatmConsumer3LambdaRuleE3621C1E8AE3FBC1:
     Type: AWS::Lambda::Permission

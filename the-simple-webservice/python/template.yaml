@@ -95,7 +95,6 @@ Resources:
       - DynamoLambdaHandlerServiceRole4C867B01
     Metadata:
       aws:cdk:path: the-simple-webservice/DynamoLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-simple-webservice\python\lambda
       aws:asset:property: Code
   EndpointEEF1FD8F:
     Type: AWS::ApiGateway::RestApi
