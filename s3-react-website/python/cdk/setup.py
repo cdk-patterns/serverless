@@ -6,7 +6,7 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="s3_angular_website",
+    name="s3_react_website",
     version="0.0.1",
 
     description="An empty CDK Python app",
@@ -15,8 +15,8 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "s3_angular_website"},
-    packages=setuptools.find_packages(where="s3_angular_website"),
+    package_dir={"": "s3_react_website"},
+    packages=setuptools.find_packages(where="s3_react_website"),
 
     install_requires=[
         "aws-cdk.core==1.23.0",

@@ -1,0 +1,253 @@
+Resources:
+  S3AngularDeployWebsiteBucket1058F914:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: s3-angular-website/S3AngularDeploy/WebsiteBucket/Resource
+  S3AngularDeployWebsiteBucketPolicy75EBA810:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: S3AngularDeployWebsiteBucket1058F914
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetObject
+            Effect: Allow
+            Principal: "*"
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - S3AngularDeployWebsiteBucket1058F914
+                      - Arn
+                  - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: s3-angular-website/S3AngularDeploy/WebsiteBucket/Policy/Resource
+  S3AngularDeployBucketDeploymentCustomResourceEAB5AEE8:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536
+          - Arn
+      SourceBucketNames:
+        - Ref: AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3Bucket4A7A4335
+      SourceObjectKeys:
+        - Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3VersionKey5A066FA1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3VersionKey5A066FA1
+      DestinationBucketName:
+        Ref: S3AngularDeployWebsiteBucket1058F914
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: s3-angular-website/S3AngularDeploy/BucketDeployment/CustomResource/Default
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: s3-angular-website/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Ref: AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3Bucket4A7A4335
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Ref: AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3Bucket4A7A4335
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject*
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - S3AngularDeployWebsiteBucket1058F914
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - S3AngularDeployWebsiteBucket1058F914
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: s3-angular-website/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffS3Bucket848A1F31
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffS3VersionKey983DBE96
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffS3VersionKey983DBE96
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+          - Arn
+      Runtime: python3.6
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: s3-angular-website/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource
+      aws:asset:property: Code
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.23.0,@aws-cdk/assets=1.23.0,@aws-cdk/aws-apigateway=1.23.0,@aws-cdk/aws-certificatemanager=1.23.0,@aws-cdk/aws-cloudformation=1.23.0,@aws-cdk/aws-cloudfront=1.23.0,@aws-cdk/aws-cloudwatch=1.23.0,@aws-cdk/aws-ec2=1.23.0,@aws-cdk/aws-elasticloadbalancing=1.23.0,@aws-cdk/aws-elasticloadbalancingv2=1.23.0,@aws-cdk/aws-events=1.23.0,@aws-cdk/aws-iam=1.23.0,@aws-cdk/aws-kms=1.23.0,@aws-cdk/aws-lambda=1.23.0,@aws-cdk/aws-logs=1.23.0,@aws-cdk/aws-route53=1.23.0,@aws-cdk/aws-route53-patterns=1.23.0,@aws-cdk/aws-route53-targets=1.23.0,@aws-cdk/aws-s3=1.23.0,@aws-cdk/aws-s3-assets=1.23.0,@aws-cdk/aws-s3-deployment=1.23.0,@aws-cdk/aws-sns=1.23.0,@aws-cdk/aws-sqs=1.23.0,@aws-cdk/aws-ssm=1.23.0,@aws-cdk/core=1.23.0,@aws-cdk/cx-api=1.23.0,@aws-cdk/region-info=1.23.0,jsii-runtime=Python/3.6.3
+    Condition: CDKMetadataAvailable
+Outputs:
+  S3AngularDeployURL69410A3C:
+    Description: The url of the website
+    Value:
+      Fn::GetAtt:
+        - S3AngularDeployWebsiteBucket1058F914
+        - WebsiteURL
+Parameters:
+  AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffS3Bucket848A1F31:
+    Type: String
+    Description: S3 bucket for asset "a9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ff"
+  AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffS3VersionKey983DBE96:
+    Type: String
+    Description: S3 key for asset version "a9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ff"
+  AssetParametersa9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ffArtifactHash08605F5E:
+    Type: String
+    Description: Artifact hash for asset "a9125fa9a40550c71cde90bd478cc23091e868067a12380c1df0827d013ad2ff"
+  AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3Bucket4A7A4335:
+    Type: String
+    Description: S3 bucket for asset "9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544"
+  AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544S3VersionKey5A066FA1:
+    Type: String
+    Description: S3 key for asset version "9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544"
+  AssetParameters9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544ArtifactHash8D1DBF19:
+    Type: String
+    Description: Artifact hash for asset "9be5d0c5efcd967499429fb8b73ff83d99c616a66302487b1b87415a71c19544"
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
