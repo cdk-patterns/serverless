@@ -15,7 +15,7 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "s3_angular_website"},
+    package_dir={"": "s3_react_website"},
     packages=setuptools.find_packages(where="s3_react_website"),
 
     install_requires=[
