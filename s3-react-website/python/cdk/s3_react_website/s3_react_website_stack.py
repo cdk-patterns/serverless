@@ -7,4 +7,4 @@ class S3ReactWebsiteStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         SPADeploy(self, 'S3ReactDeploy').create_basic_site(index_doc='index.html',
-                                                             website_folder='../website/dist/website')
+                                                             website_folder='../website/build')
