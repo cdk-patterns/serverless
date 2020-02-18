@@ -1,12 +1,12 @@
 Resources:
-  HitsFF5AF8CD:
+  Messages804FA4EB:
     Type: AWS::DynamoDB::Table
     Properties:
       KeySchema:
-        - AttributeName: path
+        - AttributeName: id
           KeyType: HASH
       AttributeDefinitions:
-        - AttributeName: path
+        - AttributeName: id
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 5
@@ -14,8 +14,14 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Hits/Resource
-  HelloHandlerServiceRole11EF7C63:
+      aws:cdk:path: TheScalableWebhookStack/Messages/Resource
+  RDSPublishQueue2BEA1A7F:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 300
+    Metadata:
+      aws:cdk:path: TheScalableWebhookStack/RDSPublishQueue/Resource
+  SQSPublishLambdaHandlerServiceRole4F9A1044:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -32,12 +38,97 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/HelloHandler/ServiceRole/Resource
-  HelloHandlerServiceRoleDefaultPolicyA2A0A4BB:
+      aws:cdk:path: TheScalableWebhookStack/SQSPublishLambdaHandler/ServiceRole/Resource
+  SQSPublishLambdaHandlerServiceRoleDefaultPolicy986E25F0:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
         Statement:
+          - Action:
+              - sqs:SendMessage
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - RDSPublishQueue2BEA1A7F
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: SQSPublishLambdaHandlerServiceRoleDefaultPolicy986E25F0
+      Roles:
+        - Ref: SQSPublishLambdaHandlerServiceRole4F9A1044
+    Metadata:
+      aws:cdk:path: TheScalableWebhookStack/SQSPublishLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  SQSPublishLambdaHandler51EE31BE:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6S3BucketD3B4FA50
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6S3VersionKeyDB7C7E1F
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6S3VersionKeyDB7C7E1F
+      Handler: lambda.handler
+      Role:
+        Fn::GetAtt:
+          - SQSPublishLambdaHandlerServiceRole4F9A1044
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          queueURL:
+            Ref: RDSPublishQueue2BEA1A7F
+    DependsOn:
+      - SQSPublishLambdaHandlerServiceRoleDefaultPolicy986E25F0
+      - SQSPublishLambdaHandlerServiceRole4F9A1044
+    Metadata:
+      aws:cdk:path: TheScalableWebhookStack/SQSPublishLambdaHandler/Resource
+      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-scalable-webhook\typescript\lambdas\publish
+      aws:asset:property: Code
+  SQSSubscribeLambdaHandlerServiceRoleB6261F09:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheScalableWebhookStack/SQSSubscribeLambdaHandler/ServiceRole/Resource
+  SQSSubscribeLambdaHandlerServiceRoleDefaultPolicy828D90B1:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - sqs:ReceiveMessage
+              - sqs:ChangeMessageVisibility
+              - sqs:GetQueueUrl
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - RDSPublishQueue2BEA1A7F
+                - Arn
           - Action:
               - dynamodb:BatchGetItem
               - dynamodb:GetRecords
@@ -52,21 +143,21 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - HitsFF5AF8CD
+                  - Messages804FA4EB
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
-      PolicyName: HelloHandlerServiceRoleDefaultPolicyA2A0A4BB
+      PolicyName: SQSSubscribeLambdaHandlerServiceRoleDefaultPolicy828D90B1
       Roles:
-        - Ref: HelloHandlerServiceRole11EF7C63
+        - Ref: SQSSubscribeLambdaHandlerServiceRoleB6261F09
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/HelloHandler/ServiceRole/DefaultPolicy/Resource
-  HelloHandler2E4FBA4D:
+      aws:cdk:path: TheScalableWebhookStack/SQSSubscribeLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  SQSSubscribeLambdaHandlerBBB58615:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bS3Bucket714B14B3
+          Ref: AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673S3Bucket7266549D
         S3Key:
           Fn::Join:
             - ""
@@ -74,36 +165,50 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bS3VersionKey2D58A242
+                      - Ref: AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673S3VersionKey6B2FE09F
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bS3VersionKey2D58A242
+                      - Ref: AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673S3VersionKey6B2FE09F
       Handler: lambda.handler
       Role:
         Fn::GetAtt:
-          - HelloHandlerServiceRole11EF7C63
+          - SQSSubscribeLambdaHandlerServiceRoleB6261F09
           - Arn
       Runtime: nodejs12.x
       Environment:
         Variables:
-          HITS_TABLE_NAME:
-            Ref: HitsFF5AF8CD
+          queueURL:
+            Ref: RDSPublishQueue2BEA1A7F
+          tableName:
+            Ref: Messages804FA4EB
+      ReservedConcurrentExecutions: 2
     DependsOn:
-      - HelloHandlerServiceRoleDefaultPolicyA2A0A4BB
-      - HelloHandlerServiceRole11EF7C63
+      - SQSSubscribeLambdaHandlerServiceRoleDefaultPolicy828D90B1
+      - SQSSubscribeLambdaHandlerServiceRoleB6261F09
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/HelloHandler/Resource
-      aws:asset:path: asset.021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962b
+      aws:cdk:path: TheScalableWebhookStack/SQSSubscribeLambdaHandler/Resource
+      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-scalable-webhook\typescript\lambdas\subscribe
       aws:asset:property: Code
+  SQSSubscribeLambdaHandlerSqsEventSourceTheScalableWebhookStackRDSPublishQueue119E6E347AD14066:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - RDSPublishQueue2BEA1A7F
+          - Arn
+      FunctionName:
+        Ref: SQSSubscribeLambdaHandlerBBB58615
+    Metadata:
+      aws:cdk:path: TheScalableWebhookStack/SQSSubscribeLambdaHandler/SqsEventSource:TheScalableWebhookStackRDSPublishQueue119E6E34/Resource
   EndpointEEF1FD8F:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: Endpoint
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Resource
-  EndpointDeployment318525DA37c0e38727e25b4317827bf43e918fbf:
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Resource
+  EndpointDeployment318525DAea971d8a03e37d8a80d962fc995b21f3:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId:
@@ -114,17 +219,17 @@ Resources:
       - Endpointproxy39E2174E
       - EndpointANY485C938B
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Deployment/Resource
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Deployment/Resource
   EndpointDeploymentStageprodB78BEEA0:
     Type: AWS::ApiGateway::Stage
     Properties:
       RestApiId:
         Ref: EndpointEEF1FD8F
       DeploymentId:
-        Ref: EndpointDeployment318525DA37c0e38727e25b4317827bf43e918fbf
+        Ref: EndpointDeployment318525DAea971d8a03e37d8a80d962fc995b21f3
       StageName: prod
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/DeploymentStage.prod/Resource
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/DeploymentStage.prod/Resource
   EndpointCloudWatchRoleC3C64E0F:
     Type: AWS::IAM::Role
     Properties:
@@ -142,7 +247,7 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/CloudWatchRole/Resource
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/CloudWatchRole/Resource
   EndpointAccountB8304247:
     Type: AWS::ApiGateway::Account
     Properties:
@@ -153,7 +258,7 @@ Resources:
     DependsOn:
       - EndpointEEF1FD8F
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Account
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Account
   Endpointproxy39E2174E:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -165,14 +270,14 @@ Resources:
       RestApiId:
         Ref: EndpointEEF1FD8F
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/{proxy+}/Resource
-  EndpointproxyANYApiPermissionTheSimpleWebserviceStackEndpoint4D88DB46ANYproxyB140B3BD:
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/{proxy+}/Resource
+  EndpointproxyANYApiPermissionTheScalableWebhookStackEndpoint462DCEBFANYproxy6224F0D7:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Fn::GetAtt:
-          - HelloHandler2E4FBA4D
+          - SQSPublishLambdaHandler51EE31BE
           - Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
@@ -190,14 +295,14 @@ Resources:
             - Ref: EndpointDeploymentStageprodB78BEEA0
             - /*/{proxy+}
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.TheSimpleWebserviceStackEndpoint4D88DB46.ANY..{proxy+}
-  EndpointproxyANYApiPermissionTestTheSimpleWebserviceStackEndpoint4D88DB46ANYproxy08C79E50:
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.TheScalableWebhookStackEndpoint462DCEBF.ANY..{proxy+}
+  EndpointproxyANYApiPermissionTestTheScalableWebhookStackEndpoint462DCEBFANYproxy171AE875:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Fn::GetAtt:
-          - HelloHandler2E4FBA4D
+          - SQSPublishLambdaHandler51EE31BE
           - Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
@@ -213,7 +318,7 @@ Resources:
             - Ref: EndpointEEF1FD8F
             - /test-invoke-stage/*/{proxy+}
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.TheSimpleWebserviceStackEndpoint4D88DB46.ANY..{proxy+}
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.TheScalableWebhookStackEndpoint462DCEBF.ANY..{proxy+}
   EndpointproxyANYC09721C5:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -235,18 +340,18 @@ Resources:
               - Ref: AWS::Region
               - :lambda:path/2015-03-31/functions/
               - Fn::GetAtt:
-                  - HelloHandler2E4FBA4D
+                  - SQSPublishLambdaHandler51EE31BE
                   - Arn
               - /invocations
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/{proxy+}/ANY/Resource
-  EndpointANYApiPermissionTheSimpleWebserviceStackEndpoint4D88DB46ANY4125DEDB:
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/{proxy+}/ANY/Resource
+  EndpointANYApiPermissionTheScalableWebhookStackEndpoint462DCEBFANYA4DEC70E:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Fn::GetAtt:
-          - HelloHandler2E4FBA4D
+          - SQSPublishLambdaHandler51EE31BE
           - Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
@@ -264,14 +369,14 @@ Resources:
             - Ref: EndpointDeploymentStageprodB78BEEA0
             - /*/
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/ANY/ApiPermission.TheSimpleWebserviceStackEndpoint4D88DB46.ANY..
-  EndpointANYApiPermissionTestTheSimpleWebserviceStackEndpoint4D88DB46ANY2C1DB5A2:
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/ANY/ApiPermission.TheScalableWebhookStackEndpoint462DCEBF.ANY..
+  EndpointANYApiPermissionTestTheScalableWebhookStackEndpoint462DCEBFANY6F14FF34:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Fn::GetAtt:
-          - HelloHandler2E4FBA4D
+          - SQSPublishLambdaHandler51EE31BE
           - Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
@@ -287,7 +392,7 @@ Resources:
             - Ref: EndpointEEF1FD8F
             - /test-invoke-stage/*/
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/ANY/ApiPermission.Test.TheSimpleWebserviceStackEndpoint4D88DB46.ANY..
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/ANY/ApiPermission.Test.TheScalableWebhookStackEndpoint462DCEBF.ANY..
   EndpointANY485C938B:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -311,26 +416,35 @@ Resources:
               - Ref: AWS::Region
               - :lambda:path/2015-03-31/functions/
               - Fn::GetAtt:
-                  - HelloHandler2E4FBA4D
+                  - SQSPublishLambdaHandler51EE31BE
                   - Arn
               - /invocations
     Metadata:
-      aws:cdk:path: TheSimpleWebserviceStack/Endpoint/Default/ANY/Resource
+      aws:cdk:path: TheScalableWebhookStack/Endpoint/Default/ANY/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.21.1,@aws-cdk/assets=1.21.1,@aws-cdk/aws-apigateway=1.21.1,@aws-cdk/aws-applicationautoscaling=1.21.1,@aws-cdk/aws-autoscaling-common=1.21.1,@aws-cdk/aws-cloudwatch=1.21.1,@aws-cdk/aws-dynamodb=1.21.1,@aws-cdk/aws-ec2=1.21.1,@aws-cdk/aws-events=1.21.1,@aws-cdk/aws-iam=1.21.1,@aws-cdk/aws-kms=1.21.1,@aws-cdk/aws-lambda=1.21.1,@aws-cdk/aws-s3=1.21.1,@aws-cdk/aws-s3-assets=1.21.1,@aws-cdk/aws-sqs=1.21.1,@aws-cdk/aws-ssm=1.21.1,@aws-cdk/core=1.21.1,@aws-cdk/cx-api=1.21.1,@aws-cdk/region-info=1.21.1,jsii-runtime=node.js/v13.6.0
+      Modules: aws-cdk=1.23.0,@aws-cdk/assets=1.22.0,@aws-cdk/aws-apigateway=1.22.0,@aws-cdk/aws-applicationautoscaling=1.22.0,@aws-cdk/aws-autoscaling-common=1.22.0,@aws-cdk/aws-cloudwatch=1.22.0,@aws-cdk/aws-dynamodb=1.22.0,@aws-cdk/aws-ec2=1.22.0,@aws-cdk/aws-events=1.22.0,@aws-cdk/aws-iam=1.22.0,@aws-cdk/aws-kms=1.22.0,@aws-cdk/aws-lambda=1.22.0,@aws-cdk/aws-lambda-event-sources=1.22.0,@aws-cdk/aws-logs=1.22.0,@aws-cdk/aws-s3=1.22.0,@aws-cdk/aws-s3-assets=1.22.0,@aws-cdk/aws-s3-notifications=1.22.0,@aws-cdk/aws-sns=1.22.0,@aws-cdk/aws-sns-subscriptions=1.22.0,@aws-cdk/aws-sqs=1.22.0,@aws-cdk/aws-ssm=1.22.0,@aws-cdk/core=1.22.0,@aws-cdk/cx-api=1.22.0,@aws-cdk/region-info=1.22.0,jsii-runtime=node.js/v13.6.0
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bS3Bucket714B14B3:
+  AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6S3BucketD3B4FA50:
     Type: String
-    Description: S3 bucket for asset "021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962b"
-  AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bS3VersionKey2D58A242:
+    Description: S3 bucket for asset "e23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6"
+  AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6S3VersionKeyDB7C7E1F:
     Type: String
-    Description: S3 key for asset version "021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962b"
-  AssetParameters021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962bArtifactHash80EDAA75:
+    Description: S3 key for asset version "e23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6"
+  AssetParameterse23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6ArtifactHash275CEFF0:
     Type: String
-    Description: Artifact hash for asset "021253fe8de19c6f70b8f1ca7aa029c7241fec35aa1f6aaced688781b661962b"
+    Description: Artifact hash for asset "e23a1ee0e6c8b8f0e6ef8f29534fdfd57a9cd35231274b67fed76b96a6f1ecd6"
+  AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673S3Bucket7266549D:
+    Type: String
+    Description: S3 bucket for asset "c9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673"
+  AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673S3VersionKey6B2FE09F:
+    Type: String
+    Description: S3 key for asset version "c9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673"
+  AssetParametersc9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673ArtifactHash881D716E:
+    Type: String
+    Description: Artifact hash for asset "c9862f991318eec2c73def7637b7774822137242bf4206dec3d24b3a19095673"
 Outputs:
   Endpoint8024A810:
     Value:

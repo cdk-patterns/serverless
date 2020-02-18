@@ -1,0 +1,412 @@
+Resources:
+  TheDynamoStreamer641C5E5B:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: message
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: message
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/TheDynamoStreamer/Resource
+  DynamoLambdaHandlerServiceRole4C867B01:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoLambdaHandler/ServiceRole/Resource
+  DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: dynamodb:ListStreams
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - TheDynamoStreamer641C5E5B
+                      - Arn
+                  - /stream/*
+          - Action:
+              - dynamodb:DescribeStream
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - TheDynamoStreamer641C5E5B
+                - StreamArn
+        Version: "2012-10-17"
+      PolicyName: DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090
+      Roles:
+        - Ref: DynamoLambdaHandlerServiceRole4C867B01
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  DynamoLambdaHandlerFB6EB814:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3BucketC07C49DB
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0
+      Handler: lambda.handler
+      Role:
+        Fn::GetAtt:
+          - DynamoLambdaHandlerServiceRole4C867B01
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090
+      - DynamoLambdaHandlerServiceRole4C867B01
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoLambdaHandler/Resource
+      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-dynamo-streamer\python\lambdas\subscribe
+      aws:asset:property: Code
+  DynamoLambdaHandlerDynamoDBEventSourcethedynamostreamerTheDynamoStreamerD730D0607DE8FA51:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - TheDynamoStreamer641C5E5B
+          - StreamArn
+      FunctionName:
+        Ref: DynamoLambdaHandlerFB6EB814
+      BatchSize: 100
+      StartingPosition: LATEST
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoLambdaHandler/DynamoDBEventSource:thedynamostreamerTheDynamoStreamerD730D060/Resource
+  DynamoStreamerAPICA573C81:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DynamoStreamerAPI
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/Resource
+  DynamoStreamerAPIDeployment8F20C3E3609fb50d0bd11b3e39585030900e0ebb:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - DynamoStreamerAPIInsertItemPOSTCDE209E1
+      - DynamoStreamerAPIInsertItemACBD0A97
+      - DynamoStreamerAPIErrorResponseModelEB962BDA
+      - DynamoStreamerAPIResponseModel5C9A2FF6
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/Deployment/Resource
+  DynamoStreamerAPIDeploymentStageprod0700648B:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+      DeploymentId:
+        Ref: DynamoStreamerAPIDeployment8F20C3E3609fb50d0bd11b3e39585030900e0ebb
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+      StageName: prod
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/DeploymentStage.prod/Resource
+  DynamoStreamerAPICloudWatchRoleEF2543E3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/CloudWatchRole/Resource
+  DynamoStreamerAPIAccount4440C728:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - DynamoStreamerAPICloudWatchRoleEF2543E3
+          - Arn
+    DependsOn:
+      - DynamoStreamerAPICA573C81
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/Account
+  DynamoStreamerAPIInsertItemACBD0A97:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - DynamoStreamerAPICA573C81
+          - RootResourceId
+      PathPart: InsertItem
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/Default/InsertItem/Resource
+  DynamoStreamerAPIInsertItemPOSTCDE209E1:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      ResourceId:
+        Ref: DynamoStreamerAPIInsertItemACBD0A97
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+      AuthorizationType: NONE
+      Integration:
+        Credentials:
+          Fn::GetAtt:
+            - DefaultLambdaHanderRoleA44A3BA8
+            - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: '{"message": "item added to db"}'
+            StatusCode: "200"
+          - ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+            SelectionPattern: ^\[BadRequest\].*
+            StatusCode: "400"
+        PassthroughBehavior: NEVER
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+              - ""
+              - - '{"TableName":"'
+                - Ref: TheDynamoStreamer641C5E5B
+                - "\",\"Item\":{\"message\":{\"S\":\"$input.path('$.message')\"}}}"
+        Type: AWS
+        Uri: arn:aws:apigateway:us-east-1:dynamodb:action/PutItem
+      MethodResponses:
+        - ResponseModels:
+            application/json:
+              Ref: DynamoStreamerAPIResponseModel5C9A2FF6
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "200"
+        - ResponseModels:
+            application/json:
+              Ref: DynamoStreamerAPIErrorResponseModelEB962BDA
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "400"
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/Default/InsertItem/POST/Resource
+  DynamoStreamerAPIResponseModel5C9A2FF6:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+      ContentType: application/json
+      Name: ResponseModel
+      Schema:
+        properties:
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: pollResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/ResponseModel/Resource
+  DynamoStreamerAPIErrorResponseModelEB962BDA:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: DynamoStreamerAPICA573C81
+      ContentType: application/json
+      Name: ErrorResponseModel
+      Schema:
+        properties:
+          state:
+            type: string
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: errorResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DynamoStreamerAPI/ErrorResponseModel/Resource
+  DefaultLambdaHanderRoleA44A3BA8:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DefaultLambdaHanderRole/Resource
+  DefaultLambdaHanderRoleDefaultPolicy40E2D129:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - TheDynamoStreamer641C5E5B
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: DefaultLambdaHanderRoleDefaultPolicy40E2D129
+      Roles:
+        - Ref: DefaultLambdaHanderRoleA44A3BA8
+    Metadata:
+      aws:cdk:path: the-dynamo-streamer/DefaultLambdaHanderRole/DefaultPolicy/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.23.0,@aws-cdk/assets=1.23.0,@aws-cdk/aws-apigateway=1.23.0,@aws-cdk/aws-applicationautoscaling=1.23.0,@aws-cdk/aws-autoscaling-common=1.23.0,@aws-cdk/aws-certificatemanager=1.23.0,@aws-cdk/aws-cloudformation=1.23.0,@aws-cdk/aws-cloudwatch=1.23.0,@aws-cdk/aws-dynamodb=1.23.0,@aws-cdk/aws-ec2=1.23.0,@aws-cdk/aws-elasticloadbalancingv2=1.23.0,@aws-cdk/aws-events=1.23.0,@aws-cdk/aws-iam=1.23.0,@aws-cdk/aws-kinesis=1.23.0,@aws-cdk/aws-kms=1.23.0,@aws-cdk/aws-lambda=1.23.0,@aws-cdk/aws-lambda-event-sources=1.23.0,@aws-cdk/aws-logs=1.23.0,@aws-cdk/aws-route53=1.23.0,@aws-cdk/aws-s3=1.23.0,@aws-cdk/aws-s3-assets=1.23.0,@aws-cdk/aws-s3-notifications=1.23.0,@aws-cdk/aws-sns=1.23.0,@aws-cdk/aws-sns-subscriptions=1.23.0,@aws-cdk/aws-sqs=1.23.0,@aws-cdk/aws-ssm=1.23.0,@aws-cdk/core=1.23.0,@aws-cdk/cx-api=1.23.0,@aws-cdk/region-info=1.23.0,jsii-runtime=Python/3.6.3
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3BucketC07C49DB:
+    Type: String
+    Description: S3 bucket for asset "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
+  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0:
+    Type: String
+    Description: S3 key for asset version "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
+  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdArtifactHashEE79E413:
+    Type: String
+    Description: Artifact hash for asset "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
+Outputs:
+  DynamoStreamerAPIEndpointA76F4941:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: DynamoStreamerAPICA573C81
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: DynamoStreamerAPIDeploymentStageprod0700648B
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
