@@ -17,7 +17,7 @@ The lambda queries the dynamoDB for errors added in the last 60 seconds for this
 
 ### Closed Circuit Architecture:
 The lambda queries the dynamoDB for errors added in the last 60 seconds for this service. In this scenario the number found is greater than our threshold so the lambda immediately responds with a failure rather than calling the real service.
-![Architecture](../img/arch_closed.PNG)
+![Architecture](../img/arch_closed.png)
 
 ## When You Would Use This Pattern
 
