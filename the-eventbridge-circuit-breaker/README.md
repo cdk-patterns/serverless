@@ -11,7 +11,7 @@ When a consumer calls our lambda we check if there have been 3 failure events in
 ### Implemented Architecture:
 ![Architecture](img/arch.png)
 
-### Jeremy Daly's Architecture:
+### Jeremy Daly's Pattern:
 ![Architecture](img/jd_arch.png)
 
 ## When You Would Use This Pattern
