@@ -8,7 +8,7 @@ Don't worry, we have integrated a circuit breaker into this system. When a call 
 
 When a consumer calls our lambda we check if there have been 3 failure events in the last 60 seconds and if so we fail immediately, this saves over 9 seconds of execution costs. As the error events expire after 60 seconds our failure events should gradually drop below 3 where we call the service again and check status.
 
-![Architecture](img/amazon-eventbridge-custom-application-2.png)
+![Architecture](img/arch.png)
 
 ## When You Would Use This Pattern
 
