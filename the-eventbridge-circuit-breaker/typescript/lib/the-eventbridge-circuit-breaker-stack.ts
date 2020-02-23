@@ -59,6 +59,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/error'),
       handler: 'lambda.handler',
+      timeout: Duration.seconds(3),
       environment: {
         TABLE_NAME: table.tableName
       }
@@ -68,7 +69,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
 
     // Create EventBridge rule to route failures
     const webserviceErrorRule = new events.Rule(this, 'webserviceErrorRule', {
-      description: 'Failed Webvservice Call',
+      description: 'Failed Webservice Call',
       eventPattern: {
         source: ['cdkpatterns.eventbridge.circuitbreaker'],
         detailType: ['httpcall'],
