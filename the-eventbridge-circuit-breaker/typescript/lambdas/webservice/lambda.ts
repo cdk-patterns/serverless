@@ -13,8 +13,9 @@ exports.handler = async (event:any, context:any) => {
        S: "www.google.com"
       }
     }, 
-    KeyConditionExpression: "url = :v1", 
-    TableName: "CircuitBreaker"
+    KeyConditionExpression: "siteUrl = :v1", 
+    IndexName: "UrlIndex",
+    TableName: process.env.TABLE_NAME,
    };
 
   const knownErrors = await dynamo.query(dynamoParams).promise();
@@ -32,7 +33,7 @@ exports.handler = async (event:any, context:any) => {
         // Main event body
         Detail: JSON.stringify({
           status: 'fail',
-          url: 'google.com',
+          siteUrl: 'www.google.com',
         })
       }
     ]
