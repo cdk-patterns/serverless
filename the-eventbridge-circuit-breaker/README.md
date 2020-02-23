@@ -8,10 +8,10 @@ Don't worry, we have integrated a circuit breaker into this system. When a call 
 
 When a consumer calls our lambda we check if there have been 3 failure events in the last 60 seconds and if so we fail immediately, this saves over 9 seconds of execution costs. As the error events expire after 60 seconds our failure events should gradually drop below 3 where we call the service again and check status.
 
-Implemented Architecture
+### Implemented Architecture:
 ![Architecture](img/arch.png)
 
-Jeremy Daly's Architecture:
+### Jeremy Daly's Architecture:
 ![Architecture](img/jd_arch.png)
 
 ## When You Would Use This Pattern
