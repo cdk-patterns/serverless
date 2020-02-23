@@ -6,6 +6,7 @@ import iam = require('@aws-cdk/aws-iam');
 import events = require('@aws-cdk/aws-events');
 import events_targets = require('@aws-cdk/aws-events-targets');
 import { GlobalSecondaryIndexProps } from '@aws-cdk/aws-dynamodb';
+import { Duration } from '@aws-cdk/core';
 
 export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -16,13 +17,15 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
     // TTL Docs - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html
     const table = new dynamodb.Table(this, 'CircuitBreaker', {
       partitionKey: { name: 'RequestID', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'ExpirationTime', type: dynamodb.AttributeType.NUMBER },
       timeToLiveAttribute: 'ExpirationTime'
     });
     
     // Add index to let us query on siteUrl
     let secondaryIndex:GlobalSecondaryIndexProps = {
       indexName: 'UrlIndex',
-      partitionKey: { name: 'siteUrl', type: dynamodb.AttributeType.STRING }
+      partitionKey: { name: 'SiteUrl', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'ExpirationTime', type: dynamodb.AttributeType.NUMBER }
     }
     
     table.addGlobalSecondaryIndex(secondaryIndex);
@@ -32,6 +35,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/webservice'),
       handler: 'lambda.handler',
+      timeout: Duration.seconds(20),
       environment: {
         TABLE_NAME: table.tableName
       }
@@ -54,7 +58,10 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
     const errorLambda = new lambda.Function(this, 'ErrorLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/error'),
-      handler: 'lambda.handler'
+      handler: 'lambda.handler',
+      environment: {
+        TABLE_NAME: table.tableName
+      }
     });
 
     table.grantWriteData(errorLambda);

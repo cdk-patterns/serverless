@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk')
 AWS.config.region = process.env.AWS_REGION || 'us-east-1'
 const eventbridge = new AWS.EventBridge()
+export {};
 
 exports.handler = async (event:any, context:any) => {
   const ERROR_THRESHOLD = 3;
@@ -8,22 +9,23 @@ exports.handler = async (event:any, context:any) => {
 
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
+  const secondsSinceEpoch = Math.round(Date.now() / 1000);
 
   // We are querying our error Dynamo to count how many errors are in there for www.google.com
   var dynamoParams = {
     ExpressionAttributeValues: {
-     ":v1": {
-       S: serviceURL
-      }
+     ":v1":  {"S":serviceURL},
+     ":now": {"N":secondsSinceEpoch.toString()}
     }, 
-    KeyConditionExpression: "siteUrl = :v1", 
+    KeyConditionExpression: "SiteUrl = :v1 and ExpirationTime > :now", 
     IndexName: "UrlIndex",
     TableName: process.env.TABLE_NAME,
    };
 
   const recentErrors = await dynamo.query(dynamoParams).promise();
   console.log('--- Recent Errors ---');
-  console.log(recentErrors);
+  console.log(recentErrors.Count);
+  console.log(JSON.stringify(recentErrors));
   
   // If we are within our error threshold, make the http call
   if(recentErrors.Count < ERROR_THRESHOLD){
@@ -35,7 +37,7 @@ exports.handler = async (event:any, context:any) => {
       console.log('--- Calling Webservice, recent errors below threshold ---');
       setTimeout( function() {
         reject("service timeout exception")
-      }, 1000) 
+      }, 10000) 
     }).catch((reason)=> {
       console.log('--- Service Call Failure ---');
       console.log(reason);
