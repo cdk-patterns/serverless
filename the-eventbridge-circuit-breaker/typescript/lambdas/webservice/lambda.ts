@@ -6,6 +6,7 @@ export {};
 exports.handler = async (event:any, context:any) => {
   const ERROR_THRESHOLD = 3;
   const serviceURL = 'www.google.com';
+  let response;
 
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
@@ -66,10 +67,13 @@ exports.handler = async (event:any, context:any) => {
   
     console.log('--- EventBridge Response ---')
     console.log(result)  
+    response = sendRes(500, 'Something appears to be wrong with this service, please try again later');
+  } else {
+    console.log('Circuit currently closed, sending back failure response');
+    response = sendRes(500, 'This service has been experiencing issues for a while, we have closed the circuit');
   }
 
-  // Tell the user it errored
-  return sendRes(500, 'Something appears to be wrong with this service, please try again later');
+  return response;
 }
 
 const sendRes = (status:any, body:any) => {
