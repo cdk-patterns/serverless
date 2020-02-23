@@ -121,7 +121,7 @@ Resources:
       - WebserviceIntegrationLambdaHandlerServiceRole851361F8
     Metadata:
       aws:cdk:path: the-eventbridge-circuit-breaker/WebserviceIntegrationLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-circuit-breaker\python\lambdas\webservice
+      aws:asset:path: serverless\the-eventbridge-circuit-breaker\python\lambdas\webservice
       aws:asset:property: Code
   ErrorLambdaHandlerServiceRole5D9F8D61:
     Type: AWS::IAM::Role
@@ -203,7 +203,7 @@ Resources:
       - ErrorLambdaHandlerServiceRole5D9F8D61
     Metadata:
       aws:cdk:path: the-eventbridge-circuit-breaker/ErrorLambdaHandler/Resource
-      aws:asset:path: C:\Users\matco\Documents\nideveloper\serverless\the-eventbridge-circuit-breaker\python\lambdas\error
+      aws:asset:path: serverless\the-eventbridge-circuit-breaker\python\lambdas\error
       aws:asset:property: Code
   ErrorLambdaHandlerAllowEventRuletheeventbridgecircuitbreakerwebserviceErrorRuleBFBFCBE1AE43D72B:
     Type: AWS::Lambda::Permission
