@@ -5,6 +5,7 @@ import dynamodb = require('@aws-cdk/aws-dynamodb');
 import iam = require('@aws-cdk/aws-iam');
 import events = require('@aws-cdk/aws-events');
 import events_targets = require('@aws-cdk/aws-events-targets');
+import { GlobalSecondaryIndexProps } from '@aws-cdk/aws-dynamodb';
 
 export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -17,12 +18,23 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
       partitionKey: { name: 'RequestID', type: dynamodb.AttributeType.STRING },
       timeToLiveAttribute: 'ExpirationTime'
     });
+    
+    // Add index to let us query on siteUrl
+    let secondaryIndex:GlobalSecondaryIndexProps = {
+      indexName: 'UrlIndex',
+      partitionKey: { name: 'siteUrl', type: dynamodb.AttributeType.STRING }
+    }
+    
+    table.addGlobalSecondaryIndex(secondaryIndex);
 
     // defines an Integration Lambda to call our failing web service
     const webserviceIntegrationLambda = new lambda.Function(this, 'WebserviceIntegrationLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/webservice'),
-      handler: 'lambda.handler'
+      handler: 'lambda.handler',
+      environment: {
+        TABLE_NAME: table.tableName
+      }
     });
 
     // grant the lambda role read/write permissions to our table
@@ -45,7 +57,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
       handler: 'lambda.handler'
     });
 
-    table.grantWriteData(webserviceIntegrationLambda);
+    table.grantWriteData(errorLambda);
 
     // Create EventBridge rule to route failures
     const webserviceErrorRule = new events.Rule(this, 'webserviceErrorRule', {
