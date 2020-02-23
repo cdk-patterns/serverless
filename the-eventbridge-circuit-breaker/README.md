@@ -8,14 +8,15 @@ Don't worry, we have integrated a circuit breaker into this system. When a call 
 
 When a consumer calls our lambda we check if there have been 3 failure events in the last 60 seconds and if so we fail immediately, this saves over 9 seconds of execution costs. As the error events expire after 60 seconds our failure events should gradually drop below 3 where we call the service again and check status.
 
+Implemented Architecture
 ![Architecture](img/arch.png)
 
-Jeremy Daly's Arch:
+Jeremy Daly's Architecture:
 ![Architecture](img/jd_arch.png)
 
 ## When You Would Use This Pattern
 
-When integrating with an external webservice via a lambda that is not stable. This will save you execution costs.
+When integrating with an external webservice via a lambda that is not stable. This will save you execution costs, it will also improve end user experience because not only are they still receiving an error without this but they have to wait the full 10 seconds for it.
 
 ## How to test pattern 
 
