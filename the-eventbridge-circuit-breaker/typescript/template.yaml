@@ -1,0 +1,566 @@
+Resources:
+  CircuitBreaker4FAEA3DB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: RequestID
+          KeyType: HASH
+        - AttributeName: ExpirationTime
+          KeyType: RANGE
+      AttributeDefinitions:
+        - AttributeName: RequestID
+          AttributeType: S
+        - AttributeName: ExpirationTime
+          AttributeType: "N"
+        - AttributeName: SiteUrl
+          AttributeType: S
+      GlobalSecondaryIndexes:
+        - IndexName: UrlIndex
+          KeySchema:
+            - AttributeName: SiteUrl
+              KeyType: HASH
+            - AttributeName: ExpirationTime
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TimeToLiveSpecification:
+        AttributeName: ExpirationTime
+        Enabled: true
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreaker/Resource
+  WebserviceIntegrationLambdaHandlerServiceRole851361F8:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/WebserviceIntegrationLambdaHandler/ServiceRole/Resource
+  WebserviceIntegrationLambdaHandlerServiceRoleDefaultPolicy86CA93C2:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - CircuitBreaker4FAEA3DB
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CircuitBreaker4FAEA3DB
+                        - Arn
+                    - /index/*
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: WebserviceIntegrationLambdaHandlerServiceRoleDefaultPolicy86CA93C2
+      Roles:
+        - Ref: WebserviceIntegrationLambdaHandlerServiceRole851361F8
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/WebserviceIntegrationLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  WebserviceIntegrationLambdaHandler5E349AB7:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951S3Bucket9C31DBE5
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951S3VersionKey02D96348
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951S3VersionKey02D96348
+      Handler: lambda.handler
+      Role:
+        Fn::GetAtt:
+          - WebserviceIntegrationLambdaHandlerServiceRole851361F8
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: CircuitBreaker4FAEA3DB
+      Timeout: 20
+    DependsOn:
+      - WebserviceIntegrationLambdaHandlerServiceRoleDefaultPolicy86CA93C2
+      - WebserviceIntegrationLambdaHandlerServiceRole851361F8
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/WebserviceIntegrationLambdaHandler/Resource
+      aws:asset:path: serverless\the-eventbridge-circuit-breaker\typescript\lambdas\webservice
+      aws:asset:property: Code
+  ErrorLambdaHandlerServiceRole5D9F8D61:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/ErrorLambdaHandler/ServiceRole/Resource
+  ErrorLambdaHandlerServiceRoleDefaultPolicy9B079F8F:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - CircuitBreaker4FAEA3DB
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CircuitBreaker4FAEA3DB
+                        - Arn
+                    - /index/*
+        Version: "2012-10-17"
+      PolicyName: ErrorLambdaHandlerServiceRoleDefaultPolicy9B079F8F
+      Roles:
+        - Ref: ErrorLambdaHandlerServiceRole5D9F8D61
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/ErrorLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  ErrorLambdaHandler4224322A:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3S3BucketE3C7CA84
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3S3VersionKey73A14560
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3S3VersionKey73A14560
+      Handler: lambda.handler
+      Role:
+        Fn::GetAtt:
+          - ErrorLambdaHandlerServiceRole5D9F8D61
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: CircuitBreaker4FAEA3DB
+      Timeout: 3
+    DependsOn:
+      - ErrorLambdaHandlerServiceRoleDefaultPolicy9B079F8F
+      - ErrorLambdaHandlerServiceRole5D9F8D61
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/ErrorLambdaHandler/Resource
+      aws:asset:path: serverless\the-eventbridge-circuit-breaker\typescript\lambdas\error
+      aws:asset:property: Code
+  ErrorLambdaHandlerAllowEventRuleTheEventbridgeCircuitBreakerStackwebserviceErrorRule5CA5849A81689960:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - ErrorLambdaHandler4224322A
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - webserviceErrorRuleCE293636
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/ErrorLambdaHandler/AllowEventRuleTheEventbridgeCircuitBreakerStackwebserviceErrorRule5CA5849A
+  webserviceErrorRuleCE293636:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Failed Webservice Call
+      EventPattern:
+        source:
+          - cdkpatterns.eventbridge.circuitbreaker
+        detail-type:
+          - httpcall
+        detail:
+          status:
+            - fail
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - ErrorLambdaHandler4224322A
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/webserviceErrorRule/Resource
+  CircuitBreakerGateway122B123C:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: CircuitBreakerGateway
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Resource
+  CircuitBreakerGatewayDeployment9F2A82FAe336ba6fa6ef940b678cf2901558c04c:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: CircuitBreakerGateway122B123C
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - CircuitBreakerGatewayproxyANY759880DB
+      - CircuitBreakerGatewayproxy1147E2CF
+      - CircuitBreakerGatewayANYE076316B
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Deployment/Resource
+  CircuitBreakerGatewayDeploymentStageprod84F6B9E5:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: CircuitBreakerGateway122B123C
+      DeploymentId:
+        Ref: CircuitBreakerGatewayDeployment9F2A82FAe336ba6fa6ef940b678cf2901558c04c
+      StageName: prod
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/DeploymentStage.prod/Resource
+  CircuitBreakerGatewayCloudWatchRole934DF897:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/CloudWatchRole/Resource
+  CircuitBreakerGatewayAccount58B91765:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - CircuitBreakerGatewayCloudWatchRole934DF897
+          - Arn
+    DependsOn:
+      - CircuitBreakerGateway122B123C
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Account
+  CircuitBreakerGatewayproxy1147E2CF:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - CircuitBreakerGateway122B123C
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: CircuitBreakerGateway122B123C
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/{proxy+}/Resource
+  CircuitBreakerGatewayproxyANYApiPermissionTheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824ANYproxy584EF780:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - WebserviceIntegrationLambdaHandler5E349AB7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CircuitBreakerGateway122B123C
+            - /
+            - Ref: CircuitBreakerGatewayDeploymentStageprod84F6B9E5
+            - /*/{proxy+}
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/{proxy+}/ANY/ApiPermission.TheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824.ANY..{proxy+}
+  CircuitBreakerGatewayproxyANYApiPermissionTestTheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824ANYproxyE09D3DF2:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - WebserviceIntegrationLambdaHandler5E349AB7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CircuitBreakerGateway122B123C
+            - /test-invoke-stage/*/{proxy+}
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/{proxy+}/ANY/ApiPermission.Test.TheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824.ANY..{proxy+}
+  CircuitBreakerGatewayproxyANY759880DB:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Ref: CircuitBreakerGatewayproxy1147E2CF
+      RestApiId:
+        Ref: CircuitBreakerGateway122B123C
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - WebserviceIntegrationLambdaHandler5E349AB7
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/{proxy+}/ANY/Resource
+  CircuitBreakerGatewayANYApiPermissionTheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824ANY2D2F06E0:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - WebserviceIntegrationLambdaHandler5E349AB7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CircuitBreakerGateway122B123C
+            - /
+            - Ref: CircuitBreakerGatewayDeploymentStageprod84F6B9E5
+            - /*/
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/ANY/ApiPermission.TheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824.ANY..
+  CircuitBreakerGatewayANYApiPermissionTestTheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824ANY33532EB9:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - WebserviceIntegrationLambdaHandler5E349AB7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CircuitBreakerGateway122B123C
+            - /test-invoke-stage/*/
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/ANY/ApiPermission.Test.TheEventbridgeCircuitBreakerStackCircuitBreakerGateway4CD07824.ANY..
+  CircuitBreakerGatewayANYE076316B:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Fn::GetAtt:
+          - CircuitBreakerGateway122B123C
+          - RootResourceId
+      RestApiId:
+        Ref: CircuitBreakerGateway122B123C
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - WebserviceIntegrationLambdaHandler5E349AB7
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheEventbridgeCircuitBreakerStack/CircuitBreakerGateway/Default/ANY/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.25.0,@aws-cdk/assets=1.25.0,@aws-cdk/aws-apigateway=1.25.0,@aws-cdk/aws-applicationautoscaling=1.25.0,@aws-cdk/aws-autoscaling=1.25.0,@aws-cdk/aws-autoscaling-common=1.25.0,@aws-cdk/aws-autoscaling-hooktargets=1.25.0,@aws-cdk/aws-cloudformation=1.25.0,@aws-cdk/aws-cloudwatch=1.25.0,@aws-cdk/aws-dynamodb=1.25.0,@aws-cdk/aws-ec2=1.25.0,@aws-cdk/aws-ecr=1.25.0,@aws-cdk/aws-ecr-assets=1.25.0,@aws-cdk/aws-ecs=1.25.0,@aws-cdk/aws-elasticloadbalancingv2=1.25.0,@aws-cdk/aws-events=1.25.0,@aws-cdk/aws-events-targets=1.25.0,@aws-cdk/aws-iam=1.25.0,@aws-cdk/aws-kms=1.25.0,@aws-cdk/aws-lambda=1.25.0,@aws-cdk/aws-logs=1.25.0,@aws-cdk/aws-s3=1.25.0,@aws-cdk/aws-s3-assets=1.25.0,@aws-cdk/aws-servicediscovery=1.25.0,@aws-cdk/aws-sns=1.25.0,@aws-cdk/aws-sns-subscriptions=1.25.0,@aws-cdk/aws-sqs=1.25.0,@aws-cdk/aws-ssm=1.25.0,@aws-cdk/aws-stepfunctions=1.25.0,@aws-cdk/aws-stepfunctions-tasks=1.25.0,@aws-cdk/core=1.25.0,@aws-cdk/custom-resources=1.25.0,@aws-cdk/cx-api=1.25.0,@aws-cdk/region-info=1.25.0,jsii-runtime=node.js/v13.6.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951S3Bucket9C31DBE5:
+    Type: String
+    Description: S3 bucket for asset "af48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951"
+  AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951S3VersionKey02D96348:
+    Type: String
+    Description: S3 key for asset version "af48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951"
+  AssetParametersaf48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951ArtifactHash15D184FC:
+    Type: String
+    Description: Artifact hash for asset "af48d6141950b11dc2bd92a5d0c62f1b0febf230e19dede6cff23a22f3d06951"
+  AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3S3BucketE3C7CA84:
+    Type: String
+    Description: S3 bucket for asset "a9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3"
+  AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3S3VersionKey73A14560:
+    Type: String
+    Description: S3 key for asset version "a9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3"
+  AssetParametersa9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3ArtifactHash37BE959B:
+    Type: String
+    Description: Artifact hash for asset "a9fd14c87844784c4c570b3bbeb9e0f18d403a48fa0583ff3fd700e040b855c3"
+Outputs:
+  CircuitBreakerGatewayEndpoint85026A5E:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: CircuitBreakerGateway122B123C
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: CircuitBreakerGatewayDeploymentStageprod84F6B9E5
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
