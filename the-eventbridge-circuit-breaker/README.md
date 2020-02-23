@@ -10,6 +10,9 @@ When a consumer calls our lambda we check if there have been 3 failure events in
 
 ![Architecture](img/arch.png)
 
+Jeremy Daly's Arch:
+![Architecture](img/jd_arch.png)
+
 ## When You Would Use This Pattern
 
 When integrating with an external webservice via a lambda that is not stable. This will save you execution costs.
