@@ -24,6 +24,7 @@ exports.handler = async (event:any, context:any) => {
    };
 
   const recentErrors = await dynamo.query(dynamoParams).promise();
+  
   console.log('--- Recent Errors ---');
   console.log(recentErrors.Count);
   console.log(JSON.stringify(recentErrors));
