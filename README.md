@@ -76,7 +76,7 @@ These patterns are from https://www.jeremydaly.com/serverless-microservice-patte
 ![Architecture](the-state-machine/img/the-state-machine-arch-centered.png)
 
 #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
-![Architecture](the-eventbridge-circuit-breaker/img/arch.png)
+![Architecture](the-eventbridge-circuit-breaker/img/arch2.png)
 
 <br /><hr /><br />
 
