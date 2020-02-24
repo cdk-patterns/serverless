@@ -41,7 +41,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
       }
     });
 
-    // grant the lambda role read/write permissions to our table
+    // grant the lambda role read permissions for our table
     table.grantReadData(webserviceIntegrationLambda);
 
     // We need to give your lambda permission to put events on our EventBridge
