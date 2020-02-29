@@ -25,7 +25,7 @@ When integrating with an external webservice via a lambda that is not stable. Th
 
 ## How to test pattern 
 
-After deployment you will have an api gateway where hitting any endpoint calls our fake unstable google endpoint. The first 3 times you hit the endpoint should all take 10 seconds each, then the next should be instand with a message saying the circuit was closed. 
+After deployment you will have an api gateway where hitting any endpoint calls our fake unstable google endpoint. The first 3 times you hit the endpoint should all take 10 seconds each, then the next should be instant with a message saying the circuit was closed. 
 
 Now wait 60 seconds and try again, you should see the 10 second wait return
 
