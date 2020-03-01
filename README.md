@@ -107,7 +107,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
   Blog - [medium.com/@jbesw](https://medium.com/@jbesw)<br />
 
   #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
-  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br /><br />
 
   ![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
 
