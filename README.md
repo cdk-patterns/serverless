@@ -53,6 +53,64 @@ All patterns are available in Typescript and Python so pick your favourite langu
 ## Patterns
 <details>
   <summary>
+    Grouped Alphabetically
+  </summary>
+
+  #### Single Page Application S3 Website Deploy
+  These are built using https://www.npmjs.com/package/cdk-spa-deploy and allow you to deploy a website in as little as 5 lines of CDK code.
+
+  * [S3 Angular Deploy ](/s3-angular-website/README.md)
+  * [S3 React Deploy ](/s3-react-website/README.md)
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
+
+  <br /><hr /><br />
+
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
+
+  You can easily create routing rules in EventBridge to send the same event to multiple sources based on conditions. This example shows you how<br /><br />
+
+  ![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
+
+  <br /><hr /><br />
+
+  #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
+  Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
+  ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
+  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+
+  <br /><hr /><br />
+
+  #### [The Simple Webservice](/the-simple-webservice/README.md)
+  The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
+
+  <br /><hr /><br />
+
+  #### [The State Machine](/the-state-machine/README.md)
+  Have complex orchestration logic in your application? Build a state machine <br />
+  ![Architecture](the-state-machine/img/the-state-machine-arch-overview.png)
+
+  <br /><hr /><br />
+
+</details>
+<details>
+  <summary>
     Grouped By Pattern Creator
   </summary>
   <br />
