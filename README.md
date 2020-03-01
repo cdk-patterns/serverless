@@ -56,6 +56,11 @@ All patterns are available in Typescript and Python so pick your favourite langu
     Grouped By Pattern Creator
   </summary>
 
+  * [Eric Johnson](#eric-johnson)
+  * [James Beswick](#james-beswick)
+  * [Jeremy Daly](#jeremy-daly)
+  * [Matt Coulter](#matt-coulter)
+
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
 
