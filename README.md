@@ -56,7 +56,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
     Grouped By Pattern Creator
   </summary>
 
-  ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
+  ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
 
   Christian, husband, dad of 5, musician, Senior Developer Advocate - Serverless for @AWScloud. Opinions are my own. #Serverless #ServerlessForEveryone<br />
@@ -71,7 +71,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  ### James Beswick Patterns
+  ### James Beswick
   <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br />
 
   ☁️🥑 Dev Advocate @AWScloud Serverless<br />
@@ -86,7 +86,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  ### Jeremy Daly Patterns
+  ### Jeremy Daly
   <img src="img/dev_profiles/jeremy_daly.png" width="120" alt="jeremy daly profile pic" /><br />
 
   AWS Serverless Hero/🥑 & host of @ServerlessChats. I build web & open source stuff, blog, speak, and publish http://OffByNone.io every week. CTO @AlertMeNews.<br />
@@ -110,7 +110,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  ### Matt Coulter Patterns
+  ### Matt Coulter
   <img src="img/dev_profiles/nideveloper.png" width="120" alt="nideveloper profile pic" /><br />
 
   Software Architect, working for @Liberty_IT in Belfast. Passionate about #Serverless, #AWS, @cdkpatterns, #TCO, CI/CD and #TrunkBasedDev.<br />
