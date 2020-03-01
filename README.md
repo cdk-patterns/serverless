@@ -51,92 +51,102 @@ All patterns are available in Typescript and Python so pick your favourite langu
 </details>
 
 ## Patterns
-### Matt Coulter Patterns ([@nideveloper](https://twitter.com/nideveloper))
+<details>
+  <summary>
+    Grouped By Pattern Creator
+  </summary>
+  <br />
+  
+  * [Eric Johnson](#eric-johnson)
+  * [James Beswick](#james-beswick)
+  * [Jeremy Daly](#jeremy-daly)
+  * [Matt Coulter](#matt-coulter)
 
-#### Single Page Application S3 Website Deploy
-These are built using https://www.npmjs.com/package/cdk-spa-deploy
+  ### Eric Johnson
+  <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
 
-* [S3 Angular Deploy ](/s3-angular-website/README.md)
-* [S3 React Deploy ](/s3-react-website/README.md)
+  Christian, husband, dad of 5, musician, Senior Developer Advocate - Serverless for @AWScloud. Opinions are my own. #Serverless #ServerlessForEveryone<br />
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
+  Twitter - [@edjgeek](https://twitter.com/edjgeek)<br />
+  Youtube - [bit.ly/edjgeek](https://bit.ly/edjgeek)<br />
 
-<br /><hr /><br />
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
-### Jeremy Daly Patterns ([@jeremy_daly](https://twitter.com/jeremy_daly))
-These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
-#### [The Simple Webservice](/the-simple-webservice/README.md)
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
+  <br /><hr /><br />
 
-#### [The Scalable Webhook](/the-scalable-webhook/README.md)
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+  ### James Beswick
+  <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br />
 
-#### [The State Machine](/the-state-machine/README.md)
-![Architecture](the-state-machine/img/the-state-machine-arch-overview.png)
+  ☁️🥑 Dev Advocate @AWScloud Serverless<br />
 
-#### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
-![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+  Twitter - [@jbesw](https://twitter.com/jbesw) <br />
+  Blog - [medium.com/@jbesw](https://medium.com/@jbesw)<br />
 
-<br /><hr /><br />
+  #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
 
-### James Beswick Patterns ([@jbesw](https://twitter.com/jbesw))
+  You can easily create routing rules in EventBridge to send the same event to multiple sources based on conditions. This example shows you how<br /><br />
 
-#### [The EventBridge ATM](/the-eventbridge-atm/README.md)
-This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)
+  ![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
 
-![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
+  <br /><hr /><br />
 
-<br /><hr /><br />
+  ### Jeremy Daly
+  <img src="img/dev_profiles/jeremy_daly.png" width="120" alt="jeremy daly profile pic" /><br />
 
-### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
+  AWS Serverless Hero/🥑 & host of @ServerlessChats. I build web & open source stuff, blog, speak, and publish http://OffByNone.io every week. CTO @AlertMeNews.<br />
 
-#### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
+  Twitter - [@jeremy_daly](https://twitter.com/jeremy_daly) <br />
+  Blog - [jeremydaly.com](https://www.jeremydaly.com/) <br />
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+  These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
-<br /><hr /><br />
+  #### [The Simple Webservice](/the-simple-webservice/README.md)
+  The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
+
+  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
+  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+
+  #### [The State Machine](/the-state-machine/README.md)
+  Have complex orchestration logic in your application? Build a state machine <br />
+  ![Architecture](the-state-machine/img/the-state-machine-arch-overview.png)
+
+  #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
+  Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
+  ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  ### Matt Coulter
+  <img src="img/dev_profiles/nideveloper.png" width="120" alt="nideveloper profile pic" /><br />
+
+  Software Architect, working for @Liberty_IT in Belfast. Passionate about #Serverless, #AWS, @cdkpatterns, #TCO, CI/CD and #TrunkBasedDev.<br />
+
+  Twitter - [@nideveloper](https://twitter.com/nideveloper) <br />
+  Blog - [mattcoulter.com](https://www.mattcoulter.com) <br />
+
+  #### Single Page Application S3 Website Deploy
+  These are built using https://www.npmjs.com/package/cdk-spa-deploy and allow you to deploy a website in as little as 5 lines of CDK code.
+
+  * [S3 Angular Deploy ](/s3-angular-website/README.md)
+  * [S3 React Deploy ](/s3-react-website/README.md)
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
+
+  <br /><hr /><br />
+
+</details>
 
 ## External Patterns
 
-### AWS Examples
-
-#### [Building enterprise applications using Amazon DynamoDB, AWS Lambda, and Go](https://github.com/aws-samples/aws-dynamodb-enterprise-application/blob/master/README.md) by Geoffroy Rollat
-
-
-Found via this [tweet](https://twitter.com/danilop/status/1222856997751656449)
-* [Tutorial](https://aws.amazon.com/blogs/database/building-enterprise-applications-using-amazon-dynamodb-aws-lambda-and-golang/)
-* [GitHub Repo](https://github.com/aws-samples/aws-dynamodb-enterprise-application)
-
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/img/building-enterprise-architecture.jpg)
-
-#### [Designing Cloud Native Microservices on AWS (via DDD/EventStormingWorkshop)](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws) by [Kim Kao](https://twitter.com/YiKaiKao)
-> Introduce a fluent way to design cloud native microservices via EventStorming workshop, this is a hands-on workshop. Contains such topics: DDD, Event storming, Specification by example. Including the AWS product : Serverless Lambda , DynamoDB, Fargate, CloudWatch.
-
-* [Tutorial / Github](https://github.com/aws-samples/designing-cloud-native-microservices-on-aws)
-
-![Architecture](/img/Coffeeshop-architecture.png)
-
-### Sebastian Müller ([@sbstjn](https://twitter.com/sbstjn), [@superluminario](https://twitter.com/superluminario))
-
-> Full-featured example project based on [create-react-app](https://create-react-app.dev/) with server-side rendering and continuous deployment.
-
-#### [React SPA with server-side rendering on AWS Lambda](https://github.com/sbstjn/cra-serverless/blob/master/README.md)
-
-Found via this [tweet](https://twitter.com/sbstjn/status/1225811582061621250?s=20) and [this](https://twitter.com/superluminario/status/1225779586161684480).
-
-* [Tutorial (English)](https://sbstjn.com/serverless-create-react-app-server-side-rendering-ssr-lamda.html)
-* [Tutorial (German)](https://superluminar.io/2020/02/07/react-spa-und-server-side-rendering-ssr-mit-aws-lambda-cloudfront-und-dem-cdk/)
-* [GitHub Repo](https://github.com/sbstjn/cra-serverless/blob/master/README.md)
-
-#### Architecture (English)
-
-![Architecture](/img/serverless-ssr-react-lambda-en.png)
-
-#### Architecture (German)
-
-![Architecture](/img/serverless-ssr-react-lambda-de.png)
+[External Patterns Page](EXTERNAL_PATTERNS.md)
 
 ## Contributing
 I hope for this to be something the whole cdk community contributes to so feel free to fork this repo and open up a pull request. For full details see our [Contributing Guidelines](CONTRIBUTING.md)
