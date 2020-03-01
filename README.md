@@ -84,7 +84,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
   #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
   This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
 
-  You can easily create routing rules in EventBridge to send the same event to multiple sources based on conditions. This example shows you how<br />
+  You can easily create routing rules in EventBridge to send the same event to multiple sources based on conditions. This example shows you how<br /><br />
 
   ![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
 
@@ -101,11 +101,11 @@ All patterns are available in Typescript and Python so pick your favourite langu
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
   #### [The Simple Webservice](/the-simple-webservice/README.md)
-  The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br />
+  The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
 
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
-  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br />
+  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
 
   #### [The State Machine](/the-state-machine/README.md)
