@@ -55,7 +55,8 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <summary>
     Grouped By Pattern Creator
   </summary>
-
+  <br />
+  
   * [Eric Johnson](#eric-johnson)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
