@@ -75,12 +75,12 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br /><hr /><br />
 
   ### Jeremy Daly Patterns
-  <img src="img/dev_profiles/jeremy_daly.png" width="120" alt="jeremy daly profile pic" /><br /><br />
+  <img src="img/dev_profiles/jeremy_daly.png" width="120" alt="jeremy daly profile pic" /><br />
 
-  AWS Serverless Hero/🥑 & host of @ServerlessChats. I build web & open source stuff, blog, speak, and publish http://OffByNone.io every week. CTO @AlertMeNews.<br /><br />
+  AWS Serverless Hero/🥑 & host of @ServerlessChats. I build web & open source stuff, blog, speak, and publish http://OffByNone.io every week. CTO @AlertMeNews.<br />
 
   Twitter - [@jeremy_daly](https://twitter.com/jeremy_daly) <br />
-  Blog [jeremydaly.com](https://www.jeremydaly.com/) <br /><br />
+  Blog - [jeremydaly.com](https://www.jeremydaly.com/) <br />
 
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
@@ -99,9 +99,9 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br /><hr /><br />
 
   ### James Beswick Patterns ([@jbesw](https://twitter.com/jbesw))
-  <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br /><br />
+  <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br />
 
-  ☁️🥑 Dev Advocate @AWScloud Serverless<br /><br />
+  ☁️🥑 Dev Advocate @AWScloud Serverless<br />
 
   Twitter - [@jbesw](https://twitter.com/jbesw) <br />
   Blog - [medium.com/@jbesw](https://medium.com/@jbesw)<br />
