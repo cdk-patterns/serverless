@@ -72,7 +72,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
-
+  
   You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
@@ -116,7 +116,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   #### [The State Machine](/the-state-machine/README.md)
   Have complex orchestration logic in your application? Build a state machine <br />
-  ![Architecture](the-state-machine/img/the-state-machine-arch-centered.png)
+  ![Architecture](the-state-machine/img/the-state-machine-arch-overview.png)
 
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
