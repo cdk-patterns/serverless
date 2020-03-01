@@ -98,7 +98,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  ### James Beswick Patterns ([@jbesw](https://twitter.com/jbesw))
+  ### James Beswick Patterns
   <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br />
 
   ☁️🥑 Dev Advocate @AWScloud Serverless<br />
@@ -114,7 +114,12 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br /><hr /><br />
 
   ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
-  <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" />
+  <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
+
+  Christian, husband, dad of 5, musician, Senior Developer Advocate - Serverless for @AWScloud. Opinions are my own. #Serverless #ServerlessForEveryone<br />
+
+  Twitter - [@edjgeek](https://twitter.com/edjgeek)<br />
+  Youtube - [bit.ly/edjgeek](https://bit.ly/edjgeek)<br />
 
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
