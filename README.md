@@ -201,6 +201,33 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br /><hr /><br />
 
 </details>
+<details>
+  <summary>
+    Resiliency Focused Patterns
+  </summary>
+
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
+  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+
+  <br /><hr /><br />
+
+  #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
+  Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
+  ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+</details>
 
 ## External Patterns
 
