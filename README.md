@@ -106,6 +106,8 @@ All patterns are available in Typescript and Python so pick your favourite langu
   Have complex orchestration logic in your application? Build a state machine <br />
   ![Architecture](the-state-machine/img/the-state-machine-arch-overview.png)
 
+  <br /><hr /><br />
+
 </details>
 <details>
   <summary>
