@@ -56,7 +56,13 @@ All patterns are available in Typescript and Python so pick your favourite langu
     Foundational
   </summary>
 
-  ### Matt Coulter Patterns ([@nideveloper](https://twitter.com/nideveloper))
+  ### Matt Coulter Patterns
+  <img src="img/dev_profiles/nideveloper.png" width="120" alt="nideveloper profile pic" /><br />
+
+  Software Architect, working for @Liberty_IT in Belfast. Passionate about #Serverless, #AWS, @cdkpatterns, #TCO, CI/CD and #TrunkBasedDev.<br />
+
+  Twitter - [@nideveloper](https://twitter.com/nideveloper) <br />
+  Blog - [mattcoulter.com](https://www.mattcoulter.com) <br />
 
   #### Single Page Application S3 Website Deploy
   These are built using https://www.npmjs.com/package/cdk-spa-deploy
@@ -68,7 +74,14 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  ### Jeremy Daly Patterns ([@jeremy_daly](https://twitter.com/jeremy_daly))
+  ### Jeremy Daly Patterns
+  <img src="img/dev_profiles/jeremy_daly.png" width="120" alt="jeremy daly profile pic" /><br /><br />
+
+  AWS Serverless Hero/🥑 & host of @ServerlessChats. I build web & open source stuff, blog, speak, and publish http://OffByNone.io every week. CTO @AlertMeNews.<br /><br />
+
+  Twitter - [@jeremy_daly](https://twitter.com/jeremy_daly) <br />
+  Blog [jeremydaly.com](https://www.jeremydaly.com/) <br /><br />
+
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
   #### [The Simple Webservice](/the-simple-webservice/README.md)
@@ -86,15 +99,22 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br /><hr /><br />
 
   ### James Beswick Patterns ([@jbesw](https://twitter.com/jbesw))
+  <img src="img/dev_profiles/james_beswick.png" width="120" alt="James Beswick profile pic" /><br /><br />
+
+  ☁️🥑 Dev Advocate @AWScloud Serverless<br /><br />
+
+  Twitter - [@jbesw](https://twitter.com/jbesw) <br />
+  Blog - [medium.com/@jbesw](https://medium.com/@jbesw)<br />
 
   #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
-  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
 
   ![Architecture](the-eventbridge-atm/img/amazon-eventbridge-custom-application-2.png)
 
   <br /><hr /><br />
 
   ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
+  <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" />
 
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)
