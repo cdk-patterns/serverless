@@ -53,7 +53,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 ## Patterns
 <details>
   <summary>
-    By Pattern Creator
+    Grouped By Pattern Creator
   </summary>
 
   ### Eric Johnson Patterns ([@edjgeek](https://twitter.com/edjgeek))
