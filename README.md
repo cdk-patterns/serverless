@@ -215,15 +215,15 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
-  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
-  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
-
-  <br /><hr /><br />
-
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
   ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
+  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
 
   <br /><hr /><br />
 
