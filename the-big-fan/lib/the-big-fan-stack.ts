@@ -12,7 +12,7 @@ export class TheBigFanStack extends cdk.Stack {
     /**
      * API Gateway Creation
      */
-    let gateway = new apigw.RestApi(this, 'DynamoStreamerAPI', {
+    let gateway = new apigw.RestApi(this, 'theBigFanAPI', {
       deployOptions: {
         metricsEnabled: true,
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -52,13 +52,18 @@ export class TheBigFanStack extends cdk.Stack {
       .addMethod('POST', new apigw.Integration({
         type: apigw.IntegrationType.AWS, //native aws integration
         integrationHttpMethod: "POST",
-        uri: 'arn:aws:apigateway:us-east-1:sns:path//', // This is how we setup an SNS Topic publish operation.
+        uri: 'arn:aws:apigateway:us-east-1:sns:action/Publish', // This is how we setup an SNS Topic publish operation.
         options: {
           credentialsRole: apigwSnsRole,
+          requestParameters: {
+            'integration.request.header.Content-Type': "'application/json'",
+            'integration.request.querystring.TargetArn': "'"+topic.topicArn+"'",
+            'integration.request.querystring.Version': "'2010-03-31'"
+          },
           requestTemplates: {
           // This is the VTL to transform our incoming request to post to our SNS topic
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-          'application/json': "Action=Publish&TopicArn="+encodeURI(topic.topicArn)+"&Message=hello"
+          'application/json': "#set($context.requestOverride.querystring.Message = 'hello')"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
@@ -73,7 +78,7 @@ export class TheBigFanStack extends cdk.Stack {
           },
           {
             // For errors, we check if the response contains the words BadRequest
-            selectionPattern: '^\[BadRequest\].*',
+            selectionPattern: '^\[Error\].*',
             statusCode: "400",
             responseTemplates: {
                 'application/json': JSON.stringify({ state: 'error', message: "$util.escapeJavaScript($input.path('$.errorMessage'))" })
