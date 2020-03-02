@@ -26,8 +26,15 @@ export class TheBigFanStack extends cdk.Stack {
     const queue = new sqs.Queue(this, 'BigFanTopicSubscriberQueue', {
       visibilityTimeout: cdk.Duration.seconds(300)
     });
+
+    //Only send messages with a status of created
     topic.addSubscription(new sns_sub.SqsSubscription(queue, {
-      rawMessageDelivery: true
+      rawMessageDelivery: true,
+      filterPolicy: {
+        status: sns.SubscriptionFilter.stringFilter({
+          whitelist: ['created']
+        })
+      }
     }));
 
     /**
