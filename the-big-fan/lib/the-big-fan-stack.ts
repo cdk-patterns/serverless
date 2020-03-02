@@ -57,7 +57,7 @@ export class TheBigFanStack extends cdk.Stack {
           credentialsRole: apigwSnsRole,
           requestParameters: {
             'integration.request.header.Content-Type': "'application/json'",
-            'integration.request.querystring.TargetArn': "'"+topic.topicArn+"'",
+            'integration.request.querystring.TargetArn': "'$util.urlEncode("+topic.topicArn+")'",
             'integration.request.querystring.Version': "'2010-03-31'"
           },
           requestTemplates: {
