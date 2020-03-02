@@ -4,10 +4,30 @@ import apigw = require('@aws-cdk/aws-apigateway');
 import lambda = require('@aws-cdk/aws-lambda');
 import sns = require('@aws-cdk/aws-sns');
 import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
+import sqs = require('@aws-cdk/aws-sqs');
 
 export class TheBigFanStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    /**
+     * SNS Topic Creation
+     */
+    const topic = new sns.Topic(this, 'theBigFanTopic',
+    {
+      displayName: "The Big Fan CDK Pattern Topic"
+    });
+
+    /**
+     * Subscriber Queue Setup
+     * SQS creation
+     */
+    const queue = new sqs.Queue(this, 'BigFanTopicSubscriberQueue', {
+      visibilityTimeout: cdk.Duration.seconds(300)
+    });
+    topic.addSubscription(new sns_sub.SqsSubscription(queue, {
+      rawMessageDelivery: true
+    }));
 
     /**
      * API Gateway Creation
@@ -19,12 +39,6 @@ export class TheBigFanStack extends cdk.Stack {
         dataTraceEnabled: true,
         stageName: 'prod'
       }
-    });
-
-    //Create our SNS Topic
-    const topic = new sns.Topic(this, 'theBigFanTopic',
-    {
-      displayName: "The Big Fan CDK Pattern Topic"
     });
 
     //Give our gateway permissions to interact with SNS
