@@ -5,6 +5,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import sns = require('@aws-cdk/aws-sns');
 import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
 import sqs = require('@aws-cdk/aws-sqs');
+import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 export class TheBigFanStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -28,6 +29,17 @@ export class TheBigFanStack extends cdk.Stack {
     topic.addSubscription(new sns_sub.SqsSubscription(queue, {
       rawMessageDelivery: true
     }));
+
+    /**
+     * Lambda SQS Subscriber Setup
+     */
+    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
+      code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
+      handler: 'lambda.handler'                // file is "lambda", function is "handler"
+    });
+    queue.grantConsumeMessages(sqsSubscribeLambda);
+    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
 
     /**
      * API Gateway Creation
