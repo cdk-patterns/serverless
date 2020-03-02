@@ -63,7 +63,7 @@ export class TheBigFanStack extends cdk.Stack {
           requestTemplates: {
           // This is the VTL to transform our incoming request to post to our SNS topic
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-          'application/json': "#set($context.requestOverride.querystring.Message = 'hello')"
+          'application/json': "#set($context.requestOverride.querystring.Message = \"$input.path('$.message')\")"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
