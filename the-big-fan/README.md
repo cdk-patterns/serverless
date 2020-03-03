@@ -2,7 +2,7 @@
 
 ![architecture](img/the-big-fan-arch.png)
 
-This is an example cdk stack to deploy "The Big Fan" from Heitor Lessa as seen in [these re:invent slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf).
+This is an example cdk stack to deploy "The Big Fan" from Heitor Lessa as seen in these [re:Invent slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf) or this [Youtube Recording](https://www.youtube.com/watch?v=9IYpGTS7Jy0).
 
 In this example we have an API Gateway with a "/SendEvent" endpoint that takes a POST request with a JSON payload. The payload formats are beneath.
 
@@ -16,13 +16,11 @@ To send to the first lambda
 To send to the second lambda
 `{ "message": "hello", "status": "not created" }`
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+### Postman Example
+![postman](img/postman.png)
 
-## Useful commands
+## Available Versions
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
+ * [Python](python/)
+
