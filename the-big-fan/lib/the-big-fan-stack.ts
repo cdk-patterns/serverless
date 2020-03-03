@@ -91,12 +91,16 @@ export class TheBigFanStack extends cdk.Stack {
           requestParameters: {
             'integration.request.header.Content-Type': "'application/json'",
             'integration.request.querystring.Version': "'2010-03-31'",
-            'integration.request.querystring.TargetArn': "'"+topic.topicArn+"'"
+            'integration.request.querystring.TargetArn': "'"+topic.topicArn+"'",
+            'integration.request.querystring.MessageAttributes.entry.1.Name': "'status'",
+            'integration.request.querystring.MessageAttributes.entry.1.Value.DataType': "'String'"
           },
           requestTemplates: {
           // This is the VTL to transform our incoming request to post to our SNS topic
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-          'application/json': "#set($context.requestOverride.querystring.Message = \"$input.path('$.message')\")"
+          'application/json': "#set($context.requestOverride.querystring.Message = \"$input.path('$.message')\") \n"+
+                              "## Add in value for Message Attribute \n" +
+                              "#set($context.requestOverride.querystring.MessageAttributes.entry.1.Value.StringValue = \"created\")"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
