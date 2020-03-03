@@ -1,6 +1,18 @@
-# Welcome to your CDK TypeScript project!
+# The Big Fan
 
-This is a blank project for TypeScript development with CDK.
+This is an example cdk stack to deploy "The Big Fan" from Heitor Lessa as seen in [these re:invent slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf).
+
+In this example we have an API Gateway with a "/SendEvent" endpoint that takes a POST request with a JSON payload. The payload formats are beneath.
+
+When API Gateway receives the json it automatically through VTL routes it to an SNS Topic, this Topic then has two subscribers which are SQS Queues. The difference between the two subscribers is that one looks for a property of "status":"created" in the json and the other subscriber looks for any message that doesn't have that property. Each queue has a lambda that subscribes to it and prints whatever message it recieves to cloudwatch.
+
+### JSON Payload Format
+
+To send to the first lambda
+`{ "message": "hello", "status": "created" }`
+
+To send to the second lambda
+`{ "message": "hello", "status": "not created" }`
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
