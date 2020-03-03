@@ -13,6 +13,7 @@ export class TheBigFanStack extends cdk.Stack {
 
     /**
      * SNS Topic Creation
+     * Our API Gateway posts messages directly to this
      */
     const topic = new sns.Topic(this, 'theBigFanTopic',
     {
@@ -20,15 +21,17 @@ export class TheBigFanStack extends cdk.Stack {
     });
 
     /**
-     * Subscriber Queue Setup
-     * SQS creation
+     * SQS Subscribers for our SNS Topic creation
+     * 2 subscribers, one for messages with a status of created one for any other message
      */
-    const queue = new sqs.Queue(this, 'BigFanTopicSubscriberQueue', {
+
+    // Status:created SNS Subscriber Queue
+    const createdStatusQueue = new sqs.Queue(this, 'BigFanTopicStatusCreatedSubscriberQueue', {
       visibilityTimeout: cdk.Duration.seconds(300)
     });
 
-    //Only send messages with a status of created
-    topic.addSubscription(new sns_sub.SqsSubscription(queue, {
+    // Only send messages to our createdStatusQueue with a status of created
+    topic.addSubscription(new sns_sub.SqsSubscription(createdStatusQueue, {
       rawMessageDelivery: true,
       filterPolicy: {
         status: sns.SubscriptionFilter.stringFilter({
@@ -37,19 +40,47 @@ export class TheBigFanStack extends cdk.Stack {
       }
     }));
 
-    /**
-     * Lambda SQS Subscriber Setup
-     */
-    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
-      handler: 'lambda.handler'                // file is "lambda", function is "handler"
+    // Any other status SNS Subscriber Queue
+    const anyOtherStatusQueue = new sqs.Queue(this, 'BigFanTopicAnyOtherStatusSubscriberQueue', {
+      visibilityTimeout: cdk.Duration.seconds(300)
     });
-    queue.grantConsumeMessages(sqsSubscribeLambda);
-    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
+
+    // Only send messages to our anyOtherStatusQueue that do not have a status of created
+    topic.addSubscription(new sns_sub.SqsSubscription(anyOtherStatusQueue, {
+      rawMessageDelivery: true,
+      filterPolicy: {
+        status: sns.SubscriptionFilter.stringFilter({
+          blacklist: ['created']
+        })
+      }
+    }));
+
+    /**
+     * Creation of Lambdas that subscribe to above SQS queues
+     */
+
+    // Created status queue lambda
+    const sqsCreatedStatusSubscribeLambda = new lambda.Function(this, 'SQSCreatedStatusSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/subscribe'),
+      handler: 'createdStatus.handler'
+    });
+    createdStatusQueue.grantConsumeMessages(sqsCreatedStatusSubscribeLambda);
+    sqsCreatedStatusSubscribeLambda.addEventSource(new SqsEventSource(createdStatusQueue, {}));
+
+    // Any other status queue lambda
+    const sqsAnyOtherStatusSubscribeLambda = new lambda.Function(this, 'SQSAnyOtherStatusSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X, 
+      code: lambda.Code.asset('lambdas/subscribe'), 
+      handler: 'anyOtherStatus.handler'
+    });
+    anyOtherStatusQueue.grantConsumeMessages(sqsAnyOtherStatusSubscribeLambda);
+    sqsAnyOtherStatusSubscribeLambda.addEventSource(new SqsEventSource(anyOtherStatusQueue, {}));
 
     /**
      * API Gateway Creation
+     * This is complicated because it transforms the incoming json payload into a query string url
+     * this url is used to post the payload to sns without a lambda inbetween 
      */
     let gateway = new apigw.RestApi(this, 'theBigFanAPI', {
       deployOptions: {
@@ -89,7 +120,7 @@ export class TheBigFanStack extends cdk.Stack {
         options: {
           credentialsRole: apigwSnsRole,
           requestParameters: {
-            'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'"
+            'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'" // Tell api gw to send our payload as query params
           },
           requestTemplates: {
           // This is the VTL to transform our incoming request to post to our SNS topic
