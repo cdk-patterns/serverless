@@ -96,11 +96,11 @@ export class TheBigFanStack extends cdk.Stack {
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
           'application/json': "Action=Publish&"+
                               "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
-                              "Message=hello&"+
+                              "Message=$input.path('$.message')&"+
                               "Version=2010-03-31&"+
                               "MessageAttributes.entry.1.Name=status&"+
                               "MessageAttributes.entry.1.Value.DataType=String&"+
-                              "MessageAttributes.entry.1.Value.StringValue=created"
+                              "MessageAttributes.entry.1.Value.StringValue=$input.path('$.status')"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
