@@ -1,5 +1,7 @@
 # The Big Fan
 
+![architecture](img/the-big-fan-arch.png)
+
 This is an example cdk stack to deploy "The Big Fan" from Heitor Lessa as seen in [these re:invent slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf).
 
 In this example we have an API Gateway with a "/SendEvent" endpoint that takes a POST request with a JSON payload. The payload formats are beneath.
