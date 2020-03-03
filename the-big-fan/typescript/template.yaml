@@ -166,7 +166,7 @@ Resources:
       - SQSCreatedStatusSubscribeLambdaHandlerServiceRole36576A8A
     Metadata:
       aws:cdk:path: TheBigFanStack/SQSCreatedStatusSubscribeLambdaHandler/Resource
-      aws:asset:path: asset.c4555fa47848dc36beaf32b1d5163d17f17d56e74054e28f8902c72fe560fd61
+      aws:asset:path: /cdkpatterns/serverless/the-big-fan/typescript/lambdas/subscribe
       aws:asset:property: Code
   SQSCreatedStatusSubscribeLambdaHandlerSqsEventSourceTheBigFanStackBigFanTopicStatusCreatedSubscriberQueueF8927E4802E7770C:
     Type: AWS::Lambda::EventSourceMapping
@@ -249,7 +249,7 @@ Resources:
       - SQSAnyOtherStatusSubscribeLambdaHandlerServiceRole395E81EB
     Metadata:
       aws:cdk:path: TheBigFanStack/SQSAnyOtherStatusSubscribeLambdaHandler/Resource
-      aws:asset:path: asset.c4555fa47848dc36beaf32b1d5163d17f17d56e74054e28f8902c72fe560fd61
+      aws:asset:path: /cdkpatterns/serverless/the-big-fan/typescript/lambdas/subscribe
       aws:asset:property: Code
   SQSAnyOtherStatusSubscribeLambdaHandlerSqsEventSourceTheBigFanStackBigFanTopicAnyOtherStatusSubscriberQueue08FB964013A92B5B:
     Type: AWS::Lambda::EventSourceMapping
@@ -268,15 +268,15 @@ Resources:
       Name: theBigFanAPI
     Metadata:
       aws:cdk:path: TheBigFanStack/theBigFanAPI/Resource
-  theBigFanAPIDeployment0A3D40CCb8b7ada1934d4ca5e48ae1f5b0fb5dc5:
+  theBigFanAPIDeployment0A3D40CC8c978c6e9df15a6f710f9da31de8dc88:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId:
         Ref: theBigFanAPI6E21715A
       Description: Automatically created by the RestApi construct
     DependsOn:
-      - theBigFanAPIInsertItemPOSTAB3A2104
-      - theBigFanAPIInsertItem15AC3D2F
+      - theBigFanAPISendEventPOSTBC493093
+      - theBigFanAPISendEventD29495C2
       - theBigFanAPIErrorResponseModel11E9FBC4
       - theBigFanAPIResponseModelD06A5A7F
     Metadata:
@@ -287,7 +287,7 @@ Resources:
       RestApiId:
         Ref: theBigFanAPI6E21715A
       DeploymentId:
-        Ref: theBigFanAPIDeployment0A3D40CCb8b7ada1934d4ca5e48ae1f5b0fb5dc5
+        Ref: theBigFanAPIDeployment0A3D40CC8c978c6e9df15a6f710f9da31de8dc88
       MethodSettings:
         - DataTraceEnabled: true
           HttpMethod: "*"
@@ -326,24 +326,24 @@ Resources:
       - theBigFanAPI6E21715A
     Metadata:
       aws:cdk:path: TheBigFanStack/theBigFanAPI/Account
-  theBigFanAPIInsertItem15AC3D2F:
+  theBigFanAPISendEventD29495C2:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId:
         Fn::GetAtt:
           - theBigFanAPI6E21715A
           - RootResourceId
-      PathPart: InsertItem
+      PathPart: SendEvent
       RestApiId:
         Ref: theBigFanAPI6E21715A
     Metadata:
-      aws:cdk:path: TheBigFanStack/theBigFanAPI/Default/InsertItem/Resource
-  theBigFanAPIInsertItemPOSTAB3A2104:
+      aws:cdk:path: TheBigFanStack/theBigFanAPI/Default/SendEvent/Resource
+  theBigFanAPISendEventPOSTBC493093:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
       ResourceId:
-        Ref: theBigFanAPIInsertItem15AC3D2F
+        Ref: theBigFanAPISendEventD29495C2
       RestApiId:
         Ref: theBigFanAPI6E21715A
       AuthorizationType: NONE
@@ -395,7 +395,7 @@ Resources:
             method.response.header.Access-Control-Allow-Credentials: true
           StatusCode: "400"
     Metadata:
-      aws:cdk:path: TheBigFanStack/theBigFanAPI/Default/InsertItem/POST/Resource
+      aws:cdk:path: TheBigFanStack/theBigFanAPI/Default/SendEvent/POST/Resource
   theBigFanAPIResponseModelD06A5A7F:
     Type: AWS::ApiGateway::Model
     Properties:
