@@ -133,6 +133,9 @@ class TheBigFanStack(core.Stack):
         # This is how our gateway chooses what response to send based on selection_pattern
         integration_options = api_gw.IntegrationOptions(
             credentials_role=api_gw_sns_role,
+            request_parameters={
+                'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'"
+            },
             request_templates={
                 "application/json": request_template
             },
@@ -142,7 +145,7 @@ class TheBigFanStack(core.Stack):
                     status_code='200',
                     response_templates={
                         "application/json": json.dumps(
-                            {"message": 'item added to db'})
+                            {"message": 'message added to topic'})
                     }),
                 api_gw.IntegrationResponse(
                     selection_pattern="^\[Error\].*",
