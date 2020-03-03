@@ -27,7 +27,8 @@ export class TheBigFanStack extends cdk.Stack {
 
     // Status:created SNS Subscriber Queue
     const createdStatusQueue = new sqs.Queue(this, 'BigFanTopicStatusCreatedSubscriberQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300)
+      visibilityTimeout: cdk.Duration.seconds(300),
+      queueName: 'BigFanTopicStatusCreatedSubscriberQueue'
     });
 
     // Only send messages to our createdStatusQueue with a status of created
@@ -42,7 +43,8 @@ export class TheBigFanStack extends cdk.Stack {
 
     // Any other status SNS Subscriber Queue
     const anyOtherStatusQueue = new sqs.Queue(this, 'BigFanTopicAnyOtherStatusSubscriberQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300)
+      visibilityTimeout: cdk.Duration.seconds(300),
+      queueName: 'BigFanTopicAnyOtherStatusSubscriberQueue'
     });
 
     // Only send messages to our anyOtherStatusQueue that do not have a status of created
@@ -112,7 +114,7 @@ export class TheBigFanStack extends cdk.Stack {
     });
 
     //Create an endpoint '/InsertItem' which accepts a JSON payload on a POST verb
-    gateway.root.addResource('InsertItem')
+    gateway.root.addResource('SendEvent')
       .addMethod('POST', new apigw.Integration({
         type: apigw.IntegrationType.AWS, //native aws integration
         integrationHttpMethod: "POST",
