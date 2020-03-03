@@ -66,6 +66,13 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
+  #### [The Big Fan](/the-big-fan/README.md)  
+  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+
+  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
+
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
   
