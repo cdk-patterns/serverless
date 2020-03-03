@@ -21,7 +21,7 @@ export class TheBigFanStack extends cdk.Stack {
     });
 
     /**
-     * SQS Subscribers for our SNS Topic creation
+     * SQS Subscribers creation for our SNS Topic
      * 2 subscribers, one for messages with a status of created one for any other message
      */
 
