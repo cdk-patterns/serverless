@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handler = async function (event) {
+    console.log("request:", JSON.stringify(event, undefined, 2));
+    let records = event.Records;
+    for (let index in records) {
+        let payload = records[index].body;
+        console.log('received message ' + payload);
+    }
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY3JlYXRlZFN0YXR1cy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImNyZWF0ZWRTdGF0dXMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFFQSxPQUFPLENBQUMsT0FBTyxHQUFHLEtBQUssV0FBVSxLQUFTO0lBQ3hDLE9BQU8sQ0FBQyxHQUFHLENBQUMsVUFBVSxFQUFFLElBQUksQ0FBQyxTQUFTLENBQUMsS0FBSyxFQUFFLFNBQVMsRUFBRSxDQUFDLENBQUMsQ0FBQyxDQUFDO0lBRTdELElBQUksT0FBTyxHQUFVLEtBQUssQ0FBQyxPQUFPLENBQUM7SUFFbkMsS0FBSSxJQUFJLEtBQUssSUFBSSxPQUFPLEVBQUU7UUFDeEIsSUFBSSxPQUFPLEdBQUcsT0FBTyxDQUFDLEtBQUssQ0FBQyxDQUFDLElBQUksQ0FBQztRQUNsQyxPQUFPLENBQUMsR0FBRyxDQUFDLG1CQUFtQixHQUFHLE9BQU8sQ0FBQyxDQUFDO0tBQzVDO0FBQ0gsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHt9O1xuXG5leHBvcnRzLmhhbmRsZXIgPSBhc3luYyBmdW5jdGlvbihldmVudDphbnkpIHtcbiAgY29uc29sZS5sb2coXCJyZXF1ZXN0OlwiLCBKU09OLnN0cmluZ2lmeShldmVudCwgdW5kZWZpbmVkLCAyKSk7XG5cbiAgbGV0IHJlY29yZHM6IGFueVtdID0gZXZlbnQuUmVjb3JkcztcbiAgXG4gIGZvcihsZXQgaW5kZXggaW4gcmVjb3Jkcykge1xuICAgIGxldCBwYXlsb2FkID0gcmVjb3Jkc1tpbmRleF0uYm9keTtcbiAgICBjb25zb2xlLmxvZygncmVjZWl2ZWQgbWVzc2FnZSAnICsgcGF5bG9hZCk7XG4gIH1cbn07Il19

@@ -66,6 +66,13 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
+  #### [The Big Fan](/the-big-fan/README.md)  
+  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+
+  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
+
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
   
@@ -116,6 +123,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <br />
   
   * [Eric Johnson](#eric-johnson)
+  * [Heitor Lessa](#heitor-lessa)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
@@ -134,6 +142,20 @@ All patterns are available in Typescript and Python so pick your favourite langu
   You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  ### Heitor Lessa
+  <img src="img/dev_profiles/heitor_lessa.png" width="120" alt="Heitor Lessa profile pic" /><br />
+
+  Principal Serverless Lead, Well-Architected @ AWS<br />
+
+  Twitter - [@heitor_lessa](https://twitter.com/heitor_lessa)<br />
+
+  #### [The Big Fan](/the-big-fan/README.md)  
+  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+
+  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
 
   <br /><hr /><br />
 
@@ -205,6 +227,13 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <summary>
     Resiliency Focused Patterns
   </summary>
+
+  #### [The Big Fan](/the-big-fan/README.md)  
+  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+
+  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
 
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
   This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />

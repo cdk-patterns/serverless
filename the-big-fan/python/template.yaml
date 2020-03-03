@@ -1,0 +1,554 @@
+Resources:
+  theBigFanTopicF96567DE:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: The Big Fan CDK Pattern Topic
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanTopic/Resource
+  BigFanTopicStatusCreatedSubscriberQueue589E974E:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: BigFanTopicStatusCreatedSubscriberQueue
+      VisibilityTimeout: 300
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicStatusCreatedSubscriberQueue/Resource
+  BigFanTopicStatusCreatedSubscriberQueuePolicy92D53255:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sqs:SendMessage
+            Condition:
+              ArnEquals:
+                aws:SourceArn:
+                  Ref: theBigFanTopicF96567DE
+            Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Resource:
+              Fn::GetAtt:
+                - BigFanTopicStatusCreatedSubscriberQueue589E974E
+                - Arn
+        Version: "2012-10-17"
+      Queues:
+        - Ref: BigFanTopicStatusCreatedSubscriberQueue589E974E
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicStatusCreatedSubscriberQueue/Policy/Resource
+  BigFanTopicStatusCreatedSubscriberQueuethebigfantheBigFanTopic5A3DE4C124CD014C:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn:
+        Ref: theBigFanTopicF96567DE
+      Endpoint:
+        Fn::GetAtt:
+          - BigFanTopicStatusCreatedSubscriberQueue589E974E
+          - Arn
+      FilterPolicy:
+        status:
+          - created
+      RawMessageDelivery: true
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicStatusCreatedSubscriberQueue/thebigfantheBigFanTopic5A3DE4C1/Resource
+  BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: BigFanTopicAnyOtherStatusSubscriberQueue
+      VisibilityTimeout: 300
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicAnyOtherStatusSubscriberQueue/Resource
+  BigFanTopicAnyOtherStatusSubscriberQueuePolicy38415694:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sqs:SendMessage
+            Condition:
+              ArnEquals:
+                aws:SourceArn:
+                  Ref: theBigFanTopicF96567DE
+            Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Resource:
+              Fn::GetAtt:
+                - BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76
+                - Arn
+        Version: "2012-10-17"
+      Queues:
+        - Ref: BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicAnyOtherStatusSubscriberQueue/Policy/Resource
+  BigFanTopicAnyOtherStatusSubscriberQueuethebigfantheBigFanTopic5A3DE4C1B699CE5B:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn:
+        Ref: theBigFanTopicF96567DE
+      Endpoint:
+        Fn::GetAtt:
+          - BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76
+          - Arn
+      FilterPolicy:
+        status:
+          - anything-but:
+              - created
+      RawMessageDelivery: true
+    Metadata:
+      aws:cdk:path: the-big-fan/BigFanTopicAnyOtherStatusSubscriberQueue/thebigfantheBigFanTopic5A3DE4C1/Resource
+  SQSCreatedStatusSubscribeLambdaHandlerServiceRole36576A8A:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSCreatedStatusSubscribeLambdaHandler/ServiceRole/Resource
+  SQSCreatedStatusSubscribeLambdaHandlerServiceRoleDefaultPolicyF668D64A:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - sqs:ReceiveMessage
+              - sqs:ChangeMessageVisibility
+              - sqs:GetQueueUrl
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - BigFanTopicStatusCreatedSubscriberQueue589E974E
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: SQSCreatedStatusSubscribeLambdaHandlerServiceRoleDefaultPolicyF668D64A
+      Roles:
+        - Ref: SQSCreatedStatusSubscribeLambdaHandlerServiceRole36576A8A
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSCreatedStatusSubscribeLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  SQSCreatedStatusSubscribeLambdaHandler0467DB95:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3BucketF6295E77
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3VersionKey101243C6
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3VersionKey101243C6
+      Handler: createdStatus.handler
+      Role:
+        Fn::GetAtt:
+          - SQSCreatedStatusSubscribeLambdaHandlerServiceRole36576A8A
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - SQSCreatedStatusSubscribeLambdaHandlerServiceRoleDefaultPolicyF668D64A
+      - SQSCreatedStatusSubscribeLambdaHandlerServiceRole36576A8A
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSCreatedStatusSubscribeLambdaHandler/Resource
+      aws:asset:path: /home/ec2-user/environment/serverless/the-big-fan/python/lambdas/subscribe
+      aws:asset:property: Code
+  SQSCreatedStatusSubscribeLambdaHandlerSqsEventSourcethebigfanBigFanTopicStatusCreatedSubscriberQueue94667EC51EBA6CBF:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - BigFanTopicStatusCreatedSubscriberQueue589E974E
+          - Arn
+      FunctionName:
+        Ref: SQSCreatedStatusSubscribeLambdaHandler0467DB95
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSCreatedStatusSubscribeLambdaHandler/SqsEventSource:thebigfanBigFanTopicStatusCreatedSubscriberQueue94667EC5/Resource
+  SQSAnyOtherStatusSubscribeLambdaHandlerServiceRole395E81EB:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSAnyOtherStatusSubscribeLambdaHandler/ServiceRole/Resource
+  SQSAnyOtherStatusSubscribeLambdaHandlerServiceRoleDefaultPolicy7E448E8B:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - sqs:ReceiveMessage
+              - sqs:ChangeMessageVisibility
+              - sqs:GetQueueUrl
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: SQSAnyOtherStatusSubscribeLambdaHandlerServiceRoleDefaultPolicy7E448E8B
+      Roles:
+        - Ref: SQSAnyOtherStatusSubscribeLambdaHandlerServiceRole395E81EB
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSAnyOtherStatusSubscribeLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  SQSAnyOtherStatusSubscribeLambdaHandler4037E293:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3BucketF6295E77
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3VersionKey101243C6
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3VersionKey101243C6
+      Handler: anyOtherStatus.handler
+      Role:
+        Fn::GetAtt:
+          - SQSAnyOtherStatusSubscribeLambdaHandlerServiceRole395E81EB
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - SQSAnyOtherStatusSubscribeLambdaHandlerServiceRoleDefaultPolicy7E448E8B
+      - SQSAnyOtherStatusSubscribeLambdaHandlerServiceRole395E81EB
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSAnyOtherStatusSubscribeLambdaHandler/Resource
+      aws:asset:path: /home/ec2-user/environment/serverless/the-big-fan/python/lambdas/subscribe
+      aws:asset:property: Code
+  SQSAnyOtherStatusSubscribeLambdaHandlerSqsEventSourcethebigfanBigFanTopicAnyOtherStatusSubscriberQueue08B8CA2B7F854F89:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - BigFanTopicAnyOtherStatusSubscriberQueue51F6CD76
+          - Arn
+      FunctionName:
+        Ref: SQSAnyOtherStatusSubscribeLambdaHandler4037E293
+    Metadata:
+      aws:cdk:path: the-big-fan/SQSAnyOtherStatusSubscribeLambdaHandler/SqsEventSource:thebigfanBigFanTopicAnyOtherStatusSubscriberQueue08B8CA2B/Resource
+  theBigFanAPI6E21715A:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: theBigFanAPI
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/Resource
+  theBigFanAPIDeployment0A3D40CCcf746076bf7529c29b9e444712e403b5:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - theBigFanAPISendEventPOSTBC493093
+      - theBigFanAPISendEventD29495C2
+      - theBigFanAPIErrorResponseModel11E9FBC4
+      - theBigFanAPIResponseModelD06A5A7F
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/Deployment/Resource
+  theBigFanAPIDeploymentStageprod1F15C9DC:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+      DeploymentId:
+        Ref: theBigFanAPIDeployment0A3D40CCcf746076bf7529c29b9e444712e403b5
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+      StageName: prod
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/DeploymentStage.prod/Resource
+  theBigFanAPICloudWatchRoleD603B41E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/CloudWatchRole/Resource
+  theBigFanAPIAccountBD0B8261:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - theBigFanAPICloudWatchRoleD603B41E
+          - Arn
+    DependsOn:
+      - theBigFanAPI6E21715A
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/Account
+  theBigFanAPISendEventD29495C2:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - theBigFanAPI6E21715A
+          - RootResourceId
+      PathPart: SendEvent
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/Default/SendEvent/Resource
+  theBigFanAPISendEventPOSTBC493093:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      ResourceId:
+        Ref: theBigFanAPISendEventD29495C2
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+      AuthorizationType: NONE
+      Integration:
+        Credentials:
+          Fn::GetAtt:
+            - DefaultLambdaHanderRoleA44A3BA8
+            - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: '{"message": "message added to topic"}'
+            StatusCode: "200"
+          - ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+            SelectionPattern: ^\[Error\].*
+            StatusCode: "400"
+        PassthroughBehavior: NEVER
+        RequestParameters:
+          integration.request.header.Content-Type: "'application/x-www-form-urlencoded'"
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+              - ""
+              - - Action=Publish&TargetArn=$util.urlEncode('
+                - Ref: theBigFanTopicF96567DE
+                - "')&Message=$util.urlEncode($input.path('$.message'))&Version=2010-03-31&MessageAttributes.entry.1.Name=status&MessageAttributes.entry.1.Value.DataType=String&MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.path('$.status'))"
+        Type: AWS
+        Uri: arn:aws:apigateway:us-east-1:sns:path//
+      MethodResponses:
+        - ResponseModels:
+            application/json:
+              Ref: theBigFanAPIResponseModelD06A5A7F
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "200"
+        - ResponseModels:
+            application/json:
+              Ref: theBigFanAPIErrorResponseModel11E9FBC4
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "400"
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/Default/SendEvent/POST/Resource
+  theBigFanAPIResponseModelD06A5A7F:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+      ContentType: application/json
+      Name: ResponseModel
+      Schema:
+        properties:
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: pollResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/ResponseModel/Resource
+  theBigFanAPIErrorResponseModel11E9FBC4:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: theBigFanAPI6E21715A
+      ContentType: application/json
+      Name: ErrorResponseModel
+      Schema:
+        properties:
+          state:
+            type: string
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: errorResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-big-fan/theBigFanAPI/ErrorResponseModel/Resource
+  DefaultLambdaHanderRoleA44A3BA8:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: the-big-fan/DefaultLambdaHanderRole/Resource
+  DefaultLambdaHanderRoleDefaultPolicy40E2D129:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sns:Publish
+            Effect: Allow
+            Resource:
+              Ref: theBigFanTopicF96567DE
+        Version: "2012-10-17"
+      PolicyName: DefaultLambdaHanderRoleDefaultPolicy40E2D129
+      Roles:
+        - Ref: DefaultLambdaHanderRoleA44A3BA8
+    Metadata:
+      aws:cdk:path: the-big-fan/DefaultLambdaHanderRole/DefaultPolicy/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.26.0,@aws-cdk/assets=1.26.0,@aws-cdk/aws-apigateway=1.26.0,@aws-cdk/aws-applicationautoscaling=1.26.0,@aws-cdk/aws-autoscaling=1.26.0,@aws-cdk/aws-autoscaling-common=1.26.0,@aws-cdk/aws-autoscaling-hooktargets=1.26.0,@aws-cdk/aws-certificatemanager=1.26.0,@aws-cdk/aws-cloudformation=1.26.0,@aws-cdk/aws-cloudfront=1.26.0,@aws-cdk/aws-cloudwatch=1.26.0,@aws-cdk/aws-dynamodb=1.26.0,@aws-cdk/aws-ec2=1.26.0,@aws-cdk/aws-ecr=1.26.0,@aws-cdk/aws-ecr-assets=1.26.0,@aws-cdk/aws-ecs=1.26.0,@aws-cdk/aws-elasticloadbalancing=1.26.0,@aws-cdk/aws-elasticloadbalancingv2=1.26.0,@aws-cdk/aws-events=1.26.0,@aws-cdk/aws-iam=1.26.0,@aws-cdk/aws-kinesis=1.26.0,@aws-cdk/aws-kms=1.26.0,@aws-cdk/aws-lambda=1.26.0,@aws-cdk/aws-lambda-event-sources=1.26.0,@aws-cdk/aws-logs=1.26.0,@aws-cdk/aws-route53=1.26.0,@aws-cdk/aws-route53-targets=1.26.0,@aws-cdk/aws-s3=1.26.0,@aws-cdk/aws-s3-assets=1.26.0,@aws-cdk/aws-s3-notifications=1.26.0,@aws-cdk/aws-sam=1.26.0,@aws-cdk/aws-secretsmanager=1.26.0,@aws-cdk/aws-servicediscovery=1.26.0,@aws-cdk/aws-sns=1.26.0,@aws-cdk/aws-sns-subscriptions=1.26.0,@aws-cdk/aws-sqs=1.26.0,@aws-cdk/aws-ssm=1.26.0,@aws-cdk/aws-stepfunctions=1.26.0,@aws-cdk/aws-stepfunctions-tasks=1.26.0,@aws-cdk/core=1.26.0,@aws-cdk/custom-resources=1.26.0,@aws-cdk/cx-api=1.26.0,@aws-cdk/region-info=1.26.0,jsii-runtime=Python/3.6.8
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3BucketF6295E77:
+    Type: String
+    Description: S3 bucket for asset "7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2"
+  AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2S3VersionKey101243C6:
+    Type: String
+    Description: S3 key for asset version "7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2"
+  AssetParameters7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2ArtifactHash71ED0E9B:
+    Type: String
+    Description: Artifact hash for asset "7c329e72aacb934b99deede07cf288d208762e102d0388178077f650f7c09fc2"
+Outputs:
+  theBigFanAPIEndpointFC762F6E:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: theBigFanAPI6E21715A
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: theBigFanAPIDeploymentStageprod1F15C9DC
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
