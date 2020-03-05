@@ -1,6 +1,6 @@
 # The Simple GraphQL Service
 
-![architecture](img/architecture.png)
+![architecture](../img/architecture.png)
 
 This is an example CDK stack to deploy The Simple GraphQL Service stack inspired by the [CDK AppSync Module example]( https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appsync-readme.html#usage-example)
 

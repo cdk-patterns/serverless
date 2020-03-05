@@ -15,7 +15,7 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 
 ### Postman Example
 Follow the [Postman instructions for GraphQL](https://learning.postman.com/docs/postman/sending-api-requests/graphql/) 
-![postman](img/postman.png)
+![postman](../img/postman.png)
 
 # CDK Python Useful Commands
 
