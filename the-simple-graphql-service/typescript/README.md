@@ -1,14 +1,21 @@
-# The Simple Webservice
+# The Simple GraphQL Service
 
-This is an example CDK stack to deploy The Simple Webservice stack described by Jeremy Daly here - https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#simplewebservice
+![architecture](img/architecture.png)
 
-Most of this code was borrowed from https://www.cdkworkshop.com
+This is an example CDK stack to deploy The Simple GraphQL Service stack inspired by the [CDK AppSync Module example]( https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appsync-readme.html#usage-example)
 
-This is the most basic of implementations and would have to be hardened before production use. e.g. cognito added to the API Gateway
+An advanced version of this pattern was talked about by [Heitor Lessa](https://twitter.com/heitor_lessa) at re:Invent 2019 as "The Cherry Pick".
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-graphql-service/img/architecture.png)
+* [Youtube Recording](https://www.youtube.com/watch?v=9IYpGTS7Jy0)
+* [Static Slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf)
+
+This is the most basic of implementations and would have to be hardened before production use. e.g. cognito user pools configured
 
 After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited.
+
+### Postman Example
+Follow the [Postman instructions for GraphQL](https://learning.postman.com/docs/postman/sending-api-requests/graphql/) 
+![postman](img/postman.png)
 
 ## Useful commands
 
