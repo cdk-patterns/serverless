@@ -1,7 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import { CfnApiKey, PrimaryKey, Values, GraphQLApi, MappingTemplate, UserPoolDefaultAction, FieldLogLevel } from '@aws-cdk/aws-appsync';
-import { UserPool } from "@aws-cdk/aws-cognito";
+import { CfnApiKey, PrimaryKey, Values, GraphQLApi, MappingTemplate, FieldLogLevel } from '@aws-cdk/aws-appsync';
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { join } from 'path';
 
@@ -10,28 +9,10 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     super(scope, id, props);
 
     /**
-     * Create a new Cognito User Pool
-     */
-    const userPool = new UserPool(this, 'UserPool', {
-      userPoolName: 'the-simple-graphql-service-userpool'
-    });
-
-    /**
      * Create a new AppSync GraphQL API
      */
     const api = new GraphQLApi(this, 'Api', {
       name: `demoapi`,
-      // authorizationConfig: {
-      //   defaultAuthorization: {
-      //     userPool,
-      //     defaultAction: UserPoolDefaultAction.ALLOW,
-      //   },
-      //   additionalAuthorizationModes: [
-      //     {
-      //       apiKeyDesc: 'the-simple-graphql-service-api-key',
-      //     },
-      //   ],
-      // },
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
       },
