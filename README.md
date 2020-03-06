@@ -103,6 +103,12 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   <br /><hr /><br />
 
+  #### [The Simple GraphQL Service](/the-simple-graphql-service/README.md)
+  Simple graphQL service built with [AppSync](https://aws.amazon.com/appsync/)<br /><br />
+  ![Architecture](the-simple-graphql-service/img/architecture.png)
+
+  <br /><hr /><br />
+
   #### [The Simple Webservice](/the-simple-webservice/README.md)
   The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
@@ -127,6 +133,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
+  * [Thorsten Hoeger](#thorsten-hoeger)
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -211,7 +218,7 @@ All patterns are available in Typescript and Python so pick your favourite langu
 
   Twitter - [@nideveloper](https://twitter.com/nideveloper) <br />
   Blog - [mattcoulter.com](https://www.mattcoulter.com) <br />
-
+  
   #### Single Page Application S3 Website Deploy
   These are built using https://www.npmjs.com/package/cdk-spa-deploy and allow you to deploy a website in as little as 5 lines of CDK code.
 
@@ -221,6 +228,18 @@ All patterns are available in Typescript and Python so pick your favourite langu
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
 
   <br /><hr /><br />
+
+  ### Thorsten Hoeger
+  <img src="img/dev_profiles/thorsten-hoeger.png" width="120" alt="Thorsten Hoeger profile pic" /><br />
+
+  Cloud Evangelist, CEO @ Taimos GmbH [@taimosgmbh](https://twitter.com/taimosgmbh) - [AWS Community Hero](http://aws.amazon.com/de/heroes/) - AWS, Alexa, Serverless, Gemeinderat [@fw_reichenbach](https://twitter.com/fw_reichenbach)<br />
+
+  Twitter - [@hoegertn](https://twitter.com/hoegertn) <br />
+  LinkTree - [@hoegertn](https://linktr.ee/hoegertn) <br />
+
+  #### [The Simple GraphQL Service](/the-simple-graphql-service/README.md)
+  Simple graphQL service built with [AppSync](https://aws.amazon.com/appsync/)<br /><br />
+  ![Architecture](the-simple-graphql-service/img/architecture.png)
 
 </details>
 <details>
