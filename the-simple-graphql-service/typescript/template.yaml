@@ -1,50 +1,4 @@
 Resources:
-  UserPoolsmsRole4EA729DD:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Action: sts:AssumeRole
-            Condition:
-              StringEquals:
-                sts:ExternalId: TheSimpleGraphqlServiceStackUserPoolE812EAB5
-            Effect: Allow
-            Principal:
-              Service: cognito-idp.amazonaws.com
-        Version: "2012-10-17"
-      Policies:
-        - PolicyDocument:
-            Statement:
-              - Action: sns:Publish
-                Effect: Allow
-                Resource: "*"
-            Version: "2012-10-17"
-          PolicyName: sns-publish
-    Metadata:
-      aws:cdk:path: TheSimpleGraphqlServiceStack/UserPool/smsRole/Resource
-  UserPool6BA7E5F2:
-    Type: AWS::Cognito::UserPool
-    Properties:
-      AdminCreateUserConfig:
-        AllowAdminCreateUserOnly: true
-      EmailVerificationMessage: Hello {username}, Your verification code is {####}
-      EmailVerificationSubject: Verify your new account
-      LambdaConfig: {}
-      SmsConfiguration:
-        ExternalId: TheSimpleGraphqlServiceStackUserPoolE812EAB5
-        SnsCallerArn:
-          Fn::GetAtt:
-            - UserPoolsmsRole4EA729DD
-            - Arn
-      SmsVerificationMessage: The verification code to your new account is {####}
-      UserPoolName: the-simple-graphql-service-userpool
-      VerificationMessageTemplate:
-        DefaultEmailOption: CONFIRM_WITH_CODE
-        EmailMessage: Hello {username}, Your verification code is {####}
-        EmailSubject: Verify your new account
-        SmsMessage: The verification code to your new account is {####}
-    Metadata:
-      aws:cdk:path: TheSimpleGraphqlServiceStack/UserPool/Resource
   ApiApiLogsRole90293F72:
     Type: AWS::IAM::Role
     Properties:
@@ -443,7 +397,7 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.27.0,@aws-cdk/assets=1.27.0,@aws-cdk/aws-applicationautoscaling=1.27.0,@aws-cdk/aws-appsync=1.27.0,@aws-cdk/aws-autoscaling=1.27.0,@aws-cdk/aws-autoscaling-common=1.27.0,@aws-cdk/aws-autoscaling-hooktargets=1.27.0,@aws-cdk/aws-cloudformation=1.27.0,@aws-cdk/aws-cloudwatch=1.27.0,@aws-cdk/aws-cognito=1.27.0,@aws-cdk/aws-dynamodb=1.27.0,@aws-cdk/aws-ec2=1.27.0,@aws-cdk/aws-ecr=1.27.0,@aws-cdk/aws-ecr-assets=1.27.0,@aws-cdk/aws-ecs=1.27.0,@aws-cdk/aws-elasticloadbalancingv2=1.27.0,@aws-cdk/aws-events=1.27.0,@aws-cdk/aws-iam=1.27.0,@aws-cdk/aws-kms=1.27.0,@aws-cdk/aws-lambda=1.27.0,@aws-cdk/aws-logs=1.27.0,@aws-cdk/aws-s3=1.27.0,@aws-cdk/aws-s3-assets=1.27.0,@aws-cdk/aws-servicediscovery=1.27.0,@aws-cdk/aws-sns=1.27.0,@aws-cdk/aws-sns-subscriptions=1.27.0,@aws-cdk/aws-sqs=1.27.0,@aws-cdk/aws-ssm=1.27.0,@aws-cdk/aws-stepfunctions=1.27.0,@aws-cdk/aws-stepfunctions-tasks=1.27.0,@aws-cdk/core=1.27.0,@aws-cdk/custom-resources=1.27.0,@aws-cdk/cx-api=1.27.0,@aws-cdk/region-info=1.27.0,jsii-runtime=node.js/v13.8.0
+      Modules: aws-cdk=1.27.0,@aws-cdk/assets=1.27.0,@aws-cdk/aws-applicationautoscaling=1.27.0,@aws-cdk/aws-appsync=1.27.0,@aws-cdk/aws-autoscaling=1.27.0,@aws-cdk/aws-autoscaling-common=1.27.0,@aws-cdk/aws-autoscaling-hooktargets=1.27.0,@aws-cdk/aws-cloudformation=1.27.0,@aws-cdk/aws-cloudwatch=1.27.0,@aws-cdk/aws-dynamodb=1.27.0,@aws-cdk/aws-ec2=1.27.0,@aws-cdk/aws-ecr=1.27.0,@aws-cdk/aws-ecr-assets=1.27.0,@aws-cdk/aws-ecs=1.27.0,@aws-cdk/aws-elasticloadbalancingv2=1.27.0,@aws-cdk/aws-events=1.27.0,@aws-cdk/aws-iam=1.27.0,@aws-cdk/aws-kms=1.27.0,@aws-cdk/aws-lambda=1.27.0,@aws-cdk/aws-logs=1.27.0,@aws-cdk/aws-s3=1.27.0,@aws-cdk/aws-s3-assets=1.27.0,@aws-cdk/aws-servicediscovery=1.27.0,@aws-cdk/aws-sns=1.27.0,@aws-cdk/aws-sns-subscriptions=1.27.0,@aws-cdk/aws-sqs=1.27.0,@aws-cdk/aws-ssm=1.27.0,@aws-cdk/aws-stepfunctions=1.27.0,@aws-cdk/aws-stepfunctions-tasks=1.27.0,@aws-cdk/core=1.27.0,@aws-cdk/custom-resources=1.27.0,@aws-cdk/cx-api=1.27.0,@aws-cdk/region-info=1.27.0,jsii-runtime=node.js/v13.8.0
     Condition: CDKMetadataAvailable
 Parameters:
   AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3BucketF71A97B7:
