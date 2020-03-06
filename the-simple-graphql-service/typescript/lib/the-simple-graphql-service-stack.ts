@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import { PrimaryKey, Values, GraphQLApi, MappingTemplate, UserPoolDefaultAction, FieldLogLevel } from '@aws-cdk/aws-appsync';
+import { CfnApiKey, PrimaryKey, Values, GraphQLApi, MappingTemplate, UserPoolDefaultAction, FieldLogLevel } from '@aws-cdk/aws-appsync';
 import { UserPool } from "@aws-cdk/aws-cognito";
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { join } from 'path';
@@ -21,21 +21,25 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
      */
     const api = new GraphQLApi(this, 'Api', {
       name: `demoapi`,
-      authorizationConfig: {
-        defaultAuthorization: {
-          userPool,
-          defaultAction: UserPoolDefaultAction.ALLOW,
-        },
-        additionalAuthorizationModes: [
-          {
-            apiKeyDesc: 'the-simple-graphql-service-api-key',
-          },
-        ],
-      },
+      // authorizationConfig: {
+      //   defaultAuthorization: {
+      //     userPool,
+      //     defaultAction: UserPoolDefaultAction.ALLOW,
+      //   },
+      //   additionalAuthorizationModes: [
+      //     {
+      //       apiKeyDesc: 'the-simple-graphql-service-api-key',
+      //     },
+      //   ],
+      // },
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
       },
       schemaDefinitionFile: join('__dirname', '/../', 'schema/schema.graphql'),
+    });
+    
+    new CfnApiKey(this, 'the-simple-graphql-service-api-key', {
+      apiId: api.apiId
     });
 
     /**
