@@ -31,6 +31,14 @@ test('AppSync Endpoint Created', () => {
   ));
 });
 
+test('API Key Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheSimpleGraphQLService.TheSimpleGraphQLServiceStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::AppSync::ApiKey"));
+});
+
 test('DynamoDB Read/Write IAM Policy Created', () => {
   const app = new cdk.App();
   // WHEN

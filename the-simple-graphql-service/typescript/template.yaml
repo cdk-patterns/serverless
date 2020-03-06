@@ -37,6 +37,7 @@ Resources:
             - UserPoolsmsRole4EA729DD
             - Arn
       SmsVerificationMessage: The verification code to your new account is {####}
+      UserPoolName: the-simple-graphql-service-userpool
       VerificationMessageTemplate:
         DefaultEmailOption: CONFIRM_WITH_CODE
         EmailMessage: Hello {username}, Your verification code is {####}
@@ -367,6 +368,15 @@ Resources:
       - ApiSchema510EECD7
     Metadata:
       aws:cdk:path: TheSimpleGraphqlServiceStack/Api/LoyaltyDS/QuerygetLoyaltyLevelResolver/Resource
+  thesimplegraphqlserviceapikey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - ApiF70053CD
+          - ApiId
+    Metadata:
+      aws:cdk:path: TheSimpleGraphqlServiceStack/the-simple-graphql-service-api-key
   CustomerTable260DCC08:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -404,7 +414,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301S3Bucket5499B522
+          Ref: AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3BucketF71A97B7
         S3Key:
           Fn::Join:
             - ""
@@ -412,13 +422,13 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301S3VersionKey6B0A0213
+                      - Ref: AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3VersionKey6F1AD796
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301S3VersionKey6B0A0213
-      Handler: lambda.handler
+                      - Ref: AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3VersionKey6F1AD796
+      Handler: loyalty.handler
       Role:
         Fn::GetAtt:
           - LoyaltyLambdaHandlerServiceRole62E814E8
@@ -428,23 +438,34 @@ Resources:
       - LoyaltyLambdaHandlerServiceRole62E814E8
     Metadata:
       aws:cdk:path: TheSimpleGraphqlServiceStack/LoyaltyLambdaHandler/Resource
-      aws:asset:path: asset.939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301
+      aws:asset:path: asset.4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04
       aws:asset:property: Code
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.26.0,@aws-cdk/assets=1.26.0,@aws-cdk/aws-applicationautoscaling=1.26.0,@aws-cdk/aws-appsync=1.26.0,@aws-cdk/aws-autoscaling=1.26.0,@aws-cdk/aws-autoscaling-common=1.26.0,@aws-cdk/aws-autoscaling-hooktargets=1.26.0,@aws-cdk/aws-cloudformation=1.26.0,@aws-cdk/aws-cloudwatch=1.26.0,@aws-cdk/aws-cognito=1.26.0,@aws-cdk/aws-dynamodb=1.26.0,@aws-cdk/aws-ec2=1.26.0,@aws-cdk/aws-ecr=1.26.0,@aws-cdk/aws-ecr-assets=1.26.0,@aws-cdk/aws-ecs=1.26.0,@aws-cdk/aws-elasticloadbalancingv2=1.26.0,@aws-cdk/aws-events=1.26.0,@aws-cdk/aws-iam=1.26.0,@aws-cdk/aws-kms=1.26.0,@aws-cdk/aws-lambda=1.26.0,@aws-cdk/aws-logs=1.26.0,@aws-cdk/aws-s3=1.26.0,@aws-cdk/aws-s3-assets=1.26.0,@aws-cdk/aws-servicediscovery=1.26.0,@aws-cdk/aws-sns=1.26.0,@aws-cdk/aws-sns-subscriptions=1.26.0,@aws-cdk/aws-sqs=1.26.0,@aws-cdk/aws-ssm=1.26.0,@aws-cdk/aws-stepfunctions=1.26.0,@aws-cdk/aws-stepfunctions-tasks=1.26.0,@aws-cdk/core=1.26.0,@aws-cdk/custom-resources=1.26.0,@aws-cdk/cx-api=1.26.0,@aws-cdk/region-info=1.26.0,jsii-runtime=node.js/v13.8.0
+      Modules: aws-cdk=1.27.0,@aws-cdk/assets=1.27.0,@aws-cdk/aws-applicationautoscaling=1.27.0,@aws-cdk/aws-appsync=1.27.0,@aws-cdk/aws-autoscaling=1.27.0,@aws-cdk/aws-autoscaling-common=1.27.0,@aws-cdk/aws-autoscaling-hooktargets=1.27.0,@aws-cdk/aws-cloudformation=1.27.0,@aws-cdk/aws-cloudwatch=1.27.0,@aws-cdk/aws-cognito=1.27.0,@aws-cdk/aws-dynamodb=1.27.0,@aws-cdk/aws-ec2=1.27.0,@aws-cdk/aws-ecr=1.27.0,@aws-cdk/aws-ecr-assets=1.27.0,@aws-cdk/aws-ecs=1.27.0,@aws-cdk/aws-elasticloadbalancingv2=1.27.0,@aws-cdk/aws-events=1.27.0,@aws-cdk/aws-iam=1.27.0,@aws-cdk/aws-kms=1.27.0,@aws-cdk/aws-lambda=1.27.0,@aws-cdk/aws-logs=1.27.0,@aws-cdk/aws-s3=1.27.0,@aws-cdk/aws-s3-assets=1.27.0,@aws-cdk/aws-servicediscovery=1.27.0,@aws-cdk/aws-sns=1.27.0,@aws-cdk/aws-sns-subscriptions=1.27.0,@aws-cdk/aws-sqs=1.27.0,@aws-cdk/aws-ssm=1.27.0,@aws-cdk/aws-stepfunctions=1.27.0,@aws-cdk/aws-stepfunctions-tasks=1.27.0,@aws-cdk/core=1.27.0,@aws-cdk/custom-resources=1.27.0,@aws-cdk/cx-api=1.27.0,@aws-cdk/region-info=1.27.0,jsii-runtime=node.js/v13.8.0
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301S3Bucket5499B522:
+  AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3BucketF71A97B7:
     Type: String
-    Description: S3 bucket for asset "939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301"
-  AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301S3VersionKey6B0A0213:
+    Description: S3 bucket for asset "4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04"
+  AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04S3VersionKey6F1AD796:
     Type: String
-    Description: S3 key for asset version "939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301"
-  AssetParameters939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301ArtifactHashF3907CE0:
+    Description: S3 key for asset version "4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04"
+  AssetParameters4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04ArtifactHashAFB30D89:
     Type: String
-    Description: Artifact hash for asset "939fef107d668997d47799aa6a09a86b8e9551d1b153cc2c96c456d160ba3301"
+    Description: Artifact hash for asset "4f4ca4a2006c152258cd3ec8fbd6b341acf4241b48c39c82959f125b819a2c04"
+Outputs:
+  Endpoint:
+    Value:
+      Fn::GetAtt:
+        - ApiF70053CD
+        - GraphQLUrl
+  APIKey:
+    Value:
+      Fn::GetAtt:
+        - thesimplegraphqlserviceapikey
+        - ApiKey
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
