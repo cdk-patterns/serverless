@@ -2,6 +2,9 @@
 *.d.ts
 node_modules
 
+# Intellij
+.idea
+
 # CDK asset staging directory
 .cdk.staging
 cdk.out
