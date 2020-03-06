@@ -1,7 +1,6 @@
 from aws_cdk import (
     aws_lambda as _lambda,
     aws_appsync as appsync,
-    aws_cognito as cognito,
     aws_dynamodb as dynamo_db,
     core
 )
@@ -11,22 +10,16 @@ class TheSimpleGraphqlServiceStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        # Create a new Cognito User Pool
-        user_pool = cognito.UserPool(self, 'UserPool',
-                                     sign_in_aliases=cognito.SignInAliases(username=True)
-                                     )
-
         # Create a new AppSync GraphQL API
         api = appsync.GraphQLApi(self, 'Api',
                                  name="demoapi",
                                  log_config=appsync.LogConfig(field_log_level=appsync.FieldLogLevel.ALL),
-                                 #  User pool authorizer configuration
-                                 #  userPoolConfig={
-                                 #    userPool,
-                                 #    defaultAction: UserPoolDefaultAction.ALLOW,
-                                 #  },
                                  schema_definition_file="schema/schema.graphql"
                                  )
+
+        api_key = appsync.CfnApiKey(self, 'the-simple-graphql-service-api-key',
+                                    api_id=api.api_id
+                                    )
 
         # Create new DynamoDB Table for Customer
         customer_table = dynamo_db.Table(self, "CustomerTable",
@@ -100,3 +93,13 @@ class TheSimpleGraphqlServiceStack(core.Stack):
             request_mapping_template=appsync.MappingTemplate.lambda_request(),
             response_mapping_template=appsync.MappingTemplate.lambda_result(),
         )
+
+        # GraphQL API Endpoint
+        core.CfnOutput(self, 'Endpoint',
+                       value=api.graph_ql_url
+                       )
+
+        # API Key
+        core.CfnOutput(self, 'API_Key',
+                       value=api_key.attr_api_key
+                       )
