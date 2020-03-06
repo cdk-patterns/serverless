@@ -11,8 +11,6 @@ An advanced version of this pattern was talked about by [Heitor Lessa](https://t
 
 This is the most basic of implementations and would have to be hardened before production use. e.g. cognito user pools configured
 
-After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited.
-
 ### Postman Example
 Follow the [Postman instructions for GraphQL](https://learning.postman.com/docs/postman/sending-api-requests/graphql/) 
 ![postman](img/postman.png)
