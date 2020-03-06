@@ -38,7 +38,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       schemaDefinitionFile: join('__dirname', '/../', 'schema/schema.graphql'),
     });
     
-    new CfnApiKey(this, 'the-simple-graphql-service-api-key', {
+    const apiKey = new CfnApiKey(this, 'the-simple-graphql-service-api-key', {
       apiId: api.apiId
     });
 
@@ -124,6 +124,16 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       fieldName: 'getLoyaltyLevel',
       requestMappingTemplate: MappingTemplate.lambdaRequest(),
       responseMappingTemplate: MappingTemplate.lambdaResult(),
+    });
+    
+    // GraphQL API Endpoint
+    new cdk.CfnOutput(this, 'Endpoint', {
+      value: api.graphQlUrl
+    });
+
+    // API Key
+    new cdk.CfnOutput(this, 'API_Key', {
+      value: apiKey.attrApiKey
     });
   }
 }
