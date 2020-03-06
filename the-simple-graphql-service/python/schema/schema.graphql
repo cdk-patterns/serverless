@@ -1,0 +1,35 @@
+type Customer {
+    id: String!
+    name: String!
+}
+
+input SaveCustomerInput {
+    name: String!
+}
+
+type Order {
+    customer: String!
+    order: String!
+}
+
+type Loyalty {
+    level: String
+}
+
+type Query {
+    getCustomers: [Customer]
+    getCustomer(id: String): Customer
+    getLoyaltyLevel(id: String): Loyalty
+}
+
+input FirstOrderInput {
+    product: String!
+    quantity: Int!
+}
+
+type Mutation {
+    addCustomer(customer: SaveCustomerInput!): Customer
+    saveCustomer(id: String!, customer: SaveCustomerInput!): Customer
+    removeCustomer(id: String!): Customer
+    saveCustomerWithFirstOrder(customer: SaveCustomerInput!, order: FirstOrderInput!, referral: String): Order
+}
