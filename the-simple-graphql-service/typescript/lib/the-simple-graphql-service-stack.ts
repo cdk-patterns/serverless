@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import { PrimaryKey, Values, GraphQLApi, MappingTemplate, UserPoolDefaultAction, FieldLogLevel} from '@aws-cdk/aws-appsync';
-import { UserPool, SignInType } from "@aws-cdk/aws-cognito";
+import { PrimaryKey, Values, GraphQLApi, MappingTemplate, UserPoolDefaultAction, FieldLogLevel } from '@aws-cdk/aws-appsync';
+import { UserPool } from "@aws-cdk/aws-cognito";
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { join } from 'path';
 
@@ -13,7 +13,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
      * Create a new Cognito User Pool
      */
     const userPool = new UserPool(this, 'UserPool', {
-      signInType: SignInType.USERNAME
+      userPoolName: 'the-simple-graphql-service-userpool'
     });
 
     /**
@@ -21,14 +21,20 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
      */
     const api = new GraphQLApi(this, 'Api', {
       name: `demoapi`,
+      authorizationConfig: {
+        defaultAuthorization: {
+          userPool,
+          defaultAction: UserPoolDefaultAction.ALLOW,
+        },
+        additionalAuthorizationModes: [
+          {
+            apiKeyDesc: 'the-simple-graphql-service-api-key',
+          },
+        ],
+      },
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
       },
-      // User pool authorizer configuration
-      // userPoolConfig: {
-      //   userPool,
-      //   defaultAction: UserPoolDefaultAction.ALLOW,
-      // },
       schemaDefinitionFile: join('__dirname', '/../', 'schema/schema.graphql'),
     });
 
@@ -69,8 +75,8 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'addCustomer',
       requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
-          PrimaryKey.partition('id').auto(),
-          Values.projecting('customer')),
+        PrimaryKey.partition('id').auto(),
+        Values.projecting('customer')),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
 
@@ -79,12 +85,12 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'saveCustomerWithFirstOrder',
       requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
-          PrimaryKey
-              .partition('order').auto()
-              .sort('customer').is('customer.id'),
-          Values
-              .projecting('order')
-              .attribute('referral').is('referral')),
+        PrimaryKey
+          .partition('order').auto()
+          .sort('customer').is('customer.id'),
+        Values
+          .projecting('order')
+          .attribute('referral').is('referral')),
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
 
