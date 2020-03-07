@@ -11,6 +11,8 @@ An advanced version of this pattern was talked about by [Heitor Lessa](https://t
 
 This is the most basic of [AppSync](https://aws.amazon.com/appsync/) implementations and would have to be hardened before production use. e.g. cognito user pools configured
 
+**Note, never print your API Key to the logs in a production system. This was added to make learning AppSync and GraphQL easier. If you want to use this pattern in a production system remove the two cloudformation outputs**
+
 ### Testing
 
 1. After CDK Deploy, capture outputs from the log.
