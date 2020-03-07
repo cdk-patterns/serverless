@@ -1,0 +1,28 @@
+{
+    "patterns": {
+        "the-big-fan": {
+            "prodReady": false
+        },
+        "the-dynamo-streamer": {
+            "prodReady": false
+        },
+        "the-eventbridge-atm": {
+            "prodReady": false
+        },
+        "the-eventbridge-circuit-breaker": {
+            "prodReady": false
+        },
+        "the-scalable-webhook": {
+            "prodReady": false
+        },
+        "the-simple-graphql-service": {
+            "prodReady": false
+        },
+        "the-simple-webservice": {
+            "prodReady": false
+        },
+        "the-state-machine": {
+            "prodReady": false
+        }
+    }
+}
