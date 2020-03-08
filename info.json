@@ -1,5 +1,11 @@
 {
     "patterns": {
+        "s3-angular-website": {
+            "prodReady": false
+        },
+        "s3-react-website": {
+            "prodReady": false
+        },
         "the-big-fan": {
             "prodReady": false
         },
