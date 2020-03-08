@@ -33,7 +33,6 @@ npx cdkp list
   <br />
   
  ```bash
-# npx cdkp list will show available patterns
 npx cdkp init {pattern-name}
 cd {pattern-name}
 npm run test
@@ -48,7 +47,6 @@ npm run deploy
   <br />
   
   ```bash
-# npx cdkp list will show available patterns
 npx cdkp init {pattern-name} --lang=python
 cd {pattern-name}
 python -m venv .env
