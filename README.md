@@ -16,19 +16,29 @@ Note, this is maintained by [@nideveloper](https://twitter.com/nideveloper) not 
 ## Pattern Usage
 All patterns are available in Typescript and Python so pick your favourite language! Note the Typescript patterns all include unit tests but right now I have not seen a standard python testing approach
 
+You can always clone this repo which contains every pattern in python/typescript but if you just want a single pattern in one language follow these steps:
+
+### 1) Choose your pattern
+Browse the "Grouped Alphabetically" patterns list below or run:
+
+```bash
+npx cdkp list
+```
+
+### 2) Download Pattern In Python or Typescript CDK
 <details>
   <summary>TypeScript</summary>
   <br />
-  All Patterns (unless otherwise stated in their readme) should support the same commands so you can just run:
-  <br /><br />
-  
-  * `git clone https://github.com/cdk-patterns/serverless.git`
-  * `cd {pattern-name}/typescript`
-  * `npm i` - install the dependencies
-  * `npm run build` - build the project
-  * `npm run test` - run the unit tests
-  * `npm run deploy` - deploy the pattern into your AWS account&#42;
+  All Patterns support the same commands so you can just run:
   <br />
+  
+ ```bash
+// npx cdkp list will show available patterns
+npx cdkp init {pattern-name}
+cd {pattern-name}
+npm run test
+npm run deploy*
+```
   
   &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 </details>
@@ -36,16 +46,18 @@ All patterns are available in Typescript and Python so pick your favourite langu
   <summary>Python</summary>
   <br />
   The CDK CLI is still installed via npm so make sure you have the latest version of node installed or the npx commands will fail. Then you can just run:
-  <br /><br />
-  
-  * `git clone https://github.com/cdk-patterns/serverless.git`
-  * `cd {pattern-name}/python`
-  * `python -m venv .env` - Create a virtual env
-  * `source .env/bin/activate` - Activate the virtual env
-  * `pip install -r requirements.txt` - Install the dependencies
-  * `npx cdk synth` - generate a cft from the stack to validate your setup
-  * `npx cdk deploy` - deploy the pattern into your AWS account&#42;
   <br />
+  
+  ```bash
+// npx cdkp list will show available patterns
+npx cdkp init {pattern-name} --lang=python
+cd {pattern-name}
+python -m venv .env
+source .env/bin/activate
+pip install -r requirements.txt
+npx cdk synth
+npx cdk deploy*
+```
   
   &#42; Note this requires you to be using cloud9 or have ran aws configure to setup your local credentials
 </details>
