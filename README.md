@@ -33,11 +33,11 @@ npx cdkp list
   <br />
   
  ```bash
-// npx cdkp list will show available patterns
+# npx cdkp list will show available patterns
 npx cdkp init {pattern-name}
 cd {pattern-name}
 npm run test
-// requires you to be using cloud9 or have ran aws configure to setup your local credentials
+# requires you to be using cloud9 or have ran aws configure to setup your local credentials
 npm run deploy 
 ```
 </details>
@@ -48,14 +48,14 @@ npm run deploy
   <br />
   
   ```bash
-// npx cdkp list will show available patterns
+# npx cdkp list will show available patterns
 npx cdkp init {pattern-name} --lang=python
 cd {pattern-name}
 python -m venv .env
 source .env/bin/activate
 pip install -r requirements.txt
 npx cdk synth
-// requires you to be using cloud9 or have ran aws configure to setup your local credentials
+# requires you to be using cloud9 or have ran aws configure to setup your local credentials
 npx cdk deploy
 ```
 </details>
