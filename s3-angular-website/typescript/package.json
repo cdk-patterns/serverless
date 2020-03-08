@@ -5,7 +5,8 @@
   "scripts": {
     "buildwebsite": "cd website && npm i && npm run build && cd ../",
     "buildcdk": "cd cdk && npm i && npm run build && cd ../",
-    "build": "npm run buildwebsite && npm run buildcdk"
+    "build": "npm run buildwebsite && npm run buildcdk",
+    "deploy": "npm run build && cd cdk && npm run deploy"
   },
   "author": "",
   "license": "ISC"
