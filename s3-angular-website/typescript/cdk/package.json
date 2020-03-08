@@ -6,7 +6,7 @@
   },
   "scripts": {
     "buildwebsite": "cd ../website && npm i && npm run build && cd ../cdk",
-    "build": "npm run buildwebsite && tsc",
+    "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
