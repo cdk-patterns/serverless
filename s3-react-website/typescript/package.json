@@ -1,0 +1,12 @@
+{
+  "name": "cdkpatterns-s3-react-deploy",
+  "version": "1.0.0",
+  "description": "This is a pattern to deploy a react website",
+  "scripts": {
+    "buildwebsite": "cd website && npm i && npm run build && cd ../",
+    "buildcdk": "cd cdk && npm i && npm run build && cd ../",
+    "build": "npm run buildwebsite && npm run buildcdk"
+  },
+  "author": "",
+  "license": "ISC"
+}
