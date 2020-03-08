@@ -49,9 +49,13 @@ npm run deploy
   ```bash
 npx cdkp init {pattern-name} --lang=python
 cd {pattern-name}
+
+# create a virtual env and install your dependencies
 python -m venv .env
 source .env/bin/activate
 pip install -r requirements.txt
+
+# test everything is working by outputting the cloudformation
 npx cdk synth
 # requires you to be using cloud9 or have ran aws configure to setup your local credentials
 npx cdk deploy
