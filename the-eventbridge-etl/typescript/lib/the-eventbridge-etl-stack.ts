@@ -52,6 +52,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       cpu: 256
     });
 
+
     let container = taskDefinition.addContainer('AppContainer', {
       image: ecs.ContainerImage.fromAsset('container/s3DataExtractionTask'),
       logging,
@@ -68,7 +69,8 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       resources: ['*'],
       actions: ['events:PutEvents']
     });
-    container.addToExecutionPolicy(eventPolicy)
+    container.addToExecutionPolicy(eventPolicy);
+    taskDefinition.addToTaskRolePolicy(eventPolicy);
 
     // Grant task access to new uploaded assets
     bucket.grantRead(taskDefinition.taskRole);
