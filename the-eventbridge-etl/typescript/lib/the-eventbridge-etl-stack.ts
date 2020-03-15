@@ -107,7 +107,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/extract'), 
       handler: 's3SqsEventConsumer.handler',
-      reservedConcurrentExecutions: 2, 
+      reservedConcurrentExecutions: 2,
       environment: {
         CLUSTER_NAME: cluster.clusterName,
         TASK_DEFINITION: taskDefinition.taskDefinitionArn,
@@ -149,6 +149,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/transform'),
       handler: 'transform.handler',
+      reservedConcurrentExecutions: 2, 
       timeout: cdk.Duration.seconds(3)
     });
     transformLambda.addToRolePolicy(eventbridgePutPolicy);
@@ -176,6 +177,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas/load'),
       handler: 'load.handler',
       timeout: cdk.Duration.seconds(3),
+      reservedConcurrentExecutions: 2,
       environment: {
         TABLE_NAME: table.tableName
       }
