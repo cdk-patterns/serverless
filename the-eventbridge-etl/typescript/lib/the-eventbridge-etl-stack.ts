@@ -60,6 +60,14 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       },
     });
 
+    // We need to give your fargate container permission to put events on our EventBridge
+    let eventPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: ['events:PutEvents']
+    });
+    container.addToExecutionPolicy(eventPolicy)
+
     // Grant task access to new uploaded assets
     bucket.grantRead(taskDefinition.taskRole);
 

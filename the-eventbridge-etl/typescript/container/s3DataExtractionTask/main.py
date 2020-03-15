@@ -2,8 +2,11 @@ import boto3
 import time
 import os
 import csv
+from datetime import datetime
+import json
 
 def main():
+    event_bridge = boto3.client('events')
     # https://stackoverflow.com/questions/4906977/how-to-access-environment-variable-values
 
     data_s3_bucket_name = os.environ.get('S3_BUCKET_NAME')
@@ -24,10 +27,28 @@ def main():
 
     print('SUCCESS: data file downloaded: ' + local_file)
 
+
     with open(local_file) as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for row in spamreader:
+        reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        headers = next(reader)
+        for row in reader:
             print(', '.join(row))
+            var event = {
+                'headers': ', '.join(headers),
+                'data': ', '.join(row)
+            }
+            response = event_bridge.put_events(
+                Entries=[
+                    {
+                        'DetailType': 's3RecordExtraction',
+                        'EventBusName': 'default',
+                        'Source': 'the-eventbridge-etl',
+                        'Time': datetime.now(),
+                        'Detail': json.dumps(event)
+                        
+                    },
+                ]
+            )
     exit(0)
 
 if __name__ == '__main__':
