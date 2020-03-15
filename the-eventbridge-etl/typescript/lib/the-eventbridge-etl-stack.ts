@@ -40,9 +40,23 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     bucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.SqsDestination(queue));
 
     /**
-     * Fargate ECS Task Creation to pull data from S3
+     * EventBridge Permissions
      */
-    // Producer definition, launch is done through a lambda function
+    let eventbridgePutPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: ['*'],
+      actions: ['events:PutEvents']
+    });
+
+    /**
+     * Fargate ECS Task Creation to pull data from S3
+     * 
+     * Fargate is used here because if you had a seriously large file,
+     * you could stream the data to fargate for as long as needed before
+     * putting the data onto eventbridge or up the memory/storage to 
+     * download the whole file. Lambda has limitations on runtime and 
+     * memory/storage
+     */
     const vpc = new ec2.Vpc(this, 'Vpc', {
       maxAzs: 2, // Default is all AZs in the region
     });
@@ -61,28 +75,48 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       cpu: 256
     });
 
+    // We need to give our fargate container permission to put events on our EventBridge
+    taskDefinition.addToTaskRolePolicy(eventbridgePutPolicy);
+    // Grant fargate container access to the object that was uploaded to s3
+    bucket.grantRead(taskDefinition.taskRole);
 
     let container = taskDefinition.addContainer('AppContainer', {
       image: ecs.ContainerImage.fromAsset('container/s3DataExtractionTask'),
       logging,
       environment: { // clear text, not for sensitive data
         'S3_BUCKET_NAME': bucket.bucketName,
-        'S3_OBJECT_KEY': '',
-        'STREAM_NAME': '',
+        'S3_OBJECT_KEY': ''
       },
     });
 
-    // We need to give your fargate container permission to put events on our EventBridge
-    let eventPolicy = new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      resources: ['*'],
-      actions: ['events:PutEvents']
-    });
-    container.addToExecutionPolicy(eventPolicy);
-    taskDefinition.addToTaskRolePolicy(eventPolicy);
+    /**
+     * Lambdas
+     * 
+     * These are used for 3 phases:
+     * extract - kicks of ecs fargate task to download data and splinter to eventbridge events
+     * transform - takes the two comma separated strings and produces a json object
+     * load - insterts the data into dynamodb
+     */
 
-    // Grant task access to new uploaded assets
-    bucket.grantRead(taskDefinition.taskRole);
+
+    /**
+     * Extract
+     */
+    // defines an AWS Lambda resource to trigger our fargate ecs task
+    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/subscribe'), 
+      handler: 'newObjectInLandingBucketEventQueue.handler',
+      reservedConcurrentExecutions: 2, 
+      environment: {
+        CLUSTER_NAME: cluster.clusterName,
+        TASK_DEFINITION: taskDefinition.taskDefinitionArn,
+        SUBNETS: JSON.stringify(Array.from(vpc.privateSubnets, x => x.subnetId)),
+        CONTAINER_NAME: container.containerName
+      }
+    });
+    queue.grantConsumeMessages(sqsSubscribeLambda);
+    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
 
     const runTaskPolicyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -93,6 +127,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         taskDefinition.taskDefinitionArn,
       ]
     });
+    sqsSubscribeLambda.addToRolePolicy(runTaskPolicyStatement);
 
     const taskExecutionRolePolicyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -104,34 +139,11 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         taskDefinition.taskRole.roleArn,
       ]
     });
-
-    /**
-     * Lambda that subscribes to newObjectInLandingBucketEventQueue
-     */
-
-    // Create a command line launcher for the fargate task. It is based on lambda.
-    const lambdaEnv = {
-      CLUSTER_NAME: cluster.clusterName,
-      TASK_DEFINITION: taskDefinition.taskDefinitionArn,
-      SUBNETS: JSON.stringify(Array.from(vpc.privateSubnets, x => x.subnetId)),
-      CONTAINER_NAME: container.containerName
-    };
-
-    // defines an AWS Lambda resource to pull from our queue
-    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
-      handler: 'newObjectInLandingBucketEventQueue.handler',                // file is "lambda", function is "handler"
-      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
-      environment: lambdaEnv
-    });
-    queue.grantConsumeMessages(sqsSubscribeLambda);
-    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
-    sqsSubscribeLambda.addToRolePolicy(runTaskPolicyStatement);
     sqsSubscribeLambda.addToRolePolicy(taskExecutionRolePolicyStatement);
 
-
-    // Transform Lambda
+    /**
+     * Transform
+     */
     // defines a lambda to transform the data that was extracted from s3
     const transformLambda = new lambda.Function(this, 'TransformLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -139,7 +151,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       handler: 'transform.handler',
       timeout: cdk.Duration.seconds(3)
     });
-    transformLambda.addToRolePolicy(eventPolicy);
+    transformLambda.addToRolePolicy(eventbridgePutPolicy);
 
     // Create EventBridge rule to route failures
     const transformRule = new events.Rule(this, 'transformRule', {
@@ -155,7 +167,9 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
 
     transformRule.addTarget(new events_targets.LambdaFunction(transformLambda));
 
-    // Load Lambda
+    /**
+     * Load
+     */
     // load the transformed data in dynamodb
     const loadLambda = new lambda.Function(this, 'LoadLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -166,7 +180,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         TABLE_NAME: table.tableName
       }
     });
-    transformLambda.addToRolePolicy(eventPolicy);
+    loadLambda.addToRolePolicy(eventbridgePutPolicy);
     table.grantReadWriteData(loadLambda);
 
     // Create EventBridge rule to route failures
