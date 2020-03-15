@@ -47,7 +47,7 @@ exports.handler = async function (event: any) {
         let payload = records[index].body;
         console.log('processing s3 events ' + payload);
 
-        let s3eventRecords = event.Records;
+        let s3eventRecords = payload.Records;
 
         for (let i in s3eventRecords) {
 
