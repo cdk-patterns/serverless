@@ -22,6 +22,11 @@ exports.handler = async function (event: any) {
         throw new Error('SubNets are not defined')
     }
 
+    const containerName = process.env.CONTAINER_NAME;
+    if (typeof containerName == 'undefined') {
+        throw new Error('Container Name is not defined')
+    }
+
     console.log('Cluster Name - ' + clusterName);
     console.log('Task Definition - ' + taskDefinition);
     console.log('SubNets - ' + subNets);
@@ -81,7 +86,8 @@ exports.handler = async function (event: any) {
                                     name: 'S3_OBJECT_KEY',
                                     value: objectKey
                                 }
-                            ]
+                            ],
+                            name: containerName
                         }
                     ]
                 }
