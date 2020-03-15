@@ -33,8 +33,8 @@ def main():
         headers = next(reader)
         for row in reader:
             print(', '.join(row))
-            var event = {
-                'status': 'extracted'
+            event = {
+                'status': 'extracted',
                 'headers': ', '.join(headers),
                 'data': ', '.join(row)
             }
