@@ -29,7 +29,7 @@ def main():
 
 
     with open(local_file) as csvfile:
-        reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        reader = csv.reader(csvfile, delimiter=',')
         headers = next(reader)
         for row in reader:
             print(', '.join(row))
