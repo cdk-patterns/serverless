@@ -9,11 +9,11 @@ exports.handler = async (event:any) => {
   var params = {
     TableName: process.env.TABLE_NAME,
     Item: {
-      'id' : {S: event.detail.ID},
-      'house_number' : {S: event.detail.HouseNum},
-      'street_address': {S: event.detail.Street},
-      'town': {S: event.detail.Town},
-      'zip': {S: event.detail.Zip}
+      'id' : {S: event.detail.data.ID},
+      'house_number' : {S: event.detail.data.HouseNum},
+      'street_address': {S: event.detail.data.Street},
+      'town': {S: event.detail.data.Town},
+      'zip': {S: event.detail.data.Zip}
     }
   };
   
