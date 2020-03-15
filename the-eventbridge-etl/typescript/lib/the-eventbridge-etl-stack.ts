@@ -130,13 +130,13 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
 
     // Create EventBridge rule to route failures
-    const transformRule = new events.Rule(this, 'webserviceErrorRule', {
-      description: 'Failed Webservice Call',
+    const transformRule = new events.Rule(this, 'transformRule', {
+      description: 'Data extracted from S3, Needs transformed',
       eventPattern: {
-        source: ['cdkpatterns.eventbridge.circuitbreaker'],
-        detailType: ['httpcall'],
+        source: ['cdkpatterns.the-eventbridge-etl'],
+        detailType: ['s3RecordExtraction'],
         detail: {
-          status: ["fail"]
+          status: ["extracted"]
         }
       }
     });

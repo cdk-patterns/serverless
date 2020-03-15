@@ -34,6 +34,7 @@ def main():
         for row in reader:
             print(', '.join(row))
             var event = {
+                'status': 'extracted'
                 'headers': ', '.join(headers),
                 'data': ', '.join(row)
             }
@@ -42,7 +43,7 @@ def main():
                     {
                         'DetailType': 's3RecordExtraction',
                         'EventBusName': 'default',
-                        'Source': 'the-eventbridge-etl',
+                        'Source': 'cdkpatterns.the-eventbridge-etl',
                         'Time': datetime.now(),
                         'Detail': json.dumps(event)
                         
