@@ -157,7 +157,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     transformLambda.addToRolePolicy(eventPolicy);
 
     // Create EventBridge rule to route failures
-    const loadRule = new events.Rule(this, 'transformRule', {
+    const loadRule = new events.Rule(this, 'loadRule', {
       description: 'Data transformed, Needs loaded into dynamodb',
       eventPattern: {
         source: ['cdkpatterns.the-eventbridge-etl'],
