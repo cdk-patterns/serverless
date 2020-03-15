@@ -17,6 +17,13 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     super(scope, id, props);
 
     /**
+     * If left unchecked this pattern could "fan out" on the transform and load
+     * lambdas to the point that it consumes all resources on the account. This is
+     * why we are limiting concurrency to 2 on all 3 lambdas. Feel free to raise this.
+     */
+    const LAMBDA_THROTTLE_SIZE = 2;
+
+    /**
      * DynamoDB Table
      * This is where our transformed data ends up
      */
@@ -107,7 +114,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/extract'), 
       handler: 's3SqsEventConsumer.handler',
-      reservedConcurrentExecutions: 2,
+      reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE,
       environment: {
         CLUSTER_NAME: cluster.clusterName,
         TASK_DEFINITION: taskDefinition.taskDefinitionArn,
@@ -149,7 +156,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/transform'),
       handler: 'transform.handler',
-      reservedConcurrentExecutions: 2, 
+      reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE, 
       timeout: cdk.Duration.seconds(3)
     });
     transformLambda.addToRolePolicy(eventbridgePutPolicy);
@@ -177,7 +184,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas/load'),
       handler: 'load.handler',
       timeout: cdk.Duration.seconds(3),
-      reservedConcurrentExecutions: 2,
+      reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE,
       environment: {
         TABLE_NAME: table.tableName
       }
