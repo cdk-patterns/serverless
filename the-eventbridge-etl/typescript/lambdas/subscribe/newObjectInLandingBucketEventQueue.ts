@@ -49,9 +49,12 @@ exports.handler = async function (event: any) {
 
         let s3eventRecords = payload.Records;
 
+        console.log('records '+ s3eventRecords);
+
         for (let i in s3eventRecords) {
 
             let s3event =  s3eventRecords[i];
+            console.log('s3 event '+ s3event)
 
             //Extract variables from event
             const objectKey = s3event?.s3?.object?.key;
