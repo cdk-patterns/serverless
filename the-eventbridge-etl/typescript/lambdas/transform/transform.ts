@@ -17,7 +17,7 @@ exports.handler = async (event:any) => {
         transformedObject[headerArray[index]] = dataArray[index];
     }
 
-    // Building our failure event for EventBridge
+    // Building our transform event for EventBridge
     var params = {
         Entries: [
           {
