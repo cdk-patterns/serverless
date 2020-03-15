@@ -8,6 +8,8 @@ import ec2 = require('@aws-cdk/aws-ec2');
 import ecs = require('@aws-cdk/aws-ecs');
 import logs = require('@aws-cdk/aws-logs');
 import iam = require('@aws-cdk/aws-iam');
+import events = require('@aws-cdk/aws-events');
+import events_targets = require('@aws-cdk/aws-events-targets');
 
 export class TheEventbridgeEtlStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -116,5 +118,29 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
     sqsSubscribeLambda.addToRolePolicy(runTaskPolicyStatement);
     sqsSubscribeLambda.addToRolePolicy(taskExecutionRolePolicyStatement);
+
+
+    // Transform Lambda
+    // defines a lambda to transform the data that was extracted from s3
+    const transformLambda = new lambda.Function(this, 'TransformLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/transform'),
+      handler: 'transform.handler',
+      timeout: cdk.Duration.seconds(3)
+    });
+
+    // Create EventBridge rule to route failures
+    const transformRule = new events.Rule(this, 'webserviceErrorRule', {
+      description: 'Failed Webservice Call',
+      eventPattern: {
+        source: ['cdkpatterns.eventbridge.circuitbreaker'],
+        detailType: ['httpcall'],
+        detail: {
+          status: ["fail"]
+        }
+      }
+    });
+
+    transformRule.addTarget(new events_targets.LambdaFunction(transformLambda));
   }
 }
