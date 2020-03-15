@@ -44,7 +44,7 @@ exports.handler = async function (event: any) {
      * An event can contain multiple records to process. i.e. the user could have uploaded 2 files.
      */
     for (let index in records) {
-        let payload = records[index].body;
+        let payload = JSON.parse(records[index].body);
         console.log('processing s3 events ' + payload);
 
         let s3eventRecords = payload.Records;
