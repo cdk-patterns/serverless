@@ -10,10 +10,19 @@ import logs = require('@aws-cdk/aws-logs');
 import iam = require('@aws-cdk/aws-iam');
 import events = require('@aws-cdk/aws-events');
 import events_targets = require('@aws-cdk/aws-events-targets');
+import dynamodb = require('@aws-cdk/aws-dynamodb');
 
 export class TheEventbridgeEtlStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    /**
+     * DynamoDB Table
+     * This is where our transformed data ends up
+     */
+    const table = new dynamodb.Table(this, 'TransformedData', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+    });
 
     /**
      * Queue that listens for S3 Bucket events
@@ -152,9 +161,13 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas/load'),
       handler: 'load.handler',
-      timeout: cdk.Duration.seconds(3)
+      timeout: cdk.Duration.seconds(3),
+      environment: {
+        TABLE_NAME: table.tableName
+      }
     });
     transformLambda.addToRolePolicy(eventPolicy);
+    table.grantReadWriteData(loadLambda);
 
     // Create EventBridge rule to route failures
     const loadRule = new events.Rule(this, 'loadRule', {
