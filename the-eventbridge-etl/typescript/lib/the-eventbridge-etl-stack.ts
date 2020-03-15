@@ -99,7 +99,6 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
      * load - insterts the data into dynamodb
      */
 
-
     /**
      * Extract
      */
