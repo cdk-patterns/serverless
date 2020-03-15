@@ -1,4 +1,5 @@
 const { ECS } = require('aws-sdk');
+export {};
 
 exports.handler = async function (event: any) {
     var ecs = new ECS({ apiVersion: '2014-11-13' });
