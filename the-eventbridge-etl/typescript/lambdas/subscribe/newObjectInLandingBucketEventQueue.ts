@@ -45,45 +45,52 @@ exports.handler = async function (event: any) {
      */
     for (let index in records) {
         let payload = records[index].body;
-        console.log('processing s3 event ' + payload);
+        console.log('processing s3 events ' + payload);
 
-        //Extract variables from event
-        const objectKey = payload?.s3?.object?.key;
-        const bucketName = payload?.s3?.bucket?.name;
-        const bucketARN = payload?.s3?.bucket?.arn;
+        let s3eventRecords = event.Records;
 
-        console.log('Object Key - ' + objectKey);
-        console.log('Bucket Name - ' + bucketName);
-        console.log('Bucket ARN - ' + bucketARN);
+        for (let i in s3eventRecords) {
 
-        if ((typeof (objectKey) != 'undefined') &&
-            (typeof (bucketName) != 'undefined') &&
-            (typeof (bucketARN) != 'undefined')) {
+            let s3event =  s3eventRecords[i];
 
-            params.overrides = {
-                containerOverrides: [
-                    {
-                        environment: [
-                            {
-                                name: 'S3_BUCKET_NAME',
-                                value: bucketName
-                            },
-                            {
-                                name: 'S3_OBJECT_KEY',
-                                value: objectKey
-                            }
-                        ]
-                    }
-                ]
+            //Extract variables from event
+            const objectKey = s3event?.s3?.object?.key;
+            const bucketName = s3event?.s3?.bucket?.name;
+            const bucketARN = s3event?.s3?.bucket?.arn;
+
+            console.log('Object Key - ' + objectKey);
+            console.log('Bucket Name - ' + bucketName);
+            console.log('Bucket ARN - ' + bucketARN);
+
+            if ((typeof (objectKey) != 'undefined') &&
+                (typeof (bucketName) != 'undefined') &&
+                (typeof (bucketARN) != 'undefined')) {
+
+                params.overrides = {
+                    containerOverrides: [
+                        {
+                            environment: [
+                                {
+                                    name: 'S3_BUCKET_NAME',
+                                    value: bucketName
+                                },
+                                {
+                                    name: 'S3_OBJECT_KEY',
+                                    value: objectKey
+                                }
+                            ]
+                        }
+                    ]
+                }
+
+                let ecsResponse = await ecs.runTask(params).promise().catch((error: any) => {
+                    throw new Error(error);
+                });
+
+                console.log(ecsResponse);
+            } else {
+                console.log('not an s3 event...')
             }
-
-            let ecsResponse = await ecs.runTask(params).promise().catch((error: any) => {
-                throw new Error(error);
-            });
-
-            console.log(ecsResponse);
-        } else {
-            console.log('not an s3 event...')
         }
     }
 };
