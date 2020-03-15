@@ -35,8 +35,8 @@ def main():
             print(', '.join(row))
             event = {
                 'status': 'extracted',
-                'headers': ', '.join(headers),
-                'data': ', '.join(row)
+                'headers': ','.join(headers),
+                'data': ','.join(row)
             }
             response = event_bridge.put_events(
                 Entries=[
