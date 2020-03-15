@@ -22,8 +22,11 @@
     "typescript": "~3.7.2"
   },
   "dependencies": {
+    "@aws-cdk/aws-ec2": "^1.27.0",
+    "@aws-cdk/aws-ecs": "^1.27.0",
     "@aws-cdk/aws-lambda": "^1.27.0",
     "@aws-cdk/aws-lambda-event-sources": "^1.27.0",
+    "@aws-cdk/aws-logs": "^1.27.0",
     "@aws-cdk/aws-s3": "^1.27.0",
     "@aws-cdk/aws-s3-notifications": "^1.27.0",
     "@aws-cdk/aws-sqs": "^1.27.0",

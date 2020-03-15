@@ -4,6 +4,10 @@ import s3n = require("@aws-cdk/aws-s3-notifications");
 import sqs = require('@aws-cdk/aws-sqs');
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import lambda = require('@aws-cdk/aws-lambda');
+import ec2 = require('@aws-cdk/aws-ec2');
+import ecs = require('@aws-cdk/aws-ecs');
+import logs = require('@aws-cdk/aws-logs');
+import * as path from 'path';
 
 export class TheEventbridgeEtlStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -25,17 +29,62 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     bucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.SqsDestination(queue));
 
     /**
+     * Fargate ECS Task Creation to pull data from S3
+     */
+    // Producer definition, launch is done through a lambda function
+    const vpc = new ec2.Vpc(this, 'Vpc', {
+      maxAzs: 2, // Default is all AZs in the region
+    });
+
+    const logging = new ecs.AwsLogDriver({
+      streamPrefix: 'TheEventBridgeETL',
+      logRetention: logs.RetentionDays.ONE_WEEK,
+    });
+
+    const cluster = new ecs.Cluster(this, 'Ec2Cluster', {
+      vpc: vpc
+    });
+
+    const taskDefinition = new ecs.FargateTaskDefinition(this, 'ProducerTaskDefinition', {
+      memoryLimitMiB: 512,
+      cpu: 256
+    });
+
+    taskDefinition.addContainer('AppContainer', {
+      image: ecs.ContainerImage.fromAsset('container/s3DataExtractionTask'),
+      logging,
+      environment: { // clear text, not for sensitive data
+        'S3_BUCKET_NAME': bucket.bucketName,
+        'S3_OBJECT_KEY': '',
+        'STREAM_NAME': '',
+      },
+    });
+
+    // Grant task access to new uploaded assets
+    bucket.grantRead(taskDefinition.taskRole);
+
+
+    /**
      * Lambda that subscribes to newObjectInLandingBucketEventQueue
      */
+
+    // Create a command line launcher for the fargate task. It is based on lambda.
+    const lambdaEnv = {
+      CLUSTER_NAME: cluster.clusterName,
+      TASK_DEFINITION: taskDefinition.taskDefinitionArn,
+      SUBNETS: JSON.stringify(Array.from(vpc.privateSubnets, x => x.subnetId)),
+    };
 
     // defines an AWS Lambda resource to pull from our queue
     const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambdas/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'newObjectInLandingBucketEventQueue.handler',                // file is "lambda", function is "handler"
-      reservedConcurrentExecutions: 2 // throttle lambda to 2 concurrent invocations
+      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
+      environment: lambdaEnv
     });
     queue.grantConsumeMessages(sqsSubscribeLambda);
     sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
+
   }
 }
