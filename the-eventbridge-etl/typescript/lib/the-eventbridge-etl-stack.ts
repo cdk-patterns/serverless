@@ -50,7 +50,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       cpu: 256
     });
 
-    taskDefinition.addContainer('AppContainer', {
+    let container = taskDefinition.addContainer('AppContainer', {
       image: ecs.ContainerImage.fromAsset('container/s3DataExtractionTask'),
       logging,
       environment: { // clear text, not for sensitive data
@@ -93,6 +93,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       CLUSTER_NAME: cluster.clusterName,
       TASK_DEFINITION: taskDefinition.taskDefinitionArn,
       SUBNETS: JSON.stringify(Array.from(vpc.privateSubnets, x => x.subnetId)),
+      CONTAINER_NAME: container.containerName
     };
 
     // defines an AWS Lambda resource to pull from our queue
