@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+export{};
 AWS.config.region = process.env.AWS_REGION || 'us-east-1'
 const eventbridge = new AWS.EventBridge()
 

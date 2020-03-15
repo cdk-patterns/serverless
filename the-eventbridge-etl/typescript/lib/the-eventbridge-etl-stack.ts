@@ -104,10 +104,10 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
      * Extract
      */
     // defines an AWS Lambda resource to trigger our fargate ecs task
-    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+    const extractLambda = new lambda.Function(this, 'extractLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas/subscribe'), 
-      handler: 'newObjectInLandingBucketEventQueue.handler',
+      code: lambda.Code.asset('lambdas/extract'), 
+      handler: 's3SqsEventConsumer.handler',
       reservedConcurrentExecutions: 2, 
       environment: {
         CLUSTER_NAME: cluster.clusterName,
@@ -116,8 +116,8 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         CONTAINER_NAME: container.containerName
       }
     });
-    queue.grantConsumeMessages(sqsSubscribeLambda);
-    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
+    queue.grantConsumeMessages(extractLambda);
+    extractLambda.addEventSource(new SqsEventSource(queue, {}));
 
     const runTaskPolicyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -128,7 +128,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         taskDefinition.taskDefinitionArn,
       ]
     });
-    sqsSubscribeLambda.addToRolePolicy(runTaskPolicyStatement);
+    extractLambda.addToRolePolicy(runTaskPolicyStatement);
 
     const taskExecutionRolePolicyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -140,7 +140,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
         taskDefinition.taskRole.roleArn,
       ]
     });
-    sqsSubscribeLambda.addToRolePolicy(taskExecutionRolePolicyStatement);
+    extractLambda.addToRolePolicy(taskExecutionRolePolicyStatement);
 
     /**
      * Transform
