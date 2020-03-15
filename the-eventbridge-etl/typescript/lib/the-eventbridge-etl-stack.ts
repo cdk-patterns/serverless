@@ -25,16 +25,17 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
 
     /**
+     * S3 Landing Bucket
+     * This is where the user uploads the file to be transformed
+     */
+    let bucket = new s3.Bucket(this, 'LandingBucket', {
+    });
+
+    /**
      * Queue that listens for S3 Bucket events
      */
     const queue = new sqs.Queue(this, 'newObjectInLandingBucketEventQueue', {
       visibilityTimeout: cdk.Duration.seconds(300)
-    });
-
-    /**
-     * S3 Landing Bucket
-     */
-    let bucket = new s3.Bucket(this, 'LandingBucket', {
     });
 
     bucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.SqsDestination(queue));
