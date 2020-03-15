@@ -130,6 +130,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       handler: 'transform.handler',
       timeout: cdk.Duration.seconds(3)
     });
+    transformLambda.addToRolePolicy(eventPolicy);
 
     // Create EventBridge rule to route failures
     const transformRule = new events.Rule(this, 'transformRule', {
@@ -144,5 +145,29 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
 
     transformRule.addTarget(new events_targets.LambdaFunction(transformLambda));
+
+    // Load Lambda
+    // load the transformed data in dynamodb
+    const loadLambda = new lambda.Function(this, 'LoadLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/load'),
+      handler: 'load.handler',
+      timeout: cdk.Duration.seconds(3)
+    });
+    transformLambda.addToRolePolicy(eventPolicy);
+
+    // Create EventBridge rule to route failures
+    const loadRule = new events.Rule(this, 'transformRule', {
+      description: 'Data transformed, Needs loaded into dynamodb',
+      eventPattern: {
+        source: ['cdkpatterns.the-eventbridge-etl'],
+        detailType: ['transform'],
+        detail: {
+          status: ["transformed"]
+        }
+      }
+    });
+
+    loadRule.addTarget(new events_targets.LambdaFunction(loadLambda));
   }
 }
