@@ -7,7 +7,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import ec2 = require('@aws-cdk/aws-ec2');
 import ecs = require('@aws-cdk/aws-ecs');
 import logs = require('@aws-cdk/aws-logs');
-import * as path from 'path';
+import iam = require('@aws-cdk/aws-iam');
 
 export class TheEventbridgeEtlStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -63,6 +63,26 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     // Grant task access to new uploaded assets
     bucket.grantRead(taskDefinition.taskRole);
 
+    const runTaskPolicyStatement = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'ecs:RunTask'
+      ],
+      resources: [
+        taskDefinition.taskDefinitionArn,
+      ]
+    });
+
+    const taskExecutionRolePolicyStatement = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'iam:PassRole',
+      ],
+      resources: [
+        taskDefinition.obtainExecutionRole().roleArn,
+        taskDefinition.taskRole.roleArn,
+      ]
+    });
 
     /**
      * Lambda that subscribes to newObjectInLandingBucketEventQueue
@@ -85,6 +105,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
     queue.grantConsumeMessages(sqsSubscribeLambda);
     sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
-
+    sqsSubscribeLambda.addToRolePolicy(runTaskPolicyStatement);
+    sqsSubscribeLambda.addToRolePolicy(taskExecutionRolePolicyStatement);
   }
 }
