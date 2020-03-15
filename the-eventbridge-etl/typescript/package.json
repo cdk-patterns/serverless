@@ -24,6 +24,8 @@
   "dependencies": {
     "@aws-cdk/aws-ec2": "^1.27.0",
     "@aws-cdk/aws-ecs": "^1.27.0",
+    "@aws-cdk/aws-events": "^1.27.0",
+    "@aws-cdk/aws-events-targets": "^1.27.0",
     "@aws-cdk/aws-iam": "^1.27.0",
     "@aws-cdk/aws-lambda": "^1.27.0",
     "@aws-cdk/aws-lambda-event-sources": "^1.27.0",
