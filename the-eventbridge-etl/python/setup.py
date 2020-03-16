@@ -24,7 +24,11 @@ setuptools.setup(
         "aws-cdk.aws-dynamodb==1.28.0",
         "aws-cdk.aws-s3==1.28.0",
         "aws-cdk.aws-sqs==1.28.0",
-        "aws-cdk.aws-s3-notifications==1.28.0"
+        "aws-cdk.aws-s3-notifications==1.28.0",
+        "aws-cdk.aws-iam==1.28.0",
+        "aws-cdk.aws-ec2==1.28.0",
+        "aws-cdk.aws-ecs==1.28.0",
+        "aws-cdk.aws-logs==1.28.0"
     ],
 
     python_requires=">=3.6",
