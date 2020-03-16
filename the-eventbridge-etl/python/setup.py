@@ -29,7 +29,9 @@ setuptools.setup(
         "aws-cdk.aws-iam==1.28.0",
         "aws-cdk.aws-ec2==1.28.0",
         "aws-cdk.aws-ecs==1.28.0",
-        "aws-cdk.aws-logs==1.28.0"
+        "aws-cdk.aws-logs==1.28.0",
+        "aws-cdk.aws-events==1.28.0",
+        "aws-cdk.aws-events-targets==1.28.0"
     ],
 
     python_requires=">=3.6",

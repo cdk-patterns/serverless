@@ -9,6 +9,8 @@ from aws_cdk import (
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_logs as logs,
+    aws_events as events,
+    aws_events_targets as targets,
     core
 )
 import json
@@ -107,10 +109,10 @@ class TheEventbridgeEtlStack(core.Stack):
                                           code=_lambda.Code.from_asset("lambdas/extract"),
                                           reserved_concurrent_executions=lambda_throttle_size,
                                           environment={
-                                            "CLUSTER_NAME": cluster.cluster_name,
-                                            "TASK_DEFINITION": task_definition.task_definition_arn,
-                                            "SUBNETS": json.dumps(subnet_ids),
-                                            "CONTAINER_NAME": container.container_name
+                                              "CLUSTER_NAME": cluster.cluster_name,
+                                              "TASK_DEFINITION": task_definition.task_definition_arn,
+                                              "SUBNETS": json.dumps(subnet_ids),
+                                              "CONTAINER_NAME": container.container_name
                                           }
                                           )
         queue.grant_consume_messages(extract_lambda)
@@ -127,3 +129,73 @@ class TheEventbridgeEtlStack(core.Stack):
                        task_definition.task_role.role_arn],
             actions=['iam:PassRole'])
         extract_lambda.add_to_role_policy(task_execution_role_policy_statement)
+
+        ####
+        # Transform
+        # defines a lambda to transform the data that was extracted from s3
+        ####
+
+        transform_lambda = _lambda.Function(self, "TransformLambdaHandler",
+                                            runtime=_lambda.Runtime.NODEJS_12_X,
+                                            handler="transform.handler",
+                                            code=_lambda.Code.from_asset("lambdas/transform"),
+                                            reserved_concurrent_executions=lambda_throttle_size,
+                                            timeout=core.Duration.seconds(3)
+                                            )
+        transform_lambda.add_to_role_policy(event_bridge_put_policy)
+
+        # Create EventBridge rule to route extraction events
+        transform_rule = events.Rule(self, 'transformRule',
+                                     description='Data extracted from S3, Needs transformed',
+                                     event_pattern=events.EventPattern(source=['cdkpatterns.the-eventbridge-etl'],
+                                                                       detail_type=['s3RecordExtraction'],
+                                                                       detail={
+                                                                           "status": ["extracted"]
+                                                                       }))
+        transform_rule.add_target(targets.LambdaFunction(handler=transform_lambda))
+
+        ####
+        # Load
+        # load the transformed data in dynamodb
+        ####
+
+        load_lambda = _lambda.Function(self, "LoadLambdaHandler",
+                                       runtime=_lambda.Runtime.NODEJS_12_X,
+                                       handler="load.handler",
+                                       code=_lambda.Code.from_asset("lambdas/load"),
+                                       reserved_concurrent_executions=lambda_throttle_size,
+                                       timeout=core.Duration.seconds(3),
+                                       environment={
+                                           "TABLE_NAME": table.table_name
+                                       }
+                                       )
+        load_lambda.add_to_role_policy(event_bridge_put_policy)
+        table.grant_read_write_data(load_lambda)
+
+        load_rule = events.Rule(self, 'loadRule',
+                                description='Data transformed, Needs loaded into dynamodb',
+                                event_pattern=events.EventPattern(source=['cdkpatterns.the-eventbridge-etl'],
+                                                                  detail_type=['transform'],
+                                                                  detail={
+                                                                      "status": ["transformed"]
+                                                                  }))
+        load_rule.add_target(targets.LambdaFunction(handler=load_lambda))
+
+        ####
+        # Observe
+        # Watch for all cdkpatterns.the-eventbridge-etl events and log them centrally
+        ####
+
+        observe_lambda = _lambda.Function(self, "ObserveLambdaHandler",
+                                          runtime=_lambda.Runtime.NODEJS_12_X,
+                                          handler="observe.handler",
+                                          code=_lambda.Code.from_asset("lambdas/observe"),
+                                          reserved_concurrent_executions=lambda_throttle_size,
+                                          timeout=core.Duration.seconds(3)
+                                          )
+
+        observe_rule = events.Rule(self, 'observeRule',
+                                   description='all events are caught here and logged centrally',
+                                   event_pattern=events.EventPattern(source=['cdkpatterns.the-eventbridge-etl']))
+
+        observe_rule.add_target(targets.LambdaFunction(handler=observe_lambda))
