@@ -152,6 +152,7 @@ npx cdk deploy
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
+  * [Vyas Sarangapani](#vyas-sarangapani)
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -258,6 +259,19 @@ npx cdk deploy
   #### [The Simple GraphQL Service](/the-simple-graphql-service/README.md)
   Simple graphQL service built with [AppSync](https://aws.amazon.com/appsync/)<br /><br />
   ![Architecture](the-simple-graphql-service/img/architecture.png)
+
+  ### Vyas Sarangapani
+  <img src="img/dev_profiles/vyas_sarangapani.jpg" width="120" alt="Vyas Sarangapani profile pic" /><br />
+
+  Software Developer, SAP Cloud Applications Architect, Block chain Evangelist, Marathoner, Ultra Runner, Information Junkie, Ambivert<br />
+
+  Twitter - [@madladvyas](https://twitter.com/madladvyas) <br />
+  Medium - [@svyasrao22](https://medium.com/@svyasrao22) <br />
+
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
+  
 
 </details>
 <details>
