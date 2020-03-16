@@ -109,6 +109,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
