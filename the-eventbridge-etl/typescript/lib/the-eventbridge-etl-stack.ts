@@ -100,10 +100,11 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     /**
      * Lambdas
      * 
-     * These are used for 3 phases:
+     * These are used for 4 phases:
      * extract - kicks of ecs fargate task to download data and splinter to eventbridge events
      * transform - takes the two comma separated strings and produces a json object
      * load - insterts the data into dynamodb
+     * observe - This is a lambda that subscribes to all events and logs them centrally
      */
 
     /**
@@ -124,6 +125,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
     queue.grantConsumeMessages(extractLambda);
     extractLambda.addEventSource(new SqsEventSource(queue, {}));
+    extractLambda.addToRolePolicy(eventbridgePutPolicy);
 
     const runTaskPolicyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -161,7 +163,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
     transformLambda.addToRolePolicy(eventbridgePutPolicy);
 
-    // Create EventBridge rule to route failures
+    // Create EventBridge rule to route extraction events
     const transformRule = new events.Rule(this, 'transformRule', {
       description: 'Data extracted from S3, Needs transformed',
       eventPattern: {
@@ -192,7 +194,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     loadLambda.addToRolePolicy(eventbridgePutPolicy);
     table.grantReadWriteData(loadLambda);
 
-    // Create EventBridge rule to route failures
+    // Create EventBridge rule to route transform events
     const loadRule = new events.Rule(this, 'loadRule', {
       description: 'Data transformed, Needs loaded into dynamodb',
       eventPattern: {
@@ -205,5 +207,26 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     });
 
     loadRule.addTarget(new events_targets.LambdaFunction(loadLambda));
+
+    /**
+     * Observe
+     */
+    // Watch for all cdkpatterns.the-eventbridge-etl events and log them centrally
+    const observeLambda = new lambda.Function(this, 'ObserveLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/observe'),
+      handler: 'observe.handler',
+      timeout: cdk.Duration.seconds(3)
+    });
+
+    // Create EventBridge rule to route events
+    const observeRule = new events.Rule(this, 'observeRule', {
+      description: 'all events are caught here and logged centrally',
+      eventPattern: {
+        source: ['cdkpatterns.the-eventbridge-etl']
+      }
+    });
+
+    observeRule.addTarget(new events_targets.LambdaFunction(observeLambda));
   }
 }
