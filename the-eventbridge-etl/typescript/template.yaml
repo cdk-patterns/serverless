@@ -647,6 +647,9 @@ Resources:
               Fn::GetAtt:
                 - newObjectInLandingBucketEventQueue67CBE2F2
                 - Arn
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
           - Action: ecs:RunTask
             Effect: Allow
             Resource:
@@ -671,7 +674,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aS3Bucket788F816E
+          Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3BucketB50581FD
         S3Key:
           Fn::Join:
             - ""
@@ -679,12 +682,12 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aS3VersionKeyAC139AF9
+                      - Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aS3VersionKeyAC139AF9
+                      - Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D
       Handler: s3SqsEventConsumer.handler
       Role:
         Fn::GetAtt:
@@ -712,7 +715,7 @@ Resources:
       - extractLambdaHandlerServiceRole8A50F829
     Metadata:
       aws:cdk:path: TheEventbridgeEtlStack/extractLambdaHandler/Resource
-      aws:asset:path: asset.7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52a
+      aws:asset:path: asset.3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef
       aws:asset:property: Code
   extractLambdaHandlerSqsEventSourceTheEventbridgeEtlStacknewObjectInLandingBucketEventQueueA6103BFC894EEFC5:
     Type: AWS::Lambda::EventSourceMapping
@@ -881,7 +884,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fS3Bucket2D866707
+          Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3Bucket689341CE
         S3Key:
           Fn::Join:
             - ""
@@ -889,12 +892,12 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fS3VersionKey603C1CEB
+                      - Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fS3VersionKey603C1CEB
+                      - Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F
       Handler: load.handler
       Role:
         Fn::GetAtt:
@@ -912,7 +915,7 @@ Resources:
       - LoadLambdaHandlerServiceRole83E61748
     Metadata:
       aws:cdk:path: TheEventbridgeEtlStack/LoadLambdaHandler/Resource
-      aws:asset:path: asset.b4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0f
+      aws:asset:path: asset.f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798
       aws:asset:property: Code
   LoadLambdaHandlerAllowEventRuleTheEventbridgeEtlStackloadRuleE4CE7871B2567CFC:
     Type: AWS::Lambda::Permission
@@ -950,21 +953,102 @@ Resources:
           Id: Target0
     Metadata:
       aws:cdk:path: TheEventbridgeEtlStack/loadRule/Resource
+  ObserveLambdaHandlerServiceRole040C69BA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/ServiceRole/Resource
+  ObserveLambdaHandler685FFDBB:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3Bucket31B40717
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB
+      Handler: observe.handler
+      Role:
+        Fn::GetAtt:
+          - ObserveLambdaHandlerServiceRole040C69BA
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 3
+    DependsOn:
+      - ObserveLambdaHandlerServiceRole040C69BA
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/Resource
+      aws:asset:path: asset.5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1
+      aws:asset:property: Code
+  ObserveLambdaHandlerAllowEventRuleTheEventbridgeEtlStackobserveRuleDD299C271547ABA6:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - ObserveLambdaHandler685FFDBB
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - observeRule9CF2E16C
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/AllowEventRuleTheEventbridgeEtlStackobserveRuleDD299C27
+  observeRule9CF2E16C:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: all events are caught here and logged centrally
+      EventPattern:
+        source:
+          - cdkpatterns.the-eventbridge-etl
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - ObserveLambdaHandler685FFDBB
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/observeRule/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
       Modules: aws-cdk=1.27.0,@aws-cdk/assets=1.27.0,@aws-cdk/aws-apigateway=1.27.0,@aws-cdk/aws-applicationautoscaling=1.27.0,@aws-cdk/aws-autoscaling=1.27.0,@aws-cdk/aws-autoscaling-common=1.27.0,@aws-cdk/aws-autoscaling-hooktargets=1.27.0,@aws-cdk/aws-cloudformation=1.27.0,@aws-cdk/aws-cloudwatch=1.27.0,@aws-cdk/aws-dynamodb=1.27.0,@aws-cdk/aws-ec2=1.27.0,@aws-cdk/aws-ecr=1.27.0,@aws-cdk/aws-ecr-assets=1.27.0,@aws-cdk/aws-ecs=1.27.0,@aws-cdk/aws-elasticloadbalancingv2=1.27.0,@aws-cdk/aws-events=1.27.0,@aws-cdk/aws-events-targets=1.27.0,@aws-cdk/aws-iam=1.27.0,@aws-cdk/aws-kms=1.27.0,@aws-cdk/aws-lambda=1.27.0,@aws-cdk/aws-lambda-event-sources=1.27.0,@aws-cdk/aws-logs=1.27.0,@aws-cdk/aws-s3=1.27.0,@aws-cdk/aws-s3-assets=1.27.0,@aws-cdk/aws-s3-notifications=1.27.0,@aws-cdk/aws-servicediscovery=1.27.0,@aws-cdk/aws-sns=1.27.0,@aws-cdk/aws-sns-subscriptions=1.27.0,@aws-cdk/aws-sqs=1.27.0,@aws-cdk/aws-ssm=1.27.0,@aws-cdk/aws-stepfunctions=1.27.0,@aws-cdk/aws-stepfunctions-tasks=1.27.0,@aws-cdk/core=1.27.0,@aws-cdk/custom-resources=1.27.0,@aws-cdk/cx-api=1.27.0,@aws-cdk/region-info=1.27.0,jsii-runtime=node.js/v11.10.0
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aS3Bucket788F816E:
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3BucketB50581FD:
     Type: String
-    Description: S3 bucket for asset "7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52a"
-  AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aS3VersionKeyAC139AF9:
+    Description: S3 bucket for asset "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D:
     Type: String
-    Description: S3 key for asset version "7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52a"
-  AssetParameters7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52aArtifactHash09E46978:
+    Description: S3 key for asset version "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efArtifactHashE7D0DD27:
     Type: String
-    Description: Artifact hash for asset "7eccdf3ddb9c36a44db2590b26fd030c38a49b9f73fc21344db7dfb6a377a52a"
+    Description: Artifact hash for asset "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
   AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3Bucket52730867:
     Type: String
     Description: S3 bucket for asset "3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d"
@@ -974,15 +1058,24 @@ Parameters:
   AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dArtifactHash24B74F40:
     Type: String
     Description: Artifact hash for asset "3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d"
-  AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fS3Bucket2D866707:
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3Bucket689341CE:
     Type: String
-    Description: S3 bucket for asset "b4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0f"
-  AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fS3VersionKey603C1CEB:
+    Description: S3 bucket for asset "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F:
     Type: String
-    Description: S3 key for asset version "b4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0f"
-  AssetParametersb4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0fArtifactHash2BD5E901:
+    Description: S3 key for asset version "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798ArtifactHash8D572EFB:
     Type: String
-    Description: Artifact hash for asset "b4d0bd12648f0508b6e4729f53ec551efa716ee5ad66e4ee0dde1e2a48ea6f0f"
+    Description: Artifact hash for asset "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3Bucket31B40717:
+    Type: String
+    Description: S3 bucket for asset "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB:
+    Type: String
+    Description: S3 key for asset version "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1ArtifactHash3C054779:
+    Type: String
+    Description: Artifact hash for asset "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
