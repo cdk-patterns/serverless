@@ -11,7 +11,7 @@ This pattern was insired by two people:
 
 ### Vyas Sarangapani
 Twitter - [link](https://twitter.com/madladvyas) <br />
-Article on [medium](https://medium.com/@svyasrao22/how-to-build-a-scalable-cost-effective-event-driven-etl-solution-using-serverless-b407c14d4093)
+Full Article explaining architecture on [medium](https://medium.com/@svyasrao22/how-to-build-a-scalable-cost-effective-event-driven-etl-solution-using-serverless-b407c14d4093)
 
 #### Architecture
 ![Architecture](img/vyas_arch.png)
