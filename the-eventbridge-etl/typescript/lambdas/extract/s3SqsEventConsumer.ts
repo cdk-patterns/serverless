@@ -1,5 +1,8 @@
 const { ECS } = require('aws-sdk');
+const { AWS } = require('aws-sdk');
 export {};
+AWS.config.region = process.env.AWS_REGION || 'us-east-1'
+const eventbridge = new AWS.EventBridge()
 
 exports.handler = async function (event: any) {
     var ecs = new ECS({ apiVersion: '2014-11-13' });
@@ -98,6 +101,28 @@ exports.handler = async function (event: any) {
                 });
 
                 console.log(ecsResponse);
+
+                 // Building our transform event for EventBridge
+                var eventBridgeParams = {
+                    Entries: [
+                    {
+                        DetailType: 'ecs-started',
+                        EventBusName: 'default',
+                        Source: 'cdkpatterns.the-eventbridge-etl',
+                        Time: new Date(),
+                        // Main event body
+                        Detail: JSON.stringify({
+                            status: 'success',
+                            data: ecsResponse
+                        })
+                    }
+                    ]
+                };
+                
+                const result = await eventbridge.putEvents(eventBridgeParams).promise().catch((error: any) => {
+                    throw new Error(error);
+                });
+                console.log(result);
             } else {
                 console.log('not an s3 event...')
             }
