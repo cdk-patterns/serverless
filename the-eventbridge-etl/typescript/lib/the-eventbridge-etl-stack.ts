@@ -101,10 +101,11 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
      * Lambdas
      * 
      * These are used for 4 phases:
-     * extract - kicks of ecs fargate task to download data and splinter to eventbridge events
-     * transform - takes the two comma separated strings and produces a json object
-     * load - insterts the data into dynamodb
-     * observe - This is a lambda that subscribes to all events and logs them centrally
+     * 
+     * Extract    - kicks of ecs fargate task to download data and splinter to eventbridge events
+     * Transform  - takes the two comma separated strings and produces a json object
+     * Load       - inserts the data into dynamodb
+     * Observe    - This is a lambda that subscribes to all events and logs them centrally
      */
 
     /**
