@@ -1,3 +1,17 @@
+# The EventBridge ETL
+
+This is an example stack showing how you can use EventBridge to orchestrate events through an ETL process. This pattern was insired by [Vyas Sarangapani](https://twitter.com/madladvyas) and [Hervé Nivon](https://twitter.com/hervenivon) as you can see at the bottom of this page.
+
+Note - This is a learning pattern, if I was implementing this in a production system I would make a couple of changes:
+
+* KMS Encryption of sensitive data in events
+* SQS between EventBridge and the Lambdas for resiliency
+* Add in error events to EventBridge and error event rules
+
+### Architecture:
+![Architecture](img/arch.png)
+
+#### Architecture Notes
 
 ##### Fargate ECS Task
 I chose to use a Fargate container to download the file from s3 rather than using Lambda. For the small bundled test data csv Lambda would have worked but I felt it would be misleading and suggestive that you could pull larger files down onto a Lambda function. Lambda functions have a few limitations around memory, storage and runtime. You can do things like partially stream files from s3 to Lambda (if they happen to be in the right format) and then store state somewhere between timeouts but I felt that having an ECS Task that you can define CPU, RAM and Disk Space was the much more flexible way to go and being Fargate you are still on the serverless spectrum. You can see how cheap Fargate is if you go into the cost breakdown in Hervé's GitHub repo.
