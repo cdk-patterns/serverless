@@ -148,6 +148,7 @@ npx cdk deploy
   
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
+  * [Hervé Nivon](#herve-nivon)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
@@ -182,6 +183,20 @@ npx cdk deploy
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
   ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
+
+  ### Hervé Nivon
+  <img src="img/dev_profiles/herve_nivon.jpg" width="120" alt="Hervé Nivon profile pic" /><br />
+
+  Startup Solutions Architect @AWScloud ★ Founder ★ Focus on #Innovation, #Cloud, #Startup, #AI ★ #Geek, #Curious & #Epicurean ★<br />
+
+  Twitter - [@hervenivon](https://twitter.com/hervenivon) <br />
+  Github - [@hervenivon](https://github.com/hervenivon/aws-experiments-data-ingestion-and-analytics) <br />
+
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
 
   <br /><hr /><br />
 
