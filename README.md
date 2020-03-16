@@ -148,7 +148,7 @@ npx cdk deploy
   
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
-  * [Hervé Nivon](#herve-nivon)
+  * [Hervé Nivon](#hervé-nivon)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
