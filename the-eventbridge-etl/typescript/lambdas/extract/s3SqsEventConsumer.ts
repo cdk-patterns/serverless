@@ -1,11 +1,10 @@
-const { ECS } = require('aws-sdk');
 const { AWS } = require('aws-sdk');
 export {};
 AWS.config.region = process.env.AWS_REGION || 'us-east-1'
 const eventbridge = new AWS.EventBridge()
 
 exports.handler = async function (event: any) {
-    var ecs = new ECS({ apiVersion: '2014-11-13' });
+    var ecs = new AWS({ apiVersion: '2014-11-13' });
 
     console.log("request:", JSON.stringify(event, undefined, 2));
     let records: any[] = event.Records;
