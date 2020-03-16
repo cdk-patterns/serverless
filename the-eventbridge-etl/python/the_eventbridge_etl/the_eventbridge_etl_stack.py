@@ -1,5 +1,6 @@
 from aws_cdk import (
     aws_lambda as _lambda,
+    aws_lambda_event_sources as _event,
     aws_dynamodb as dynamo_db,
     aws_s3 as s3,
     aws_s3_notifications as s3n,
@@ -112,3 +113,17 @@ class TheEventbridgeEtlStack(core.Stack):
                                             "CONTAINER_NAME": container.container_name
                                           }
                                           )
+        queue.grant_consume_messages(extract_lambda)
+        extract_lambda.add_event_source(_event.SqsEventSource(queue=queue))
+        extract_lambda.add_to_role_policy(event_bridge_put_policy)
+
+        run_task_policy_statement = iam.PolicyStatement(
+            effect=iam.Effect.ALLOW, resources=[task_definition.task_definition_arn], actions=['ecs:RunTask'])
+        extract_lambda.add_to_role_policy(run_task_policy_statement)
+
+        task_execution_role_policy_statement = iam.PolicyStatement(
+            effect=iam.Effect.ALLOW,
+            resources=[task_definition.obtain_execution_role().role_arn,
+                       task_definition.task_role.role_arn],
+            actions=['iam:PassRole'])
+        extract_lambda.add_to_role_policy(task_execution_role_policy_statement)
