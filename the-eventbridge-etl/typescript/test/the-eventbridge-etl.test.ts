@@ -191,3 +191,113 @@ test('Extract Lambda IAM Policy Created', () => {
   }
   ));
 });
+
+test('Transform Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "transform.handler",
+    "Runtime": "nodejs12.x",
+    "ReservedConcurrentExecutions": 2
+    }
+  ));
+});
+
+test('Transform Rule Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Events::Rule", {
+    "Description": "Data extracted from S3, Needs transformed",
+    "EventPattern": {
+      "source": [
+        "cdkpatterns.the-eventbridge-etl"
+      ],
+      "detail-type": [
+        "s3RecordExtraction"
+      ],
+      "detail": {
+        "status": [
+          "extracted"
+        ]
+      }
+    },
+    "State": "ENABLED",
+    }
+  ));
+});
+
+test('Load Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "load.handler",
+    "Runtime": "nodejs12.x",
+    "ReservedConcurrentExecutions": 2,
+    "Environment": {
+      "Variables": {
+        "TABLE_NAME": {}
+      }
+    }
+    }
+  ));
+});
+
+test('Load Rule Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Events::Rule", {
+    "Description": "Data transformed, Needs loaded into dynamodb",
+    "EventPattern": {
+      "source": [
+        "cdkpatterns.the-eventbridge-etl"
+      ],
+      "detail-type": [
+        "transform"
+      ],
+      "detail": {
+        "status": [
+          "transformed"
+        ]
+      }
+    },
+    "State": "ENABLED",
+    }
+  ));
+});
+
+test('Observe Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "observe.handler",
+    "Runtime": "nodejs12.x"
+    }
+  ));
+});
+
+test('Observe Rule Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Events::Rule", {
+    "Description": "all events are caught here and logged centrally",
+    "EventPattern": {
+      "source": [
+        "cdkpatterns.the-eventbridge-etl"
+      ]
+    },
+    "State": "ENABLED",
+    }
+  ));
+});
