@@ -33,5 +33,161 @@ test('SQS Created', () => {
   // WHEN
   const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
   // THEN
-expectCDK(stack).to(haveResource("AWS::SQS::Queue"));
+  expectCDK(stack).to(haveResource("AWS::SQS::Queue"));
+});
+
+test('PutBucketNotification IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument":{
+      "Statement": [
+        {
+          "Action": "s3:PutBucketNotification",
+          "Effect": "Allow",
+          "Resource": "*"
+        }
+      ]
+    }
+  }
+  ));
+});
+
+test('Custom::S3BucketNotifications LambdaCreated', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)"
+  }
+  ));
+});
+
+test('EventBridge IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument":{
+      "Statement": [
+        {
+          "Action": "events:PutEvents",
+          "Effect": "Allow",
+          "Resource": "*"
+        }
+      ]
+    }
+  }
+  ));
+});
+
+test('VPC Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResource("AWS::EC2::VPC"));
+});
+
+test('ECS Cluster Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResource("AWS::ECS::Cluster"));
+});
+
+test('ECS Task Definition Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::ECS::TaskDefinition", {
+    "ContainerDefinitions":[
+      {
+        "Environment": [
+          {
+            "Name": "S3_BUCKET_NAME"
+          },
+          {
+            "Name": "S3_OBJECT_KEY"
+          }
+        ],
+        "LogConfiguration": {
+          "LogDriver": "awslogs",
+          "Options": {
+            "awslogs-stream-prefix": "TheEventBridgeETL"
+          }
+        }
+      }
+    ],
+    "Cpu": "256",
+    "Memory": "512",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": ["FARGATE"]
+  }
+  ));
+});
+
+test('Extract Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "s3SqsEventConsumer.handler",
+    "Runtime": "nodejs12.x",
+    "ReservedConcurrentExecutions": 2,
+    "Environment": {
+      "Variables": {
+        "CLUSTER_NAME": {},
+        "TASK_DEFINITION": {},
+        "SUBNETS": {}
+      }
+    }
+    }
+  ));
+});
+
+test('Extract Lambda IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument":{
+      "Statement": [
+        {
+          "Action": [
+            "sqs:ReceiveMessage",
+            "sqs:ChangeMessageVisibility",
+            "sqs:GetQueueUrl",
+            "sqs:DeleteMessage",
+            "sqs:GetQueueAttributes"
+          ],
+          "Effect": "Allow",
+          "Resource": {}
+        },
+        {
+          "Action": "events:PutEvents",
+          "Effect": "Allow",
+          "Resource": "*"
+        },
+        {
+          "Action": "ecs:RunTask",
+          "Effect": "Allow",
+          "Resource": {}
+        },
+        {
+          "Action": "iam:PassRole",
+          "Effect": "Allow"
+        }
+      ]
+    }
+  }
+  ));
 });
