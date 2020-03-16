@@ -10,6 +10,7 @@ from aws_cdk import (
     aws_logs as logs,
     core
 )
+import json
 
 
 class TheEventbridgeEtlStack(core.Stack):
@@ -66,3 +67,48 @@ class TheEventbridgeEtlStack(core.Stack):
                                              memory_mib="512",
                                              cpu="256",
                                              compatibility=ecs.Compatibility.FARGATE)
+
+        # We need to give our fargate container permission to put events on our EventBridge
+        task_definition.add_to_task_role_policy(event_bridge_put_policy)
+        # Grant fargate container access to the object that was uploaded to s3
+        bucket.grant_read(task_definition.task_role)
+
+        container = task_definition.add_container('AppContainer',
+                                                  image=ecs.ContainerImage.from_asset('container/s3DataExtractionTask'),
+                                                  logging=logging,
+                                                  environment={
+                                                      'S3_BUCKET_NAME': bucket.bucket_name,
+                                                      'S3_OBJECT_KEY': ''
+                                                  })
+
+        ####
+        # Lambdas
+        #
+        # These are used for 4 phases:
+        #
+        # Extract    - kicks of ecs fargate task to download data and splinter to eventbridge events
+        # Transform  - takes the two comma separated strings and produces a json object
+        # Load       - inserts the data into dynamodb
+        # Observe    - This is a lambda that subscribes to all events and logs them centrally
+        ####
+
+        subnet_ids = []
+        for subnet in vpc.private_subnets:
+            subnet_ids.append(subnet.subnet_id)
+
+        ####
+        # Extract
+        # defines an AWS Lambda resource to trigger our fargate ecs task
+        ####
+        extract_lambda = _lambda.Function(self, "extractLambdaHandler",
+                                          runtime=_lambda.Runtime.NODEJS_12_X,
+                                          handler="s3SqsEventConsumer.handler",
+                                          code=_lambda.Code.from_asset("lambdas/extract"),
+                                          reserved_concurrent_executions=lambda_throttle_size,
+                                          environment={
+                                            "CLUSTER_NAME": cluster.cluster_name,
+                                            "TASK_DEFINITION": task_definition.task_definition_arn,
+                                            "SUBNETS": json.dumps(subnet_ids),
+                                            "CONTAINER_NAME": container.container_name
+                                          }
+                                          )
