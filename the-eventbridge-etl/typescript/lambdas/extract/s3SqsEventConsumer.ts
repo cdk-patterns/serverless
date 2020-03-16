@@ -102,7 +102,7 @@ exports.handler = async function (event: any) {
 
                 console.log(ecsResponse);
 
-                 // Building our transform event for EventBridge
+                 // Building our ecs started event for EventBridge
                 var eventBridgeParams = {
                     Entries: [
                     {
