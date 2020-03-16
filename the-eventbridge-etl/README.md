@@ -1,14 +1,23 @@
-# Welcome to your CDK TypeScript project!
+# The EventBridge ETL
 
-This is a blank project for TypeScript development with CDK.
+This is an example stack showing how you can use EventBridge to orchestrate events through an ETL process.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+### Architecture:
+![Architecture](img/arch.png)
 
-## Useful commands
+## When You Would Use This Pattern
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+If you need to create a process where a user uploads a csv and it gets transformed and inserted into DynamoDB
+
+## How to test pattern 
+
+After deployment you will have an s3 bucket where if you go into the aws console for that bucket and upload the file "test_data.csv" found in the data-to-upload folder.
+
+After you upload that file to your bucket the process kicks off. You should be able to watch the process by looking in the cloudwatch logs for your observer lambda.
+
+Finally all of the data ends up in your DynamoDB table so you should be able to open it in the console and view the data after transform.
+
+## Available Versions
+
+ * [TypeScript](typescript/)
+ * [Python](python/)
