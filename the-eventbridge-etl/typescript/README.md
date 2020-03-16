@@ -29,9 +29,9 @@ If you need to create a process where a user uploads a csv and it gets transform
 
 ## How to test pattern 
 
-After deployment you will have an s3 bucket where if you go into the aws console for that bucket and upload the file [test_data.csv](data-to-upload/test_data.csv) found in the data-to-upload folder.
+After deployment you will have an s3 bucket where if you go into the aws console for that bucket and upload the file [test_data.csv](data-to-upload/test_data.csv) found in the data-to-upload folder you will kick everything off.
 
-After you upload that file to your bucket the process kicks off. You should be able to watch the process by looking in the cloudwatch logs for your observer lambda.
+After you upload that file everything should automatically start working. You should be able to watch the process by looking in the cloudwatch logs for your observer lambda. Note this is a multi-threaded, concurrent process so the order of the events in the observer logs may not be what you were expecting!
 
 Finally all of the data ends up in your DynamoDB table so you should be able to open it in the console and view the data after transform.
 
