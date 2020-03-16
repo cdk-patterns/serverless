@@ -16,6 +16,13 @@ Article on [medium](https://medium.com/@svyasrao22/how-to-build-a-scalable-cost-
 #### Architecture
 ![Architecture](img/vyas_arch.png)
 
+### Hervé Nivon
+Twitter - [link](https://twitter.com/hervenivon) <br />
+Github [repo](https://github.com/hervenivon/aws-experiments-data-ingestion-and-analytics)
+
+#### Architecture
+![Architecture](img/herve_arch.png)
+
 ## When You Would Use This Pattern
 
 If you need to create a process where a user uploads a csv and it gets transformed and inserted into DynamoDB
