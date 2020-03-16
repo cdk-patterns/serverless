@@ -248,6 +248,40 @@ test('Load Lambda Created', () => {
   ));
 });
 
+test('Load Lambda IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument":{
+      "Statement": [
+        {
+          "Action": "events:PutEvents",
+          "Effect": "Allow",
+          "Resource": "*"
+        },
+        {
+          "Action": [
+            "dynamodb:BatchGetItem",
+            "dynamodb:GetRecords",
+            "dynamodb:GetShardIterator",
+            "dynamodb:Query",
+            "dynamodb:GetItem",
+            "dynamodb:Scan",
+            "dynamodb:BatchWriteItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem"
+          ],
+          "Effect": "Allow"
+        }
+      ]
+    }
+  }
+  ));
+});
+
 test('Load Rule Created', () => {
   const app = new cdk.App();
   // WHEN
