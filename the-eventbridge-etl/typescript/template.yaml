@@ -470,7 +470,7 @@ Resources:
     Type: AWS::ECS::Cluster
     Metadata:
       aws:cdk:path: TheEventbridgeEtlStack/Ec2Cluster/Resource
-  ProducerTaskDefinitionTaskRole18392769:
+  FargateTaskDefinitionTaskRoleE3C2BCAA:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -481,8 +481,8 @@ Resources:
               Service: ecs-tasks.amazonaws.com
         Version: "2012-10-17"
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/TaskRole/Resource
-  ProducerTaskDefinitionTaskRoleDefaultPolicy8DDD0211:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/TaskRole/Resource
+  FargateTaskDefinitionTaskRoleDefaultPolicy798E9D9D:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -506,12 +506,12 @@ Resources:
                         - Arn
                     - /*
         Version: "2012-10-17"
-      PolicyName: ProducerTaskDefinitionTaskRoleDefaultPolicy8DDD0211
+      PolicyName: FargateTaskDefinitionTaskRoleDefaultPolicy798E9D9D
       Roles:
-        - Ref: ProducerTaskDefinitionTaskRole18392769
+        - Ref: FargateTaskDefinitionTaskRoleE3C2BCAA
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/TaskRole/DefaultPolicy/Resource
-  ProducerTaskDefinition897BE53F:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/TaskRole/DefaultPolicy/Resource
+  FargateTaskDefinition8E3B365E:
     Type: AWS::ECS::TaskDefinition
     Properties:
       ContainerDefinitions:
@@ -535,7 +535,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group:
-                Ref: ProducerTaskDefinitionAppContainerLogGroup6406FA75
+                Ref: FargateTaskDefinitionAppContainerLogGroup20407D7C
               awslogs-stream-prefix: TheEventBridgeETL
               awslogs-region:
                 Ref: AWS::Region
@@ -543,28 +543,28 @@ Resources:
       Cpu: "256"
       ExecutionRoleArn:
         Fn::GetAtt:
-          - ProducerTaskDefinitionExecutionRoleA9E8B960
+          - FargateTaskDefinitionExecutionRoleE69A8E33
           - Arn
-      Family: TheEventbridgeEtlStackProducerTaskDefinition282988A0
+      Family: TheEventbridgeEtlStackFargateTaskDefinitionE442270B
       Memory: "512"
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
       TaskRoleArn:
         Fn::GetAtt:
-          - ProducerTaskDefinitionTaskRole18392769
+          - FargateTaskDefinitionTaskRoleE3C2BCAA
           - Arn
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/Resource
-  ProducerTaskDefinitionAppContainerLogGroup6406FA75:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/Resource
+  FargateTaskDefinitionAppContainerLogGroup20407D7C:
     Type: AWS::Logs::LogGroup
     Properties:
       RetentionInDays: 7
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/AppContainer/LogGroup/Resource
-  ProducerTaskDefinitionExecutionRoleA9E8B960:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/AppContainer/LogGroup/Resource
+  FargateTaskDefinitionExecutionRoleE69A8E33:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -575,8 +575,8 @@ Resources:
               Service: ecs-tasks.amazonaws.com
         Version: "2012-10-17"
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/ExecutionRole/Resource
-  ProducerTaskDefinitionExecutionRoleDefaultPolicyDFCD56D7:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/ExecutionRole/Resource
+  FargateTaskDefinitionExecutionRoleDefaultPolicy1632DA52:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -605,14 +605,14 @@ Resources:
             Effect: Allow
             Resource:
               Fn::GetAtt:
-                - ProducerTaskDefinitionAppContainerLogGroup6406FA75
+                - FargateTaskDefinitionAppContainerLogGroup20407D7C
                 - Arn
         Version: "2012-10-17"
-      PolicyName: ProducerTaskDefinitionExecutionRoleDefaultPolicyDFCD56D7
+      PolicyName: FargateTaskDefinitionExecutionRoleDefaultPolicy1632DA52
       Roles:
-        - Ref: ProducerTaskDefinitionExecutionRoleA9E8B960
+        - Ref: FargateTaskDefinitionExecutionRoleE69A8E33
     Metadata:
-      aws:cdk:path: TheEventbridgeEtlStack/ProducerTaskDefinition/ExecutionRole/DefaultPolicy/Resource
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/ExecutionRole/DefaultPolicy/Resource
   extractLambdaHandlerServiceRole8A50F829:
     Type: AWS::IAM::Role
     Properties:
@@ -653,15 +653,15 @@ Resources:
           - Action: ecs:RunTask
             Effect: Allow
             Resource:
-              Ref: ProducerTaskDefinition897BE53F
+              Ref: FargateTaskDefinition8E3B365E
           - Action: iam:PassRole
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - ProducerTaskDefinitionExecutionRoleA9E8B960
+                  - FargateTaskDefinitionExecutionRoleE69A8E33
                   - Arn
               - Fn::GetAtt:
-                  - ProducerTaskDefinitionTaskRole18392769
+                  - FargateTaskDefinitionTaskRoleE3C2BCAA
                   - Arn
         Version: "2012-10-17"
       PolicyName: extractLambdaHandlerServiceRoleDefaultPolicyB880CB8F
@@ -699,7 +699,7 @@ Resources:
           CLUSTER_NAME:
             Ref: Ec2ClusterEE43E89D
           TASK_DEFINITION:
-            Ref: ProducerTaskDefinition897BE53F
+            Ref: FargateTaskDefinition8E3B365E
           SUBNETS:
             Fn::Join:
               - ""
@@ -1037,7 +1037,7 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.27.0,@aws-cdk/assets=1.27.0,@aws-cdk/aws-apigateway=1.27.0,@aws-cdk/aws-applicationautoscaling=1.27.0,@aws-cdk/aws-autoscaling=1.27.0,@aws-cdk/aws-autoscaling-common=1.27.0,@aws-cdk/aws-autoscaling-hooktargets=1.27.0,@aws-cdk/aws-cloudformation=1.27.0,@aws-cdk/aws-cloudwatch=1.27.0,@aws-cdk/aws-dynamodb=1.27.0,@aws-cdk/aws-ec2=1.27.0,@aws-cdk/aws-ecr=1.27.0,@aws-cdk/aws-ecr-assets=1.27.0,@aws-cdk/aws-ecs=1.27.0,@aws-cdk/aws-elasticloadbalancingv2=1.27.0,@aws-cdk/aws-events=1.27.0,@aws-cdk/aws-events-targets=1.27.0,@aws-cdk/aws-iam=1.27.0,@aws-cdk/aws-kms=1.27.0,@aws-cdk/aws-lambda=1.27.0,@aws-cdk/aws-lambda-event-sources=1.27.0,@aws-cdk/aws-logs=1.27.0,@aws-cdk/aws-s3=1.27.0,@aws-cdk/aws-s3-assets=1.27.0,@aws-cdk/aws-s3-notifications=1.27.0,@aws-cdk/aws-servicediscovery=1.27.0,@aws-cdk/aws-sns=1.27.0,@aws-cdk/aws-sns-subscriptions=1.27.0,@aws-cdk/aws-sqs=1.27.0,@aws-cdk/aws-ssm=1.27.0,@aws-cdk/aws-stepfunctions=1.27.0,@aws-cdk/aws-stepfunctions-tasks=1.27.0,@aws-cdk/core=1.27.0,@aws-cdk/custom-resources=1.27.0,@aws-cdk/cx-api=1.27.0,@aws-cdk/region-info=1.27.0,jsii-runtime=node.js/v11.10.0
+      Modules: aws-cdk=1.28.0,@aws-cdk/assets=1.28.0,@aws-cdk/aws-apigateway=1.28.0,@aws-cdk/aws-applicationautoscaling=1.28.0,@aws-cdk/aws-autoscaling=1.28.0,@aws-cdk/aws-autoscaling-common=1.28.0,@aws-cdk/aws-autoscaling-hooktargets=1.28.0,@aws-cdk/aws-cloudformation=1.28.0,@aws-cdk/aws-cloudwatch=1.28.0,@aws-cdk/aws-dynamodb=1.28.0,@aws-cdk/aws-ec2=1.28.0,@aws-cdk/aws-ecr=1.28.0,@aws-cdk/aws-ecr-assets=1.28.0,@aws-cdk/aws-ecs=1.28.0,@aws-cdk/aws-elasticloadbalancingv2=1.28.0,@aws-cdk/aws-events=1.28.0,@aws-cdk/aws-events-targets=1.28.0,@aws-cdk/aws-iam=1.28.0,@aws-cdk/aws-kms=1.28.0,@aws-cdk/aws-lambda=1.28.0,@aws-cdk/aws-lambda-event-sources=1.28.0,@aws-cdk/aws-logs=1.28.0,@aws-cdk/aws-s3=1.28.0,@aws-cdk/aws-s3-assets=1.28.0,@aws-cdk/aws-s3-notifications=1.28.0,@aws-cdk/aws-servicediscovery=1.28.0,@aws-cdk/aws-sns=1.28.0,@aws-cdk/aws-sns-subscriptions=1.28.0,@aws-cdk/aws-sqs=1.28.0,@aws-cdk/aws-ssm=1.28.0,@aws-cdk/aws-stepfunctions=1.28.0,@aws-cdk/aws-stepfunctions-tasks=1.28.0,@aws-cdk/core=1.28.0,@aws-cdk/custom-resources=1.28.0,@aws-cdk/cx-api=1.28.0,@aws-cdk/region-info=1.28.0,jsii-runtime=node.js/v11.10.0
     Condition: CDKMetadataAvailable
 Parameters:
   AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3BucketB50581FD:
