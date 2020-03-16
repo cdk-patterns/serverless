@@ -1,6 +1,6 @@
 # The EventBridge ETL
 
-This is an example stack showing how you can use EventBridge to orchestrate events through an ETL process.
+This is an example stack showing how you can use EventBridge to orchestrate events through an ETL process. This pattern was insired by Vyas Sarangapani and Hervé Nivon as you can see at the bottom of this page.
 
 ### Architecture:
 ![Architecture](img/arch.png)
