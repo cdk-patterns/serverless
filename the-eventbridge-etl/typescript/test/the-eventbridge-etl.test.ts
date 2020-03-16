@@ -205,7 +205,7 @@ test('Transform Lambda Created', () => {
   ));
 });
 
-test('Transform Rule Created', () => {
+test('Transform EventBridge Rule Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
@@ -282,7 +282,7 @@ test('Load Lambda IAM Policy Created', () => {
   ));
 });
 
-test('Load Rule Created', () => {
+test('Load EventBridge Rule Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
@@ -319,7 +319,7 @@ test('Observe Lambda Created', () => {
   ));
 });
 
-test('Observe Rule Created', () => {
+test('Observe EventBridge Rule Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new TheEventbridgeEtl.TheEventbridgeEtlStack(app, 'MyTestStack');
