@@ -1,6 +1,11 @@
 {
   "name": "the-eventbridge-etl",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdk-patterns/serverless.git"
+  },
+  "license" : "MIT",
   "bin": {
     "the-eventbridge-etl": "bin/the-eventbridge-etl.js"
   },
