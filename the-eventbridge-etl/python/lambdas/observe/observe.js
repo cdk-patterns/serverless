@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * This is a lambda that subscribes to every eventbridge etl event that is sent and logs them in one place
+ */
+exports.handler = async (event) => {
+    console.log(JSON.stringify(event, null, 2));
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoib2JzZXJ2ZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIm9ic2VydmUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFFQTs7R0FFRztBQUNILE9BQU8sQ0FBQyxPQUFPLEdBQUcsS0FBSyxFQUFFLEtBQVMsRUFBRSxFQUFFO0lBQ2xDLE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLFNBQVMsQ0FBQyxLQUFLLEVBQUUsSUFBSSxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUM7QUFDaEQsQ0FBQyxDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHt9O1xuXG4vKipcbiAqIFRoaXMgaXMgYSBsYW1iZGEgdGhhdCBzdWJzY3JpYmVzIHRvIGV2ZXJ5IGV2ZW50YnJpZGdlIGV0bCBldmVudCB0aGF0IGlzIHNlbnQgYW5kIGxvZ3MgdGhlbSBpbiBvbmUgcGxhY2VcbiAqL1xuZXhwb3J0cy5oYW5kbGVyID0gYXN5bmMgKGV2ZW50OmFueSkgPT4ge1xuICAgIGNvbnNvbGUubG9nKEpTT04uc3RyaW5naWZ5KGV2ZW50LCBudWxsLCAyKSk7XG59Il19
