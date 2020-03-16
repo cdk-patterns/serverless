@@ -78,7 +78,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
       vpc: vpc
     });
 
-    const taskDefinition = new ecs.FargateTaskDefinition(this, 'ProducerTaskDefinition', {
+    const taskDefinition = new ecs.FargateTaskDefinition(this, 'FargateTaskDefinition', {
       memoryLimitMiB: 512,
       cpu: 256
     });
