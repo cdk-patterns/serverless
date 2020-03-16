@@ -18,6 +18,9 @@
         "the-eventbridge-circuit-breaker": {
             "prodReady": false
         },
+        "the-eventbridge-etl": {
+            "prodReady": false
+        },
         "the-scalable-webhook": {
             "prodReady": false
         },
