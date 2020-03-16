@@ -37,7 +37,7 @@ exports.handler = async (event: any) => {
         // Main event body
         Detail: JSON.stringify({
           status: 'success',
-          data: result
+          data: params
         })
       }
     ]
