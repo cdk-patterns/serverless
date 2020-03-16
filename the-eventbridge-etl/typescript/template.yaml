@@ -1,0 +1,1144 @@
+Resources:
+  TransformedDataB0572681:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/TransformedData/Resource
+  LandingBucket23FE90FB:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LandingBucket/Resource
+  LandingBucketNotificationsEF1634C6:
+    Type: Custom::S3BucketNotifications
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691
+          - Arn
+      BucketName:
+        Ref: LandingBucket23FE90FB
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Events:
+              - s3:ObjectCreated:*
+            QueueArn:
+              Fn::GetAtt:
+                - newObjectInLandingBucketEventQueue67CBE2F2
+                - Arn
+    DependsOn:
+      - newObjectInLandingBucketEventQueuePolicy6B7CC541
+      - newObjectInLandingBucketEventQueue67CBE2F2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LandingBucket/Notifications/Resource
+  newObjectInLandingBucketEventQueue67CBE2F2:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 300
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/newObjectInLandingBucketEventQueue/Resource
+  newObjectInLandingBucketEventQueuePolicy6B7CC541:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - sqs:SendMessage
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+            Condition:
+              ArnLike:
+                aws:SourceArn:
+                  Fn::GetAtt:
+                    - LandingBucket23FE90FB
+                    - Arn
+            Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Resource:
+              Fn::GetAtt:
+                - newObjectInLandingBucketEventQueue67CBE2F2
+                - Arn
+        Version: "2012-10-17"
+      Queues:
+        - Ref: newObjectInLandingBucketEventQueue67CBE2F2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/newObjectInLandingBucketEventQueue/Policy/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: s3:PutBucketNotification
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36
+      Roles:
+        - Ref: BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource
+  BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: AWS CloudFormation handler for "Custom::S3BucketNotifications" resources (@aws-cdk/aws-s3)
+      Code:
+        ZipFile: >-
+          exports.handler = (event, context) => {
+              // eslint-disable-next-line @typescript-eslint/no-require-imports, import/no-extraneous-dependencies
+              const s3 = new (require('aws-sdk').S3)();
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const https = require("https");
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const url = require("url");
+              log(JSON.stringify(event, undefined, 2));
+              const props = event.ResourceProperties;
+              if (event.RequestType === 'Delete') {
+                  props.NotificationConfiguration = {}; // this is how you clean out notifications
+              }
+              const req = {
+                  Bucket: props.BucketName,
+                  NotificationConfiguration: props.NotificationConfiguration
+              };
+              return s3.putBucketNotificationConfiguration(req, (err, data) => {
+                  log({ err, data });
+                  if (err) {
+                      return submitResponse("FAILED", err.message + `\nMore information in CloudWatch Log Stream: ${context.logStreamName}`);
+                  }
+                  else {
+                      return submitResponse("SUCCESS");
+                  }
+              });
+              function log(obj) {
+                  console.error(event.RequestId, event.StackId, event.LogicalResourceId, obj);
+              }
+              // tslint:disable-next-line:max-line-length
+              // adapted from https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-cfnresponsemodule
+              // to allow sending an error messge as a reason.
+              function submitResponse(responseStatus, reason) {
+                  const responseBody = JSON.stringify({
+                      Status: responseStatus,
+                      Reason: reason || "See the details in CloudWatch Log Stream: " + context.logStreamName,
+                      PhysicalResourceId: event.PhysicalResourceId || event.LogicalResourceId,
+                      StackId: event.StackId,
+                      RequestId: event.RequestId,
+                      LogicalResourceId: event.LogicalResourceId,
+                      NoEcho: false,
+                  });
+                  log({ responseBody });
+                  const parsedUrl = url.parse(event.ResponseURL);
+                  const options = {
+                      hostname: parsedUrl.hostname,
+                      port: 443,
+                      path: parsedUrl.path,
+                      method: "PUT",
+                      headers: {
+                          "content-type": "",
+                          "content-length": responseBody.length
+                      }
+                  };
+                  const request = https.request(options, (r) => {
+                      log({ statusCode: r.statusCode, statusMessage: r.statusMessage });
+                      context.done();
+                  });
+                  request.on("error", (error) => {
+                      log({ sendError: error });
+                      context.done();
+                  });
+                  request.write(responseBody);
+                  request.end();
+              }
+          };
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+          - Arn
+      Runtime: nodejs10.x
+      Timeout: 300
+    DependsOn:
+      - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36
+      - BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource
+  Vpc8378EB38:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/Resource
+  VpcPublicSubnet1Subnet5C2D37C4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet1
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/Subnet
+  VpcPublicSubnet1RouteTable6C95E38E:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/RouteTable
+  VpcPublicSubnet1RouteTableAssociation97140677:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/RouteTableAssociation
+  VpcPublicSubnet1DefaultRoute3DA9E72A:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/DefaultRoute
+  VpcPublicSubnet1EIPD7E02669:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/EIP
+  VpcPublicSubnet1NATGateway4D7517AA:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet1EIPD7E02669
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet1/NATGateway
+  VpcPublicSubnet2Subnet691E08A3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.64.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet2
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/Subnet
+  VpcPublicSubnet2RouteTable94F7E489:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/RouteTable
+  VpcPublicSubnet2RouteTableAssociationDD5762D8:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/RouteTableAssociation
+  VpcPublicSubnet2DefaultRoute97F91067:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/DefaultRoute
+  VpcPublicSubnet2EIP3C605A87:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/EIP
+  VpcPublicSubnet2NATGateway9182C01D:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet2EIP3C605A87
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PublicSubnet2/NATGateway
+  VpcPrivateSubnet1Subnet536B997A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.128.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PrivateSubnet1
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet1/Subnet
+  VpcPrivateSubnet1RouteTableB2C5B500:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PrivateSubnet1
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet1/RouteTable
+  VpcPrivateSubnet1RouteTableAssociation70C59FA6:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      SubnetId:
+        Ref: VpcPrivateSubnet1Subnet536B997A
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet1/RouteTableAssociation
+  VpcPrivateSubnet1DefaultRouteBE02A9ED:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet1NATGateway4D7517AA
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet1/DefaultRoute
+  VpcPrivateSubnet2Subnet3788AAA1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.192.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PrivateSubnet2
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet2/Subnet
+  VpcPrivateSubnet2RouteTableA678073B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc/PrivateSubnet2
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet2/RouteTable
+  VpcPrivateSubnet2RouteTableAssociationA89CAD56:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      SubnetId:
+        Ref: VpcPrivateSubnet2Subnet3788AAA1
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet2/RouteTableAssociation
+  VpcPrivateSubnet2DefaultRoute060D2087:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet2NATGateway9182C01D
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/PrivateSubnet2/DefaultRoute
+  VpcIGWD7BA715C:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TheEventbridgeEtlStack/Vpc
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/IGW
+  VpcVPCGWBF912B6E:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      InternetGatewayId:
+        Ref: VpcIGWD7BA715C
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Vpc/VPCGW
+  Ec2ClusterEE43E89D:
+    Type: AWS::ECS::Cluster
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/Ec2Cluster/Resource
+  FargateTaskDefinitionTaskRoleE3C2BCAA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/TaskRole/Resource
+  FargateTaskDefinitionTaskRoleDefaultPolicy798E9D9D:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - LandingBucket23FE90FB
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - LandingBucket23FE90FB
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: FargateTaskDefinitionTaskRoleDefaultPolicy798E9D9D
+      Roles:
+        - Ref: FargateTaskDefinitionTaskRoleE3C2BCAA
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/TaskRole/DefaultPolicy/Resource
+  FargateTaskDefinition8E3B365E:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Environment:
+            - Name: S3_BUCKET_NAME
+              Value:
+                Ref: LandingBucket23FE90FB
+            - Name: S3_OBJECT_KEY
+              Value: ""
+          Essential: true
+          Image:
+            Fn::Join:
+              - ""
+              - - Ref: AWS::AccountId
+                - .dkr.ecr.
+                - Ref: AWS::Region
+                - "."
+                - Ref: AWS::URLSuffix
+                - /aws-cdk/assets:c0b516e9cf4b40ccd301dfe80b21137805cbf3b84b1b0813797cfec33c439d2e
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group:
+                Ref: FargateTaskDefinitionAppContainerLogGroup20407D7C
+              awslogs-stream-prefix: TheEventBridgeETL
+              awslogs-region:
+                Ref: AWS::Region
+          Name: AppContainer
+      Cpu: "256"
+      ExecutionRoleArn:
+        Fn::GetAtt:
+          - FargateTaskDefinitionExecutionRoleE69A8E33
+          - Arn
+      Family: TheEventbridgeEtlStackFargateTaskDefinitionE442270B
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn:
+        Fn::GetAtt:
+          - FargateTaskDefinitionTaskRoleE3C2BCAA
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/Resource
+  FargateTaskDefinitionAppContainerLogGroup20407D7C:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 7
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/AppContainer/LogGroup/Resource
+  FargateTaskDefinitionExecutionRoleE69A8E33:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/ExecutionRole/Resource
+  FargateTaskDefinitionExecutionRoleDefaultPolicy1632DA52:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ecr:BatchCheckLayerAvailability
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":ecr:"
+                  - Ref: AWS::Region
+                  - ":"
+                  - Ref: AWS::AccountId
+                  - :repository/aws-cdk/assets
+          - Action: ecr:GetAuthorizationToken
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - FargateTaskDefinitionAppContainerLogGroup20407D7C
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: FargateTaskDefinitionExecutionRoleDefaultPolicy1632DA52
+      Roles:
+        - Ref: FargateTaskDefinitionExecutionRoleE69A8E33
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/FargateTaskDefinition/ExecutionRole/DefaultPolicy/Resource
+  extractLambdaHandlerServiceRole8A50F829:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/extractLambdaHandler/ServiceRole/Resource
+  extractLambdaHandlerServiceRoleDefaultPolicyB880CB8F:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - sqs:ReceiveMessage
+              - sqs:ChangeMessageVisibility
+              - sqs:GetQueueUrl
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - newObjectInLandingBucketEventQueue67CBE2F2
+                - Arn
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+          - Action: ecs:RunTask
+            Effect: Allow
+            Resource:
+              Ref: FargateTaskDefinition8E3B365E
+          - Action: iam:PassRole
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - FargateTaskDefinitionExecutionRoleE69A8E33
+                  - Arn
+              - Fn::GetAtt:
+                  - FargateTaskDefinitionTaskRoleE3C2BCAA
+                  - Arn
+        Version: "2012-10-17"
+      PolicyName: extractLambdaHandlerServiceRoleDefaultPolicyB880CB8F
+      Roles:
+        - Ref: extractLambdaHandlerServiceRole8A50F829
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/extractLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  extractLambdaHandlerD06B8F09:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3BucketB50581FD
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D
+      Handler: s3SqsEventConsumer.handler
+      Role:
+        Fn::GetAtt:
+          - extractLambdaHandlerServiceRole8A50F829
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          CLUSTER_NAME:
+            Ref: Ec2ClusterEE43E89D
+          TASK_DEFINITION:
+            Ref: FargateTaskDefinition8E3B365E
+          SUBNETS:
+            Fn::Join:
+              - ""
+              - - '["'
+                - Ref: VpcPrivateSubnet1Subnet536B997A
+                - '","'
+                - Ref: VpcPrivateSubnet2Subnet3788AAA1
+                - '"]'
+          CONTAINER_NAME: AppContainer
+      ReservedConcurrentExecutions: 2
+    DependsOn:
+      - extractLambdaHandlerServiceRoleDefaultPolicyB880CB8F
+      - extractLambdaHandlerServiceRole8A50F829
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/extractLambdaHandler/Resource
+      aws:asset:path: asset.3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef
+      aws:asset:property: Code
+  extractLambdaHandlerSqsEventSourceTheEventbridgeEtlStacknewObjectInLandingBucketEventQueueA6103BFC894EEFC5:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+          - newObjectInLandingBucketEventQueue67CBE2F2
+          - Arn
+      FunctionName:
+        Ref: extractLambdaHandlerD06B8F09
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/extractLambdaHandler/SqsEventSource:TheEventbridgeEtlStacknewObjectInLandingBucketEventQueueA6103BFC/Resource
+  TransformLambdaHandlerServiceRole710C039E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/TransformLambdaHandler/ServiceRole/Resource
+  TransformLambdaHandlerServiceRoleDefaultPolicy94353D30:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: TransformLambdaHandlerServiceRoleDefaultPolicy94353D30
+      Roles:
+        - Ref: TransformLambdaHandlerServiceRole710C039E
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/TransformLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  TransformLambdaHandler60ABE8EE:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3Bucket52730867
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3VersionKeyA72746F6
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3VersionKeyA72746F6
+      Handler: transform.handler
+      Role:
+        Fn::GetAtt:
+          - TransformLambdaHandlerServiceRole710C039E
+          - Arn
+      Runtime: nodejs12.x
+      ReservedConcurrentExecutions: 2
+      Timeout: 3
+    DependsOn:
+      - TransformLambdaHandlerServiceRoleDefaultPolicy94353D30
+      - TransformLambdaHandlerServiceRole710C039E
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/TransformLambdaHandler/Resource
+      aws:asset:path: asset.3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d
+      aws:asset:property: Code
+  TransformLambdaHandlerAllowEventRuleTheEventbridgeEtlStacktransformRuleF338DDCDB98C30A0:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - TransformLambdaHandler60ABE8EE
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - transformRuleFEA34632
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/TransformLambdaHandler/AllowEventRuleTheEventbridgeEtlStacktransformRuleF338DDCD
+  transformRuleFEA34632:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Data extracted from S3, Needs transformed
+      EventPattern:
+        source:
+          - cdkpatterns.the-eventbridge-etl
+        detail-type:
+          - s3RecordExtraction
+        detail:
+          status:
+            - extracted
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - TransformLambdaHandler60ABE8EE
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/transformRule/Resource
+  LoadLambdaHandlerServiceRole83E61748:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LoadLambdaHandler/ServiceRole/Resource
+  LoadLambdaHandlerServiceRoleDefaultPolicy63B03BA2:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - TransformedDataB0572681
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: LoadLambdaHandlerServiceRoleDefaultPolicy63B03BA2
+      Roles:
+        - Ref: LoadLambdaHandlerServiceRole83E61748
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LoadLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  LoadLambdaHandlerFDA03D53:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3Bucket689341CE
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F
+      Handler: load.handler
+      Role:
+        Fn::GetAtt:
+          - LoadLambdaHandlerServiceRole83E61748
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TransformedDataB0572681
+      ReservedConcurrentExecutions: 2
+      Timeout: 3
+    DependsOn:
+      - LoadLambdaHandlerServiceRoleDefaultPolicy63B03BA2
+      - LoadLambdaHandlerServiceRole83E61748
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LoadLambdaHandler/Resource
+      aws:asset:path: asset.f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798
+      aws:asset:property: Code
+  LoadLambdaHandlerAllowEventRuleTheEventbridgeEtlStackloadRuleE4CE7871B2567CFC:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - LoadLambdaHandlerFDA03D53
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - loadRuleF0FAF418
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/LoadLambdaHandler/AllowEventRuleTheEventbridgeEtlStackloadRuleE4CE7871
+  loadRuleF0FAF418:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Data transformed, Needs loaded into dynamodb
+      EventPattern:
+        source:
+          - cdkpatterns.the-eventbridge-etl
+        detail-type:
+          - transform
+        detail:
+          status:
+            - transformed
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - LoadLambdaHandlerFDA03D53
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/loadRule/Resource
+  ObserveLambdaHandlerServiceRole040C69BA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/ServiceRole/Resource
+  ObserveLambdaHandler685FFDBB:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3Bucket31B40717
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB
+      Handler: observe.handler
+      Role:
+        Fn::GetAtt:
+          - ObserveLambdaHandlerServiceRole040C69BA
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 3
+    DependsOn:
+      - ObserveLambdaHandlerServiceRole040C69BA
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/Resource
+      aws:asset:path: asset.5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1
+      aws:asset:property: Code
+  ObserveLambdaHandlerAllowEventRuleTheEventbridgeEtlStackobserveRuleDD299C271547ABA6:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - ObserveLambdaHandler685FFDBB
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - observeRule9CF2E16C
+          - Arn
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/ObserveLambdaHandler/AllowEventRuleTheEventbridgeEtlStackobserveRuleDD299C27
+  observeRule9CF2E16C:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: all events are caught here and logged centrally
+      EventPattern:
+        source:
+          - cdkpatterns.the-eventbridge-etl
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - ObserveLambdaHandler685FFDBB
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: TheEventbridgeEtlStack/observeRule/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.28.0,@aws-cdk/assets=1.28.0,@aws-cdk/aws-apigateway=1.28.0,@aws-cdk/aws-applicationautoscaling=1.28.0,@aws-cdk/aws-autoscaling=1.28.0,@aws-cdk/aws-autoscaling-common=1.28.0,@aws-cdk/aws-autoscaling-hooktargets=1.28.0,@aws-cdk/aws-cloudformation=1.28.0,@aws-cdk/aws-cloudwatch=1.28.0,@aws-cdk/aws-dynamodb=1.28.0,@aws-cdk/aws-ec2=1.28.0,@aws-cdk/aws-ecr=1.28.0,@aws-cdk/aws-ecr-assets=1.28.0,@aws-cdk/aws-ecs=1.28.0,@aws-cdk/aws-elasticloadbalancingv2=1.28.0,@aws-cdk/aws-events=1.28.0,@aws-cdk/aws-events-targets=1.28.0,@aws-cdk/aws-iam=1.28.0,@aws-cdk/aws-kms=1.28.0,@aws-cdk/aws-lambda=1.28.0,@aws-cdk/aws-lambda-event-sources=1.28.0,@aws-cdk/aws-logs=1.28.0,@aws-cdk/aws-s3=1.28.0,@aws-cdk/aws-s3-assets=1.28.0,@aws-cdk/aws-s3-notifications=1.28.0,@aws-cdk/aws-servicediscovery=1.28.0,@aws-cdk/aws-sns=1.28.0,@aws-cdk/aws-sns-subscriptions=1.28.0,@aws-cdk/aws-sqs=1.28.0,@aws-cdk/aws-ssm=1.28.0,@aws-cdk/aws-stepfunctions=1.28.0,@aws-cdk/aws-stepfunctions-tasks=1.28.0,@aws-cdk/core=1.28.0,@aws-cdk/custom-resources=1.28.0,@aws-cdk/cx-api=1.28.0,@aws-cdk/region-info=1.28.0,jsii-runtime=node.js/v11.10.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3BucketB50581FD:
+    Type: String
+    Description: S3 bucket for asset "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efS3VersionKey9353037D:
+    Type: String
+    Description: S3 key for asset version "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
+  AssetParameters3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8efArtifactHashE7D0DD27:
+    Type: String
+    Description: Artifact hash for asset "3d4073f7e091374918e3a906e9ed910bfac6f3e80c9bbddc9001f6b44a1bc8ef"
+  AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3Bucket52730867:
+    Type: String
+    Description: S3 bucket for asset "3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d"
+  AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dS3VersionKeyA72746F6:
+    Type: String
+    Description: S3 key for asset version "3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d"
+  AssetParameters3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23dArtifactHash24B74F40:
+    Type: String
+    Description: Artifact hash for asset "3f21814646b7943d7f4523e57db6b5ae19f3f5910bbc04013fae00c7a0a4a23d"
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3Bucket689341CE:
+    Type: String
+    Description: S3 bucket for asset "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798S3VersionKey4A45C95F:
+    Type: String
+    Description: S3 key for asset version "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParametersf60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798ArtifactHash8D572EFB:
+    Type: String
+    Description: Artifact hash for asset "f60819695c7a11886d0ef1100dc0dcf6166c79bfe22a93e8b0e5e148e26cc798"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3Bucket31B40717:
+    Type: String
+    Description: S3 bucket for asset "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1S3VersionKeyCD75E4AB:
+    Type: String
+    Description: S3 key for asset version "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
+  AssetParameters5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1ArtifactHash3C054779:
+    Type: String
+    Description: Artifact hash for asset "5c46dab3af6a6aa03e1f093055d6a09930619300ec83c4023322ab4412b858f1"
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

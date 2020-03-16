@@ -109,6 +109,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
@@ -142,10 +148,12 @@ npx cdk deploy
   
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
+  * [Hervé Nivon](#hervé-nivon)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
+  * [Vyas Sarangapani](#vyas-sarangapani)
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -175,6 +183,20 @@ npx cdk deploy
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
   ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
+
+  ### Hervé Nivon
+  <img src="img/dev_profiles/herve_nivon.jpg" width="120" alt="Hervé Nivon profile pic" /><br />
+
+  Startup Solutions Architect @AWScloud ★ Founder ★ Focus on #Innovation, #Cloud, #Startup, #AI ★ #Geek, #Curious & #Epicurean ★<br />
+
+  Twitter - [@hervenivon](https://twitter.com/hervenivon) <br />
+  Github - [@hervenivon](https://github.com/hervenivon/aws-experiments-data-ingestion-and-analytics) <br />
+
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
 
   <br /><hr /><br />
 
@@ -252,6 +274,19 @@ npx cdk deploy
   #### [The Simple GraphQL Service](/the-simple-graphql-service/README.md)
   Simple graphQL service built with [AppSync](https://aws.amazon.com/appsync/)<br /><br />
   ![Architecture](the-simple-graphql-service/img/architecture.png)
+
+  ### Vyas Sarangapani
+  <img src="img/dev_profiles/vyas_sarangapani.jpg" width="120" alt="Vyas Sarangapani profile pic" /><br />
+
+  Software Developer, SAP Cloud Applications Architect, Block chain Evangelist, Marathoner, Ultra Runner, Information Junkie, Ambivert<br />
+
+  Twitter - [@madladvyas](https://twitter.com/madladvyas) <br />
+  Medium - [@svyasrao22](https://medium.com/@svyasrao22) <br />
+
+  #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
+  Build a fully serverless CSV to DynamoDB pipeline <br />
+  ![Architecture](the-eventbridge-etl/img/arch.png)
+  
 
 </details>
 <details>
