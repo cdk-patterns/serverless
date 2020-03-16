@@ -2,6 +2,12 @@
 
 This is an example stack showing how you can use EventBridge to orchestrate events through an ETL process. This pattern was insired by [Vyas Sarangapani](https://twitter.com/madladvyas) and [Hervé Nivon](https://twitter.com/hervenivon) as you can see at the bottom of this page.
 
+Note - This is a learning pattern, if I was implementing this in a production system I would make a couple of changes:
+
+* KMS Encryption of sensitive data in events
+* SQS between EventBridge and the Lambdas for resiliency
+* Add in error events to EventBridge and error event rules
+
 ### Architecture:
 ![Architecture](img/arch.png)
 
