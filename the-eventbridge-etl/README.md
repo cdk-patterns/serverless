@@ -35,7 +35,7 @@ Full Article explaining architecture on [medium](https://medium.com/@svyasrao22/
 
 ### Hervé Nivon
 Twitter - [link](https://twitter.com/hervenivon) <br />
-Github [repo](https://github.com/hervenivon/aws-experiments-data-ingestion-and-analytics)
+Github - [repo](https://github.com/hervenivon/aws-experiments-data-ingestion-and-analytics)
 
 #### Architecture
 ![Architecture](img/herve_arch.png)
