@@ -1,6 +1,11 @@
 {
   "name": "the-simple-graphql-service",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdk-patterns/serverless.git"
+  },
+  "license" : "MIT",
   "bin": {
     "the-simple-graphql-service": "bin/the-simple-graphql-service.js"
   },
