@@ -9,6 +9,10 @@ export class TheDestinedLambdaStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const bus = new events.EventBus(this, 'DestinedEventBus', {
+      eventBusName: 'the-destined-lambda'
+    })
+
     /**
      * Lambda configured with destinations
      */
@@ -16,7 +20,8 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
       handler: 'destinedLambda.handler',
-      onSuccess: new destinations.EventBridgeDestination()
+      onSuccess: new destinations.EventBridgeDestination(bus),
+      onFailure: new destinations.EventBridgeDestination(bus)
     });
 
     /**
