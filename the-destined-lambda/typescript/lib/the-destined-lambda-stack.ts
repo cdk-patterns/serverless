@@ -51,7 +51,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       {
         detail: {
           requestContext: {
-            functionArn: destinedLambda.functionArn
+            functionArn: [destinedLambda.functionArn]
           }
         }
       }
