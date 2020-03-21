@@ -175,3 +175,69 @@ test('Failure Lambda EventBridge Rule Created', () => {
     }
   ));
 });
+
+test('API Gateway Method + VTL Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Method", {
+    "HttpMethod": "GET",
+    "AuthorizationType": "NONE",
+    "Integration": {
+      "IntegrationHttpMethod": "POST",
+      "IntegrationResponses": [
+        {
+          "ResponseTemplates": {
+            "application/json": "{\"message\":\"Message added to SNS topic\"}"
+          },
+          "StatusCode": "200"
+        },
+        {
+          "ResponseParameters": {
+            "method.response.header.Content-Type": "'application/json'",
+            "method.response.header.Access-Control-Allow-Origin": "'*'",
+            "method.response.header.Access-Control-Allow-Credentials": "'true'"
+          },
+          "ResponseTemplates": {
+            "application/json": "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+          },
+          "SelectionPattern": "^\[Error\].*",
+          "StatusCode": "400"
+        }
+      ],
+      "RequestTemplates": {
+        "application/json": {
+          "Fn::Join": [
+            "",
+            [
+              "Action=Publish&TargetArn=$util.urlEncode('",
+              {},
+              "')&Message=please $input.params().querystring.get('mode')&Version=2010-03-31"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS",
+    },
+    "MethodResponses": [
+      {
+        "ResponseParameters": {
+          "method.response.header.Content-Type": true,
+          "method.response.header.Access-Control-Allow-Origin": true,
+          "method.response.header.Access-Control-Allow-Credentials": true
+        },
+        "StatusCode": "200"
+      },
+      {
+        "ResponseParameters": {
+          "method.response.header.Content-Type": true,
+          "method.response.header.Access-Control-Allow-Origin": true,
+          "method.response.header.Access-Control-Allow-Credentials": true
+        },
+        "StatusCode": "400"
+      }
+    ]
+  }
+  ));
+});
