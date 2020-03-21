@@ -16,11 +16,17 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       eventBusName: 'the-destined-lambda'
     })
 
+    /**
+     * Destinations need invoked Asyncronously so let's use SNS
+     */
     const topic = new sns.Topic(this, 'theDestinedLambdaTopic',
     {
       displayName: "The Destined Lambda CDK Pattern Topic"
     });
 
+    /**
+     * This is a lambda that will be called by onSuccess for destinedLambda
+     */
     const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
@@ -121,7 +127,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
           'application/json': "Action=Publish&"+
                               "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
-                              "Message=$input.params().querystring.get('mode')&"+
+                              "Message=[$input.params().querystring.get('mode')]&"+
                               "Version=2010-03-31"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
