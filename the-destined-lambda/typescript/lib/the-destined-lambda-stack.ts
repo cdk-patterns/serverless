@@ -12,6 +12,9 @@ export class TheDestinedLambdaStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    /**
+     * Let's create our own Event Bus for this rather than using default
+     */
     const bus = new events.EventBus(this, 'DestinedEventBus', {
       eventBusName: 'the-destined-lambda'
     })
@@ -25,17 +28,9 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     });
 
     /**
-     * This is a lambda that will be called by onSuccess for destinedLambda
-     */
-    const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas'),
-      handler: 'success.handler',
-      timeout: cdk.Duration.seconds(3)
-    });
-
-    /**
-     * Lambda configured with destinations
+     * Lambda configured with success and failure destinations
+     * 
+     * Note the actual lambda has no EventBridge code inside it
      */
     const destinedLambda = new lambda.Function(this, 'destinedLambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -49,15 +44,19 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     topic.addSubscription(new sns_sub.LambdaSubscription(destinedLambda))
 
     /**
-     * This Lambda catches all failed events in our DestinedEventBus
+     * This is a lambda that will be called by onSuccess for destinedLambda
+     * 
+     * It simply prints the event it receives to the cloudwatch
      */
-    const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
+    const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
-      handler: 'failure.handler',
+      handler: 'success.handler',
       timeout: cdk.Duration.seconds(3)
     });
 
+    // Notice how we can still do event filtering based on the json payload returned
+    // by the actual lambda
     const successRule = new events.Rule(this, 'successRule', {
       eventBus: bus,
       description: 'all success events are caught here and logged centrally',
@@ -77,6 +76,16 @@ export class TheDestinedLambdaStack extends cdk.Stack {
 
     successRule.addTarget(new events_targets.LambdaFunction(successLambda));
 
+    /**
+     * This Lambda catches all failed events in our DestinedEventBus
+     */
+    const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'failure.handler',
+      timeout: cdk.Duration.seconds(3)
+    });
+
     // Create EventBridge rule to route events
     const failureRule = new events.Rule(this, 'failureRule', {
       eventBus: bus,
@@ -95,7 +104,10 @@ export class TheDestinedLambdaStack extends cdk.Stack {
 
     /**
      * API Gateway Creation
-     * This is complicated because it transforms the incoming json payload into a query string url
+     * 
+     * This is a VTL integration to SNS so most of the below is boilerplate
+     * 
+     * This looks complicated because it transforms the incoming json payload into a query string url
      * this url is used to post the payload to sns without a lambda inbetween 
      */
     let gateway = new apigw.RestApi(this, 'theDestinedLambdaAPI', {
@@ -154,7 +166,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
             responseTemplates: {
               // Just respond with a generic message
               // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-              'application/json': JSON.stringify({ message: 'Message added to topic'})
+              'application/json': JSON.stringify({ message: 'Message added to SNS topic'})
             }
           },
           {
