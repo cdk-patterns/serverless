@@ -49,9 +49,11 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       description: 'all events are caught here and logged centrally',
       eventPattern:
       {
-        "source": [
-          "aws.lambda"
-        ]
+        detail: {
+          requestContext: {
+            functionArn: destinedLambda.functionArn
+          }
+        }
       }
     });
 
