@@ -14,7 +14,7 @@ exports.handler = async (event:any, context:any, callback:any) => {
   }
 
   return {
-    source: 'cdkpatterns.the-eventbridge-etl',
+    source: 'cdkpatterns.the-destined-lambda',
     action: 'message',
     message: 'hello world'
   };
