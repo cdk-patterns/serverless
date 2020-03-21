@@ -42,7 +42,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas'),
       handler: 'destinedLambda.handler',
       retryAttempts: 0,
-      onSuccess: new destinations.LambdaDestination(successLambda),
+      onSuccess: new destinations.EventBridgeDestination(bus),
       onFailure: new destinations.EventBridgeDestination(bus)
     });
 
@@ -58,10 +58,25 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(3)
     });
 
+    const successRule = new events.Rule(this, 'successRule', {
+      eventBus: bus,
+      description: 'all success events are caught here and logged centrally',
+      eventPattern:
+      {
+        "detail": {
+          "requestContext": {
+            "condition": ["Success"]
+          }
+        }
+      }
+    });
+
+    successRule.addTarget(new events_targets.LambdaFunction(successLambda));
+
     // Create EventBridge rule to route events
     const failureRule = new events.Rule(this, 'failureRule', {
       eventBus: bus,
-      description: 'all events are caught here and logged centrally',
+      description: 'all failure events are caught here and logged centrally',
       eventPattern:
       {
         "detail": {
