@@ -121,3 +121,26 @@ test('Eventbridge Invoke Success Lambda Permissions Created', () => {
   }
   ));
 });
+
+test('Success Lambda EventBridge Rule Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Events::Rule", {
+    "Description": "all success events are caught here and logged centrally",
+    "EventPattern": {
+      "detail": {
+        "requestContext": {
+          "condition": ["Success"]
+        },
+        "responsePayload": {
+          "source": ["cdkpatterns.the-destined-lambda"],
+          "action": ["message"]
+        }
+      }
+    },
+    "State": "ENABLED",
+    }
+  ));
+});
