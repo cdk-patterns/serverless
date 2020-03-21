@@ -55,9 +55,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
           requestContext: {
             functionArn: [destinedLambda.functionArn]
           },
-          responsePayload: {
-            source: [{ "prefix": "{\"source\":\"cdkpatterns.the-destined-lambda\""}]
-          }
+          responsePayload: [{ "prefix": "{\"source\":\"cdkpatterns.the-destined-lambda\""}]
         }
       }
     });
