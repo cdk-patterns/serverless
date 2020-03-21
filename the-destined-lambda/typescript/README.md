@@ -16,7 +16,7 @@ At time of writing there are 4 available destinations targets but I have chosen 
 
 The destined lambda sends some extra parameters in its response json. This is because we don't manually create the EventBridge envelope like normal so we need the ability to control how our events are processed:
 
-```
+```typescript
 {
     source: 'cdkpatterns.the-eventbridge-etl',
     action: 'message',
@@ -26,7 +26,7 @@ The destined lambda sends some extra parameters in its response json. This is be
 
 by adding in the source and action fields this means that I could have multiple rules in eventbridge going to different targets based on the successful result of this function rather than the simple success/failure split you see today. 
 
-```
+```typescript
 const successRule = new events.Rule(this, 'successRule', {
       eventBus: bus,
       description: 'all success events are caught here and logged centrally',
