@@ -52,8 +52,11 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       {
         source: ["lambda"],
         detail: {
-          responseContext: {
-            statusCode: [{ "numeric": [ "=", 200]}]
+          requestContext: {
+            functionArn: [destinedLambda.functionArn]
+          },
+          responsePayload: {
+            source: ["cdkpatterns.the-destined-lambda"]
           }
         }
       }
@@ -76,6 +79,9 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       {
         source: ["lambda"],
         detail: {
+          requestContext: {
+            functionArn: [destinedLambda.functionArn]
+          },
           responsePayload: {
             errorType: ["Error"]
           }
