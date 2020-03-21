@@ -53,7 +53,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
         source: ["lambda"],
         detail: {
           responseContext: {
-            statusCode: [200]
+            statusCode: [{ "numeric": [ "=", 200]}]
           }
         }
       }
