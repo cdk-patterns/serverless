@@ -127,7 +127,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
           // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
           'application/json': "Action=Publish&"+
                               "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
-                              "Message=[\"$input.params().querystring.get('mode')\"]&"+
+                              "Message=please $input.params().querystring.get('mode')&"+
                               "Version=2010-03-31"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
