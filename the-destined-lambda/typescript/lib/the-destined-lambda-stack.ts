@@ -59,7 +59,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
      * This is complicated because it transforms the incoming json payload into a query string url
      * this url is used to post the payload to sns without a lambda inbetween 
      */
-    let gateway = new apigw.RestApi(this, 'theBigFanAPI', {
+    let gateway = new apigw.RestApi(this, 'theDestinedLambdaAPI', {
       deployOptions: {
         metricsEnabled: true,
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -164,6 +164,5 @@ export class TheDestinedLambdaStack extends cdk.Stack {
           }
         ]
       })
-  }
   }
 }
