@@ -24,3 +24,34 @@ test('SNS Topic Created', () => {
   }
   ));
 });
+
+test('Destined Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "destinedLambda.handler",
+    "Runtime": "nodejs12.x"
+    }
+  ));
+});
+
+
+test('Lambda Destinations Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::EventInvokeConfig", {
+    "DestinationConfig": {
+      OnFailure: {
+        Destination: {}
+      },
+      OnSuccess: {
+        Destination: {}
+      }
+    }
+  }
+  ));
+});
