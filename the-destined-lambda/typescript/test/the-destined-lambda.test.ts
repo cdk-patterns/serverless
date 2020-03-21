@@ -86,3 +86,14 @@ test('SNS Lambda Invoke Permissions Created', () => {
   }
   ));
 });
+
+test('SNS Subscription Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::SNS::Subscription", {
+    "Protocol": "lambda"
+  }
+  ));
+});
