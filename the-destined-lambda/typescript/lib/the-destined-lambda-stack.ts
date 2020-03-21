@@ -66,6 +66,10 @@ export class TheDestinedLambdaStack extends cdk.Stack {
         "detail": {
           "requestContext": {
             "condition": ["Success"]
+          },
+          "responsePayload": {
+            "source": ["cdkpatterns.the-eventbridge-etl"],
+            "action": ["message"]
           }
         }
       }
