@@ -55,3 +55,34 @@ test('Lambda Destinations Created', () => {
   }
   ));
 });
+
+test('EventBridge PUT Permissions IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument":{
+      "Statement": [
+        {
+          "Action": "events:PutEvents",
+          "Effect": "Allow",
+          "Resource": "*"
+        }
+      ]
+    }
+  }
+  ));
+});
+
+test('SNS Lambda Invoke Permissions Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Permission", {
+    "Action": "lambda:InvokeFunction",
+    "Principal": "sns.amazonaws.com"
+  }
+  ));
+});
