@@ -144,3 +144,34 @@ test('Success Lambda EventBridge Rule Created', () => {
     }
   ));
 });
+
+test('Failure Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "failure.handler",
+    "Runtime": "nodejs12.x"
+    }
+  ));
+});
+
+test('Failure Lambda EventBridge Rule Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Events::Rule", {
+    "Description": "all failure events are caught here and logged centrally",
+    "EventPattern": {
+      "detail": {
+        "responsePayload": {
+          "errorType": ["Error"]
+        }
+      }
+    },
+    "State": "ENABLED",
+    }
+  ));
+});
