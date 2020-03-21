@@ -8,10 +8,24 @@ An important point about Lambda Destinations is that they have to be executed as
 
 ![arch](img/arch.png)
 
+### Architecture Notes
 
 At time of writing there are 4 available destinations targets but I have chosen EventBridge as to be honest this is the most complicated and powerful of the 4:
 
 ![destinations](img/destinations.png)
+
+The destined lambda sends some extra parameters in its response json:
+
+```
+{
+    source: 'cdkpatterns.the-eventbridge-etl',
+    action: 'message',
+    message: 'hello world'
+}
+```
+
+by adding in the source and action fields this means that I could have multiple rules in eventbridge going to different targets based on the successful result of this function. For a complete version of this see [The EventBridge ETL Pattern](../../the-eventbridge-etl)
+
 
 ## When You Would Use This Pattern
 If you are building an asyncronous, event driven flow but step functions seem too heavy weight for your current needs. 
