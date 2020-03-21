@@ -1,4 +1,6 @@
-# Welcome to your CDK TypeScript project!
+# The Destined Lambda
+
+![arch](img/arch.png)
 
 This is a blank project for TypeScript development with CDK.
 
