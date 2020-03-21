@@ -97,3 +97,27 @@ test('SNS Subscription Created', () => {
   }
   ));
 });
+
+test('Success Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "success.handler",
+    "Runtime": "nodejs12.x"
+    }
+  ));
+});
+
+test('Eventbridge Invoke Success Lambda Permissions Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheDestinedLambda.TheDestinedLambdaStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Permission", {
+    "Action": "lambda:InvokeFunction",
+    "Principal": "events.amazonaws.com"
+  }
+  ));
+});
