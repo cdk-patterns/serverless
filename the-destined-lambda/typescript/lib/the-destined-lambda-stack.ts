@@ -66,9 +66,6 @@ export class TheDestinedLambdaStack extends cdk.Stack {
         detail: {
           requestContext: {
             functionArn: [destinedLambda.functionArn]
-          },
-          responsePayload: {
-            errorType: ["Error"]
           }
         }
       }
