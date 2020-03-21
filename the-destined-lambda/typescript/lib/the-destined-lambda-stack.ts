@@ -105,7 +105,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
           'application/json': "Action=Publish&"+
                               "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
                               "Message=hello&"+
-                              "Version=2010-03-31)"
+                              "Version=2010-03-31"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
