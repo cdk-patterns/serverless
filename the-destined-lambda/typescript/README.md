@@ -14,7 +14,7 @@ At time of writing there are 4 available destinations targets but I have chosen 
 
 ![destinations](img/destinations.png)
 
-The destined lambda sends some extra parameters in its response json:
+The destined lambda sends some extra parameters in its response json. This is because we don't manually create the EventBridge envelope like normal so we need the ability to control how our events are processed:
 
 ```
 {
