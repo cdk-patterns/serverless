@@ -1,4 +1,4 @@
-exports.handler = async (event:any, context:any) => {
+exports.handler = async (event:any, context:any, callback:any) => {
     const response = {
         // Event envelope fields
         Source: 'cdkpatterns.the-destined-lambda',
@@ -12,6 +12,6 @@ exports.handler = async (event:any, context:any) => {
           message: 'hello world'
         })
     };
-    throw new Error('test')
+    throw new Error('test');
     return "{'value': 'test'}";
   };
