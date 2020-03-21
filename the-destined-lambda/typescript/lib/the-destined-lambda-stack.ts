@@ -48,7 +48,9 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     const observeRule = new events.Rule(this, 'observeRule', {
       description: 'all events are caught here and logged centrally',
       eventPattern: {
-        source: ['cdkpatterns.the-destined-lambda']
+        detail: {
+          source: ['cdkpatterns.the-destined-lambda']
+        }
       }
     });
 
