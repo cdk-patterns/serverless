@@ -47,10 +47,11 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     // Create EventBridge rule to route events
     const observeRule = new events.Rule(this, 'observeRule', {
       description: 'all events are caught here and logged centrally',
-      eventPattern: {
-        detail: {
-          source: ['cdkpatterns.the-destined-lambda']
-        }
+      eventPattern:
+      {
+        "source": [
+          "aws.lambda"
+        ]
       }
     });
 

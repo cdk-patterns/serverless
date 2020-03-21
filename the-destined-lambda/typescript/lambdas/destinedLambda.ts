@@ -12,5 +12,5 @@ exports.handler = async (event:any, context:any) => {
           message: 'hello world'
         })
     };
-    return response;
+    return "{'value': 'test'}";
   };
