@@ -70,7 +70,6 @@ To send a message that triggers the onFailure flow add ?mode=fail onto the url.
 What you are looking for in both flows is inside the cloudwatch logs for the Success and Failure Lambda functions. You will see that in the logs for failure, not only do you get the actual error that was thrown but it also includes the event details that came into the function to cause the error. This means you have everything you need to replay it at your leisure.
 
 
-
 ## Useful commands
 
  * `npm run build`   compile typescript to js
