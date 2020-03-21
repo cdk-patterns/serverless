@@ -22,6 +22,16 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     });
 
     /**
+     * Lambda that is called through destinations when main lambda fails
+     */
+    const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'failure.handler',
+      timeout: cdk.Duration.seconds(3)
+    });
+
+    /**
      * Lambda configured with destinations
      */
     const destinedLambda = new lambda.Function(this, 'destinedLambda', {
@@ -29,7 +39,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas'),
       handler: 'destinedLambda.handler',
       onSuccess: new destinations.EventBridgeDestination(bus),
-      onFailure: new destinations.EventBridgeDestination(bus)
+      onFailure: new destinations.LambdaDestination(failureLambda)
     });
 
     topic.addSubscription(new sns_sub.LambdaSubscription(destinedLambda))
