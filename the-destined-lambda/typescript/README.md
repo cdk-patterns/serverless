@@ -21,6 +21,8 @@ Alternatively As illustrated in this implementation, you can use it to strip cus
 ## How To Test Pattern
 After you deploy this pattern you will have an API Gateway with one endpoint "SendEvent" that accepts GET requests.
 
+You will get the base url for your deployed api from the deploy logs.
+
 To send a message that triggers the onSuccess flow just open the endpoint in a browser.
 
 ```https://{{API ID}}.execute-api.us-east-1.amazonaws.com/prod/SendEvent```
