@@ -21,22 +21,6 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       displayName: "The Big Fan CDK Pattern Topic"
     });
 
-    /**
-     * Lambda configured with destinations
-     */
-    const destinedLambda = new lambda.Function(this, 'destinedLambda', {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas'),
-      handler: 'destinedLambda.handler',
-      onSuccess: new destinations.EventBridgeDestination(bus),
-      onFailure: new destinations.EventBridgeDestination(bus)
-    });
-
-    topic.addSubscription(new sns_sub.LambdaSubscription(destinedLambda))
-
-    /**
-     * This Lambda catches all EventBridge events from 'cdkpatterns.the-destined-lambda' source
-     */
     const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
@@ -44,23 +28,22 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(3)
     });
 
-    // Create EventBridge rule to route events
-    const successRule = new events.Rule(this, 'successRule', {
-      eventBus: bus,
-      description: 'all events are caught here and logged centrally',
-      eventPattern:
-      {
-        source: ["lambda"],
-        detail: {
-          requestContext: {
-            functionArn: [destinedLambda.functionArn]
-          }
-        }
-      }
+    /**
+     * Lambda configured with destinations
+     */
+    const destinedLambda = new lambda.Function(this, 'destinedLambda', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'destinedLambda.handler',
+      onSuccess: new destinations.LambdaDestination(successLambda),
+      onFailure: new destinations.EventBridgeDestination(bus)
     });
 
-    successRule.addTarget(new events_targets.LambdaFunction(successLambda));
+    topic.addSubscription(new sns_sub.LambdaSubscription(destinedLambda))
 
+    /**
+     * This Lambda catches all failed events in our DestinedEventBus
+     */
     const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
