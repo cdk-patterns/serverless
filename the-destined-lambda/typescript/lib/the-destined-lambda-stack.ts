@@ -41,6 +41,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
       handler: 'destinedLambda.handler',
+      retryAttempts: 0,
       onSuccess: new destinations.LambdaDestination(successLambda),
       onFailure: new destinations.EventBridgeDestination(bus)
     });
