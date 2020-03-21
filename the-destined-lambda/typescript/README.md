@@ -24,7 +24,29 @@ The destined lambda sends some extra parameters in its response json:
 }
 ```
 
-by adding in the source and action fields this means that I could have multiple rules in eventbridge going to different targets based on the successful result of this function. For a complete version of this see [The EventBridge ETL Pattern](../../the-eventbridge-etl)
+by adding in the source and action fields this means that I could have multiple rules in eventbridge going to different targets based on the successful result of this function rather than the simple success/failure split you see today. 
+
+```
+const successRule = new events.Rule(this, 'successRule', {
+      eventBus: bus,
+      description: 'all success events are caught here and logged centrally',
+      eventPattern:
+      {
+        "detail": {
+          "requestContext": {
+            "condition": ["Success"]
+          },
+          "responsePayload": {
+            "source": ["cdkpatterns.the-eventbridge-etl"],
+            "action": ["message"]
+          }
+        }
+      }
+    });
+```
+
+
+For a complete version of routing flow based on the json payload see [The EventBridge ETL Pattern](../../the-eventbridge-etl)
 
 
 ## When You Would Use This Pattern
