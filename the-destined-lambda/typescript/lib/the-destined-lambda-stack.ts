@@ -64,9 +64,9 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       description: 'all events are caught here and logged centrally',
       eventPattern:
       {
-        detail: {
-          requestContext: {
-            functionArn: [destinedLambda.functionArn]
+        "detail": {
+          "responsePayload": {
+            "errorType": ["Error"]
           }
         }
       }
