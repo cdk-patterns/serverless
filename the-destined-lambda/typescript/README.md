@@ -18,7 +18,7 @@ The destined lambda sends some extra parameters in its response json. This is be
 
 ```typescript
 {
-    source: 'cdkpatterns.the-eventbridge-etl',
+    source: 'cdkpatterns.the-destined-lambda',
     action: 'message',
     message: 'hello world'
 }
@@ -37,7 +37,7 @@ const successRule = new events.Rule(this, 'successRule', {
             "condition": ["Success"]
           },
           "responsePayload": {
-            "source": ["cdkpatterns.the-eventbridge-etl"],
+            "source": ["cdkpatterns.the-destined-lambda"],
             "action": ["message"]
           }
         }
