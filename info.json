@@ -9,6 +9,9 @@
         "the-big-fan": {
             "prodReady": false
         },
+        "the-destined-lambda": {
+            "prodReady": false
+        },
         "the-dynamo-streamer": {
             "prodReady": false
         },
