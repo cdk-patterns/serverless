@@ -1,8 +1,13 @@
 # The Destined Lambda
 
-This project combines [Lambda Destinations](https://aws.amazon.com/blogs/compute/introducing-aws-lambda-destinations/) with [Amazon EventBridge](https://aws.amazon.com/eventbridge/) to show you that with EventBridge rules you can decouple your components in an event driven architecture and by combining it with lambda destinations you can strip out EventBridge specific code from your lambda functions themselves and decouple further.
+This project combines [Lambda Destinations](https://aws.amazon.com/blogs/compute/introducing-aws-lambda-destinations/) 
+with [Amazon EventBridge](https://aws.amazon.com/eventbridge/) to show you that with EventBridge rules you can decouple 
+your components in an event driven architecture and by combining it with lambda destinations you can strip out EventBridge 
+specific code from your lambda functions themselves and decouple further.
 
-An important point about Lambda Destinations is that they have to be executed asyncronously which is why the lambda is invoked via SNS in this pattern. To reduce custom code, I have integrated the SNS directly with API Gateway using [Apache VTL](https://velocity.apache.org/engine/1.7/vtl-reference.html).
+An important point about Lambda Destinations is that they have to be executed asyncronously which is why the lambda is 
+invoked via SNS in this pattern. To reduce custom code, I have integrated the SNS directly with API Gateway using 
+[Apache VTL](https://velocity.apache.org/engine/1.7/vtl-reference.html).
 
 ## Architecture
 
@@ -10,11 +15,13 @@ An important point about Lambda Destinations is that they have to be executed as
 
 ### Architecture Notes
 
-At time of writing there are 4 available destinations targets but I have chosen EventBridge as to be honest this is the most complicated and powerful of the 4:
+At time of writing there are 4 available destinations targets but I have chosen EventBridge as to be honest this is the 
+most complicated and powerful of the 4:
 
 ![destinations](img/destinations.png)
 
-The destined lambda sends some extra parameters in its response json. This is because we don't manually create the EventBridge envelope like normal so we need the ability to control how our events are processed:
+The destined lambda sends some extra parameters in its response json. This is because we don't manually create the 
+EventBridge envelope like normal so we need the ability to control how our events are processed:
 
 ```typescript
 {
@@ -24,7 +31,8 @@ The destined lambda sends some extra parameters in its response json. This is be
 }
 ```
 
-by adding in the source and action fields this means that I could have multiple rules in eventbridge going to different targets based on the successful result of this function rather than the simple success/failure split you see today. 
+by adding in the source and action fields this means that I could have multiple rules in eventbridge going to 
+different targets based on the successful result of this function rather than the simple success/failure split you see today. 
 
 ```typescript
 const successRule = new events.Rule(this, 'successRule', {
@@ -46,7 +54,8 @@ const successRule = new events.Rule(this, 'successRule', {
 ```
 
 
-For a complete version of routing flow based on the json payload see [The EventBridge ETL Pattern](../../the-eventbridge-etl)
+For a complete version of routing flow based on the json payload see 
+[The EventBridge ETL Pattern](https://github.com/cdk-patterns/serverless/tree/master/the-eventbridge-etl)
 
 
 ## When You Would Use This Pattern
@@ -67,7 +76,10 @@ To send a message that triggers the onFailure flow add ?mode=fail onto the url.
 
 ```https://{{API ID}}.execute-api.us-east-1.amazonaws.com/prod/SendEvent?mode=fail```
 
-What you are looking for in both flows is inside the cloudwatch logs for the Success and Failure Lambda functions. You will see that in the logs for failure, not only do you get the actual error that was thrown but it also includes the event details that came into the function to cause the error. This means you have everything you need to replay it at your leisure.
+What you are looking for in both flows is inside the cloudwatch logs for the Success and Failure Lambda functions. 
+You will see that in the logs for failure, not only do you get the actual error that was thrown but it also includes 
+the event details that came into the function to cause the error. This means you have everything you need to replay it 
+at your leisure.
 
 
 ## Python Setup

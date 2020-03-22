@@ -46,7 +46,7 @@ const successRule = new events.Rule(this, 'successRule', {
 ```
 
 
-For a complete version of routing flow based on the json payload see [The EventBridge ETL Pattern](../../the-eventbridge-etl)
+For a complete version of routing flow based on the json payload see [The EventBridge ETL Pattern](https://github.com/cdk-patterns/serverless/tree/master/the-eventbridge-etl)
 
 
 ## When You Would Use This Pattern
