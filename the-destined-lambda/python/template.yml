@@ -1,0 +1,587 @@
+Resources:
+  DestinedEventBus14820B65:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: the-destined-lambda
+    Metadata:
+      aws:cdk:path: the-destined-lambda/DestinedEventBus/Resource
+  theDestinedLambdaTopic8F2C8FB6:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: The Destined Lambda CDK Pattern Topic
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaTopic/Resource
+  destinedLambdaServiceRole87608B6F:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/ServiceRole/Resource
+  destinedLambdaServiceRoleDefaultPolicy9D15647D:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: events:PutEvents
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: destinedLambdaServiceRoleDefaultPolicy9D15647D
+      Roles:
+        - Ref: destinedLambdaServiceRole87608B6F
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/ServiceRole/DefaultPolicy/Resource
+  destinedLambda8DF776BB:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3Bucket83180DAE
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+      Handler: destinedLambda.handler
+      Role:
+        Fn::GetAtt:
+          - destinedLambdaServiceRole87608B6F
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - destinedLambdaServiceRoleDefaultPolicy9D15647D
+      - destinedLambdaServiceRole87608B6F
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/Resource
+      aws:asset:path: asset.7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271
+      aws:asset:property: Code
+  destinedLambdaEventInvokeConfig3CA2AF7E:
+    Type: AWS::Lambda::EventInvokeConfig
+    Properties:
+      FunctionName:
+        Ref: destinedLambda8DF776BB
+      Qualifier: $LATEST
+      DestinationConfig:
+        OnFailure:
+          Destination:
+            Fn::GetAtt:
+              - DestinedEventBus14820B65
+              - Arn
+        OnSuccess:
+          Destination:
+            Fn::GetAtt:
+              - DestinedEventBus14820B65
+              - Arn
+      MaximumRetryAttempts: 0
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/EventInvokeConfig/Resource
+  destinedLambdaAllowInvokethedestinedlambdatheDestinedLambdaTopic3C647105CB0A1F3B:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - destinedLambda8DF776BB
+          - Arn
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: theDestinedLambdaTopic8F2C8FB6
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/AllowInvoke:thedestinedlambdatheDestinedLambdaTopic3C647105
+  destinedLambdatheDestinedLambdaTopic8E937C7F:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn:
+        Ref: theDestinedLambdaTopic8F2C8FB6
+      Endpoint:
+        Fn::GetAtt:
+          - destinedLambda8DF776BB
+          - Arn
+    Metadata:
+      aws:cdk:path: the-destined-lambda/destinedLambda/theDestinedLambdaTopic/Resource
+  successLambdaServiceRole5B4C1628:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-destined-lambda/successLambda/ServiceRole/Resource
+  successLambdaA03E870D:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3Bucket83180DAE
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+      Handler: success.handler
+      Role:
+        Fn::GetAtt:
+          - successLambdaServiceRole5B4C1628
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 3
+    DependsOn:
+      - successLambdaServiceRole5B4C1628
+    Metadata:
+      aws:cdk:path: the-destined-lambda/successLambda/Resource
+      aws:asset:path: asset.7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271
+      aws:asset:property: Code
+  successLambdaAllowEventRulethedestinedlambdasuccessRuleD1C8879E2FDF9E98:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - successLambdaA03E870D
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - successRuleE9E88056
+          - Arn
+    Metadata:
+      aws:cdk:path: the-destined-lambda/successLambda/AllowEventRulethedestinedlambdasuccessRuleD1C8879E
+  successRuleE9E88056:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: all success events are caught here and logged centrally
+      EventBusName:
+        Ref: DestinedEventBus14820B65
+      EventPattern:
+        detail:
+          requestContext:
+            condition:
+              - Success
+          responsePayload:
+            source:
+              - cdkpatterns.the-destined-lambda
+            action:
+              - message
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - successLambdaA03E870D
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: the-destined-lambda/successRule/Resource
+  failureLambdaServiceRoleE30368A3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-destined-lambda/failureLambda/ServiceRole/Resource
+  failureLambda7FD808BA:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3Bucket83180DAE
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF
+      Handler: failure.handler
+      Role:
+        Fn::GetAtt:
+          - failureLambdaServiceRoleE30368A3
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 3
+    DependsOn:
+      - failureLambdaServiceRoleE30368A3
+    Metadata:
+      aws:cdk:path: the-destined-lambda/failureLambda/Resource
+      aws:asset:path: asset.7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271
+      aws:asset:property: Code
+  failureLambdaAllowEventRulethedestinedlambdafailureRuleD59CDD25D6D064D3:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - failureLambda7FD808BA
+          - Arn
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - failureRule10D0B2E4
+          - Arn
+    Metadata:
+      aws:cdk:path: the-destined-lambda/failureLambda/AllowEventRulethedestinedlambdafailureRuleD59CDD25
+  failureRule10D0B2E4:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: all failure events are caught here and logged centrally
+      EventBusName:
+        Ref: DestinedEventBus14820B65
+      EventPattern:
+        detail:
+          responsePayload:
+            errorType:
+              - Error
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - failureLambda7FD808BA
+              - Arn
+          Id: Target0
+    Metadata:
+      aws:cdk:path: the-destined-lambda/failureRule/Resource
+  theDestinedLambdaAPIBAB2789B:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: theDestinedLambdaAPI
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/Resource
+  theDestinedLambdaAPIDeploymentC364859E14441c1ac8ec10a2d3e28c336fa44d6d:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - theDestinedLambdaAPISendEventGETC3F11CCE
+      - theDestinedLambdaAPISendEventC20585CF
+      - theDestinedLambdaAPIErrorResponseModel5F76D2FC
+      - theDestinedLambdaAPIResponseModel7D59062C
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/Deployment/Resource
+  theDestinedLambdaAPIDeploymentStageprodD67BDFB2:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+      DeploymentId:
+        Ref: theDestinedLambdaAPIDeploymentC364859E14441c1ac8ec10a2d3e28c336fa44d6d
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+      StageName: prod
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/DeploymentStage.prod/Resource
+  theDestinedLambdaAPICloudWatchRoleCDF408DA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/CloudWatchRole/Resource
+  theDestinedLambdaAPIAccount1A39207B:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - theDestinedLambdaAPICloudWatchRoleCDF408DA
+          - Arn
+    DependsOn:
+      - theDestinedLambdaAPIBAB2789B
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/Account
+  theDestinedLambdaAPISendEventC20585CF:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - theDestinedLambdaAPIBAB2789B
+          - RootResourceId
+      PathPart: SendEvent
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/Default/SendEvent/Resource
+  theDestinedLambdaAPISendEventGETC3F11CCE:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: theDestinedLambdaAPISendEventC20585CF
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+      AuthorizationType: NONE
+      Integration:
+        Credentials:
+          Fn::GetAtt:
+            - ApiGatewaySNSRole1BAAAE75
+            - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: '{"message": "Message added to SNS topic"}'
+            StatusCode: "200"
+          - ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+            SelectionPattern: ^\[Error\].*
+            StatusCode: "400"
+        PassthroughBehavior: NEVER
+        RequestParameters:
+          integration.request.header.Content-Type: "'application/x-www-form-urlencoded'"
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+              - ""
+              - - Action=Publish&TargetArn=$util.urlEncode('
+                - Ref: theDestinedLambdaTopic8F2C8FB6
+                - "')&Message=please $input.params().querystring.get('mode')&Version=2010-03-31"
+        Type: AWS
+        Uri: arn:aws:apigateway:us-east-1:sns:path//
+      MethodResponses:
+        - ResponseModels:
+            application/json:
+              Ref: theDestinedLambdaAPIResponseModel7D59062C
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "200"
+        - ResponseModels:
+            application/json:
+              Ref: theDestinedLambdaAPIErrorResponseModel5F76D2FC
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "400"
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/Default/SendEvent/GET/Resource
+  theDestinedLambdaAPIResponseModel7D59062C:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+      ContentType: application/json
+      Name: ResponseModel
+      Schema:
+        properties:
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: pollResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/ResponseModel/Resource
+  theDestinedLambdaAPIErrorResponseModel5F76D2FC:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: theDestinedLambdaAPIBAB2789B
+      ContentType: application/json
+      Name: ErrorResponseModel
+      Schema:
+        properties:
+          state:
+            type: string
+          message:
+            type: string
+        $schema: http://json-schema.org/draft-04/schema#
+        title: errorResponse
+        type: object
+    Metadata:
+      aws:cdk:path: the-destined-lambda/theDestinedLambdaAPI/ErrorResponseModel/Resource
+  ApiGatewaySNSRole1BAAAE75:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: the-destined-lambda/ApiGatewaySNSRole/Resource
+  ApiGatewaySNSRoleDefaultPolicyCA5D0260:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sns:Publish
+            Effect: Allow
+            Resource:
+              Ref: theDestinedLambdaTopic8F2C8FB6
+        Version: "2012-10-17"
+      PolicyName: ApiGatewaySNSRoleDefaultPolicyCA5D0260
+      Roles:
+        - Ref: ApiGatewaySNSRole1BAAAE75
+    Metadata:
+      aws:cdk:path: the-destined-lambda/ApiGatewaySNSRole/DefaultPolicy/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.30.0,@aws-cdk/assets=1.30.0,@aws-cdk/aws-apigateway=1.30.0,@aws-cdk/aws-applicationautoscaling=1.30.0,@aws-cdk/aws-autoscaling=1.30.0,@aws-cdk/aws-autoscaling-common=1.30.0,@aws-cdk/aws-autoscaling-hooktargets=1.30.0,@aws-cdk/aws-certificatemanager=1.30.0,@aws-cdk/aws-cloudformation=1.30.0,@aws-cdk/aws-cloudfront=1.30.0,@aws-cdk/aws-cloudwatch=1.30.0,@aws-cdk/aws-codebuild=1.30.0,@aws-cdk/aws-codecommit=1.30.0,@aws-cdk/aws-codepipeline=1.30.0,@aws-cdk/aws-ec2=1.30.0,@aws-cdk/aws-ecr=1.30.0,@aws-cdk/aws-ecr-assets=1.30.0,@aws-cdk/aws-ecs=1.30.0,@aws-cdk/aws-elasticloadbalancing=1.30.0,@aws-cdk/aws-elasticloadbalancingv2=1.30.0,@aws-cdk/aws-events=1.30.0,@aws-cdk/aws-events-targets=1.30.0,@aws-cdk/aws-iam=1.30.0,@aws-cdk/aws-kms=1.30.0,@aws-cdk/aws-lambda=1.30.0,@aws-cdk/aws-lambda-destinations=1.30.0,@aws-cdk/aws-logs=1.30.0,@aws-cdk/aws-route53=1.30.0,@aws-cdk/aws-route53-targets=1.30.0,@aws-cdk/aws-s3=1.30.0,@aws-cdk/aws-s3-assets=1.30.0,@aws-cdk/aws-sam=1.30.0,@aws-cdk/aws-secretsmanager=1.30.0,@aws-cdk/aws-servicediscovery=1.30.0,@aws-cdk/aws-sns=1.30.0,@aws-cdk/aws-sns-subscriptions=1.30.0,@aws-cdk/aws-sqs=1.30.0,@aws-cdk/aws-ssm=1.30.0,@aws-cdk/aws-stepfunctions=1.30.0,@aws-cdk/core=1.30.0,@aws-cdk/cx-api=1.30.0,@aws-cdk/region-info=1.30.0,jsii-runtime=Python/3.7.2
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3Bucket83180DAE:
+    Type: String
+    Description: S3 bucket for asset "7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271"
+  AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271S3VersionKey123B78EF:
+    Type: String
+    Description: S3 key for asset version "7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271"
+  AssetParameters7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271ArtifactHash934D3139:
+    Type: String
+    Description: Artifact hash for asset "7085117b0a5b6b5f895f6854a30852b64062d6b18000a59d23d0f6ae41624271"
+Outputs:
+  theDestinedLambdaAPIEndpointA1D03662:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: theDestinedLambdaAPIBAB2789B
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: theDestinedLambdaAPIDeploymentStageprodD67BDFB2
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
