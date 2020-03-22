@@ -27,6 +27,7 @@ setuptools.setup(
         "aws-cdk.aws-sns==1.30.0",
         "aws-cdk.aws-sns-subscriptions==1.30.0",
         "aws-cdk.aws-lambda-destinations==1.30.0",
+        "aws-cdk.aws_apigateway==1.30.0",
     ],
 
     python_requires=">=3.6",
