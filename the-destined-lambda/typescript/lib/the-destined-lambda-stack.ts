@@ -78,6 +78,10 @@ export class TheDestinedLambdaStack extends cdk.Stack {
 
     /**
      * This Lambda catches all failed events in our DestinedEventBus
+     * It simply prints the event it receives to the cloudwatch logs.
+     * 
+     * Notice how it includes the message that came into destined lambda to make it fail so you have
+     * everything you need to do retries or manually investigate
      */
     const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
