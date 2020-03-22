@@ -6,8 +6,10 @@ from aws_cdk import (
     aws_events_targets as targets,
     aws_sns as sns,
     aws_sns_subscriptions as subscriptions,
+    aws_apigateway as api_gw,
     core
 )
+import json
 
 
 class TheDestinedLambdaStack(core.Stack):
@@ -94,3 +96,119 @@ class TheDestinedLambdaStack(core.Stack):
                                            }
                                        }))
         failure_rule.add_target(targets.LambdaFunction(failure_lambda))
+
+        ###
+        # API Gateway Creation
+        # This is complicated because it transforms the incoming json payload into a query string url
+        # this url is used to post the payload to sns without a lambda inbetween
+        ###
+
+        gateway = api_gw.RestApi(self, 'theDestinedLambdaAPI',
+                                 deploy_options=api_gw.StageOptions(metrics_enabled=True,
+                                                                    logging_level=api_gw.MethodLoggingLevel.INFO,
+                                                                    data_trace_enabled=True,
+                                                                    stage_name='prod'
+                                                                    ))
+        # Give our gateway permissions to interact with SNS
+        api_gw_sns_role = iam.Role(self, 'ApiGatewaySNSRole',
+                                   assumed_by=iam.ServicePrincipal('apigateway.amazonaws.com'))
+        topic.grant_publish(api_gw_sns_role)
+
+        # shortening the lines of later code
+        schema = api_gw.JsonSchema
+        schema_type = api_gw.JsonSchemaType
+
+        # Because this isn't a proxy integration, we need to define our response model
+        response_model = gateway.add_model('ResponseModel',
+                                           content_type='application/json',
+                                           model_name='ResponseModel',
+                                           schema=schema(schema=api_gw.JsonSchemaVersion.DRAFT4,
+                                                         title='pollResponse',
+                                                         type=schema_type.OBJECT,
+                                                         properties={
+                                                             'message': schema(type=schema_type.STRING)
+                                                         }))
+
+        error_response_model = gateway.add_model('ErrorResponseModel',
+                                                 content_type='application/json',
+                                                 model_name='ErrorResponseModel',
+                                                 schema=schema(schema=api_gw.JsonSchemaVersion.DRAFT4,
+                                                               title='errorResponse',
+                                                               type=schema_type.OBJECT,
+                                                               properties={
+                                                                   'state': schema(type=schema_type.STRING),
+                                                                   'message': schema(type=schema_type.STRING)
+                                                               }))
+
+        request_template = "Action=Publish&" + \
+                           "TargetArn=$util.urlEncode('" + topic.topic_arn + "')&" + \
+                           "Message=please $input.params().querystring.get('mode')&" + \
+                           "Version=2010-03-31"
+
+        # This is the VTL to transform the error response
+        error_template = {
+            "state": 'error',
+            "message": "$util.escapeJavaScript($input.path('$.errorMessage'))"
+        }
+        error_template_string = json.dumps(error_template, separators=(',', ':'))
+
+        # This is how our gateway chooses what response to send based on selection_pattern
+        integration_options = api_gw.IntegrationOptions(
+            credentials_role=api_gw_sns_role,
+            request_parameters={
+                'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'"
+            },
+            request_templates={
+                "application/json": request_template
+            },
+            passthrough_behavior=api_gw.PassthroughBehavior.NEVER,
+            integration_responses=[
+                api_gw.IntegrationResponse(
+                    status_code='200',
+                    response_templates={
+                        "application/json": json.dumps(
+                            {"message": 'Message added to SNS topic'})
+                    }),
+                api_gw.IntegrationResponse(
+                    selection_pattern="^\[Error\].*",
+                    status_code='400',
+                    response_templates={
+                        "application/json": error_template_string
+                    },
+                    response_parameters={
+                        'method.response.header.Content-Type': "'application/json'",
+                        'method.response.header.Access-Control-Allow-Origin': "'*'",
+                        'method.response.header.Access-Control-Allow-Credentials': "'true'"
+                    }
+                )
+            ]
+        )
+
+        # Add an SendEvent endpoint onto the gateway
+        gateway.root.add_resource('SendEvent') \
+            .add_method('GET', api_gw.Integration(type=api_gw.IntegrationType.AWS,
+                                                  integration_http_method='POST',
+                                                  uri='arn:aws:apigateway:us-east-1:sns:path//',
+                                                  options=integration_options
+                                                  ),
+                        method_responses=[
+                            api_gw.MethodResponse(status_code='200',
+                                                  response_parameters={
+                                                      'method.response.header.Content-Type': True,
+                                                      'method.response.header.Access-Control-Allow-Origin': True,
+                                                      'method.response.header.Access-Control-Allow-Credentials': True
+                                                  },
+                                                  response_models={
+                                                      'application/json': response_model
+                                                  }),
+                            api_gw.MethodResponse(status_code='400',
+                                                  response_parameters={
+                                                      'method.response.header.Content-Type': True,
+                                                      'method.response.header.Access-Control-Allow-Origin': True,
+                                                      'method.response.header.Access-Control-Allow-Credentials': True
+                                                  },
+                                                  response_models={
+                                                      'application/json': error_response_model
+                                                  }),
+                        ]
+                        )
