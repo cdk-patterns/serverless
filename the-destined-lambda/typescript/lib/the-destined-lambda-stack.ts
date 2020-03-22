@@ -20,7 +20,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     })
 
     /**
-     * Destinations need invoked Asyncronously so let's use SNS
+     * Destinations need invoked Asynchronously so let's use SNS
      */
     const topic = new sns.Topic(this, 'theDestinedLambdaTopic',
     {
@@ -46,7 +46,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     /**
      * This is a lambda that will be called by onSuccess for destinedLambda
      * 
-     * It simply prints the event it receives to the cloudwatch
+     * It simply prints the event it receives to the cloudwatch logs
      */
     const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
