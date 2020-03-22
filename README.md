@@ -99,7 +99,7 @@ npx cdk deploy
   
   You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
 
-  ![Architecture](the-destined-lambda/img/arch.jpg)
+  ![Architecture](the-destined-lambda/img/arch.png)
 
   <br /><hr /><br />
 
@@ -275,7 +275,7 @@ npx cdk deploy
   
   You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
 
-  ![Architecture](the-destined-lambda/img/arch.jpg)
+  ![Architecture](the-destined-lambda/img/arch.png)
 
   <br /><hr /><br />
 
