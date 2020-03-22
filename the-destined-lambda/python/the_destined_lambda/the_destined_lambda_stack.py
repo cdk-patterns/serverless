@@ -74,7 +74,7 @@ class TheDestinedLambdaStack(core.Stack):
         # This is a lambda that will be called by onFailure for destinedLambda
         # It simply prints the event it receives to the cloudwatch logs.
         # Notice how it includes the message that came into destined lambda to make it fail so you have
-        # everything you need to do retries
+        # everything you need to do retries or manually investigate
         ###
         failure_lambda = _lambda.Function(self, "failureLambda",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
