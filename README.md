@@ -94,6 +94,15 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Destined Lambda](/the-destined-lambda/README.md)
+  This is a stock implementation of Lambda Destinations with Amazon EventBridge
+  
+  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
+
+  ![Architecture](the-destined-lambda/img/arch.jpg)
+
+  <br /><hr /><br />
+
   #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
   This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
 
@@ -260,6 +269,13 @@ npx cdk deploy
   * [S3 React Deploy ](/s3-react-website/README.md)
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
+
+  #### [The Destined Lambda](/the-destined-lambda/README.md)
+  This is a stock implementation of Lambda Destinations with Amazon EventBridge
+  
+  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
+
+  ![Architecture](the-destined-lambda/img/arch.jpg)
 
   <br /><hr /><br />
 
