@@ -124,7 +124,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
     });
 
     //Give our gateway permissions to interact with SNS
-    let apigwSnsRole = new iam.Role(this, 'DefaultLambdaHanderRole', {
+    let apigwSnsRole = new iam.Role(this, 'ApiGatewaySnsRole', {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
     });
     topic.grantPublish(apigwSnsRole);
