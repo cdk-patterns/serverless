@@ -1,3 +1,6 @@
+/*
+* Notice that there is no mention of EventBridge in this file yet it is integrated through lambda destinations
+*/
 exports.handler = async (event:any, context:any, callback:any) => {
   console.log('Event Received')
   console.log(JSON.stringify(event));
