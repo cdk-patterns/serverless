@@ -85,21 +85,21 @@ npx cdk deploy
 
   <br /><hr /><br />
 
-  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
-  
-  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
-
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
-
-  <br /><hr /><br />
-
   #### [The Destined Lambda](/the-destined-lambda/README.md)
   This is a stock implementation of Lambda Destinations with Amazon EventBridge
   
   You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
 
   ![Architecture](the-destined-lambda/img/arch.png)
+
+  <br /><hr /><br />
+
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
   <br /><hr /><br />
 
@@ -314,6 +314,15 @@ npx cdk deploy
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
   ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  <br /><hr /><br />
+
+  #### [The Destined Lambda](/the-destined-lambda/README.md)
+  This is a stock implementation of Lambda Destinations with Amazon EventBridge
+  
+  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
+
+  ![Architecture](the-destined-lambda/img/arch.png)
 
   <br /><hr /><br />
 
