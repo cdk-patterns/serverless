@@ -320,7 +320,7 @@ npx cdk deploy
   #### [The Destined Lambda](/the-destined-lambda/README.md)
   This is a stock implementation of Lambda Destinations with Amazon EventBridge
   
-  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
+  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations. This is resiliency focused because the failure events include the full event that triggered the lambda to fail, meaning you can craft retry logic or do manual investigations from a DLQ.
 
   ![Architecture](the-destined-lambda/img/arch.png)
 
