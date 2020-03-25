@@ -19,7 +19,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="s3_react_website"),
 
     install_requires=[
-        "aws-cdk.core==1.31.0,
+        "aws-cdk.core==1.31.0",
         "cdk-spa-deploy==1.31.0"
     ],
 
