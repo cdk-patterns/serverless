@@ -19,10 +19,10 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_simple_webservice"),
 
     install_requires=[
-        "aws-cdk.core==1.23.0",
-        "aws-cdk.aws_apigateway==1.23.0",
-        "aws-cdk.aws-lambda==1.23.0",
-        "aws-cdk.aws-dynamodb==1.23.0",
+        "aws-cdk.core==1.31.0",
+        "aws-cdk.aws_apigateway==1.31.0",
+        "aws-cdk.aws-lambda==1.31.0",
+        "aws-cdk.aws-dynamodb==1.31.0",
         "path==13.1.0"
     ],
 
