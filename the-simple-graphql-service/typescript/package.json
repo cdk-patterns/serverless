@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/cdk-patterns/serverless.git"
   },
-  "license" : "MIT",
+  "license": "MIT",
   "bin": {
     "the-simple-graphql-service": "bin/the-simple-graphql-service.js"
   },
@@ -17,21 +17,21 @@
     "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.27.0",
+    "@aws-cdk/assert": "1.31.0",
     "@types/jest": "^24.0.22",
     "@types/node": "10.17.5",
-    "jest": "^24.9.0",
-    "ts-jest": "^24.1.0",
-    "aws-cdk": "1.27.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.1",
+    "aws-cdk": "1.31.0",
     "ts-node": "^8.1.0",
     "typescript": "~3.7.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "1.27.0",
-    "@aws-cdk/aws-dynamodb": "1.27.0",
-    "@aws-cdk/aws-cognito": "1.27.0",
-    "@aws-cdk/aws-lambda": "1.27.0",
-    "@aws-cdk/core": "1.27.0",
+    "@aws-cdk/aws-appsync": "1.31.0",
+    "@aws-cdk/aws-dynamodb": "1.31.0",
+    "@aws-cdk/aws-cognito": "1.31.0",
+    "@aws-cdk/aws-lambda": "1.31.0",
+    "@aws-cdk/core": "1.31.0",
     "source-map-support": "^0.5.16"
   }
 }
