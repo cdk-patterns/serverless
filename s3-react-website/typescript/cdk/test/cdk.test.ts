@@ -1,5 +1,5 @@
 import { expect as expectCDK, haveResource, haveResourceLike } from '@aws-cdk/assert';
-import cdk = require('@aws-cdk/core');
+import * as cdk from '@aws-cdk/core';
 import { CdkStack } from '../lib/cdk-stack';
 
 
