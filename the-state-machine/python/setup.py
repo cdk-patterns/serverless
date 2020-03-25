@@ -19,12 +19,12 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_state_machine"),
 
     install_requires=[
-        "aws-cdk.core==1.23.0",
-        "aws-cdk.aws-lambda==1.23.0",
-        "aws-cdk.aws-stepfunctions==1.23.0",
-        "aws-cdk.aws-stepfunctions-tasks==1.23.0",
-        "aws-cdk.aws-sqs==1.23.0",
-        "aws-cdk.aws_apigateway==1.23.0",
+        "aws-cdk.core==1.31.0",
+        "aws-cdk.aws-lambda==1.31.0",
+        "aws-cdk.aws-stepfunctions==1.31.0",
+        "aws-cdk.aws-stepfunctions-tasks==1.31.0",
+        "aws-cdk.aws-sqs==1.31.0",
+        "aws-cdk.aws_apigateway==1.31.0",
     ],
 
     python_requires=">=3.6",
