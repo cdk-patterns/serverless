@@ -19,13 +19,13 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_eventbridge_atm"),
 
     install_requires=[
-        "aws-cdk.core==1.23.0",
-        "aws-cdk.aws-iam==1.23.0",
-        "aws-cdk.aws-lambda==1.23.0",
-        "aws-cdk.aws-lambda-event-sources==1.23.0",
-        "aws-cdk.aws-events-targets==1.23.0",
-        "aws-cdk.aws-events==1.23.0",
-        "aws-cdk.aws_apigateway==1.23.0"
+        "aws-cdk.core==1.31.0",
+        "aws-cdk.aws-iam==1.31.0",
+        "aws-cdk.aws-lambda==1.31.0",
+        "aws-cdk.aws-lambda-event-sources==1.31.0",
+        "aws-cdk.aws-events-targets==1.31.0",
+        "aws-cdk.aws-events==1.31.0",
+        "aws-cdk.aws_apigateway==1.31.0"
     ],
 
     python_requires=">=3.6",
