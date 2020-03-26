@@ -143,7 +143,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
       schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'errorResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'state': { 'type': apigw.JsonSchemaType.STRING }, 'message': { 'type': apigw.JsonSchemaType.STRING } } }
     });
 
-    //Create an endpoint '/InsertItem' which accepts a JSON payload on a POST verb
+    //Create an endpoint '/SendEvent' which accepts a mode query param on a GET verb
     gateway.root.addResource('SendEvent')
       .addMethod('GET', new apigw.Integration({
         type: apigw.IntegrationType.AWS, //native aws integration
