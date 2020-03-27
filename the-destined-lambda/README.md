@@ -54,6 +54,10 @@ If you are building an asyncronous, event driven flow but step functions seem to
 
 Alternatively As illustrated in this implementation, you can use it to strip custom logic for sending events to EventBridge from your Lambdas
 
+## Desconstructing The Destined Lambda
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+- [Youtube](https://www.youtube.com/watch?v=DQgq_p6Q03M&feature=youtu.be)
+
 ## How To Test Pattern
 After you deploy this pattern you will have an API Gateway with one endpoint "SendEvent" that accepts GET requests.
 
