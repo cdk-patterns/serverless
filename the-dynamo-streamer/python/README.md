@@ -1,6 +1,9 @@
 # The Dynamo Streamer 
 
-The Dynamo Streamer pattern was taken from from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20) by [Eric Johnson](https://twitter.com/edjgeek). If I find a slidedeck, blogpost or recorded presentation later I will add the link.
+The Dynamo Streamer pattern was taken from from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20) by [Eric Johnson](https://twitter.com/edjgeek). He later went on to use this pattern to build a lambdaless, serverless url shortener. 
+
+- [Github Repo](https://github.com/aws-samples/amazon-api-gateway-url-shortener)
+- [Blog Post](https://aws.amazon.com/blogs/compute/building-a-serverless-url-shortener-app-without-lambda-part-1/)
 
 This is a variation on [The Simple Webservice](../the-simple-webservice/README.md) pattern from Jeremy Daly only instead of a lambda being connected to the apigateway, the dynamodb is connected directly and the api gateway uses templates to transform the incoming message to insert the data. A lambda then listens for events coming from dynamodb streams and can be used to do data transforms after insertion meaning if an error occurs you lose no data.
 
