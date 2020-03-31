@@ -5,7 +5,15 @@ const express = require('express');
 function apiRoutes(){
     const routes = new express.Router();
 
-    routes.get('/v1/version', (req:any, res:any) => res.send({version: '1'}));
+    routes.get('/add', (req:any, res:any) => {
+        let firstNum = req?.query?.firstNum ?? 0;
+        let secondNum = req?.query?.secondNum ?? 0;
+
+        let result = Number(firstNum) + Number(secondNum);
+        console.log(`result of ${firstNum} + ${secondNum} = ${result}`)
+
+        res.send(result)
+    });
 
     return routes;
 }
