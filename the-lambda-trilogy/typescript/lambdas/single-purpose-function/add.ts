@@ -1,9 +1,15 @@
 export {};
 
 exports.handler = async (event:any) => {
-    console.log(JSON.stringify(event, null, 2));
+  console.log(JSON.stringify(event, null, 2));
 
-    return sendRes(200, "4");
+  let firstNum = event?.queryStringParameters?.firstNum ?? 0;
+  let secondNum = event?.queryStringParameters?.secondNum ?? 0;
+
+  let result = Number(firstNum) + Number(secondNum);
+  console.log(`result of ${firstNum} + ${secondNum} = ${result}`)
+
+  return sendRes(200, result.toString());
 }
 
 const sendRes = (status:number, body:string) => {
