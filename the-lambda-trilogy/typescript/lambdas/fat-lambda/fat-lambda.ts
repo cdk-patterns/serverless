@@ -9,7 +9,7 @@ exports.add = async (event:any) => {
     let result = firstNum + secondNum;
     console.log(`result of ${firstNum} + ${secondNum} = ${result}`)
 
-    sendRes(200, result.toString());
+    return sendRes(200, result.toString());
 }
 
 exports.subtract = async (event:any) => {
@@ -21,7 +21,7 @@ exports.subtract = async (event:any) => {
     let result = firstNum - secondNum;
     console.log(`result of ${firstNum} - ${secondNum} = ${result}`)
 
-    sendRes(200, result.toString());
+    return sendRes(200, result.toString());
 }
 
 exports.multiply = async (event:any) => {
@@ -33,7 +33,7 @@ exports.multiply = async (event:any) => {
     let result = firstNum * secondNum;
     console.log(`result of ${firstNum} x ${secondNum} = ${result}`)
 
-    sendRes(200, result.toString());
+    return sendRes(200, result.toString());
 }
 
 const sendRes = (status:number, body:string) => {
