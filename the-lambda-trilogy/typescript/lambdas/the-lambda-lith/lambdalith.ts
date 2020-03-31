@@ -2,6 +2,9 @@ export {};
 
 const express = require('express');
 
+/**
+ * All of our routes are defined inside this lambda and orchestrated using express.js
+ */
 function apiRoutes(){
     const routes = new express.Router();
 
@@ -43,6 +46,9 @@ const app = express()
     .use(express.json())
     .use(apiRoutes());
 
+/**
+ * Since this is a monolith, we can start it locally to do development
+ */
 const isInLambda = !!process.env.LAMBDA_TASK_ROOT;
 if (isInLambda) {
     const serverlessExpress = require('aws-serverless-express');
