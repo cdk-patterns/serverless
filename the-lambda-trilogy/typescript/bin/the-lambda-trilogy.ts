@@ -6,6 +6,6 @@ import { TheFatLambdaStack } from '../lib/the-fat-lambda-stack';
 import { TheSinglePurposeFunctionStack } from '../lib/the-single-purpose-function-stack';
 
 const app = new cdk.App();
-//new TheLambdalithStack(app, 'TheLambdaLithStack');
+new TheLambdalithStack(app, 'TheLambdaLithStack');
 new TheFatLambdaStack(app, 'TheFatLambdaStack');
 new TheSinglePurposeFunctionStack(app, 'TheSinglePurposeFunctionStack');
