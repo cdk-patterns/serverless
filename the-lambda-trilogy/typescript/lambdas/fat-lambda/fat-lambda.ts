@@ -6,7 +6,7 @@ exports.add = async (event:any) => {
     let firstNum = event?.queryStringParameters?.firstNum ?? 0;
     let secondNum = event?.queryStringParameters?.secondNum ?? 0;
 
-    let result = firstNum + secondNum;
+    let result = Number(firstNum) + Number(secondNum);
     console.log(`result of ${firstNum} + ${secondNum} = ${result}`)
 
     return sendRes(200, result.toString());
