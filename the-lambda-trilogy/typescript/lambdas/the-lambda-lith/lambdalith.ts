@@ -12,7 +12,7 @@ function apiRoutes(){
         let result = Number(firstNum) + Number(secondNum);
         console.log(`result of ${firstNum} + ${secondNum} = ${result}`)
 
-        res.send({"result":result})
+        res.status(200).json({"result":result})
     });
 
     return routes;
