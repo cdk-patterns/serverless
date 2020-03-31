@@ -3,6 +3,7 @@ export {};
 exports.handler = async (event:any) => {
   console.log(JSON.stringify(event, null, 2));
 
+  // pull firstNum and secondNum from queryparams, default to 0
   let firstNum = event?.queryStringParameters?.firstNum ?? 0;
   let secondNum = event?.queryStringParameters?.secondNum ?? 0;
 

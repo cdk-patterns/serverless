@@ -1,8 +1,16 @@
 export {};
 
+/**
+ * This lambda contains 3 handlers in the same file rather than separating them out
+ * 
+ * Note that crucially this still ends up 3 lambdas they just have all the code for all 3
+ * in each one
+ */
+
 exports.add = async (event:any) => {
     console.log(JSON.stringify(event, null, 2));
 
+    // pull firstNum and secondNum from queryparams, default to 0
     let firstNum = event?.queryStringParameters?.firstNum ?? 0;
     let secondNum = event?.queryStringParameters?.secondNum ?? 0;
 
@@ -15,6 +23,7 @@ exports.add = async (event:any) => {
 exports.subtract = async (event:any) => {
     console.log(JSON.stringify(event, null, 2));
 
+    // pull firstNum and secondNum from queryparams, default to 0
     let firstNum = event?.queryStringParameters?.firstNum ?? 0;
     let secondNum = event?.queryStringParameters?.secondNum ?? 0;
 
@@ -27,6 +36,7 @@ exports.subtract = async (event:any) => {
 exports.multiply = async (event:any) => {
     console.log(JSON.stringify(event, null, 2));
 
+    // pull firstNum and secondNum from queryparams, default to 0
     let firstNum = event?.queryStringParameters?.firstNum ?? 0;
     let secondNum = event?.queryStringParameters?.secondNum ?? 0;
 

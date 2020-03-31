@@ -9,6 +9,7 @@ function apiRoutes(){
     const routes = new express.Router();
 
     routes.get('/add', (req:any, res:any) => {
+        // pull firstNum and secondNum from queryparams, default to 0
         let firstNum = req?.query?.firstNum ?? 0;
         let secondNum = req?.query?.secondNum ?? 0;
 
@@ -19,6 +20,7 @@ function apiRoutes(){
     });
 
     routes.get('/subtract', (req:any, res:any) => {
+        // pull firstNum and secondNum from queryparams, default to 0
         let firstNum = req?.query?.firstNum ?? 0;
         let secondNum = req?.query?.secondNum ?? 0;
 
@@ -29,6 +31,7 @@ function apiRoutes(){
     });
 
     routes.get('/multiply', (req:any, res:any) => {
+        // pull firstNum and secondNum from queryparams, default to 0
         let firstNum = req?.query?.firstNum ?? 0;
         let secondNum = req?.query?.secondNum ?? 0;
 
