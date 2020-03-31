@@ -33,7 +33,7 @@ export class TheSinglePurposeFunctionStack extends cdk.Stack {
      * Routes defined individually on API Gateway
      */
     
-    let gateway = new apigw.LambdaRestApi(this, 'FatLambdaAPI', {
+    let gateway = new apigw.LambdaRestApi(this, 'SinglePurposeFunctionAPI', {
       handler: addLambda,
       proxy: false
     });
