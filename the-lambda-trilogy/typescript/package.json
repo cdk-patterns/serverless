@@ -5,7 +5,8 @@
     "the-lambda-trilogy": "bin/the-lambda-trilogy.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build-lambdalith":"cd lambdas/the-lambda-lith && npm i && npm run build && cd ../../",
+    "build": "npm run build-lambdalith && tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
