@@ -15,6 +15,26 @@ function apiRoutes(){
         res.status(200).json({"result":result})
     });
 
+    routes.get('/subtract', (req:any, res:any) => {
+        let firstNum = req?.query?.firstNum ?? 0;
+        let secondNum = req?.query?.secondNum ?? 0;
+
+        let result = Number(firstNum) - Number(secondNum);
+        console.log(`result of ${firstNum} - ${secondNum} = ${result}`)
+
+        res.status(200).json({"result":result})
+    });
+
+    routes.get('/multiply', (req:any, res:any) => {
+        let firstNum = req?.query?.firstNum ?? 0;
+        let secondNum = req?.query?.secondNum ?? 0;
+
+        let result = Number(firstNum) * Number(secondNum);
+        console.log(`result of ${firstNum} * ${secondNum} = ${result}`)
+
+        res.status(200).json({"result":result})
+    });
+
     return routes;
 }
 
