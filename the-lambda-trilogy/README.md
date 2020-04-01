@@ -2,7 +2,7 @@
 
 The three states of AWS Lambda are something that has been discussed by many serverless heroes since their invention.
 
-Some examples from Paul Swail, Yan Cui and Jeremy Daly:
+Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https://twitter.com/theburningmonk) and [Jeremy Daly](https://twitter.com/jeremy_daly):
 - [Serverless Chats](https://www.serverlesschats.com/41)
 - [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
 - [Yan Cui Presentation (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
