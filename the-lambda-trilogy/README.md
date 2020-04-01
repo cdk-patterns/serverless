@@ -69,7 +69,8 @@ When you deploy this project you should have 3 API Gateways in your deployment l
 
 You can hit the same URLs on all 3 to see the same responses. You pass in two query params for the numbers you want to use in the operation (firstNum and secondNum). If you don't provide a valid a default of 0 is used.
 
-```Addition - https://{api gateway url}/add?firstNum=3&secondNum=4
+```
+Addition - https://{api gateway url}/add?firstNum=3&secondNum=4
 Subtraction - https://{api gateway url}/subtract?firstNum=4&secondNum=3
 Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 ```
