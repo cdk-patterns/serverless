@@ -77,7 +77,7 @@ Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 
 ## There's A Lot Of Code Here, What Should I Actually Look At?
 
-There's 3 distint CDK stacks in this project which are all instantiated in the [bin file](/bin/the-lambda-trilogy.ts).
+There's 3 distint CDK stacks in this project which are all instantiated in the [bin file](bin/the-lambda-trilogy.ts).
 
 ### TheSinglePurposeFunctionStack
 
