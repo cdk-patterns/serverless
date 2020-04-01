@@ -126,6 +126,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Responsibility Functions, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
