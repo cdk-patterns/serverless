@@ -1,7 +1,31 @@
 
-# Welcome to your CDK Python project!
+# The Lambda Trilogy
 
-This is a blank project for Python development with CDK.
+This is a CDK project containing 3 different stacks representing the 3 states of lambda
+
+- Single Purpose Function
+- Fat Lambda
+- Lambda-lith
+
+## Extra Setup
+
+To deploy this project successfully you do need to install the dependencies for the lambda-lith.
+This is because it uses Flask to route the different URLs and a WSGI compatibility library to make 
+it work inside a lambda. 
+
+I did originally use virtualenv but then found this [issue](https://github.com/aws/aws-cdk/issues/5484) so when
+presented with the option of creating a lambda layer or just doing the basics, I chose the basics.
+
+I tried to make this as simple as possible. 
+
+From a terminal
+```shell
+cd lambdas/the_lambda_lith
+pip install -r requirements.txt --target flask
+
+
+```
+## Standard Setup
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
