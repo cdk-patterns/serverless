@@ -107,6 +107,32 @@ You should also notice that the duplicated logic from before to extract the quer
 
 ![logic dedplicated](img/fl_deduplicated.png)
 
+### TheLambdalithStack
+
+OK, this state is very different from the other two. The cdk for this is bare bones, just one lambda function and a proxy api gateway:
+
+![lambdalith cdk](img/lambdalith_cdk.png)
+
+All of the action takes place inside [the lambda-lith](lambdas/the_lambda_lith) itself.
+
+#### [requirements.txt](lambdas/the_lambda_lith/requirements.txt)
+Now that we are building an application using Flask inside our lambda we need to pull it in as a dependency. We also need to pull in aws-wsgi to make Flask compatible with Lambda and API Gateway.
+
+You will be responsible for keeping these versions up to date unlike using API Gateway for the routing.
+
+![requirements.txt](img/lambdalith_requirements.png)
+
+#### Routing
+
+Inside the [lambdalith lambda](lambdas/the_lambda_lith/flask/lambdalith.py) we use Flask for routing to logic in this file rather than using API Gateway in the previous states:
+
+![flask routing](img/lambdalith_routes.png)
+
+#### Local vs Deployed
+
+Since this is using Flask you should be able to setup virtualenv or use lambda layers combined with sam for local development.
+I did not include it in this example however.
+
 ## Extra Setup
 
 To deploy this project successfully you do need to install the dependencies for the lambda-lith.
