@@ -10,12 +10,8 @@ app = Flask(__name__)
 
 @app.route('/add')
 def add():
-    first_num = request.args.get('firstNum')
-    if first_num is None:
-        first_num = 0
-    second_num = request.args.get('secondNum')
-    if second_num is None:
-        second_num = 0
+    first_num = request.args.get('firstNum', default=0)
+    second_num = request.args.get('secondNum', default=0)
 
     result = first_num + second_num
     return jsonify(status=200, message=result)
