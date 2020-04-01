@@ -77,6 +77,18 @@ Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 
 ## There's A Lot Of Code Here, What Should I Actually Look At?
 
+There's 3 distint CDK stacks in this project which you can see are all instantiated in the [bin file](/bin/the-lambda-trilogy.ts).
+
+### TheSinglePurposeFunctionStack
+
+You can see inside our [stack definition](lib/the-single-purpose-function-stack.ts) that this project has 3 endpoints defined on the api gateway and 3 [lambdas](lambdas/single-purpose-function) defined. 
+
+If you look carefully inside each lambda you will see a [duplicated function](lambdas/single-purpose-function/add.ts#L16) sendRes that formats the response from the Lambda for API Gateway. You could use layers or create a package that you install via npm for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
+
+### TheFatLambdaStack
+
+### TheLambdalithStack
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
