@@ -99,7 +99,7 @@ The big difference between this implementation and the one above is that all 3 f
 
 This means that we can still define 3 lambdas inside our cdk logic but we point to the same file all 3 times:
 
-![lambda definition](fl_cdk.png)
+![lambda definition](img/fl_cdk.png)
 
 ### TheLambdalithStack
 
