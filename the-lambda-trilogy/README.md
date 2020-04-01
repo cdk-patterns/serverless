@@ -56,7 +56,7 @@ This is using the lambda runtime container like a docker container. You use a we
 - Adapters required to make existing frameworks work with lambda. These are in various states of maturity and are another potential vulnerability in your app.
 
 ## What's In This CDK Pattern?
-I have bundled fully TypeScript and fully Python versions (including the lambdas) for this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
+I have bundled fully TypeScript and fully Python versions (including the lambdas) for all 3 lambda states inside this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
 
 The logic that I have used to demonstrate these patterns is a partially functional calculator.
 
