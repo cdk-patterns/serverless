@@ -25,7 +25,32 @@ This is the purest of all the serverless patterns. Each lambda does one unique f
 - Maintenance as it grows (how do you make sure 7000 lambdas have no code vulnerabilities?)
 
 ![arch](img/the-fat-lambda.png)
+
+### Description
+This is a compromise option where we can still have individual lambdas but we group the actual code together in one (or more) files. You would decide what goes into a file based on low coupling, high cohesion arguments like in traditional development.
+
+### Pros
+- Related logic is grouped together making your code easier to see the bigger picture
+- Code can easily be shared between lambda functions without needing things like layers
+- Security footprint reduced as updating one file can update many lambda functions
+
+### Cons
+- How big is too big? Every extra byte of code added slows your lambda cold start times.
+- Increased blast radius of changes. Now one line of code being changed could bring down a section of your infrastructure instead of one lambda.
+
 ![arch](img/the-lambda-lith.png)
+
+### Description
+This is using the lambda runtime container like a docker container. You use a web framework like Flask or Express and put them inside the lambda, then have your api gateway pass all requests through to the lambda and have that framework process the request.
+
+### Pros
+- You can have an identical local development experience to deployed since using none of AWS specific features
+- The code could be moved to Fargate later if it got too big for lambda with minimal changes (or another cloud)
+- Developers already know these frameworks
+
+### Cons
+- Is this really what Lambda excels at? The larger project sizes will increase cold start times and there will be restrictions on incoming/outgoing payload sizes
+- Lower levels of code reuse as still building the traditional ball of mud
 
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
