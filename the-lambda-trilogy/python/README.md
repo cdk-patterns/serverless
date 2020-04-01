@@ -1,6 +1,6 @@
 # The Lambda Trilogy
 
-```Note, to deploy this pattern youself there is some extra setup which is listed in the extra setup section towards the bottom of this file.```
+> Note, to deploy this pattern youself there is some extra setup which is listed in the extra setup section towards the bottom of this file.
 
 The three states of AWS Lambda are something that has been discussed by many serverless heroes since their invention. This is probably the most controversial subject in all of serverless so I am not going to tell you which of the three is the best because like everything you need to adapt the right implementation to fit your context!
 
