@@ -7,6 +7,8 @@ Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https:
 - [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
 - [Yan Cui Presentation (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
 
+The three states are:
+
 ![arch](img/the-single-purpose-function.png)
 ![arch](img/the-fat-lambda.png)
 ![arch](img/the-lambda-lith.png)
