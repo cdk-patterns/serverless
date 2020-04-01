@@ -79,7 +79,29 @@ Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 
 ## There's A Lot Of Code Here, What Should I Actually Look At?
 
-TODO
+There are 3 distinct CDK stacks in this project which are all instantiated in the [app.py file](app.py). When CDK deploys this application you should see 3 different cloudformation stacks in the AWS Console and if you update the code in one but not the other 2 you should see CDK only deploy the one you changed. This is a pretty cool, advanced feature of AWS CDK.
+
+![app.png](img/app.png)
+
+### TheSinglePurposeFunctionStack
+
+You can see inside our [stack definition](the_lambda_trilogy/the_single_purpose_function_stack.py) that this project has 3 endpoints defined on the api gateway and 3 [lambdas](lambdas/the_single_purpose_function) defined. 
+
+![api gateway](img/spf_apigw.png)
+
+If you look carefully inside each lambda you will notice that they only perform a single operation (add, subtract or multiply). You will notice that the logic for extracting the variables from the url is duplicated in each lambda.
+
+You could use layers or create a package that you install via pypi for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
+
+![lambda](img/spf_add_lambda.png)
+
+### TheFatLambdaStack
+
+The big difference between this implementation and the one above is that all 3 functions (add, subtract and multiply) are inside the same [Py file](lambdas/the_fat_lambda/fatlambda.py).
+
+This means that we can still define 3 lambdas inside our cdk logic but we point to a different method in the same file all 3 times:
+
+![lambda definition](img/fl_cdk.png)
 
 ## Extra Setup
 
