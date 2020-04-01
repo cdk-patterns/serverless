@@ -14,7 +14,7 @@ def add():
     second_num = request.args.get('secondNum', default=0, type=int)
 
     result = first_num + second_num
-    return jsonify(status=200, message=result)
+    return jsonify(message=result)
 
 
 @app.route('/subtract')
