@@ -120,6 +120,11 @@ I did include a start command for starting up the express server locally to show
 
 ![package json](img/lambdalith_package.png)
 
+#### Routing
+Inside the lambdalith lambda we use express for routing rather than API Gateway in the previous states:
+
+![express routing](lambdalith_routes.png)
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
