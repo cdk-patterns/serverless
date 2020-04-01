@@ -123,7 +123,7 @@ I did include a start command for starting up the express server locally to show
 #### Routing
 Inside the lambdalith lambda we use express for routing rather than API Gateway in the previous states:
 
-![express routing](lambdalith_routes.png)
+![express routing](img/lambdalith_routes.png)
 
 ## Useful commands
 
