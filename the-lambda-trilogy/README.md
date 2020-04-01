@@ -55,6 +55,26 @@ This is using the lambda runtime container like a docker container. You use a we
 - Lower levels of code reuse as probably still building the traditional ball of mud
 - Adapters required to make existing frameworks work with lambda. These are in various states of maturity and are another potential vulnerability in your app.
 
+## What's Actually In This Pattern?
+I have bundled fully TypeScript and fully Python versions (including the lambdas) for this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
+
+The logic that I have used to demonstrate these patterns is a partially functional calculator.
+
+This calculator can only perform three functions (It was on sale):
+- Add
+- Subtract
+- Multiply
+
+When you deploy this project you should have 3 API Gateways in your deployment logs, one for each of the patterns.
+
+You can hit the same URLs on all 3 to see the same responses. You pass in two query params for the numbers you want to use in the operation (firstNum and secondNum). If you don't provide a valid a default of 0 is used.
+
+```Addition - https://{api gateway url}/add?firstNum=3&secondNum=4
+Subtraction - https://{api gateway url}/subtract?firstNum=4&secondNum=3
+Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
+```
+
+
 ## Available Versions
 
  * [TypeScript](typescript/)
