@@ -101,6 +101,8 @@ This means that we can still define 3 lambdas inside our cdk logic but we point 
 
 ![lambda definition](img/fl_cdk.png)
 
+You should also notice that the sendRes method is no longer duplicated with this pattern as all 3 lambdas can just call the same one.
+
 ### TheLambdalithStack
 
 ## Useful commands
