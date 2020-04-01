@@ -36,7 +36,7 @@ class TheSinglePurposeFunctionStack(core.Stack):
         # All functions have their own endpoint defined on our gateway
         ##
 
-        api = api_gw.LambdaRestApi(self, 'fatLambdaAPI',
+        api = api_gw.LambdaRestApi(self, 'singlePurposeFunctionAPI',
                                    handler=add_lambda,
                                    proxy=False
                                    )
