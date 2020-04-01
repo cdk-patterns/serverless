@@ -75,6 +75,8 @@ Subtraction - https://{api gateway url}/subtract?firstNum=4&secondNum=3
 Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 ```
 
+## There's A Lot Of Code Here, What Should I actually Look At?
+This is the higher level readme file but if you look at one of the language specific implementations linked to below, I will dive into the details
 
 ## Available Versions
 
