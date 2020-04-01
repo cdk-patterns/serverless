@@ -53,14 +53,7 @@ This is using the lambda runtime container like a docker container. You use a we
 - Higher exposure to cold starts as the lambda will spend longer processing events
 - Lower levels of code reuse as still building the traditional ball of mud
 
+## Available Versions
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
+ * [Python](python/)
