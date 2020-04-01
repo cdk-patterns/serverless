@@ -15,12 +15,14 @@ def add(event, context):
 
 
 def subtract(event, context):
-    first_num = event["queryStringParameters"]['firstNum']
-    if first_num is None:
+    try:
+        first_num = event["queryStringParameters"]['firstNum']
+    except KeyError:
         first_num = 0
 
-    second_num = event["queryStringParameters"]['secondNum']
-    if second_num is None:
+    try:
+        second_num = event["queryStringParameters"]['secondNum']
+    except KeyError:
         second_num = 0
 
     result = int(first_num) - int(second_num)
@@ -29,12 +31,14 @@ def subtract(event, context):
 
 
 def multiply(event, context):
-    first_num = event["queryStringParameters"]['firstNum']
-    if first_num is None:
+    try:
+        first_num = event["queryStringParameters"]['firstNum']
+    except KeyError:
         first_num = 0
 
-    second_num = event["queryStringParameters"]['secondNum']
-    if second_num is None:
+    try:
+        second_num = event["queryStringParameters"]['secondNum']
+    except KeyError:
         second_num = 0
 
     result = int(first_num) * int(second_num)
