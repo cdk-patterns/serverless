@@ -27,6 +27,8 @@ pip install -r requirements.txt --target flask
 ```
 ## Standard Setup
 
+After you have completed the Extra Setup steps above you can from the root directory follow these standard setup instructions
+
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 This project is set up like a standard Python project.  The initialization
