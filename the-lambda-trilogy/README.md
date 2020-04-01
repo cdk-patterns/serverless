@@ -51,7 +51,7 @@ This is using the lambda runtime container like a docker container. You use a we
 ### Cons
 - Is this really what Lambda excels at? The larger project sizes will increase cold start times and there will be restrictions on incoming/outgoing payload sizes
 - Higher exposure to cold starts as the lambda will spend longer processing events
-- Lower levels of code reuse as still building the traditional ball of mud
+- Lower levels of code reuse as probably still building the traditional ball of mud
 
 ## Available Versions
 
