@@ -55,7 +55,7 @@ This is using the lambda runtime container like a docker container. You use a we
 - Lower levels of code reuse as probably still building the traditional ball of mud
 - Adapters required to make existing frameworks work with lambda. These are in various states of maturity and are another potential vulnerability in your app.
 
-## What's Actually In This Pattern?
+## What's In This CDK Pattern?
 I have bundled fully TypeScript and fully Python versions (including the lambdas) for this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
 
 The logic that I have used to demonstrate these patterns is a partially functional calculator.
