@@ -52,6 +52,7 @@ This is using the lambda runtime container like a docker container. You use a we
 - Is this really what Lambda excels at? The larger project sizes will increase cold start times and there will be restrictions on incoming/outgoing payload sizes
 - Higher exposure to cold starts as the lambda will spend longer processing events
 - Lower levels of code reuse as probably still building the traditional ball of mud
+- Adapters required to make existing frameworks work with lambda. These are in various states of maturity and are another potential vulnerability in your app.
 
 ## Available Versions
 
