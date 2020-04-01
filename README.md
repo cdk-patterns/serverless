@@ -127,7 +127,7 @@ npx cdk deploy
   <br /><hr /><br />
 
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
-  See the 3 states of Lambda in action (Single Responsibility Functions, Fat Lambda and Lambda-lith)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
   ![Architecture](the-lambda-trilogy/img/arch.png)
 
   <br /><hr /><br />
@@ -245,7 +245,7 @@ npx cdk deploy
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
-  See the 3 states of Lambda in action (Single Responsibility Functions, Fat Lambda and Lambda-lith)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
   ![Architecture](the-lambda-trilogy/img/arch.png)
 
   #### [The Simple Webservice](/the-simple-webservice/README.md)
