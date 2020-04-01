@@ -17,11 +17,12 @@ This is the purest of all the serverless patterns. Each lambda does one unique f
 ### Pros
 - Maximum code reusability
 - Forces you to write more testable code
+- Lowest cognitive burden for developers working on that individual function
 - Easier to optimize your lambda execution times and by extension costs
 
 ### Cons
 - Only works for fully event driven architectures
-- Seeing the bigger picture
+- Seeing the bigger picture, congnitive burden increases as system wide changes are talked about
 - Maintenance as it grows (how do you make sure 7000 lambdas have no code vulnerabilities?)
 
 ![arch](img/the-fat-lambda.png)
