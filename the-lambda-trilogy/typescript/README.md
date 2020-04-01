@@ -97,7 +97,7 @@ You could use layers or create a package that you install via npm for these kind
 
 The big difference between this implementation and the one above is that all 3 functions (add, subtract and multiply) are inside the same [TS file](lambdas/fat-lambda/fat-lambda.ts).
 
-This means that we can still define 3 lambdas inside our cdk logic but we point to the same file all 3 times:
+This means that we can still define 3 lambdas inside our cdk logic but we point to a different method in the same file all 3 times:
 
 ![lambda definition](img/fl_cdk.png)
 
