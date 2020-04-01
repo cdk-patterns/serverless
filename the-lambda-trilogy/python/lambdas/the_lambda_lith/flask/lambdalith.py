@@ -14,17 +14,28 @@ def add():
     second_num = request.args.get('secondNum', default=0, type=int)
 
     result = first_num + second_num
-    return jsonify(message=result)
+    print("The result of % s + % s = %s" % (first_num, second_num, result))
+    return jsonify(result=result)
 
 
 @app.route('/subtract')
 def subtract():
-    return jsonify(status=200, message='test')
+    first_num = request.args.get('firstNum', default=0, type=int)
+    second_num = request.args.get('secondNum', default=0, type=int)
+
+    result = first_num - second_num
+    print("The result of % s - % s = %s" % (first_num, second_num, result))
+    return jsonify(result=result)
 
 
 @app.route('/multiply')
 def multiply():
-    return jsonify(status=200, message='test')
+    first_num = request.args.get('firstNum', default=0, type=int)
+    second_num = request.args.get('secondNum', default=0, type=int)
+
+    result = first_num * second_num
+    print("The result of % s x % s = %s" % (first_num, second_num, result))
+    return jsonify(result=result)
 
 
 def handler(event, context):
