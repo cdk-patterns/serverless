@@ -87,7 +87,11 @@ You can see inside our [stack definition](lib/the-single-purpose-function-stack.
 
 ![api gateway](img/spf_apigw.png)
 
-If you look carefully inside each lambda you will see a [duplicated function](lambdas/single-purpose-function/add.ts#L16) sendRes that formats the response from the Lambda for API Gateway. You could use layers or create a package that you install via npm for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
+If you look carefully inside each lambda you will notice that they only perform a single operation (add, subtract or multiply) but you will also see a [duplicated function](lambdas/single-purpose-function/add.ts#L16) sendRes that formats the response from the Lambda for API Gateway. 
+
+![lambda](img/spf_lambda.png)
+
+You could use layers or create a package that you install via npm for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
 
 ### TheFatLambdaStack
 
