@@ -10,6 +10,20 @@ Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https:
 The three states are:
 
 ![arch](img/the-single-purpose-function.png)
+
+### Description
+This is the purest of all the serverless patterns. Each lambda does one unique function and the code is in its own file.
+
+### Pros
+- Maximum code reusability
+- Forces you to write more testable code
+- Easier to optimize your lambda execution times and by extension costs
+
+### Cons
+- Only works for fully event driven architectures
+- Seeing the bigger picture
+- Maintenance as it grows (how do you make sure 7000 lambdas have no code vulnerabilities?)
+
 ![arch](img/the-fat-lambda.png)
 ![arch](img/the-lambda-lith.png)
 
