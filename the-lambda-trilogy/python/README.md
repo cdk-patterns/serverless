@@ -91,9 +91,9 @@ You can see inside our [stack definition](the_lambda_trilogy/the_single_purpose_
 
 If you look carefully inside each lambda you will notice that they only perform a single operation (add, subtract or multiply). You will notice that the logic for extracting the variables from the url is duplicated in each lambda.
 
-You could use layers or create a package that you install via pypi for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
-
 ![lambda](img/spf_add_lambda.png)
+
+You could use layers or create a package that you install via pypi for these kinds of things but in the purest representation of this pattern for the purpose of autonomy you see small levels of code duplication. This is a positive when you want to move a different direction with one function and a negative if you need to update them all.
 
 ### TheFatLambdaStack
 
