@@ -79,6 +79,8 @@ Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 
 There's 3 distint CDK stacks in this project which are all instantiated in the [bin file](bin/the-lambda-trilogy.ts).
 
+![bin file](img/bin.png)
+
 ### TheSinglePurposeFunctionStack
 
 You can see inside our [stack definition](lib/the-single-purpose-function-stack.ts) that this project has 3 endpoints defined on the api gateway and 3 [lambdas](lambdas/single-purpose-function) defined. 
