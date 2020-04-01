@@ -44,7 +44,7 @@ This is a compromise option where we can still have individual lambdas but we gr
 This is using the lambda runtime container like a docker container. You use a web framework like Flask or Express and put them inside the lambda, then have your api gateway pass all requests through to the lambda and have that framework process the request.
 
 ### Pros
-- You can have an identical local development experience to deployed since using none of AWS specific features
+- You can have an identical local development experience to deployed since using no AWS specific features
 - The code could be moved to Fargate later if it got too big for lambda with minimal changes (or another cloud)
 - Developers already know these frameworks
 
