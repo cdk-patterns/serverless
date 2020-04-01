@@ -12,8 +12,8 @@ class TheLambdalithStack(core.Stack):
 
         lambda_lith = _lambda.Function(self, "lambdalithHandler",
                                        runtime=_lambda.Runtime.PYTHON_3_8,
-                                       handler="flask/lambdalith.handler",
-                                       code=_lambda.Code.from_asset("lambdas/the_lambda_lith")
+                                       handler="lambdalith.handler",
+                                       code=_lambda.Code.from_asset("lambdas/the_lambda_lith/flask")
                                        )
 
         # defines an API Gateway REST API resource backed by our "lambda_lith" function.
