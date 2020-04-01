@@ -65,7 +65,7 @@ This calculator can only perform three functions (It was on sale):
 - Subtract
 - Multiply
 
-When you deploy this project you should have 3 API Gateways in your deployment logs, one for each of the patterns.
+When you deploy this project you should have 3 API Gateways in your deployment logs, one for each of the states.
 
 You can hit the same URLs on all 3 to see the same responses. You pass in two query params for the numbers you want to use in the operation (firstNum and secondNum). If you don't provide a valid a default of 0 is used.
 
