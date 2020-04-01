@@ -18,7 +18,8 @@ class TheFatLambdaStack(core.Stack):
 
         # defines an API Gateway REST API resource backed by our "lambda_lith" function.
         api = api_gw.LambdaRestApi(self, 'fatLambdaAPI',
-                                   handler=add_lambda
+                                   handler=add_lambda,
+                                   proxy=False
                                    )
 
         api.root.resource_for_path('add').add_method('GET', api_gw.LambdaIntegration(add_lambda))
