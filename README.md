@@ -244,6 +244,10 @@ npx cdk deploy
 
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Responsibility Functions, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch.png)
+
   #### [The Simple Webservice](/the-simple-webservice/README.md)
   The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
