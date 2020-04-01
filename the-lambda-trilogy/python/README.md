@@ -103,6 +103,10 @@ This means that we can still define 3 lambdas inside our cdk logic but we point 
 
 ![lambda definition](img/fl_cdk.png)
 
+You should also notice that the duplicated logic from before to extract the query params has been extracted into one method that all 3 lambdas reuse.
+
+![logic dedplicated](img/fl_deduplicated.png)
+
 ## Extra Setup
 
 To deploy this project successfully you do need to install the dependencies for the lambda-lith.
