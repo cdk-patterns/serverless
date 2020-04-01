@@ -126,6 +126,12 @@ Inside the [lambdalith lambda](lambdas/the-lambda-lith/lambdalith.ts) we use exp
 
 ![express routing](img/lambdalith_routes.png)
 
+#### Local vs Deployed
+
+We also need to define logic for how to start up the server locally vs in a lambda container since locally we don't need the aws-serverless-express adapter
+
+![lambdalith startup](imr/lambdalith_startup.png)
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
