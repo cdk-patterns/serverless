@@ -101,9 +101,24 @@ This means that we can still define 3 lambdas inside our cdk logic but we point 
 
 ![lambda definition](img/fl_cdk.png)
 
-You should also notice that the sendRes method is no longer duplicated with this pattern as all 3 lambdas can just call the same one.
+You should also notice that the [sendRes method](lambdas/fat-lambda/fat-lambda.ts#L49) is no longer duplicated with this pattern as all 3 lambdas can just call the same one.
 
 ### TheLambdalithStack
+
+OK, this state is very different from the other two. The cdk for this is bare bones, just one lambda function and a proxy api gateway:
+
+![lambdalith cdk](img/lambdalith_cdk.png)
+
+All of the action takes place inside [the lambda-lith](lambdas/the-lambda-lith) itself.
+
+#### [package.json](lambdas/the-lambda-lith/package.json)
+Now that we are building an application using express.js inside our lambda we need to pull it in as a dependency. We also need to pull in aws-serverless-express to make express compatible with lambda and api gateway.
+
+You will be responsible for keeping these versions up to date unlike using API Gateway for the routing.
+
+I did include a start command for starting up the express server locally to show the advantage of this pattern
+
+![package json](img/lambdalith_package.png)
 
 ## Useful commands
 
