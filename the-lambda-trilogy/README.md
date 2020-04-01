@@ -1,6 +1,13 @@
-# Welcome to your CDK TypeScript project!
+# The Lambda Trilogy
 
-This is a blank project for TypeScript development with CDK.
+The three states of AWS Lambda are something that has been discussed by many serverless heroes since their invention.
+
+## The Single Purpose Function
+![arch](img/the-single-purpose-function.png)
+
+- [Serverless Chats](https://www.serverlesschats.com/41)
+- [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
+- [Yan Cui (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
