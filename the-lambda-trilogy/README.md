@@ -17,7 +17,7 @@ This is the purest of all the serverless patterns. Each lambda does one unique f
 ### Pros
 - Maximum code reusability
 - Forces you to write more testable code
-- Lowest cognitive burden for developers working on that individual function
+- Introduces lowest cognitive burden for developers making changes to that individual function
 - Easier to optimize your lambda execution times and by extension costs
 
 ### Cons
