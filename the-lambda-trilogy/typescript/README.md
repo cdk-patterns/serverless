@@ -121,7 +121,7 @@ I did include a start command for starting up the express server locally to show
 ![package json](img/lambdalith_package.png)
 
 #### Routing
-Inside the lambdalith lambda we use express for routing rather than API Gateway in the previous states:
+Inside the [lambdalith lambda](lambdas/the-lambda-lith/lambdalith.ts) we use express for routing rather than API Gateway in the previous states:
 
 ![express routing](img/lambdalith_routes.png)
 
