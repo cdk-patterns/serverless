@@ -77,7 +77,7 @@ Multiply - https://{api gateway url}/multiply?firstNum=3&secondNum=4
 
 ## There's A Lot Of Code Here, What Should I Actually Look At?
 
-There are 3 distinct CDK stacks in this project which are all instantiated in the [bin file](bin/the-lambda-trilogy.ts).
+There are 3 distinct CDK stacks in this project which are all instantiated in the [bin file](bin/the-lambda-trilogy.ts). When CDK deploys this application you should see 3 different cloudformation stacks and if you update the code in one but not the other 2 you should see CDK only deploy the one you changed. This is a pretty cool, advanced feature of AWS CDK.
 
 ![bin file](img/bin.png)
 
