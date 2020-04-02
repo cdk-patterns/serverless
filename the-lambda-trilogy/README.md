@@ -7,6 +7,10 @@ Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https:
 - [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
 - [Yan Cui Presentation (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
 - [Yan Cui re:Invent 2019](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_1_How_to_refactor_a_monolith_to_serverless_in_8_steps_API310-R1.pdf)
+- [Yan Cui Hackernoon - monolithic or single purpose functions?](https://hackernoon.com/aws-lambda-should-you-have-few-monolithic-functions-or-many-single-purposed-functions-8c3872d4338f)
+- [Yan Cui monoliths vs cold starts](https://theburningmonk.com/2018/02/aws-lambda-monolithic-functions-wont-help-you-with-cold-starts/)
+- [J D Hollis medium.com](https://medium.com/statics-and-dynamics/should-i-use-a-single-monolithic-lambda-function-or-multiple-lambda-functions-with-api-gateway-d99b0230f1e7)
+- [Ryanne Dolan medium.com](https://medium.com/@ryannedolan/aws-lambda-and-the-monolith-a0eb2d1516ef)
 
 The three states are:
 
