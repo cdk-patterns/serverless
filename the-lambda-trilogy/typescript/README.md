@@ -114,7 +114,7 @@ You should also notice that the [sendRes method](lambdas/fat-lambda/fat-lambda.t
 
 OK, this state is very different from the other two. The cdk for this is bare bones, just one lambda function and a proxy api gateway:
 
-![lambdalith cdk](img/lambdalith_cdk.png)
+![lambdalith cdk](img/lambdalith_cdk2.png)
 
 All of the action takes place inside [the lambda-lith](lambdas/the-lambda-lith) itself.
 
