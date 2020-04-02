@@ -1,0 +1,21 @@
+{
+  "name": "the-lambda-lith",
+  "version": "1.0.0",
+  "description": "An express server inside a lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node lambdalith.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "10.17.5",
+    "typescript": "~3.7.2"
+  },
+  "dependencies": {
+    "aws-serverless-express": "^3.3.8",
+    "express": "^4.17.1"
+  }
+}

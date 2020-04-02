@@ -1,0 +1,364 @@
+Resources:
+  lambdalithHandlerServiceRole5EF8B2D9:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/lambdalithHandler/ServiceRole/Resource
+  lambdalithHandlerA7E51B4B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955S3BucketA540A103
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955S3VersionKey01257490
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955S3VersionKey01257490
+      Handler: lambdalith.main
+      Role:
+        Fn::GetAtt:
+          - lambdalithHandlerServiceRole5EF8B2D9
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - lambdalithHandlerServiceRole5EF8B2D9
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/lambdalithHandler/Resource
+      aws:asset:path: asset.37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955
+      aws:asset:property: Code
+  SinglePurposeFunctionAPI1E279177:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: SinglePurposeFunctionAPI
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Resource
+  SinglePurposeFunctionAPIDeployment46FC3A9Be19aee4cb82ac40fb2e9eb12a8d25c35:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: SinglePurposeFunctionAPI1E279177
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - SinglePurposeFunctionAPIproxyANY59C269BA
+      - SinglePurposeFunctionAPIproxy30A72552
+      - SinglePurposeFunctionAPIANY373652DE
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Deployment/Resource
+  SinglePurposeFunctionAPIDeploymentStageprod9333885F:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: SinglePurposeFunctionAPI1E279177
+      DeploymentId:
+        Ref: SinglePurposeFunctionAPIDeployment46FC3A9Be19aee4cb82ac40fb2e9eb12a8d25c35
+      StageName: prod
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/DeploymentStage.prod/Resource
+  SinglePurposeFunctionAPICloudWatchRoleC96CD4C0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/CloudWatchRole/Resource
+  SinglePurposeFunctionAPIAccount4A2EA62C:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - SinglePurposeFunctionAPICloudWatchRoleC96CD4C0
+          - Arn
+    DependsOn:
+      - SinglePurposeFunctionAPI1E279177
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Account
+  SinglePurposeFunctionAPIproxy30A72552:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - SinglePurposeFunctionAPI1E279177
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: SinglePurposeFunctionAPI1E279177
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/{proxy+}/Resource
+  SinglePurposeFunctionAPIproxyANYApiPermissionTheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88ANYproxy215DF5C1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SinglePurposeFunctionAPI1E279177
+            - /
+            - Ref: SinglePurposeFunctionAPIDeploymentStageprod9333885F
+            - /*/{proxy+}
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/{proxy+}/ANY/ApiPermission.TheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88.ANY..{proxy+}
+  SinglePurposeFunctionAPIproxyANYApiPermissionTestTheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88ANYproxyA7726E61:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SinglePurposeFunctionAPI1E279177
+            - /test-invoke-stage/*/{proxy+}
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/{proxy+}/ANY/ApiPermission.Test.TheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88.ANY..{proxy+}
+  SinglePurposeFunctionAPIproxyANY59C269BA:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Ref: SinglePurposeFunctionAPIproxy30A72552
+      RestApiId:
+        Ref: SinglePurposeFunctionAPI1E279177
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - lambdalithHandlerA7E51B4B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/{proxy+}/ANY/Resource
+  SinglePurposeFunctionAPIANYApiPermissionTheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88ANY31D8635D:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SinglePurposeFunctionAPI1E279177
+            - /
+            - Ref: SinglePurposeFunctionAPIDeploymentStageprod9333885F
+            - /*/
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/ANY/ApiPermission.TheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88.ANY..
+  SinglePurposeFunctionAPIANYApiPermissionTestTheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88ANYF8E6A6A0:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: SinglePurposeFunctionAPI1E279177
+            - /test-invoke-stage/*/
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/ANY/ApiPermission.Test.TheLambdaLithStackSinglePurposeFunctionAPI3B5A0A88.ANY..
+  SinglePurposeFunctionAPIANY373652DE:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Fn::GetAtt:
+          - SinglePurposeFunctionAPI1E279177
+          - RootResourceId
+      RestApiId:
+        Ref: SinglePurposeFunctionAPI1E279177
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - lambdalithHandlerA7E51B4B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheLambdaLithStack/SinglePurposeFunctionAPI/Default/ANY/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.31.0,@aws-cdk/assets=1.31.0,@aws-cdk/aws-apigateway=1.31.0,@aws-cdk/aws-cloudwatch=1.31.0,@aws-cdk/aws-ec2=1.31.0,@aws-cdk/aws-events=1.31.0,@aws-cdk/aws-iam=1.31.0,@aws-cdk/aws-kms=1.31.0,@aws-cdk/aws-lambda=1.31.0,@aws-cdk/aws-logs=1.31.0,@aws-cdk/aws-s3=1.31.0,@aws-cdk/aws-s3-assets=1.31.0,@aws-cdk/aws-sqs=1.31.0,@aws-cdk/aws-ssm=1.31.0,@aws-cdk/core=1.31.0,@aws-cdk/cx-api=1.31.0,@aws-cdk/region-info=1.31.0,jsii-runtime=node.js/v10.19.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955S3BucketA540A103:
+    Type: String
+    Description: S3 bucket for asset "37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955"
+  AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955S3VersionKey01257490:
+    Type: String
+    Description: S3 key for asset version "37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955"
+  AssetParameters37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955ArtifactHashEA5F878E:
+    Type: String
+    Description: Artifact hash for asset "37578b266d874c61129b8ba13e2af6cb0b82a2f1dc4f75262c18e767283a4955"
+Outputs:
+  SinglePurposeFunctionAPIEndpointCD9F6E5A:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: SinglePurposeFunctionAPI1E279177
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: SinglePurposeFunctionAPIDeploymentStageprod9333885F
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
