@@ -2,6 +2,7 @@
 
 The three states of AWS Lambda are something that has been discussed by many serverless heroes since their invention. This is probably the most controversial subject in all of serverless so I am not going to tell you which of the three is the best because like everything you need to adapt the right implementation to fit your context!
 
+
 Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https://twitter.com/theburningmonk), [Jeremy Daly](https://twitter.com/jeremy_daly) and others:
 - [Jeremy Daly & Paul Swail Serverless Chats #41](https://www.serverlesschats.com/41)
 - [Jeremy Daly Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
@@ -11,6 +12,7 @@ Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https:
 - [Yan Cui monoliths vs cold starts](https://theburningmonk.com/2018/02/aws-lambda-monolithic-functions-wont-help-you-with-cold-starts/)
 - [J D Hollis medium.com](https://medium.com/statics-and-dynamics/should-i-use-a-single-monolithic-lambda-function-or-multiple-lambda-functions-with-api-gateway-d99b0230f1e7)
 - [Ryanne Dolan medium.com](https://medium.com/@ryannedolan/aws-lambda-and-the-monolith-a0eb2d1516ef)
+
 
 The three states are:
 
@@ -59,6 +61,11 @@ This is using the lambda runtime container like a docker container. You use a we
 - Higher exposure to cold starts as the lambda will spend longer processing events
 - Lower levels of code reuse as probably still building the traditional ball of mud
 - Adapters required to make existing frameworks work with lambda. These are in various states of maturity and are another potential vulnerability in your app.
+
+## Deconstructing The Lambda Trilogy
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+
+- [YouTube](https://www.youtube.com/watch?v=tHD3i06Z6gU&feature=youtu.be)
 
 ## What's In This CDK Pattern?
 I have bundled fully TypeScript and fully Python versions (including the lambdas) for all 3 lambda states inside this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
