@@ -1,0 +1,364 @@
+Resources:
+  lambdalithHandlerServiceRole5EF8B2D9:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/lambdalithHandler/ServiceRole/Resource
+  lambdalithHandlerA7E51B4B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9S3BucketA641D5EC
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9S3VersionKey5770EC3C
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9S3VersionKey5770EC3C
+      Handler: lambdalith.handler
+      Role:
+        Fn::GetAtt:
+          - lambdalithHandlerServiceRole5EF8B2D9
+          - Arn
+      Runtime: python3.8
+    DependsOn:
+      - lambdalithHandlerServiceRole5EF8B2D9
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/lambdalithHandler/Resource
+      aws:asset:path: asset.942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9
+      aws:asset:property: Code
+  LambdalithAPI8485C28D:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: LambdalithAPI
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Resource
+  LambdalithAPIDeployment2B6139A490da567cb92acee3ce092d960f90dcf0:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: LambdalithAPI8485C28D
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - LambdalithAPIproxyANY76B6A38E
+      - LambdalithAPIproxy7C4B2DE8
+      - LambdalithAPIANY5D3590BA
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Deployment/Resource
+  LambdalithAPIDeploymentStageprod8B685305:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: LambdalithAPI8485C28D
+      DeploymentId:
+        Ref: LambdalithAPIDeployment2B6139A490da567cb92acee3ce092d960f90dcf0
+      StageName: prod
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/DeploymentStage.prod/Resource
+  LambdalithAPICloudWatchRoleA48FDF3A:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/CloudWatchRole/Resource
+  LambdalithAPIAccountE79B9952:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - LambdalithAPICloudWatchRoleA48FDF3A
+          - Arn
+    DependsOn:
+      - LambdalithAPI8485C28D
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Account
+  LambdalithAPIproxy7C4B2DE8:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - LambdalithAPI8485C28D
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: LambdalithAPI8485C28D
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/{proxy+}/Resource
+  LambdalithAPIproxyANYApiPermissionthelambdalithstackLambdalithAPI338AC9DFANYproxy4687E3FC:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: LambdalithAPI8485C28D
+            - /
+            - Ref: LambdalithAPIDeploymentStageprod8B685305
+            - /*/{proxy+}
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/{proxy+}/ANY/ApiPermission.thelambdalithstackLambdalithAPI338AC9DF.ANY..{proxy+}
+  LambdalithAPIproxyANYApiPermissionTestthelambdalithstackLambdalithAPI338AC9DFANYproxy3932CEC5:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: LambdalithAPI8485C28D
+            - /test-invoke-stage/*/{proxy+}
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/{proxy+}/ANY/ApiPermission.Test.thelambdalithstackLambdalithAPI338AC9DF.ANY..{proxy+}
+  LambdalithAPIproxyANY76B6A38E:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Ref: LambdalithAPIproxy7C4B2DE8
+      RestApiId:
+        Ref: LambdalithAPI8485C28D
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - lambdalithHandlerA7E51B4B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/{proxy+}/ANY/Resource
+  LambdalithAPIANYApiPermissionthelambdalithstackLambdalithAPI338AC9DFANYF4693F3F:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: LambdalithAPI8485C28D
+            - /
+            - Ref: LambdalithAPIDeploymentStageprod8B685305
+            - /*/
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/ANY/ApiPermission.thelambdalithstackLambdalithAPI338AC9DF.ANY..
+  LambdalithAPIANYApiPermissionTestthelambdalithstackLambdalithAPI338AC9DFANY04EA70B5:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - lambdalithHandlerA7E51B4B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: LambdalithAPI8485C28D
+            - /test-invoke-stage/*/
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/ANY/ApiPermission.Test.thelambdalithstackLambdalithAPI338AC9DF.ANY..
+  LambdalithAPIANY5D3590BA:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Fn::GetAtt:
+          - LambdalithAPI8485C28D
+          - RootResourceId
+      RestApiId:
+        Ref: LambdalithAPI8485C28D
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - lambdalithHandlerA7E51B4B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: the-lambda-lith-stack/LambdalithAPI/Default/ANY/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.31.0,@aws-cdk/assets=1.31.0,@aws-cdk/aws-apigateway=1.31.0,@aws-cdk/aws-certificatemanager=1.31.0,@aws-cdk/aws-cloudformation=1.31.0,@aws-cdk/aws-cloudwatch=1.31.0,@aws-cdk/aws-ec2=1.31.0,@aws-cdk/aws-elasticloadbalancingv2=1.31.0,@aws-cdk/aws-events=1.31.0,@aws-cdk/aws-iam=1.31.0,@aws-cdk/aws-kms=1.31.0,@aws-cdk/aws-lambda=1.31.0,@aws-cdk/aws-logs=1.31.0,@aws-cdk/aws-route53=1.31.0,@aws-cdk/aws-s3=1.31.0,@aws-cdk/aws-s3-assets=1.31.0,@aws-cdk/aws-sns=1.31.0,@aws-cdk/aws-sqs=1.31.0,@aws-cdk/aws-ssm=1.31.0,@aws-cdk/core=1.31.0,@aws-cdk/cx-api=1.31.0,@aws-cdk/region-info=1.31.0,jsii-runtime=Python/3.6.10
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9S3BucketA641D5EC:
+    Type: String
+    Description: S3 bucket for asset "942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9"
+  AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9S3VersionKey5770EC3C:
+    Type: String
+    Description: S3 key for asset version "942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9"
+  AssetParameters942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9ArtifactHashE439B6C2:
+    Type: String
+    Description: Artifact hash for asset "942dc8810017b8ceebf761d04a03cd725053f34f261656610cacf5346246bcd9"
+Outputs:
+  LambdalithAPIEndpoint0CB0D0D9:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: LambdalithAPI8485C28D
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: LambdalithAPIDeploymentStageprod8B685305
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

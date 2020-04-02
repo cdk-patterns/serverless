@@ -1,0 +1,561 @@
+Resources:
+  addLambdaHandlerServiceRole37B65F50:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/addLambdaHandler/ServiceRole/Resource
+  addLambdaHandler9017B0E5:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3Bucket256CDFA5
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+      Handler: fat-lambda.add
+      Role:
+        Fn::GetAtt:
+          - addLambdaHandlerServiceRole37B65F50
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - addLambdaHandlerServiceRole37B65F50
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/addLambdaHandler/Resource
+      aws:asset:path: asset.bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304
+      aws:asset:property: Code
+  subtractLambdaHandlerServiceRole4A6E4302:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/subtractLambdaHandler/ServiceRole/Resource
+  subtractLambdaHandler5C3056BE:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3Bucket256CDFA5
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+      Handler: fat-lambda.subtract
+      Role:
+        Fn::GetAtt:
+          - subtractLambdaHandlerServiceRole4A6E4302
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - subtractLambdaHandlerServiceRole4A6E4302
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/subtractLambdaHandler/Resource
+      aws:asset:path: asset.bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304
+      aws:asset:property: Code
+  multiplyLambdaHandlerServiceRole902757A2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/multiplyLambdaHandler/ServiceRole/Resource
+  multiplyLambdaHandler7068AFA9:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3Bucket256CDFA5
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1
+      Handler: fat-lambda.multiply
+      Role:
+        Fn::GetAtt:
+          - multiplyLambdaHandlerServiceRole902757A2
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - multiplyLambdaHandlerServiceRole902757A2
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/multiplyLambdaHandler/Resource
+      aws:asset:path: asset.bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304
+      aws:asset:property: Code
+  FatLambdaAPI7F614802:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: FatLambdaAPI
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Resource
+  FatLambdaAPIDeploymentB25E2D6Ac6daba86946c1ddee99112b52c5b715a:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - FatLambdaAPIaddGETF05282DC
+      - FatLambdaAPIadd98E05B8E
+      - FatLambdaAPImultiplyGET79A12CF5
+      - FatLambdaAPImultiply10276102
+      - FatLambdaAPIsubtractGETAF76151E
+      - FatLambdaAPIsubtract05734636
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Deployment/Resource
+  FatLambdaAPIDeploymentStageprodEE2CC0C2:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+      DeploymentId:
+        Ref: FatLambdaAPIDeploymentB25E2D6Ac6daba86946c1ddee99112b52c5b715a
+      StageName: prod
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/DeploymentStage.prod/Resource
+  FatLambdaAPICloudWatchRole8B1EEF0A:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/CloudWatchRole/Resource
+  FatLambdaAPIAccount16177BA8:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - FatLambdaAPICloudWatchRole8B1EEF0A
+          - Arn
+    DependsOn:
+      - FatLambdaAPI7F614802
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Account
+  FatLambdaAPIadd98E05B8E:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - FatLambdaAPI7F614802
+          - RootResourceId
+      PathPart: add
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/add/Resource
+  FatLambdaAPIaddGETApiPermissionTheFatLambdaStackFatLambdaAPI25D2C461GETadd53837B08:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - addLambdaHandler9017B0E5
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /
+            - Ref: FatLambdaAPIDeploymentStageprodEE2CC0C2
+            - /GET/add
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/add/GET/ApiPermission.TheFatLambdaStackFatLambdaAPI25D2C461.GET..add
+  FatLambdaAPIaddGETApiPermissionTestTheFatLambdaStackFatLambdaAPI25D2C461GETaddCFC92C4A:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - addLambdaHandler9017B0E5
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /test-invoke-stage/GET/add
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/add/GET/ApiPermission.Test.TheFatLambdaStackFatLambdaAPI25D2C461.GET..add
+  FatLambdaAPIaddGETF05282DC:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: FatLambdaAPIadd98E05B8E
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - addLambdaHandler9017B0E5
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/add/GET/Resource
+  FatLambdaAPIsubtract05734636:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - FatLambdaAPI7F614802
+          - RootResourceId
+      PathPart: subtract
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/subtract/Resource
+  FatLambdaAPIsubtractGETApiPermissionTheFatLambdaStackFatLambdaAPI25D2C461GETsubtract0987727B:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - subtractLambdaHandler5C3056BE
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /
+            - Ref: FatLambdaAPIDeploymentStageprodEE2CC0C2
+            - /GET/subtract
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/subtract/GET/ApiPermission.TheFatLambdaStackFatLambdaAPI25D2C461.GET..subtract
+  FatLambdaAPIsubtractGETApiPermissionTestTheFatLambdaStackFatLambdaAPI25D2C461GETsubtractB3DE10E1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - subtractLambdaHandler5C3056BE
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /test-invoke-stage/GET/subtract
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/subtract/GET/ApiPermission.Test.TheFatLambdaStackFatLambdaAPI25D2C461.GET..subtract
+  FatLambdaAPIsubtractGETAF76151E:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: FatLambdaAPIsubtract05734636
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - subtractLambdaHandler5C3056BE
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/subtract/GET/Resource
+  FatLambdaAPImultiply10276102:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - FatLambdaAPI7F614802
+          - RootResourceId
+      PathPart: multiply
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/multiply/Resource
+  FatLambdaAPImultiplyGETApiPermissionTheFatLambdaStackFatLambdaAPI25D2C461GETmultiplyF6A6EF30:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - multiplyLambdaHandler7068AFA9
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /
+            - Ref: FatLambdaAPIDeploymentStageprodEE2CC0C2
+            - /GET/multiply
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/multiply/GET/ApiPermission.TheFatLambdaStackFatLambdaAPI25D2C461.GET..multiply
+  FatLambdaAPImultiplyGETApiPermissionTestTheFatLambdaStackFatLambdaAPI25D2C461GETmultiply24B5A8B1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - multiplyLambdaHandler7068AFA9
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: FatLambdaAPI7F614802
+            - /test-invoke-stage/GET/multiply
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/multiply/GET/ApiPermission.Test.TheFatLambdaStackFatLambdaAPI25D2C461.GET..multiply
+  FatLambdaAPImultiplyGET79A12CF5:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: FatLambdaAPImultiply10276102
+      RestApiId:
+        Ref: FatLambdaAPI7F614802
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - multiplyLambdaHandler7068AFA9
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: TheFatLambdaStack/FatLambdaAPI/Default/multiply/GET/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.31.0,@aws-cdk/assets=1.31.0,@aws-cdk/aws-apigateway=1.31.0,@aws-cdk/aws-cloudwatch=1.31.0,@aws-cdk/aws-ec2=1.31.0,@aws-cdk/aws-events=1.31.0,@aws-cdk/aws-iam=1.31.0,@aws-cdk/aws-kms=1.31.0,@aws-cdk/aws-lambda=1.31.0,@aws-cdk/aws-logs=1.31.0,@aws-cdk/aws-s3=1.31.0,@aws-cdk/aws-s3-assets=1.31.0,@aws-cdk/aws-sqs=1.31.0,@aws-cdk/aws-ssm=1.31.0,@aws-cdk/core=1.31.0,@aws-cdk/cx-api=1.31.0,@aws-cdk/region-info=1.31.0,jsii-runtime=node.js/v10.19.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3Bucket256CDFA5:
+    Type: String
+    Description: S3 bucket for asset "bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304"
+  AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304S3VersionKey7E62C7A1:
+    Type: String
+    Description: S3 key for asset version "bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304"
+  AssetParametersbef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304ArtifactHashA6FB47BF:
+    Type: String
+    Description: Artifact hash for asset "bef7c0dd26daad956f33ff07860a4b48dc4714469cac7e5cbb4e76740e2bf304"
+Outputs:
+  FatLambdaAPIEndpoint4D55FC92:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: FatLambdaAPI7F614802
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: FatLambdaAPIDeploymentStageprodEE2CC0C2
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

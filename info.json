@@ -24,6 +24,9 @@
         "the-eventbridge-etl": {
             "prodReady": false
         },
+        "the-lambda-trilogy": {
+            "prodReady": false
+        },
         "the-scalable-webhook": {
             "prodReady": false
         },

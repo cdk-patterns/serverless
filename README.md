@@ -126,6 +126,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch2.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
@@ -165,6 +171,7 @@ npx cdk deploy
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
+  * [Yan Cui](#yan-cui)
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -238,6 +245,10 @@ npx cdk deploy
 
   These patterns are from https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/
 
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch2.png)
+
   #### [The Simple Webservice](/the-simple-webservice/README.md)
   The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
@@ -304,6 +315,18 @@ npx cdk deploy
   #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
   Build a fully serverless CSV to DynamoDB pipeline <br />
   ![Architecture](the-eventbridge-etl/img/arch.png)
+
+  ### Yan Cui
+  <img src="img/dev_profiles/yan_cui.png" width="120" alt="Yan Cui profile pic" /><br />
+
+  AWS Serverless Hero | Independent Consultant | Author | Trainer | Speaker | Developer Advocate at [@Lumigo](https://twitter.com/Lumigo) | Teacher of [@LearnLambda](https://twitter.com/LearnLambda) | Host of [@RealWorldSls](https://twitter.com/RealWorldSls)
+
+  Twitter - [@theburningmonk](https://twitter.com/theburningmonk) <br />
+  Blog - [theburningmonk.com](https://theburningmonk.com/) <br />
+
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch2.png)
   
 
 </details>
