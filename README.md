@@ -171,6 +171,7 @@ npx cdk deploy
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
+  * [Yan Cui](#yan-cui)
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -314,6 +315,18 @@ npx cdk deploy
   #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
   Build a fully serverless CSV to DynamoDB pipeline <br />
   ![Architecture](the-eventbridge-etl/img/arch.png)
+
+  ### Yan Cui
+  <img src="img/dev_profiles/yan_cui.png" width="120" alt="Yan Cui profile pic" /><br />
+
+  AWS Serverless Hero | Independent Consultant | Author | Trainer | Speaker | Developer Advocate at [@Lumigo](https://twitter.com/Lumigo) | Teacher of [@LearnLambda](https://twitter.com/LearnLambda) | Host of [@RealWorldSls](https://twitter.com/RealWorldSls)
+
+  Twitter - [@theburningmonk](https://twitter.com/theburningmonk) <br />
+  Blog - [theburningmonk.com](https://theburningmonk.com/) <br />
+
+  #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
+  See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
+  ![Architecture](the-lambda-trilogy/img/arch2.png)
   
 
 </details>
