@@ -128,7 +128,7 @@ npx cdk deploy
 
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
   See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
-  ![Architecture](the-lambda-trilogy/img/arch.png)
+  ![Architecture](the-lambda-trilogy/img/lambda_trilogy.png)
 
   <br /><hr /><br />
 
@@ -246,7 +246,7 @@ npx cdk deploy
 
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
   See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
-  ![Architecture](the-lambda-trilogy/img/arch.png)
+  ![Architecture](the-lambda-trilogy/img/lambda_trilogy.png)
 
   #### [The Simple Webservice](/the-simple-webservice/README.md)
   The most basic pattern on cdkpatterns, the start of most peoples serverless journey <br /><br />
