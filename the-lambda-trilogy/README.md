@@ -6,6 +6,7 @@ Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https:
 - [Serverless Chats](https://www.serverlesschats.com/41)
 - [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
 - [Yan Cui Presentation (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
+- [Yan Cui re:Invent 2019](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_1_How_to_refactor_a_monolith_to_serverless_in_8_steps_API310-R1.pdf)
 
 The three states are:
 
