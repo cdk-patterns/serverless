@@ -3,8 +3,8 @@
 The three states of AWS Lambda are something that has been discussed by many serverless heroes since their invention. This is probably the most controversial subject in all of serverless so I am not going to tell you which of the three is the best because like everything you need to adapt the right implementation to fit your context!
 
 Some examples from [Paul Swail](https://twitter.com/paulswail), [Yan Cui](https://twitter.com/theburningmonk), [Jeremy Daly](https://twitter.com/jeremy_daly) and others:
-- [Serverless Chats](https://www.serverlesschats.com/41)
-- [Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
+- [Jeremy Daly & Paul Swail Serverless Chats](https://www.serverlesschats.com/41)
+- [Jeremy Daly Off By None](https://www.jeremydaly.com/newsletter-issue-63/)
 - [Yan Cui Presentation (slide 41 on)](https://www.slideshare.net/theburningmonk/beware-the-potholes-on-the-road-to-serverless-224107000)
 - [Yan Cui re:Invent 2019](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_1_How_to_refactor_a_monolith_to_serverless_in_8_steps_API310-R1.pdf)
 - [Yan Cui Hackernoon - monolithic or single purpose functions?](https://hackernoon.com/aws-lambda-should-you-have-few-monolithic-functions-or-many-single-purposed-functions-8c3872d4338f)
