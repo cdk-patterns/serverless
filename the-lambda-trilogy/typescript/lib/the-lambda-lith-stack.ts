@@ -21,7 +21,7 @@ export class TheLambdalithStack extends cdk.Stack {
      * All routes go to lambdalith which handles routes internally
      */
     
-    new apigw.LambdaRestApi(this, 'SinglePurposeFunctionAPI', {
+    new apigw.LambdaRestApi(this, 'LambdalithAPI', {
       handler: lambdalith
     });
   }
