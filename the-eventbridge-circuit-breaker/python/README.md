@@ -12,12 +12,12 @@ When a consumer calls our lambda we check if there have been 3 failure events in
 ![Architecture](../img/jd_arch.png)
 
 ### Closed Circuit Architecture:
-The lambda queries the dynamoDB for errors added in the last 60 seconds for this service. If the number found is greater than our threshold we close the circuit. If the number is less we try calling the service. If an error occurs during that call an event is sent to EventBridge where it is routed to a lambda that inserts an error into DynamoDB with a 60 second TTL
-![Architecture](../img/arch2.PNG)
+The lambda queries the dynamoDB for errors added in the last 60 seconds for this service. If the number found is greater than our threshold we open the circuit. If the number is less we close the circuit and try calling the service. If an error occurs during that call an event is sent to EventBridge where it is routed to a lambda that inserts an error into DynamoDB with a 60 second TTL
+![Architecture](img/arch2.PNG)
 
 ### Open Circuit Architecture:
 The lambda queries the dynamoDB for errors added in the last 60 seconds for this service. In this scenario the number found is greater than our threshold so the lambda immediately responds with a failure rather than calling the real service.
-![Architecture](../img/arch_closed.png)
+![Architecture](img/arch_closed.png)
 
 ## When You Would Use This Pattern
 
