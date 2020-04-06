@@ -9,7 +9,7 @@ Don't worry, we have integrated a circuit breaker into this system. When a call 
 When a consumer calls our lambda we check if there have been 3 failure events in the last 60 seconds and if so we fail immediately, this saves over 9 seconds of execution costs. As the error events expire after 60 seconds our failure events should gradually drop below 3 where we call the service again and check status.
 
 ### Jeremy Daly's Pattern:
-![Architecture](../img/jd_arch.png)
+![Architecture](img/jd_arch.png)
 
 ### Closed Circuit Architecture:
 The lambda queries the dynamoDB for errors added in the last 60 seconds for this service. If the number found is greater than our threshold we open the circuit. If the number is less we close the circuit and try calling the service. If an error occurs during that call an event is sent to EventBridge where it is routed to a lambda that inserts an error into DynamoDB with a 60 second TTL
