@@ -65,7 +65,7 @@ This is using the lambda runtime container like a docker container. You use a we
 ## Deconstructing The Lambda Trilogy
 If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
 
-- [YouTube](https://www.youtube.com/watch?v=tHD3i06Z6gU&feature=youtu.be)
+[![Alt text](https://img.youtube.com/vi/tHD3i06Z6gU/0.jpg)](https://www.youtube.com/watch?v=tHD3i06Z6gU)
 
 ## What's In This CDK Pattern?
 I have bundled fully TypeScript and fully Python versions (including the lambdas) for all 3 lambda states inside this pattern because most of the logic takes place outside the AWS CDK infrastructure code.
