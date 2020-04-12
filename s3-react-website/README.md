@@ -10,7 +10,7 @@ This pattern out of the box deploys the React website to Amazon S3 but does not 
 ## Deconstructing the S3 React Deploy Pattern
 If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
 
-- [YouTube](https://www.youtube.com/watch?v=tUUNiF0q7rk)
+[![Alt text](https://img.youtube.com/vi/tUUNiF0q7rk/0.jpg)](https://www.youtube.com/watch?v=tUUNiF0q7rk)
 
 ## Available Versions
 
