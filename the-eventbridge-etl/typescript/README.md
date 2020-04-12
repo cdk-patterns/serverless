@@ -27,6 +27,10 @@ In the current format this is more of a technical demo to show what is possible 
 
 If you need to create a process where a user uploads a csv and it gets transformed and inserted into DynamoDB
 
+## Desconstructing The EventBridge ETL
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+- [Youtube](https://www.youtube.com/watch?v=8kg5bYsdem4)
+
 ## How to test pattern 
 
 After deployment you will have an s3 bucket where if you go into the aws console for that bucket and upload the file [test_data.csv](data-to-upload/test_data.csv) found in the data-to-upload folder you will kick everything off.
