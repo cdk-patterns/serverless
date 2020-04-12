@@ -56,7 +56,8 @@ Alternatively As illustrated in this implementation, you can use it to strip cus
 
 ## Desconstructing The Destined Lambda
 If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
-- [Youtube](https://www.youtube.com/watch?v=DQgq_p6Q03M&feature=youtu.be)
+
+[![Alt text](https://img.youtube.com/vi/DQgq_p6Q03M/0.jpg)](https://www.youtube.com/watch?v=DQgq_p6Q03M)
 
 ## How To Test Pattern
 After you deploy this pattern you will have an API Gateway with one endpoint "SendEvent" that accepts GET requests.
