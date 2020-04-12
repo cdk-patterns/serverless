@@ -29,7 +29,8 @@ If you need to create a process where a user uploads a csv and it gets transform
 
 ## Desconstructing The EventBridge ETL
 If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
-- [Youtube](https://www.youtube.com/watch?v=8kg5bYsdem4)
+
+[![Alt text](https://img.youtube.com/vi/8kg5bYsdem4/0.jpg)](https://www.youtube.com/watch?v=8kg5bYsdem4)
 
 ## How to test pattern 
 
