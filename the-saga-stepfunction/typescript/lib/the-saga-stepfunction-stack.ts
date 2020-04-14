@@ -4,29 +4,6 @@ import dynamodb = require('@aws-cdk/aws-dynamodb');
 
 export class TheSagaStepfunctionStack extends cdk.Stack {
 
-  /**
-   * Helper function to shorten Lambda boilerplate as we have 6 in this stack
-   * @param scope 
-   * @param id 
-   * @param handler 
-   * @param table 
-   */
-  createLambda(scope:cdk.Stack, id:string, handler:string, table:dynamodb.Table){
-    // Create a Node Lambda with the table name passed in as an environment variable
-    let fn =  new lambda.Function(scope, id, {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas'),
-      handler:handler,
-      environment: {
-        TABLE_NAME: table.tableName
-      }
-    });
-    // Give our Lambda permissions to read and write data from the passed in DynamoDB table
-    table.grantReadWriteData(fn);
-
-    return fn;
-  }
-
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -70,5 +47,29 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     // 3) Rental Car 
     let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', rentalBookingsTable);
     let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', rentalBookingsTable);
+  }
+
+  /**
+   * Helper function to shorten Lambda boilerplate as we have 6 in this stack
+   * @param scope 
+   * @param id 
+   * @param handler 
+   * @param table 
+   */
+  createLambda(scope:cdk.Stack, id:string, handler:string, table:dynamodb.Table){
+    
+    // Create a Node Lambda with the table name passed in as an environment variable
+    let fn =  new lambda.Function(scope, id, {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler:handler,
+      environment: {
+        TABLE_NAME: table.tableName
+      }
+    });
+    // Give our Lambda permissions to read and write data from the passed in DynamoDB table
+    table.grantReadWriteData(fn);
+
+    return fn;
   }
 }
