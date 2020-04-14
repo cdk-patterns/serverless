@@ -9,17 +9,22 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
    * @param scope 
    * @param id 
    * @param handler 
-   * @param tablename 
+   * @param table 
    */
-  createLambdaFunction(scope:cdk.Stack, id:string, handler:string, tablename:string){
-    return new lambda.Function(scope, id, {
+  createLambda(scope:cdk.Stack, id:string, handler:string, table:dynamodb.Table){
+    // Create a Node Lambda with the table name passed in as an environment variable
+    let fn =  new lambda.Function(scope, id, {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
       handler:handler,
       environment: {
-        TABLE_NAME: tablename
+        TABLE_NAME: table.tableName
       }
     });
+    // Give our Lambda permissions to read and write data from the passed in DynamoDB table
+    table.grantReadWriteData(fn);
+
+    return fn;
   }
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -55,33 +60,15 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
      */
 
     // 1) Flights 
-
-    // Booking
-    let bookFlightLambda = this.createLambdaFunction(this, 'bookFlightLambdaHandler', 'bookFlight.handler', flightBookingsTable.tableName);
-    flightBookingsTable.grantReadWriteData(bookFlightLambda)
-
-    // Cancellation
-    let cancelFlightLambda = this.createLambdaFunction(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', flightBookingsTable.tableName);
-    flightBookingsTable.grantReadWriteData(cancelFlightLambda)
+    let bookFlightLambda = this.createLambda(this, 'bookFlightLambdaHandler', 'bookFlight.handler', flightBookingsTable);
+    let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', flightBookingsTable);
 
     // 2) Hotel 
-
-    // Booking
-    let bookHotelLambda = this.createLambdaFunction(this, 'bookHotelLambdaHandler', 'bookHotel.handler', hotelBookingsTable.tableName);
-    hotelBookingsTable.grantReadWriteData(bookHotelLambda)
-
-    // Cancellation
-    let cancelHotelLambda = this.createLambdaFunction(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', hotelBookingsTable.tableName);
-    hotelBookingsTable.grantReadWriteData(cancelHotelLambda)
+    let bookHotelLambda = this.createLambda(this, 'bookHotelLambdaHandler', 'bookHotel.handler', hotelBookingsTable);
+    let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', hotelBookingsTable);
 
     // 3) Rental Car 
-
-    // Booking
-    let bookRentalLambda = this.createLambdaFunction(this, 'bookRentalLambdaHandler', 'bookRental.handler', rentalBookingsTable.tableName);
-    rentalBookingsTable.grantReadWriteData(bookRentalLambda)
-
-    // Cancellation
-    let cancelRentalLambda = this.createLambdaFunction(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', rentalBookingsTable.tableName);
-    rentalBookingsTable.grantReadWriteData(cancelRentalLambda)
+    let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', rentalBookingsTable);
+    let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', rentalBookingsTable);
   }
 }
