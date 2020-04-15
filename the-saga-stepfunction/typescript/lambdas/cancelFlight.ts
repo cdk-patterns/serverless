@@ -18,7 +18,7 @@ export {};
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.4) {
     throw new Error("Internal Server Error");
   }
 
