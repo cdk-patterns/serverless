@@ -19,7 +19,7 @@ exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
   // If we passed the parameter to fail this step 
-  if(event.runType === 'failRental'){
+  if(event.run_type === 'failRental'){
       throw new Error('Failed to book the rental car');
   }
 
