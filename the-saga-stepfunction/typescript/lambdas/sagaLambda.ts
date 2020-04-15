@@ -5,7 +5,7 @@ region: 'us-east-1'
 });
 
 module.exports.handler = (event:any, context:any, callback:any) => {
-    // [success, failFlight, failHotel, failRental]
+    // [success, failFlights, failHotel, failRental]
     let runType = 'success';
     let tripID =  "5c12d94a-ee6a-40d9-889b-1d49142248b7";
     
