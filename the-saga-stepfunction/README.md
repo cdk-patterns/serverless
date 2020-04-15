@@ -35,11 +35,13 @@ Every action must have a corresponding reaction for error. Note the reaction can
 If we assume from this point we will roll back when an error hits then the flow might look something like:
 
 ### Success
-This flows as you might expect, we try to book a hotel, the flights and the rental car. All tasks success so we complete the transaction as a success.
+This flows as you might expect, we try to book a hotel, the flights and the rental car. All tasks completed successfully so we mark the transaction as a success.
 
 ![flow](img/step2.PNG)
 
 ### Failure
 You might think of the below as a bit extreme as you wouldn't want to cancel your flights and hotel just because you couldn't get a rental car. Just go with it. In real life the rental car step probably wouldn't be part of this saga or the compensating action would be to pick another rental.
+
+Notice though how it peels back the layers, it doesn't do one massive compensation step. It runs the cancel steps in reverse order until the system should be the way it was before we started.
 
 ![flow](img/step3.PNG)
