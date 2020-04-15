@@ -32,8 +32,8 @@ exports.handler = async function(event:any) {
       'trip_id' : {S: event.trip_id},
       'depart' : {S: event.depart},
       'depart_at': {S: event.depart_at},
-      'arrive': {N: event.arrive},
-      'arrive_at': {N: event.arrive_at}
+      'arrive': {S: event.arrive},
+      'arrive_at': {S: event.arrive_at}
     }
   };
   
