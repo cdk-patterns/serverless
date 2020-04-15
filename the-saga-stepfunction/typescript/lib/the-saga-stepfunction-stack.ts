@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
+import apigw = require('@aws-cdk/aws-apigateway');
 import sfn = require('@aws-cdk/aws-stepfunctions');
 import tasks = require('@aws-cdk/aws-stepfunctions-tasks');
 
@@ -54,8 +55,9 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
      * Saga Pattern Stepfunction
      */
 
-    const bookingFailed = new sfn.Fail(this, "Sorry, We Couldn't make the booking", {
-    });
+    // Our two end states
+    const bookingFailed = new sfn.Fail(this, "Sorry, We Couldn't make the booking", {});
+    const bookingSucceeded = new sfn.Succeed(this, 'We have made your booking!');
 
     // Hotel
     const cancelHotel = new sfn.Task(this, 'CancelHotel', {
@@ -102,10 +104,32 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     .start(bookHotel)
     .next(bookFlight)
     .next(bookRental)
+    .next(bookingSucceeded)
 
     let saga = new sfn.StateMachine(this, 'BookingSaga', {
       definition,
       timeout: cdk.Duration.minutes(5)
+    });
+
+    // defines an AWS Lambda resource to connect to our API Gateway and kick
+    // off our step function
+    const sagaLambda = new lambda.Function(this, 'sagaLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'sagaLambda.handler',
+      environment: {
+        statemachine_arn: saga.stateMachineArn
+      }
+    });
+
+    saga.grantStartExecution(sagaLambda);
+
+    /**
+     * Simple API Gateway proxy integration
+     */
+    // defines an API Gateway REST API resource backed by our "stateMachineLambda" function.
+    new apigw.LambdaRestApi(this, 'SagaPattern', {
+      handler: sagaLambda
     });
   }
 
