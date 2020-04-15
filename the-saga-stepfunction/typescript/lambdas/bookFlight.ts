@@ -38,7 +38,9 @@ exports.handler = async function(event:any) {
   };
   
   // Call DynamoDB to add the item to the table
-  let result = await dynamo.putItem(params).promise();
+  let result = await dynamo.putItem(params).promise().catch((error: any) => {
+    throw new Error(error);
+  });
 
   console.log('inserted flight booking:');
   console.log(result);

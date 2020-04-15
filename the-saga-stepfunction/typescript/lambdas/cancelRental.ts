@@ -29,7 +29,9 @@ exports.handler = async function(event:any) {
   };
   
   // Call DynamoDB to add the item to the table
-  let result = await dynamo.deleteItem(params).promise();
+  let result = await dynamo.deleteItem(params).promise().catch((error: any) => {
+    throw new Error(error);
+  });
 
   console.log('deleted rental car booking:');
   console.log(result);
