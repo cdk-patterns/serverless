@@ -49,3 +49,9 @@ Notice though how it peels back the layers, it doesn't do one massive compensati
 If the first BookHotel task had failed the only difference is the number of Cancel tasks that run:
 
 ![flow](img/stepfunction.PNG)
+
+## What Does The Saga Step Function Look Like?
+
+We have an API Gateway connected to a Lambda through a {proxy+} setup. This lambda starts a stepfunction workflow. 6 lambdas inside that workflow communicate with 3 different DynamoDB tables to complete a travel booking transaction:
+
+![flow](img/arch_saga.png)
