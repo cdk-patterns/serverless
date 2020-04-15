@@ -1,6 +1,8 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
+import sfn = require('@aws-cdk/aws-stepfunctions');
+import tasks = require('@aws-cdk/aws-stepfunctions-tasks');
 
 export class TheSagaStepfunctionStack extends cdk.Stack {
 
@@ -47,6 +49,64 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     // 3) Rental Car 
     let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', rentalBookingsTable);
     let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', rentalBookingsTable);
+
+    /**
+     * Saga Pattern Stepfunction
+     */
+
+    const bookingFailed = new sfn.Fail(this, "Sorry, We Couldn't make the booking", {
+    });
+
+    // Hotel
+    const cancelHotel = new sfn.Task(this, 'CancelHotel', {
+      task: new tasks.InvokeFunction(cancelHotelLambda),
+      resultPath: '$.CancelHotelResult',
+    }).next(bookingFailed);
+
+    const bookHotel = new sfn.Task(this, 'BookHotel', {
+      task: new tasks.InvokeFunction(bookHotelLambda),
+      resultPath: '$.BookHotelResult',
+    }).addCatch(cancelHotel, {
+      resultPath: "$.BookHotelError"
+    });
+
+
+    // Flights
+    const cancelFlight = new sfn.Task(this, 'CancelFlight', {
+      task: new tasks.InvokeFunction(cancelFlightLambda),
+      resultPath: '$.CancelFlightResult',
+    }).next(cancelHotel);
+
+    const bookFlight = new sfn.Task(this, 'BookFlight', {
+      task: new tasks.InvokeFunction(bookFlightLambda),
+      resultPath: '$.BookFlightResult',
+    }).addCatch(cancelFlight, {
+      resultPath: "$.CancelFlightError"
+    });
+
+    // Rental Car
+    const cancelRental = new sfn.Task(this, 'CancelRental', {
+      task: new tasks.InvokeFunction(cancelRentalLambda),
+      resultPath: '$.CancelRentalResult',
+    }).next(cancelFlight);
+
+    const bookRental = new sfn.Task(this, 'BookRental', {
+      task: new tasks.InvokeFunction(bookRentalLambda),
+      resultPath: '$.BookRentalResult',
+    }).addCatch(cancelRental, {
+      resultPath: "$.CancelRentalError"
+    });
+
+    //Step function definition
+    const definition = sfn.Chain
+    .start(bookHotel)
+    .next(bookFlight)
+    .next(bookRental)
+
+    let saga = new sfn.StateMachine(this, 'BookingSaga', {
+      definition,
+      timeout: cdk.Duration.minutes(5)
+    });
   }
 
   /**
