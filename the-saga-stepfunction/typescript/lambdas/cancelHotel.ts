@@ -18,6 +18,10 @@ export {};
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
+  if (Math.random() < 0.3) {
+    throw new Error("Internal Server Error");
+  }
+
   // create AWS SDK clients
   const dynamo = new DynamoDB();
 
