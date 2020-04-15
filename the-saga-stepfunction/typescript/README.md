@@ -1,4 +1,4 @@
-# Welcome to your CDK TypeScript project!
+# The Saga Step Function
 
 This is a blank project for TypeScript development with CDK.
 
