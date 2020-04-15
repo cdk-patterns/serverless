@@ -69,9 +69,15 @@ Successful Execution - https://{api gateway url}
 Book Hotel Fail - https://{api gateway url}?runType=failHotel
 Book Flight Fail - https://{api gateway url}?runType=failFlights
 Book Rental Car Fail - https://{api gateway url}?runType=failRental
+
+Inserting Muliple trips into DynamoDB, by default it will use the same ID on every execution
+https://{api gateway url}?tripID={whatever you want}
+
 ```
 
 It is important to note that the Cancel Lambdas all have a random failure built in and retry logic up to a max of 3. So when you look at the execution of your stepfunction in the aws console if you see failures in the cancel lambdas this is intentional. The reason why is to teach you that the cancel logic should attempt to self recover in the event of an error.
+
+To actually view what happened you will need to log into the AWS console and navigate to the step functions section where you can see every execution of your saga step function. You can also look inside the 3 DynamoDB tables at the records inserted.
 
 ## Available Versions
 
