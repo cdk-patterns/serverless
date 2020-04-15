@@ -57,3 +57,18 @@ If the first BookHotel task had failed the only difference is the number of Canc
 We have an API Gateway connected to a Lambda through a {proxy+} setup. This lambda starts a stepfunction workflow representing the flows above. 6 lambdas inside that workflow communicate with 3 different DynamoDB tables to complete a travel booking transaction:
 
 ![flow](img/arch_saga.png)
+
+## How Do I Test This After Deployment?
+
+After deployment you should have an API Gateway where any url you hit triggers the step function to start.
+
+You can manipulate the flow of the step function with a couple of url parameters:
+
+```
+Successful Execution - https://{api gateway url}
+Book Hotel Fail - https://{api gateway url}?runType=failHotel
+Book Flight Fail - https://{api gateway url}?runType=failFlights
+Book Rental Car Fail - https://{api gateway url}?runType=failRental
+```
+
+It is important to note that the Cancel Lambdas all have a random failure built in and retry logic up to a max of 3. So when you look at the execution of your stepfunction in the aws console of you see failures in the cancel lambdas this is intentional. The reason why is to teach you that the cancel logic should attempt to self recover in the event of an error.
