@@ -8,6 +8,8 @@ He also links to a fantastic goto talk from 2015 by [Caitie McCaffrey](https://t
 
 This pattern is even used by [Heitor Lessa](https://twitter.com/heitor_lessa) in the [AWS Serverless Airline Booking Example](https://github.com/aws-samples/aws-serverless-airline-booking/tree/develop/src/backend/booking#booking-state-machine)
 
+[Chris Richardson](https://twitter.com/crichardson) has a [blog post](https://microservices.io/patterns/data/saga.html) about saga as well
+
 ## What Is The Saga Pattern?
 
 Hector Garcia-Molina described it in his [paper](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) as follows:
