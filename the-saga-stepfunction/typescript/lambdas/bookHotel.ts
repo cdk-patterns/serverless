@@ -32,7 +32,7 @@ exports.handler = async function(event:any) {
       'trip_id' : {S: event.trip_id},
       'hotel' : {S: event.hotel},
       'check_in': {S: event.check_in},
-      'check_out': {N: event.check_out}
+      'check_out': {S: event.check_out}
     }
   };
   
