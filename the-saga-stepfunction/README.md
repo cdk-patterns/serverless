@@ -6,7 +6,7 @@ He also links to a fantastic goto talk from 2015 by [Caitie McCaffrey](https://t
 
 [![Alt text](https://img.youtube.com/vi/xDuwrtwYHu8/0.jpg)](https://www.youtube.com/watch?v=xDuwrtwYHu8)
 
-This pattern is also used by [Heitor Lessa](https://twitter.com/heitor_lessa) in the [AWS Serverless Airline Booking Example](https://github.com/aws-samples/aws-serverless-airline-booking/tree/develop/src/backend/booking#booking-state-machine)
+This pattern is even used by [Heitor Lessa](https://twitter.com/heitor_lessa) in the [AWS Serverless Airline Booking Example](https://github.com/aws-samples/aws-serverless-airline-booking/tree/develop/src/backend/booking#booking-state-machine)
 
 ## What Is The Saga Pattern?
 
