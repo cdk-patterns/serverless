@@ -63,7 +63,8 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     const cancelHotel = new sfn.Task(this, 'CancelHotel', {
       task: new tasks.InvokeFunction(cancelHotelLambda),
       resultPath: '$.CancelHotelResult',
-    }).next(bookingFailed);
+    }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
+    .next(bookingFailed);
 
     const bookHotel = new sfn.Task(this, 'BookHotel', {
       task: new tasks.InvokeFunction(bookHotelLambda),
@@ -77,7 +78,8 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     const cancelFlight = new sfn.Task(this, 'CancelFlight', {
       task: new tasks.InvokeFunction(cancelFlightLambda),
       resultPath: '$.CancelFlightResult',
-    }).next(cancelHotel);
+    }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
+    .next(cancelHotel);
 
     const bookFlight = new sfn.Task(this, 'BookFlight', {
       task: new tasks.InvokeFunction(bookFlightLambda),
@@ -90,7 +92,8 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     const cancelRental = new sfn.Task(this, 'CancelRental', {
       task: new tasks.InvokeFunction(cancelRentalLambda),
       resultPath: '$.CancelRentalResult',
-    }).next(cancelFlight);
+    }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
+    .next(cancelFlight);
 
     const bookRental = new sfn.Task(this, 'BookRental', {
       task: new tasks.InvokeFunction(bookRentalLambda),
