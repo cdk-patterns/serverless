@@ -63,6 +63,27 @@ We have an API Gateway connected to a Lambda through a {proxy+} setup. This lamb
 
 ![flow](img/saga_architecture.png)
 
+### Saga Lambda and Step Fuction Exection
+
+The Saga Lambda is a function that takes in input from the query parameters in the url and passes them to a step function execution. The data passed to the step function looks like:
+
+```javascript
+let input = {
+        "trip_id": tripID,
+        "depart": "London",
+        "depart_at": "2021-07-10T06:00:00.000Z",
+        "arrive": "Dublin",
+        "arrive_at": "2021-07-12T08:00:00.000Z",
+        "hotel": "holiday inn",
+        "check_in": "2021-07-10T12:00:00.000Z",
+        "check_out": "2021-07-12T14:00:00.000Z",
+        "rental": "Volvo",
+        "rental_from": "2021-07-10T00:00:00.000Z",
+        "rental_to": "2021-07-12T00:00:00.000Z",
+        "run_type": runType
+    };
+```
+
 ### Lambdas Inside Our Step Function
 
 | Author        | Description           |
@@ -83,6 +104,58 @@ We have 3 separate entities inside the one DynamoDB table, this was inspired by 
 You can see that the sort key on our table is overloaded to allow us to effectively filter results:
 
 ![dynamo](img/dynamodb.png)
+
+More columns exist than is shown above. The data inserted for each record is as follows:
+
+```javascript
+// Hotel Data Model
+var params = {
+    TableName: process.env.TABLE_NAME,
+    Item: {
+      'pk' : {S: event.trip_id},
+      'sk' : {S: 'HOTEL#'+hotelBookingID},
+      'trip_id' : {S: event.trip_id},
+      'type': {S: 'Hotel'},
+      'id': {S: hotelBookingID},
+      'hotel' : {S: event.hotel},
+      'check_in': {S: event.check_in},
+      'check_out': {S: event.check_out},
+      'transaction_status': {S: 'pending'}
+    }
+  };
+
+// Flights Data Model
+var params = {
+      TableName: process.env.TABLE_NAME,
+      Item: {
+        'pk' : {S: event.trip_id},
+        'sk' : {S: 'FLIGHT#'+flightBookingID},
+        'type': {S: 'Flight'},
+        'trip_id' : {S: event.trip_id},
+        'id': {S: flightBookingID},
+        'depart' : {S: event.depart},
+        'depart_at': {S: event.depart_at},
+        'arrive': {S: event.arrive},
+        'arrive_at': {S: event.arrive_at},
+        'transaction_status': {S: 'pending'}
+      }
+    };
+
+// Payments Data Model
+var params = {
+      TableName: process.env.TABLE_NAME,
+      Item: {
+        'pk' : {S: event.trip_id},
+        'sk' : {S: 'PAYMENT#'+paymentID},
+        'type': {S: 'Payment'},
+        'trip_id' : {S: event.trip_id},
+        'id': {S: paymentID},
+        'amount': {S: "450.00"},
+        'currency': {S: "USD"},
+        'transaction_status': {S: "confirmed"}
+      }
+    };
+```
 
 ## How Do I Test This After Deployment?
 
