@@ -31,29 +31,29 @@ be successful for us to call the transaction a success.
 
 Caitie uses a holiday booking example to demonstrate this which Yan elaborated on so let's continue the trend. If you are booking a holiday let's say you need at a minimum:
 
-* Flights
-* A hotel
-* A rental car
+* To Book Flights
+* To Book A hotel
+* To Pay
 
-You wouldn't be very happy if you booked a holiday then found out when you landed that the flights and rental car were booked but an error occured and you have no hotel. The saga pattern forces you to have a compensating action for that hotel booking error, either you have some other auto hotel selection process or you roll back the whole booking and ask the customer to pick another hotel.
+You wouldn't be very happy if you booked a holiday then found out when you landed that you had a reservation at the hotel but an error occured with payment so they gave it away. The saga pattern forces you to have a compensating action for that payment error, either you have some other payment selection process or you roll back the whole booking and ask the customer to try again.
 
 Every action must have a corresponding reaction for error. Note the reaction cannot always be equal as Caitie points out, if one of the actions was to send an email you cannot undo that send but you can send a follow up to say it was an error.
 
 If we assume from this point we will roll back when an error hits then the flow might look something like:
 
 ### Success
-This flows as you might expect, we try to book a hotel, the flights and the rental car. All tasks completed successfully so we mark the transaction as a success.
+This flows as you might expect - we reserve a room in the hotel, a spot on the plane, take the payment, then confirm the booking with the airline and hotel. Finally we notify the customer that it was a successful booking.
 
 ![flow](img/success.png)
 
 ### Failure
-You might think of the below as a bit extreme since you wouldn't want to cancel your flights and hotel just because you couldn't get a rental car. Just go with it. In real life the rental car step probably wouldn't be part of this saga or the compensating action would be to pick another rental.
+If after reserving the flight and hotel our payment fails then we need to release that reservation and notify the customer it failed.
 
-Notice though how it peels back the layers, it doesn't do one massive compensation step. It runs the cancel steps in reverse order until the system should be the way it was before we started.
+Notice how it peels back the layers, it doesn't do one massive compensation step. It runs the cancel steps in reverse order until the system should be the way it was before we started.
 
 ![flow](img/step3.PNG)
 
-If the first BookHotel task had failed the only difference is the number of Cancel tasks that run:
+If the first ReserveHotel task had failed the only difference is the number of Cancel tasks that run:
 
 ![flow](img/stepfunction.PNG)
 
