@@ -213,7 +213,7 @@ To actually view what happened you will need to log into the AWS console and nav
 where you can see every execution of your saga step function. You can also look inside the DynamoDB table at the records 
 inserted. If you are fast enough with refresh you can watch them go from pending to confirmed status.
 
-# Useful CDK Commands
+# CDK Setup Commands
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
