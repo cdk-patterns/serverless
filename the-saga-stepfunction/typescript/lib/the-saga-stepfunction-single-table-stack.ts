@@ -113,7 +113,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     });
 
     /**
-     * Confirm Flight and Hotel booking
+     * 3) Confirm Flight and Hotel booking
      */
     const confirmHotelBooking = new sfn.Task(this, 'ConfirmHotelBooking', {
       task: new tasks.InvokeFunction(confirmHotellambda),
