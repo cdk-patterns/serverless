@@ -71,7 +71,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
 
 
     // Flights
-    const cancelFlight = new sfn.Task(this, 'CancelFlight', {
+    /*const cancelFlight = new sfn.Task(this, 'CancelFlight', {
       task: new tasks.InvokeFunction(cancelFlightLambda),
       resultPath: '$.CancelFlightResult',
     }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
@@ -96,7 +96,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
       resultPath: '$.BookRentalResult',
     }).addCatch(cancelRental, {
       resultPath: "$.CancelRentalError"
-    });
+    });*/
 
     //Step function definition
     const definition = sfn.Chain
