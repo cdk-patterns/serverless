@@ -45,7 +45,7 @@ exports.handler = async function(event:any) {
   }
   
   // Call DynamoDB to add the item to the table
-  let result = await dynamo.putItem(params).promise().catch((error: any) => {
+  let result = await dynamo.updateItem(params).promise().catch((error: any) => {
     throw new Error(error);
   });
 
