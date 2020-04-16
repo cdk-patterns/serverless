@@ -165,9 +165,11 @@ You can manipulate the flow of the step function with a couple of url parameters
 
 ```
 Successful Execution - https://{api gateway url}
-Book Hotel Fail - https://{api gateway url}?runType=failHotel
-Book Flight Fail - https://{api gateway url}?runType=failFlights
-Book Rental Car Fail - https://{api gateway url}?runType=failRental
+Reserve Hotel Fail - https://{api gateway url}?runType=failHotelReservation
+Confirm Hotel Fail - https://{api gateway url}?runType=failHotelConfirmation
+Reserve Flight Fail - https://{api gateway url}?runType=failFlightsReservation
+Confirm Flight Fail - https://{api gateway url}?runType=failFlightsConfirmation
+Take Payment Fail - https://{api gateway url}?runType=failPayment
 
 Inserting Muliple trips into DynamoDB, by default it will use the same ID on every execution
 https://{api gateway url}?tripID={whatever you want}
