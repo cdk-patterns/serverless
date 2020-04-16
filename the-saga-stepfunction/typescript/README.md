@@ -69,7 +69,7 @@ The Saga Lambda is a function that takes in input from the query parameters in t
 
 ```javascript
 let input = {
-        "trip_id": tripID,
+        "trip_id": tripID, //taken from queryParams
         "depart": "London",
         "depart_at": "2021-07-10T06:00:00.000Z",
         "arrive": "Dublin",
@@ -80,7 +80,7 @@ let input = {
         "rental": "Volvo",
         "rental_from": "2021-07-10T00:00:00.000Z",
         "rental_to": "2021-07-12T00:00:00.000Z",
-        "run_type": runType
+        "run_type": runType //taken from queryParams
     };
 ```
 
