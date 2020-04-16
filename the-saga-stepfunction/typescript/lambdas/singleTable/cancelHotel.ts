@@ -36,7 +36,7 @@ exports.handler = async function(event:any) {
       ':pk' : {S: event.trip_id},
       ':sk' : {S: 'HOTEL#'+bookingID}
     },
-    ConditionExpression: "pk = :pk and sk begins_with(:sk)", 
+    ConditionExpression: "pk = :pk and begins_with(sk,:sk)", 
   };
   
   // Call DynamoDB to add the item to the table
