@@ -21,7 +21,7 @@ exports.handler = async function(event:any) {
   let flightBookingID = hashCode(''+event.trip_id+event.depart+event.arrive);
 
   // If we passed the parameter to fail this step 
-  if(event.run_type === 'failFlights'){
+  if(event.run_type === 'failFlightsReservation'){
       throw new Error('Failed to book the flights');
   }
 
@@ -35,7 +35,7 @@ exports.handler = async function(event:any) {
         'sk' : {S: 'FLIGHT#'+flightBookingID},
         'type': {S: 'Flight'},
         'trip_id' : {S: event.trip_id},
-        'flight_booking_id': {S: flightBookingID},
+        'booking_id': {S: flightBookingID},
         'depart' : {S: event.depart},
         'depart_at': {S: event.depart_at},
         'arrive': {S: event.arrive},
