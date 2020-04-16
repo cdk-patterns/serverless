@@ -55,7 +55,7 @@ Notice how it peels back the layers, it doesn't do one massive compensation step
 
 If the first ReserveHotel task had failed the only difference is the number of Cancel tasks that run:
 
-![flow](img/stepfunction.PNG)
+![flow](img/fail_hotel.PNG)
 
 ## What Does The Saga Step Function Look Like?
 
