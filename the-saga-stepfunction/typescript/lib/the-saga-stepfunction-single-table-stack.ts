@@ -15,6 +15,8 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
      * 
      * We store Flight, Hotel and Rental Car bookings in the same table.
      * 
+     * For more help with single table DB structures see - https://www.dynamodbbook.com/
+     * 
      * pk - the trip_id e.g. 1234
      * sk - bookingtype#booking_id e.g. HOTEL#345634, FLIGHT#574576, PAYMENT#45245
      */
