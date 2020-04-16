@@ -59,7 +59,7 @@ If the first ReserveHotel task had failed the only difference is the number of C
 
 ## What Does The Saga Step Function Look Like?
 
-We have an API Gateway connected to a Lambda through a {proxy+} setup. This lambda starts a stepfunction workflow representing the flows above. 6 lambdas inside that workflow communicate with 3 different DynamoDB tables to complete a travel booking transaction:
+We have an API Gateway connected to a Lambda through a {proxy+} setup. This lambda starts a stepfunction workflow representing the flows above. 8 lambdas inside that workflow communicate with 1 DynamoDB table to complete a travel booking transaction:
 
 ![flow](img/saga_architecture.png)
 
