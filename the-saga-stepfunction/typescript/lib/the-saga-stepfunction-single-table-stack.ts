@@ -125,7 +125,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
      * Simple API Gateway proxy integration
      */
     // defines an API Gateway REST API resource backed by our "stateMachineLambda" function.
-    new apigw.LambdaRestApi(this, 'SagaPattern', {
+    new apigw.LambdaRestApi(this, 'SagaPatternSingleTable', {
       handler: sagaLambda
     });
   }
