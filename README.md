@@ -208,6 +208,10 @@ npx cdk deploy
 
   ![Architecture](the-big-fan/img/the-big-fan-arch.png)
 
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
+
   <br /><hr /><br />
 
   ### Hervé Nivon
@@ -333,7 +337,10 @@ npx cdk deploy
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
   See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
   ![Architecture](the-lambda-trilogy/img/arch2.png)
-  
+
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
 
 </details>
 <details>
@@ -369,6 +376,12 @@ npx cdk deploy
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
   ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
 
   <br /><hr /><br />
 
