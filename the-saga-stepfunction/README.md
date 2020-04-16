@@ -51,7 +51,7 @@ If after reserving the flight and hotel our payment fails then we need to releas
 
 Notice how it peels back the layers, it doesn't do one massive compensation step. It runs the cancel steps in reverse order until the system should be the way it was before we started.
 
-![flow](img/step3.PNG)
+![flow](img/fail_payment.png)
 
 If the first ReserveHotel task had failed the only difference is the number of Cancel tasks that run:
 
