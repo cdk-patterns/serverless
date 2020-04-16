@@ -19,32 +19,41 @@ exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
   // If we passed the parameter to fail this step 
-  if(event.run_type === 'failFlights'){
+  if(event.run_type === 'failFlightsConfirmation'){
       throw new Error('Failed to book the flights');
+  }
+
+  let bookingID = '';
+  if (typeof event.ReserveFlightResult !== 'undefined') {
+      bookingID = event.ReserveFlightResult.booking_id;
   }
 
   // create AWS SDK clients
   const dynamo = new DynamoDB();
 
-  var params = {
+  var params  = {
     TableName: process.env.TABLE_NAME,
-    Item: {
-      'trip_id' : {S: event.trip_id},
-      'depart' : {S: event.depart},
-      'depart_at': {S: event.depart_at},
-      'arrive': {S: event.arrive},
-      'arrive_at': {S: event.arrive_at}
+    Key: {
+      'pk' : {S: event.trip_id},
+      'sk' : {S: 'FLIGHT#'+bookingID}
+    },
+    "UpdateExpression": "set reservation_status = :booked",
+    "ExpressionAttributeValues": {
+        ":booked": {"S": "confirmed"}
     }
-  };
+  }
   
   // Call DynamoDB to add the item to the table
-  let result = await dynamo.putItem(params).promise().catch((error: any) => {
+  let result = await dynamo.updateItem(params).promise().catch((error: any) => {
     throw new Error(error);
   });
 
-  console.log('inserted flight booking:');
+  console.log('confirmed flight booking:');
   console.log(result);
 
   // return status of ok
-  return {status: "ok"}
+  return {
+    status: "ok",
+    booking_id: bookingID
+  }
 };

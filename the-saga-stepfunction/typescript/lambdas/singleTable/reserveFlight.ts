@@ -18,43 +18,44 @@ export {};
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
-  let hotelBookingID = hashCode(''+event.trip_id+event.hotel+event.check_in);
+  let flightBookingID = hashCode(''+event.trip_id+event.depart+event.arrive);
 
   // If we passed the parameter to fail this step 
-  if(event.run_type === 'failHotelReservation'){
-    throw new Error("Failed to reserve the hotel");
+  if(event.run_type === 'failFlights'){
+      throw new Error('Failed to book the flights');
   }
 
   // create AWS SDK clients
   const dynamo = new DynamoDB();
 
   var params = {
-    TableName: process.env.TABLE_NAME,
-    Item: {
-      'pk' : {S: event.trip_id},
-      'sk' : {S: 'HOTEL#'+hotelBookingID},
-      'trip_id' : {S: event.trip_id},
-      'type': {S: 'Hotel'},
-      'hotel_booking_id': {S: hotelBookingID},
-      'hotel' : {S: event.hotel},
-      'check_in': {S: event.check_in},
-      'check_out': {S: event.check_out},
-      'reservation_status': {S: 'pending'}
-    }
-  };
+      TableName: process.env.TABLE_NAME,
+      Item: {
+        'pk' : {S: event.trip_id},
+        'sk' : {S: 'FLIGHT#'+flightBookingID},
+        'type': {S: 'Flight'},
+        'trip_id' : {S: event.trip_id},
+        'flight_booking_id': {S: flightBookingID},
+        'depart' : {S: event.depart},
+        'depart_at': {S: event.depart_at},
+        'arrive': {S: event.arrive},
+        'arrive_at': {S: event.arrive_at},
+        'reservation_status': {S: 'pending'}
+      }
+    };
   
   // Call DynamoDB to add the item to the table
   let result = await dynamo.putItem(params).promise().catch((error: any) => {
     throw new Error(error);
   });
 
-  console.log('inserted hotel booking:');
+  console.log('inserted flight booking:');
   console.log(result);
 
   // return status of ok
   return {
     status: "ok",
-    booking_id: hotelBookingID
+    booking_id: flightBookingID
   }
 };
 
