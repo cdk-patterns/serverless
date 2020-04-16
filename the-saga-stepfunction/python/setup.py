@@ -23,6 +23,8 @@ setuptools.setup(
         "aws-cdk.aws_apigateway==1.32.2",
         "aws-cdk.aws-lambda==1.32.2",
         "aws-cdk.aws-dynamodb==1.32.2",
+        "aws-cdk.aws-stepfunctions==1.32.2",
+        "aws-cdk.aws-stepfunctions-tasks==1.32.2",
     ],
 
     python_requires=">=3.6",
