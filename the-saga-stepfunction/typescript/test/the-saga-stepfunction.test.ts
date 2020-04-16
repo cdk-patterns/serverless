@@ -1,11 +1,11 @@
 import { expect as expectCDK, haveResourceLike, countResourcesLike } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import TheSagaStepfunction = require('../lib/the-saga-stepfunction-stack');
+import TheSagaStepfunction = require('../lib/the-saga-stepfunction-single-table-stack');
 
 test('API Gateway Proxy Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Resource", {
     "PathPart": "{proxy+}"
@@ -16,7 +16,7 @@ test('API Gateway Proxy Created', () => {
 test('Saga Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
     "Handler": "sagaLambda.handler"
@@ -27,7 +27,7 @@ test('Saga Lambda Created', () => {
 test('Saga Lambda Permissions To Execute StepFunction', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
     "PolicyDocument": {
@@ -43,26 +43,30 @@ test('Saga Lambda Permissions To Execute StepFunction', () => {
 test('Saga State Machine Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::StepFunctions::StateMachine", {
      "DefinitionString": {
           "Fn::Join": [
             "",
             [
-              "{\"StartAt\":\"BookHotel\",\"States\":{\"BookHotel\":{\"Next\":\"BookFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.BookHotelError\",\"Next\":\"CancelHotel\"}],\"Type\":\"Task\",\"Resource\":\"",
+              "{\"StartAt\":\"ReserveHotel\",\"States\":{\"ReserveHotel\":{\"Next\":\"ReserveFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveHotelError\",\"Next\":\"CancelHotelReservation\"}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.BookHotelResult\"},\"BookFlight\":{\"Next\":\"BookRental\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.CancelFlightError\",\"Next\":\"CancelFlight\"}],\"Type\":\"Task\",\"Resource\":\"",
+              "\",\"ResultPath\":\"$.ReserveHotelResult\"},\"ReserveFlight\":{\"Next\":\"TakePayment\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveFlightError\",\"Next\":\"CancelFlightReservation\"}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.BookFlightResult\"},\"BookRental\":{\"Next\":\"We have made your booking!\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.CancelRentalError\",\"Next\":\"CancelRental\"}],\"Type\":\"Task\",\"Resource\":\"",
+              "\",\"ResultPath\":\"$.ReserveFlightResult\"},\"TakePayment\":{\"Next\":\"ConfirmHotelBooking\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.TakePaymentError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.BookRentalResult\"},\"We have made your booking!\":{\"Type\":\"Succeed\"},\"CancelRental\":{\"Next\":\"CancelFlight\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
+              "\",\"ResultPath\":\"$.TakePaymentResult\"},\"ConfirmHotelBooking\":{\"Next\":\"ConfirmFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmHotelBookingError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.CancelRentalResult\"},\"CancelFlight\":{\"Next\":\"CancelHotel\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
+              "\",\"ResultPath\":\"$.ConfirmHotelBookingResult\"},\"ConfirmFlight\":{\"Next\":\"We have made your booking!\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmFlightError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.CancelFlightResult\"},\"CancelHotel\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
+              "\",\"ResultPath\":\"$.ConfirmFlightResult\"},\"We have made your booking!\":{\"Type\":\"Succeed\"},\"RefundPayment\":{\"Next\":\"CancelFlightReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
               {},
-              "\",\"ResultPath\":\"$.CancelHotelResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
+              "\",\"ResultPath\":\"$.RefundPaymentResult\"},\"CancelFlightReservation\":{\"Next\":\"CancelHotelReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
+              {},
+              "\",\"ResultPath\":\"$.CancelFlightReservationResult\"},\"CancelHotelReservation\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
+              {},
+              "\",\"ResultPath\":\"$.CancelHotelReservationResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
             ]
           ]
         }
@@ -70,12 +74,12 @@ test('Saga State Machine Created', () => {
   ));
 });
 
-test('6 Separate DynamoDB Read/Write IAM Policies Created', () => {
+test('8 Separate DynamoDB Read/Write IAM Policies Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
-  expectCDK(stack).to(countResourcesLike("AWS::IAM::Policy", 6, {
+  expectCDK(stack).to(countResourcesLike("AWS::IAM::Policy", 8, {
     "PolicyDocument": {
       "Statement": [
         {
@@ -98,28 +102,54 @@ test('6 Separate DynamoDB Read/Write IAM Policies Created', () => {
   ));
 });
 
-test('3 DynamoDB Tables Created', () => {
+test('1 DynamoDB Table Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
-  expectCDK(stack).to(countResourcesLike("AWS::DynamoDB::Table", 3, {
+  expectCDK(stack).to(countResourcesLike("AWS::DynamoDB::Table", 1, {
     "KeySchema": [
       {
-        "AttributeName": "trip_id",
+        "AttributeName": "pk",
         "KeyType": "HASH"
+      },
+      {
+        "AttributeName": "sk",
+        "KeyType": "RANGE"
+      }
+    ],
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "pk",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sk",
+        "AttributeType": "S"
       }
     ]}
   ));
 });
 
-test('Hotel Booking Lambda Created', () => {
+test('Hotel Reservation Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "bookHotel.handler",
+    "Handler": "hotel/reserveHotel.handler",
+    "Runtime": "nodejs12.x"
+  }
+  ));
+});
+
+test('Confirm Hotel Reservation Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "hotel/confirmHotel.handler",
     "Runtime": "nodejs12.x"
   }
   ));
@@ -128,22 +158,34 @@ test('Hotel Booking Lambda Created', () => {
 test('Cancel Hotel Booking Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "cancelHotel.handler",
+    "Handler": "hotel/cancelHotel.handler",
     "Runtime": "nodejs12.x"
   }
   ));
 });
 
-test('Flight Booking Lambda Created', () => {
+test('Flight Reservation Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "bookFlight.handler",
+    "Handler": "flights/reserveFlight.handler",
+    "Runtime": "nodejs12.x"
+  }
+  ));
+});
+
+test('Confirm Flight Reservation Lambda Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
+    "Handler": "flights/confirmFlight.handler",
     "Runtime": "nodejs12.x"
   }
   ));
@@ -152,34 +194,34 @@ test('Flight Booking Lambda Created', () => {
 test('Cancel Flight Booking Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "cancelFlight.handler",
+    "Handler": "flights/cancelFlight.handler",
     "Runtime": "nodejs12.x"
   }
   ));
 });
 
-test('Rental Car Booking Lambda Created', () => {
+test('Payment Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "bookRental.handler",
+    "Handler": "payment/takePayment.handler",
     "Runtime": "nodejs12.x"
   }
   ));
 });
 
-test('Cancel Rental Car Booking Lambda Created', () => {
+test('Cancel Payment Lambda Created', () => {
   const app = new cdk.App();
   // WHEN
-  const stack = new TheSagaStepfunction.TheSagaStepfunctionStack(app, 'MyTestStack');
+  const stack = new TheSagaStepfunction.TheSagaStepfunctionSingleTableStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "cancelRental.handler",
+    "Handler": "payment/refundPayment.handler",
     "Runtime": "nodejs12.x"
   }
   ));
