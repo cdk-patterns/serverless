@@ -18,15 +18,15 @@ export {};
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
+  let hotelBookingID = hashCode(''+event.trip_id+event.hotel+event.check_in);
+
   // If we passed the parameter to fail this step 
-  if(event.run_type === 'failHotel'){
-      throw new Error('Failed to book the hotel');
+  if(event.run_type === 'failHotelReservation'){
+    throw new Error("Failed to reserve the hotel");
   }
 
   // create AWS SDK clients
   const dynamo = new DynamoDB();
-
-  let hotelBookingID = hashCode(''+event.trip_id+event.hotel+event.check_in);
 
   var params = {
     TableName: process.env.TABLE_NAME,
@@ -37,7 +37,8 @@ exports.handler = async function(event:any) {
       'hotel_booking_id': {S: hotelBookingID},
       'hotel' : {S: event.hotel},
       'check_in': {S: event.check_in},
-      'check_out': {S: event.check_out}
+      'check_out': {S: event.check_out},
+      'reservation_status': {S: 'pending'}
     }
   };
   
