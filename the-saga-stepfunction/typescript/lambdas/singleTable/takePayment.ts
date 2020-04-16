@@ -45,9 +45,10 @@ exports.handler = async function(event:any) {
         'sk' : {S: 'PAYMENT#'+paymentID},
         'type': {S: 'Payment'},
         'trip_id' : {S: event.trip_id},
-        'payment_id': {S: paymentID},
+        'id': {S: paymentID},
         'amount': {S: "450.00"},
-        'currency': {S: "USD"}
+        'currency': {S: "USD"},
+        'status': {S: "confirmed"}
       }
     };
   
