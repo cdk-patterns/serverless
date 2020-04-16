@@ -27,6 +27,9 @@
         "the-lambda-trilogy": {
             "prodReady": false
         },
+        "the-saga-stepfunction": {
+            "prodReady": false
+        },
         "the-scalable-webhook": {
             "prodReady": false
         },
