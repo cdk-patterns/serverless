@@ -23,7 +23,7 @@ exports.handler = async function(event:any) {
       'pk' : {S: event.trip_id},
       'sk' : {S: 'FLIGHT#'+bookingID}
     },
-    "UpdateExpression": "set status = :booked",
+    "UpdateExpression": "set transaction_status = :booked",
     "ExpressionAttributeValues": {
         ":booked": {"S": "confirmed"}
     }

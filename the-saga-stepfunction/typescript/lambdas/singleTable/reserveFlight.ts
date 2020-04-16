@@ -40,7 +40,7 @@ exports.handler = async function(event:any) {
         'depart_at': {S: event.depart_at},
         'arrive': {S: event.arrive},
         'arrive_at': {S: event.arrive_at},
-        'status': {S: 'pending'}
+        'transaction_status': {S: 'pending'}
       }
     };
   
