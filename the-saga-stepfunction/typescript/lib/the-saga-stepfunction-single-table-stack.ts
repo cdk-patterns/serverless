@@ -102,7 +102,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     const refundPayment = new sfn.Task(this, 'RefundPayment', {
       task: new tasks.InvokeFunction(refundPaymentLambda),
       resultPath: '$.RefundPaymentResult',
-    }).addRetry({maxAttempts:3}) 
+    }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
     .next(cancelFlightReservation);
 
     const takePayment = new sfn.Task(this, 'TakePayment', {
