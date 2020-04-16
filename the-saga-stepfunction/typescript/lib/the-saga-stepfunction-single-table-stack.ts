@@ -60,6 +60,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     const bookingFailed = new sfn.Fail(this, "Sorry, We Couldn't make the booking", {});
     const bookingSucceeded = new sfn.Succeed(this, 'We have made your booking!');
 
+
     // Hotel
     const cancelHotelReservation = new sfn.Task(this, 'CancelHotelReservation', {
       task: new tasks.InvokeFunction(cancelHotelLambda),
@@ -72,13 +73,6 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
       resultPath: '$.ReserveHotelResult',
     }).addCatch(cancelHotelReservation, {
       resultPath: "$.ReserveHotelError"
-    });
-
-    const confirmHotelBooking = new sfn.Task(this, 'ConfirmHotelBooking', {
-      task: new tasks.InvokeFunction(confirmHotellambda),
-      resultPath: '$.ConfirmHotelBookingResult',
-    }).addCatch(cancelHotelReservation, {
-      resultPath: "$.ConfirmHotelBookingError"
     });
 
     // Payment
@@ -96,6 +90,15 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     }).addCatch(refundPayment, {
       resultPath: "$.TakePaymentError"
     });
+
+    const confirmHotelBooking = new sfn.Task(this, 'ConfirmHotelBooking', {
+      task: new tasks.InvokeFunction(confirmHotellambda),
+      resultPath: '$.ConfirmHotelBookingResult',
+    }).addCatch(refundPayment, {
+      resultPath: "$.ConfirmHotelBookingError"
+    });
+
+    
 
 
     // Flights
