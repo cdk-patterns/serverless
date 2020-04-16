@@ -1,12 +1,16 @@
 Resources:
-  FlightBookings96EE2D35:
+  BookingsB1C24132:
     Type: AWS::DynamoDB::Table
     Properties:
       KeySchema:
-        - AttributeName: trip_id
+        - AttributeName: pk
           KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
       AttributeDefinitions:
-        - AttributeName: trip_id
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 5
@@ -14,40 +18,8 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/FlightBookings/Resource
-  HotelBookings8F217109:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      KeySchema:
-        - AttributeName: trip_id
-          KeyType: HASH
-      AttributeDefinitions:
-        - AttributeName: trip_id
-          AttributeType: S
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/HotelBookings/Resource
-  RentalBookingsE3D06066:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      KeySchema:
-        - AttributeName: trip_id
-          KeyType: HASH
-      AttributeDefinitions:
-        - AttributeName: trip_id
-          AttributeType: S
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/RentalBookings/Resource
-  bookFlightLambdaHandlerServiceRole1C3B2FF2:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/Bookings/Resource
+  reserveFlightLambdaHandlerServiceRole985C586D:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -64,8 +36,8 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookFlightLambdaHandler/ServiceRole/Resource
-  bookFlightLambdaHandlerServiceRoleDefaultPolicy20197B0C:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveFlightLambdaHandler/ServiceRole/Resource
+  reserveFlightLambdaHandlerServiceRoleDefaultPolicyEE804D92:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -84,21 +56,21 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - FlightBookings96EE2D35
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
-      PolicyName: bookFlightLambdaHandlerServiceRoleDefaultPolicy20197B0C
+      PolicyName: reserveFlightLambdaHandlerServiceRoleDefaultPolicyEE804D92
       Roles:
-        - Ref: bookFlightLambdaHandlerServiceRole1C3B2FF2
+        - Ref: reserveFlightLambdaHandlerServiceRole985C586D
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookFlightLambdaHandler/ServiceRole/DefaultPolicy/Resource
-  bookFlightLambdaHandler6C391CD9:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveFlightLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  reserveFlightLambdaHandler3C75473D:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -106,28 +78,110 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: bookFlight.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: flights/reserveFlight.handler
       Role:
         Fn::GetAtt:
-          - bookFlightLambdaHandlerServiceRole1C3B2FF2
+          - reserveFlightLambdaHandlerServiceRole985C586D
           - Arn
       Runtime: nodejs12.x
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: FlightBookings96EE2D35
+            Ref: BookingsB1C24132
     DependsOn:
-      - bookFlightLambdaHandlerServiceRoleDefaultPolicy20197B0C
-      - bookFlightLambdaHandlerServiceRole1C3B2FF2
+      - reserveFlightLambdaHandlerServiceRoleDefaultPolicyEE804D92
+      - reserveFlightLambdaHandlerServiceRole985C586D
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookFlightLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveFlightLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
+      aws:asset:property: Code
+  confirmFlightLambdaHandlerServiceRole45F91B6E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmFlightLambdaHandler/ServiceRole/Resource
+  confirmFlightLambdaHandlerServiceRoleDefaultPolicyA7A08CCB:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - BookingsB1C24132
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: confirmFlightLambdaHandlerServiceRoleDefaultPolicyA7A08CCB
+      Roles:
+        - Ref: confirmFlightLambdaHandlerServiceRole45F91B6E
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmFlightLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  confirmFlightLambdaHandler96C3663F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: flights/confirmFlight.handler
+      Role:
+        Fn::GetAtt:
+          - confirmFlightLambdaHandlerServiceRole45F91B6E
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: BookingsB1C24132
+    DependsOn:
+      - confirmFlightLambdaHandlerServiceRoleDefaultPolicyA7A08CCB
+      - confirmFlightLambdaHandlerServiceRole45F91B6E
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmFlightLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
   cancelFlightLambdaHandlerServiceRole7F2439CB:
     Type: AWS::IAM::Role
@@ -146,7 +200,7 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelFlightLambdaHandler/ServiceRole/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelFlightLambdaHandler/ServiceRole/Resource
   cancelFlightLambdaHandlerServiceRoleDefaultPolicy59295FBF:
     Type: AWS::IAM::Policy
     Properties:
@@ -166,7 +220,7 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - FlightBookings96EE2D35
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
@@ -174,13 +228,13 @@ Resources:
       Roles:
         - Ref: cancelFlightLambdaHandlerServiceRole7F2439CB
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelFlightLambdaHandler/ServiceRole/DefaultPolicy/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelFlightLambdaHandler/ServiceRole/DefaultPolicy/Resource
   cancelFlightLambdaHandler437EEC76:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -188,13 +242,13 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: cancelFlight.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: flights/cancelFlight.handler
       Role:
         Fn::GetAtt:
           - cancelFlightLambdaHandlerServiceRole7F2439CB
@@ -203,15 +257,15 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: FlightBookings96EE2D35
+            Ref: BookingsB1C24132
     DependsOn:
       - cancelFlightLambdaHandlerServiceRoleDefaultPolicy59295FBF
       - cancelFlightLambdaHandlerServiceRole7F2439CB
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelFlightLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelFlightLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
-  bookHotelLambdaHandlerServiceRole4FD976A7:
+  reserveHotelLambdaHandlerServiceRole452F23B7:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -228,8 +282,8 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookHotelLambdaHandler/ServiceRole/Resource
-  bookHotelLambdaHandlerServiceRoleDefaultPolicy3332706B:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveHotelLambdaHandler/ServiceRole/Resource
+  reserveHotelLambdaHandlerServiceRoleDefaultPolicy18196942:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -248,21 +302,21 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - HotelBookings8F217109
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
-      PolicyName: bookHotelLambdaHandlerServiceRoleDefaultPolicy3332706B
+      PolicyName: reserveHotelLambdaHandlerServiceRoleDefaultPolicy18196942
       Roles:
-        - Ref: bookHotelLambdaHandlerServiceRole4FD976A7
+        - Ref: reserveHotelLambdaHandlerServiceRole452F23B7
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookHotelLambdaHandler/ServiceRole/DefaultPolicy/Resource
-  bookHotelLambdaHandler15F161C1:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveHotelLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  reserveHotelLambdaHandler020AE24A:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -270,28 +324,110 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: bookHotel.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: hotel/reserveHotel.handler
       Role:
         Fn::GetAtt:
-          - bookHotelLambdaHandlerServiceRole4FD976A7
+          - reserveHotelLambdaHandlerServiceRole452F23B7
           - Arn
       Runtime: nodejs12.x
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: HotelBookings8F217109
+            Ref: BookingsB1C24132
     DependsOn:
-      - bookHotelLambdaHandlerServiceRoleDefaultPolicy3332706B
-      - bookHotelLambdaHandlerServiceRole4FD976A7
+      - reserveHotelLambdaHandlerServiceRoleDefaultPolicy18196942
+      - reserveHotelLambdaHandlerServiceRole452F23B7
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookHotelLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/reserveHotelLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
+      aws:asset:property: Code
+  confirmHotelLambdaHandlerServiceRoleD5F8F90E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmHotelLambdaHandler/ServiceRole/Resource
+  confirmHotelLambdaHandlerServiceRoleDefaultPolicy69537B84:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - BookingsB1C24132
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: confirmHotelLambdaHandlerServiceRoleDefaultPolicy69537B84
+      Roles:
+        - Ref: confirmHotelLambdaHandlerServiceRoleD5F8F90E
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmHotelLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  confirmHotelLambdaHandler882ACF2D:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: hotel/confirmHotel.handler
+      Role:
+        Fn::GetAtt:
+          - confirmHotelLambdaHandlerServiceRoleD5F8F90E
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: BookingsB1C24132
+    DependsOn:
+      - confirmHotelLambdaHandlerServiceRoleDefaultPolicy69537B84
+      - confirmHotelLambdaHandlerServiceRoleD5F8F90E
+    Metadata:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/confirmHotelLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
   cancelHotelLambdaHandlerServiceRole4815D152:
     Type: AWS::IAM::Role
@@ -310,7 +446,7 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelHotelLambdaHandler/ServiceRole/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelHotelLambdaHandler/ServiceRole/Resource
   cancelHotelLambdaHandlerServiceRoleDefaultPolicy58EA01C9:
     Type: AWS::IAM::Policy
     Properties:
@@ -330,7 +466,7 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - HotelBookings8F217109
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
@@ -338,13 +474,13 @@ Resources:
       Roles:
         - Ref: cancelHotelLambdaHandlerServiceRole4815D152
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelHotelLambdaHandler/ServiceRole/DefaultPolicy/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelHotelLambdaHandler/ServiceRole/DefaultPolicy/Resource
   cancelHotelLambdaHandler09F13EF6:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -352,13 +488,13 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: cancelHotel.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: hotel/cancelHotel.handler
       Role:
         Fn::GetAtt:
           - cancelHotelLambdaHandlerServiceRole4815D152
@@ -367,15 +503,15 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: HotelBookings8F217109
+            Ref: BookingsB1C24132
     DependsOn:
       - cancelHotelLambdaHandlerServiceRoleDefaultPolicy58EA01C9
       - cancelHotelLambdaHandlerServiceRole4815D152
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelHotelLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/cancelHotelLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
-  bookRentalLambdaHandlerServiceRoleF1E9BE50:
+  takePaymentLambdaHandlerServiceRole56CA2808:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -392,8 +528,8 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookRentalLambdaHandler/ServiceRole/Resource
-  bookRentalLambdaHandlerServiceRoleDefaultPolicy0A16D1A5:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/takePaymentLambdaHandler/ServiceRole/Resource
+  takePaymentLambdaHandlerServiceRoleDefaultPolicy95F3D626:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -412,21 +548,21 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - RentalBookingsE3D06066
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
-      PolicyName: bookRentalLambdaHandlerServiceRoleDefaultPolicy0A16D1A5
+      PolicyName: takePaymentLambdaHandlerServiceRoleDefaultPolicy95F3D626
       Roles:
-        - Ref: bookRentalLambdaHandlerServiceRoleF1E9BE50
+        - Ref: takePaymentLambdaHandlerServiceRole56CA2808
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookRentalLambdaHandler/ServiceRole/DefaultPolicy/Resource
-  bookRentalLambdaHandler4888D418:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/takePaymentLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  takePaymentLambdaHandlerB96529D4:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -434,30 +570,30 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: bookRental.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: payment/takePayment.handler
       Role:
         Fn::GetAtt:
-          - bookRentalLambdaHandlerServiceRoleF1E9BE50
+          - takePaymentLambdaHandlerServiceRole56CA2808
           - Arn
       Runtime: nodejs12.x
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: RentalBookingsE3D06066
+            Ref: BookingsB1C24132
     DependsOn:
-      - bookRentalLambdaHandlerServiceRoleDefaultPolicy0A16D1A5
-      - bookRentalLambdaHandlerServiceRoleF1E9BE50
+      - takePaymentLambdaHandlerServiceRoleDefaultPolicy95F3D626
+      - takePaymentLambdaHandlerServiceRole56CA2808
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/bookRentalLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/takePaymentLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
-  cancelRentalLambdaHandlerServiceRoleF89E272D:
+  refundPaymentLambdaHandlerServiceRole62F72F0D:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -474,8 +610,8 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelRentalLambdaHandler/ServiceRole/Resource
-  cancelRentalLambdaHandlerServiceRoleDefaultPolicy9992EF53:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/refundPaymentLambdaHandler/ServiceRole/Resource
+  refundPaymentLambdaHandlerServiceRoleDefaultPolicy39778F0D:
     Type: AWS::IAM::Policy
     Properties:
       PolicyDocument:
@@ -494,21 +630,21 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - RentalBookingsE3D06066
+                  - BookingsB1C24132
                   - Arn
               - Ref: AWS::NoValue
         Version: "2012-10-17"
-      PolicyName: cancelRentalLambdaHandlerServiceRoleDefaultPolicy9992EF53
+      PolicyName: refundPaymentLambdaHandlerServiceRoleDefaultPolicy39778F0D
       Roles:
-        - Ref: cancelRentalLambdaHandlerServiceRoleF89E272D
+        - Ref: refundPaymentLambdaHandlerServiceRole62F72F0D
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelRentalLambdaHandler/ServiceRole/DefaultPolicy/Resource
-  cancelRentalLambdaHandler04793183:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/refundPaymentLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  refundPaymentLambdaHandler932D11D5:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -516,28 +652,28 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
-      Handler: cancelRental.handler
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
+      Handler: payment/refundPayment.handler
       Role:
         Fn::GetAtt:
-          - cancelRentalLambdaHandlerServiceRoleF89E272D
+          - refundPaymentLambdaHandlerServiceRole62F72F0D
           - Arn
       Runtime: nodejs12.x
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: RentalBookingsE3D06066
+            Ref: BookingsB1C24132
     DependsOn:
-      - cancelRentalLambdaHandlerServiceRoleDefaultPolicy9992EF53
-      - cancelRentalLambdaHandlerServiceRoleF89E272D
+      - refundPaymentLambdaHandlerServiceRoleDefaultPolicy39778F0D
+      - refundPaymentLambdaHandlerServiceRole62F72F0D
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/cancelRentalLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/refundPaymentLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
   BookingSagaRole82982544:
     Type: AWS::IAM::Role
@@ -555,7 +691,7 @@ Resources:
                     - .amazonaws.com
         Version: "2012-10-17"
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/BookingSaga/Role/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/BookingSaga/Role/Resource
   BookingSagaRoleDefaultPolicy6595FE9E:
     Type: AWS::IAM::Policy
     Properties:
@@ -565,25 +701,37 @@ Resources:
             Effect: Allow
             Resource:
               Fn::GetAtt:
-                - bookHotelLambdaHandler15F161C1
+                - reserveHotelLambdaHandler020AE24A
                 - Arn
           - Action: lambda:InvokeFunction
             Effect: Allow
             Resource:
               Fn::GetAtt:
-                - bookFlightLambdaHandler6C391CD9
+                - reserveFlightLambdaHandler3C75473D
                 - Arn
           - Action: lambda:InvokeFunction
             Effect: Allow
             Resource:
               Fn::GetAtt:
-                - bookRentalLambdaHandler4888D418
+                - takePaymentLambdaHandlerB96529D4
                 - Arn
           - Action: lambda:InvokeFunction
             Effect: Allow
             Resource:
               Fn::GetAtt:
-                - cancelRentalLambdaHandler04793183
+                - confirmHotelLambdaHandler882ACF2D
+                - Arn
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - confirmFlightLambdaHandler96C3663F
+                - Arn
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - refundPaymentLambdaHandler932D11D5
                 - Arn
           - Action: lambda:InvokeFunction
             Effect: Allow
@@ -602,38 +750,46 @@ Resources:
       Roles:
         - Ref: BookingSagaRole82982544
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/BookingSaga/Role/DefaultPolicy/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/BookingSaga/Role/DefaultPolicy/Resource
   BookingSagaFA991213:
     Type: AWS::StepFunctions::StateMachine
     Properties:
       DefinitionString:
         Fn::Join:
           - ""
-          - - '{"StartAt":"BookHotel","States":{"BookHotel":{"Next":"BookFlight","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.BookHotelError","Next":"CancelHotel"}],"Type":"Task","Resource":"'
+          - - '{"StartAt":"ReserveHotel","States":{"ReserveHotel":{"Next":"ReserveFlight","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.ReserveHotelError","Next":"CancelHotelReservation"}],"Type":"Task","Resource":"'
             - Fn::GetAtt:
-                - bookHotelLambdaHandler15F161C1
+                - reserveHotelLambdaHandler020AE24A
                 - Arn
-            - '","ResultPath":"$.BookHotelResult"},"BookFlight":{"Next":"BookRental","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.CancelFlightError","Next":"CancelFlight"}],"Type":"Task","Resource":"'
+            - '","ResultPath":"$.ReserveHotelResult"},"ReserveFlight":{"Next":"TakePayment","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.ReserveFlightError","Next":"CancelFlightReservation"}],"Type":"Task","Resource":"'
             - Fn::GetAtt:
-                - bookFlightLambdaHandler6C391CD9
+                - reserveFlightLambdaHandler3C75473D
                 - Arn
-            - '","ResultPath":"$.BookFlightResult"},"BookRental":{"Next":"We have made your booking!","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.CancelRentalError","Next":"CancelRental"}],"Type":"Task","Resource":"'
+            - '","ResultPath":"$.ReserveFlightResult"},"TakePayment":{"Next":"ConfirmHotelBooking","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.TakePaymentError","Next":"RefundPayment"}],"Type":"Task","Resource":"'
             - Fn::GetAtt:
-                - bookRentalLambdaHandler4888D418
+                - takePaymentLambdaHandlerB96529D4
                 - Arn
-            - '","ResultPath":"$.BookRentalResult"},"We have made your booking!":{"Type":"Succeed"},"CancelRental":{"Next":"CancelFlight","Type":"Task","Resource":"'
+            - '","ResultPath":"$.TakePaymentResult"},"ConfirmHotelBooking":{"Next":"ConfirmFlight","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.ConfirmHotelBookingError","Next":"RefundPayment"}],"Type":"Task","Resource":"'
             - Fn::GetAtt:
-                - cancelRentalLambdaHandler04793183
+                - confirmHotelLambdaHandler882ACF2D
                 - Arn
-            - '","ResultPath":"$.CancelRentalResult"},"CancelFlight":{"Next":"CancelHotel","Type":"Task","Resource":"'
+            - '","ResultPath":"$.ConfirmHotelBookingResult"},"ConfirmFlight":{"Next":"We have made your booking!","Catch":[{"ErrorEquals":["States.ALL"],"ResultPath":"$.ConfirmFlightError","Next":"RefundPayment"}],"Type":"Task","Resource":"'
+            - Fn::GetAtt:
+                - confirmFlightLambdaHandler96C3663F
+                - Arn
+            - '","ResultPath":"$.ConfirmFlightResult"},"We have made your booking!":{"Type":"Succeed"},"RefundPayment":{"Next":"CancelFlightReservation","Retry":[{"ErrorEquals":["States.ALL"],"MaxAttempts":3}],"Type":"Task","Resource":"'
+            - Fn::GetAtt:
+                - refundPaymentLambdaHandler932D11D5
+                - Arn
+            - '","ResultPath":"$.RefundPaymentResult"},"CancelFlightReservation":{"Next":"CancelHotelReservation","Retry":[{"ErrorEquals":["States.ALL"],"MaxAttempts":3}],"Type":"Task","Resource":"'
             - Fn::GetAtt:
                 - cancelFlightLambdaHandler437EEC76
                 - Arn
-            - "\",\"ResultPath\":\"$.CancelFlightResult\"},\"CancelHotel\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Type\":\"Task\",\"Resource\":\""
+            - "\",\"ResultPath\":\"$.CancelFlightReservationResult\"},\"CancelHotelReservation\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\""
             - Fn::GetAtt:
                 - cancelHotelLambdaHandler09F13EF6
                 - Arn
-            - "\",\"ResultPath\":\"$.CancelHotelResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
+            - "\",\"ResultPath\":\"$.CancelHotelReservationResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
       RoleArn:
         Fn::GetAtt:
           - BookingSagaRole82982544
@@ -642,7 +798,7 @@ Resources:
       - BookingSagaRoleDefaultPolicy6595FE9E
       - BookingSagaRole82982544
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/BookingSaga/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/BookingSaga/Resource
   sagaLambdaHandlerServiceRole7EB685BD:
     Type: AWS::IAM::Role
     Properties:
@@ -660,7 +816,7 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/sagaLambdaHandler/ServiceRole/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/sagaLambdaHandler/ServiceRole/Resource
   sagaLambdaHandlerServiceRoleDefaultPolicyFE9A40F4:
     Type: AWS::IAM::Policy
     Properties:
@@ -675,13 +831,13 @@ Resources:
       Roles:
         - Ref: sagaLambdaHandlerServiceRole7EB685BD
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/sagaLambdaHandler/ServiceRole/DefaultPolicy/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/sagaLambdaHandler/ServiceRole/DefaultPolicy/Resource
   sagaLambdaHandlerFC24742F:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837
+          Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8
         S3Key:
           Fn::Join:
             - ""
@@ -689,12 +845,12 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5
+                      - Ref: AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440
       Handler: sagaLambda.handler
       Role:
         Fn::GetAtt:
@@ -709,38 +865,38 @@ Resources:
       - sagaLambdaHandlerServiceRoleDefaultPolicyFE9A40F4
       - sagaLambdaHandlerServiceRole7EB685BD
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/sagaLambdaHandler/Resource
-      aws:asset:path: asset.e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/sagaLambdaHandler/Resource
+      aws:asset:path: asset.df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e
       aws:asset:property: Code
-  SagaPattern142EF129:
+  SagaPatternSingleTable288D85B3:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: SagaPattern
+      Name: SagaPatternSingleTable
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Resource
-  SagaPatternDeployment4878692F87dc1fc3ee0ec0bc57c92269be15ead9:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Resource
+  SagaPatternSingleTableDeployment96972FE7a0950f1e20e6f59dfca12d1411b1f1e8:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId:
-        Ref: SagaPattern142EF129
+        Ref: SagaPatternSingleTable288D85B3
       Description: Automatically created by the RestApi construct
     DependsOn:
-      - SagaPatternproxyANYBCA7470C
-      - SagaPatternproxyD7D734B6
-      - SagaPatternANYD06376F8
+      - SagaPatternSingleTableproxyANY8778A55C
+      - SagaPatternSingleTableproxy9F7D6084
+      - SagaPatternSingleTableANYFE1A7CB0
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Deployment/Resource
-  SagaPatternDeploymentStageprodCBB5C758:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Deployment/Resource
+  SagaPatternSingleTableDeploymentStageprod92F0690D:
     Type: AWS::ApiGateway::Stage
     Properties:
       RestApiId:
-        Ref: SagaPattern142EF129
+        Ref: SagaPatternSingleTable288D85B3
       DeploymentId:
-        Ref: SagaPatternDeployment4878692F87dc1fc3ee0ec0bc57c92269be15ead9
+        Ref: SagaPatternSingleTableDeployment96972FE7a0950f1e20e6f59dfca12d1411b1f1e8
       StageName: prod
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/DeploymentStage.prod/Resource
-  SagaPatternCloudWatchRole2A00C125:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/DeploymentStage.prod/Resource
+  SagaPatternSingleTableCloudWatchRole130684F0:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -757,31 +913,31 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/CloudWatchRole/Resource
-  SagaPatternAccount94F2554F:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/CloudWatchRole/Resource
+  SagaPatternSingleTableAccount4A29EC28:
     Type: AWS::ApiGateway::Account
     Properties:
       CloudWatchRoleArn:
         Fn::GetAtt:
-          - SagaPatternCloudWatchRole2A00C125
+          - SagaPatternSingleTableCloudWatchRole130684F0
           - Arn
     DependsOn:
-      - SagaPattern142EF129
+      - SagaPatternSingleTable288D85B3
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Account
-  SagaPatternproxyD7D734B6:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Account
+  SagaPatternSingleTableproxy9F7D6084:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId:
         Fn::GetAtt:
-          - SagaPattern142EF129
+          - SagaPatternSingleTable288D85B3
           - RootResourceId
       PathPart: "{proxy+}"
       RestApiId:
-        Ref: SagaPattern142EF129
+        Ref: SagaPatternSingleTable288D85B3
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/{proxy+}/Resource
-  SagaPatternproxyANYApiPermissionTheSagaStepfunctionStackSagaPatternC6D27FCDANYproxyAED9F37B:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/{proxy+}/Resource
+  SagaPatternSingleTableproxyANYApiPermissionTheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406ANYproxyCC0ED567:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -800,13 +956,13 @@ Resources:
             - ":"
             - Ref: AWS::AccountId
             - ":"
-            - Ref: SagaPattern142EF129
+            - Ref: SagaPatternSingleTable288D85B3
             - /
-            - Ref: SagaPatternDeploymentStageprodCBB5C758
+            - Ref: SagaPatternSingleTableDeploymentStageprod92F0690D
             - /*/{proxy+}
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/{proxy+}/ANY/ApiPermission.TheSagaStepfunctionStackSagaPatternC6D27FCD.ANY..{proxy+}
-  SagaPatternproxyANYApiPermissionTestTheSagaStepfunctionStackSagaPatternC6D27FCDANYproxy375106E5:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/{proxy+}/ANY/ApiPermission.TheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406.ANY..{proxy+}
+  SagaPatternSingleTableproxyANYApiPermissionTestTheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406ANYproxyFFAFB063:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -825,18 +981,18 @@ Resources:
             - ":"
             - Ref: AWS::AccountId
             - ":"
-            - Ref: SagaPattern142EF129
+            - Ref: SagaPatternSingleTable288D85B3
             - /test-invoke-stage/*/{proxy+}
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/{proxy+}/ANY/ApiPermission.Test.TheSagaStepfunctionStackSagaPatternC6D27FCD.ANY..{proxy+}
-  SagaPatternproxyANYBCA7470C:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/{proxy+}/ANY/ApiPermission.Test.TheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406.ANY..{proxy+}
+  SagaPatternSingleTableproxyANY8778A55C:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: ANY
       ResourceId:
-        Ref: SagaPatternproxyD7D734B6
+        Ref: SagaPatternSingleTableproxy9F7D6084
       RestApiId:
-        Ref: SagaPattern142EF129
+        Ref: SagaPatternSingleTable288D85B3
       AuthorizationType: NONE
       Integration:
         IntegrationHttpMethod: POST
@@ -854,8 +1010,8 @@ Resources:
                   - Arn
               - /invocations
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/{proxy+}/ANY/Resource
-  SagaPatternANYApiPermissionTheSagaStepfunctionStackSagaPatternC6D27FCDANY49E8D588:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/{proxy+}/ANY/Resource
+  SagaPatternSingleTableANYApiPermissionTheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406ANYF602862D:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -874,13 +1030,13 @@ Resources:
             - ":"
             - Ref: AWS::AccountId
             - ":"
-            - Ref: SagaPattern142EF129
+            - Ref: SagaPatternSingleTable288D85B3
             - /
-            - Ref: SagaPatternDeploymentStageprodCBB5C758
+            - Ref: SagaPatternSingleTableDeploymentStageprod92F0690D
             - /*/
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/ANY/ApiPermission.TheSagaStepfunctionStackSagaPatternC6D27FCD.ANY..
-  SagaPatternANYApiPermissionTestTheSagaStepfunctionStackSagaPatternC6D27FCDANYA4A06C61:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/ANY/ApiPermission.TheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406.ANY..
+  SagaPatternSingleTableANYApiPermissionTestTheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406ANY8FD1CF02:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -899,20 +1055,20 @@ Resources:
             - ":"
             - Ref: AWS::AccountId
             - ":"
-            - Ref: SagaPattern142EF129
+            - Ref: SagaPatternSingleTable288D85B3
             - /test-invoke-stage/*/
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/ANY/ApiPermission.Test.TheSagaStepfunctionStackSagaPatternC6D27FCD.ANY..
-  SagaPatternANYD06376F8:
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/ANY/ApiPermission.Test.TheSagaStepfunctionSingleTableStackSagaPatternSingleTable3D97C406.ANY..
+  SagaPatternSingleTableANYFE1A7CB0:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: ANY
       ResourceId:
         Fn::GetAtt:
-          - SagaPattern142EF129
+          - SagaPatternSingleTable288D85B3
           - RootResourceId
       RestApiId:
-        Ref: SagaPattern142EF129
+        Ref: SagaPatternSingleTable288D85B3
       AuthorizationType: NONE
       Integration:
         IntegrationHttpMethod: POST
@@ -930,35 +1086,35 @@ Resources:
                   - Arn
               - /invocations
     Metadata:
-      aws:cdk:path: TheSagaStepfunctionStack/SagaPattern/Default/ANY/Resource
+      aws:cdk:path: TheSagaStepfunctionSingleTableStack/SagaPatternSingleTable/Default/ANY/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.32.2,@aws-cdk/assets=1.32.2,@aws-cdk/aws-apigateway=1.32.2,@aws-cdk/aws-applicationautoscaling=1.32.2,@aws-cdk/aws-autoscaling=1.32.2,@aws-cdk/aws-autoscaling-common=1.32.2,@aws-cdk/aws-autoscaling-hooktargets=1.32.2,@aws-cdk/aws-cloudformation=1.32.2,@aws-cdk/aws-cloudwatch=1.32.2,@aws-cdk/aws-dynamodb=1.32.2,@aws-cdk/aws-ec2=1.32.2,@aws-cdk/aws-ecr=1.32.2,@aws-cdk/aws-ecr-assets=1.32.2,@aws-cdk/aws-ecs=1.32.2,@aws-cdk/aws-elasticloadbalancingv2=1.32.2,@aws-cdk/aws-events=1.32.2,@aws-cdk/aws-iam=1.32.2,@aws-cdk/aws-kms=1.32.2,@aws-cdk/aws-lambda=1.32.2,@aws-cdk/aws-logs=1.32.2,@aws-cdk/aws-s3=1.32.2,@aws-cdk/aws-s3-assets=1.32.2,@aws-cdk/aws-servicediscovery=1.32.2,@aws-cdk/aws-sns=1.32.2,@aws-cdk/aws-sns-subscriptions=1.32.2,@aws-cdk/aws-sqs=1.32.2,@aws-cdk/aws-ssm=1.32.2,@aws-cdk/aws-stepfunctions=1.32.2,@aws-cdk/aws-stepfunctions-tasks=1.32.2,@aws-cdk/core=1.32.2,@aws-cdk/custom-resources=1.32.2,@aws-cdk/cx-api=1.32.2,@aws-cdk/region-info=1.32.2,jsii-runtime=node.js/v13.6.0
+      Modules: aws-cdk=1.31.0,@aws-cdk/assets=1.32.2,@aws-cdk/aws-apigateway=1.32.2,@aws-cdk/aws-applicationautoscaling=1.32.2,@aws-cdk/aws-autoscaling=1.32.2,@aws-cdk/aws-autoscaling-common=1.32.2,@aws-cdk/aws-autoscaling-hooktargets=1.32.2,@aws-cdk/aws-cloudformation=1.32.2,@aws-cdk/aws-cloudwatch=1.32.2,@aws-cdk/aws-dynamodb=1.32.2,@aws-cdk/aws-ec2=1.32.2,@aws-cdk/aws-ecr=1.32.2,@aws-cdk/aws-ecr-assets=1.32.2,@aws-cdk/aws-ecs=1.32.2,@aws-cdk/aws-elasticloadbalancingv2=1.32.2,@aws-cdk/aws-events=1.32.2,@aws-cdk/aws-iam=1.32.2,@aws-cdk/aws-kms=1.32.2,@aws-cdk/aws-lambda=1.32.2,@aws-cdk/aws-logs=1.32.2,@aws-cdk/aws-s3=1.32.2,@aws-cdk/aws-s3-assets=1.32.2,@aws-cdk/aws-servicediscovery=1.32.2,@aws-cdk/aws-sns=1.32.2,@aws-cdk/aws-sns-subscriptions=1.32.2,@aws-cdk/aws-sqs=1.32.2,@aws-cdk/aws-ssm=1.32.2,@aws-cdk/aws-stepfunctions=1.32.2,@aws-cdk/aws-stepfunctions-tasks=1.32.2,@aws-cdk/core=1.32.2,@aws-cdk/custom-resources=1.32.2,@aws-cdk/cx-api=1.32.2,@aws-cdk/region-info=1.32.2,jsii-runtime=node.js/v13.12.0
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3BucketC1946837:
+  AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3Bucket39F25AF8:
     Type: String
-    Description: S3 bucket for asset "e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e"
-  AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eS3VersionKey919790C5:
+    Description: S3 bucket for asset "df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e"
+  AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eS3VersionKeyD4FE3440:
     Type: String
-    Description: S3 key for asset version "e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e"
-  AssetParameterse3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7eArtifactHashF06BEFE6:
+    Description: S3 key for asset version "df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e"
+  AssetParametersdf32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434eArtifactHashCDF57DD5:
     Type: String
-    Description: Artifact hash for asset "e3b6ee78524361b81658ef65d15ad12bcaec8ec08a43ceb5b226c254e1176e7e"
+    Description: Artifact hash for asset "df32cb721967a3dde5149b42c2b7cd4ba2db9cb21e57082cbe9ecbc76827434e"
 Outputs:
-  SagaPatternEndpointF97AB469:
+  SagaPatternSingleTableEndpoint3B912404:
     Value:
       Fn::Join:
         - ""
         - - https://
-          - Ref: SagaPattern142EF129
+          - Ref: SagaPatternSingleTable288D85B3
           - .execute-api.
           - Ref: AWS::Region
           - "."
           - Ref: AWS::URLSuffix
           - /
-          - Ref: SagaPatternDeploymentStageprodCBB5C758
+          - Ref: SagaPatternSingleTableDeploymentStageprod92F0690D
           - /
 Conditions:
   CDKMetadataAvailable:
