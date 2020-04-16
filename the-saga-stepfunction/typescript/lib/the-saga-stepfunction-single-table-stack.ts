@@ -40,18 +40,18 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
      */
 
     // 1) Flights 
-    let reserveFlightLambda = this.createLambda(this, 'reserveFlightLambdaHandler', 'reserveFlight.handler', bookingsTable);
-    let confirmFlightLambda = this.createLambda(this, 'confirmFlightLambdaHandler', 'confirmFlight.handler', bookingsTable);
-    let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', bookingsTable);
+    let reserveFlightLambda = this.createLambda(this, 'reserveFlightLambdaHandler', 'flights/reserveFlight.handler', bookingsTable);
+    let confirmFlightLambda = this.createLambda(this, 'confirmFlightLambdaHandler', 'flights/confirmFlight.handler', bookingsTable);
+    let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'flights/cancelFlight.handler', bookingsTable);
 
     // 2) Hotel 
-    let reserveHotelLambda = this.createLambda(this, 'reserveHotelLambdaHandler', 'reserveHotel.handler', bookingsTable);
-    let confirmHotellambda = this.createLambda(this, 'confirmHotelLambdaHandler', 'confirmHotel.handler', bookingsTable);
-    let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', bookingsTable);
+    let reserveHotelLambda = this.createLambda(this, 'reserveHotelLambdaHandler', 'hotel/reserveHotel.handler', bookingsTable);
+    let confirmHotellambda = this.createLambda(this, 'confirmHotelLambdaHandler', 'hotel/confirmHotel.handler', bookingsTable);
+    let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'hotel/cancelHotel.handler', bookingsTable);
 
     // 3) Payment For Holiday
-    let takePaymentLambda = this.createLambda(this, 'takePaymentLambdaHandler', 'takePayment.handler', bookingsTable);
-    let refundPaymentLambda = this.createLambda(this, 'refundPaymentLambdaHandler', 'refundPayment.handler', bookingsTable);
+    let takePaymentLambda = this.createLambda(this, 'takePaymentLambdaHandler', 'payment/takePayment.handler', bookingsTable);
+    let refundPaymentLambda = this.createLambda(this, 'refundPaymentLambdaHandler', 'payment/refundPayment.handler', bookingsTable);
 
     /**
      * Saga Pattern Stepfunction
