@@ -40,12 +40,17 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', bookingsTable);
 
     // 2) Hotel 
-    let bookHotelLambda = this.createLambda(this, 'bookHotelLambdaHandler', 'bookHotel.handler', bookingsTable);
+    let reserveHotelLambda = this.createLambda(this, 'reserveHotelLambdaHandler', 'reserveHotel.handler', bookingsTable);
+    let confirmHotellambda = this.createLambda(this, 'confirmHotelLambdaHandler', 'confirmHotel.handler', bookingsTable);
     let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', bookingsTable);
 
     // 3) Rental Car 
     let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', bookingsTable);
     let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', bookingsTable);
+
+    // 4) Payment For Holiday
+    let takePaymentLambda = this.createLambda(this, 'takePaymentLambdaHandler', 'takePayment.handler', bookingsTable);
+    let refundPaymentLambda = this.createLambda(this, 'refundPaymentLambdaHandler', 'refundPayment.handler', bookingsTable);
 
     /**
      * Saga Pattern Stepfunction
@@ -56,17 +61,40 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     const bookingSucceeded = new sfn.Succeed(this, 'We have made your booking!');
 
     // Hotel
-    const cancelHotel = new sfn.Task(this, 'CancelHotel', {
+    const cancelHotelReservation = new sfn.Task(this, 'CancelHotelReservation', {
       task: new tasks.InvokeFunction(cancelHotelLambda),
-      resultPath: '$.CancelHotelResult',
+      resultPath: '$.CancelHotelReservationResult',
     }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
     .next(bookingFailed);
 
-    const bookHotel = new sfn.Task(this, 'BookHotel', {
-      task: new tasks.InvokeFunction(bookHotelLambda),
-      resultPath: '$.BookHotelResult',
-    }).addCatch(cancelHotel, {
-      resultPath: "$.BookHotelError"
+    const reserveHotel = new sfn.Task(this, 'ReserveHotel', {
+      task: new tasks.InvokeFunction(reserveHotelLambda),
+      resultPath: '$.ReserveHotelResult',
+    }).addCatch(cancelHotelReservation, {
+      resultPath: "$.ReserveHotelError"
+    });
+
+    const confirmHotelBooking = new sfn.Task(this, 'ConfirmHotelBooking', {
+      task: new tasks.InvokeFunction(confirmHotellambda),
+      resultPath: '$.ConfirmHotelBookingResult',
+    }).addCatch(cancelHotelReservation, {
+      resultPath: "$.ConfirmHotelBookingError"
+    });
+
+    // Payment
+    const refundPayment = new sfn.Task(this, 'RefundPayment', {
+      task: new tasks.InvokeFunction(refundPaymentLambda),
+      resultPath: '$.RefundPaymentResult',
+    }).addCatch(cancelHotelReservation, {
+      resultPath: "$.RefundPaymentError"
+    })
+    .next(cancelHotelReservation);
+
+    const takePayment = new sfn.Task(this, 'TakePayment', {
+      task: new tasks.InvokeFunction(takePaymentLambda),
+      resultPath: '$.TakePaymentResult',
+    }).addCatch(refundPayment, {
+      resultPath: "$.TakePaymentError"
     });
 
 
@@ -100,7 +128,9 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
 
     //Step function definition
     const definition = sfn.Chain
-    .start(bookHotel)
+    .start(reserveHotel)
+    .next(takePayment)
+    .next(confirmHotelBooking)
     .next(bookingSucceeded)
 
     let saga = new sfn.StateMachine(this, 'BookingSaga', {
