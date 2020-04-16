@@ -63,6 +63,27 @@ We have an API Gateway connected to a Lambda through a {proxy+} setup. This lamb
 
 ![flow](img/saga_architecture.png)
 
+### Lambdas Inside Our Step Function
+
+| Author        | Description           |
+| ------------- | ------------- |
+| Reserve Hotel | Inserts a record into DynamoDB for our hotel booking with a transaction_status of pending |
+| Reserve Flight | Inserts a record into DynamoDB for our flight booking with a transaction_status of pending |
+| Cancel Hotel Reservation | Deletes the record from DynamoDB for our pending hotel booking |
+| Cancel Flight Reservation | Deletes the record from DynamoDB for our pending Flight booking |
+| Take Payment | Inserts a record into DynamoDB for the payment |
+| Cancel Payment | Deletes the record from DynamoDB for the payment |
+| Confirm Hotel | Updates the record in DynamoDB for transaction_status to confirmed |
+| Confirm Flight | Updates the record in DynamoDB for transaction_status to confirmed |
+
+### DynamoDB Table
+
+We have 3 separate entities inside the one DynamoDB table, this was inspired by [Alex Debrie](https://twitter.com/alexbdebrie) and his brilliant [book](https://www.dynamodbbook.com/). If you want to learn more about advanced single table DynamoDB patterns it is worth a purchase.
+
+You can see that the sort key on our table is overloaded to allow us to effectively filter results:
+
+![dynamo](img/dynamodb.png)
+
 ## How Do I Test This After Deployment?
 
 After deployment you should have an API Gateway where any url you hit triggers the step function to start.
