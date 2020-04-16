@@ -177,7 +177,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     // Create a Node Lambda with the table name passed in as an environment variable
     let fn =  new lambda.Function(scope, id, {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas/singleTable'),
+      code: lambda.Code.asset('lambdas'),
       handler:handler,
       environment: {
         TABLE_NAME: table.tableName
