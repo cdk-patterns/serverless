@@ -48,7 +48,7 @@ exports.handler = async function(event:any) {
         'id': {S: paymentID},
         'amount': {S: "450.00"},
         'currency': {S: "USD"},
-        'status': {S: "confirmed"}
+        'transaction_status': {S: "confirmed"}
       }
     };
   

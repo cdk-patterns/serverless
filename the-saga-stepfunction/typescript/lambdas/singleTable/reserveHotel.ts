@@ -39,7 +39,7 @@ exports.handler = async function(event:any) {
       'hotel' : {S: event.hotel},
       'check_in': {S: event.check_in},
       'check_out': {S: event.check_out},
-      'status': {S: 'pending'}
+      'transaction_status': {S: 'pending'}
     }
   };
   
