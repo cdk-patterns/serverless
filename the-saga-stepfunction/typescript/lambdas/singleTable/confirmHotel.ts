@@ -25,8 +25,8 @@ exports.handler = async function(event:any) {
     throw new Error('Failed to confirm the hotel booking');
   }
 
-  if (typeof event.BookHotelResult !== 'undefined') {
-    bookingID = event.BookHotelResult.booking_id;
+  if (typeof event.ReserveHotelResult !== 'undefined') {
+    bookingID = event.ReserveHotelResult.booking_id;
   }
 
   // create AWS SDK clients
