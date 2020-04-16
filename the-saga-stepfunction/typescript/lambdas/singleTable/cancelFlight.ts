@@ -22,13 +22,19 @@ exports.handler = async function(event:any) {
     throw new Error("Internal Server Error");
   }
 
+  let bookingID = '';
+  if (typeof event.ReserveFlightResult !== 'undefined') {
+      bookingID = event.ReserveFlightResult.booking_id;
+  }
+
   // create AWS SDK clients
   const dynamo = new DynamoDB();
 
   var params = {
     TableName: process.env.TABLE_NAME,
     Key: {
-      'trip_id' : {S: event.trip_id}
+      'pk' : {S: event.trip_id},
+      'sk' : {S: 'FLIGHT#'+bookingID}
     }
   };
   
