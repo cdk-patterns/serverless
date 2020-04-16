@@ -11,12 +11,12 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     super(scope, id, props);
 
     /**
-     * DynamoDB Tables
+     * DynamoDB Table
      * 
      * We store Flight, Hotel and Rental Car bookings in the same table.
      * 
      * pk - the trip_id e.g. 1234
-     * sk - bookingtype#booking_id e.g. HOTEL#345634, FLIGHT#574576, RENTAL#45245
+     * sk - bookingtype#booking_id e.g. HOTEL#345634, FLIGHT#574576, PAYMENT#45245
      */
 
     const bookingsTable = new dynamodb.Table(this, 'Bookings', {
@@ -34,8 +34,7 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
      * 
      * 1) Flights
      * 2) Hotel
-     * 3) Rental Car
-     * 4) Payment
+     * 3) Payment
      */
 
     // 1) Flights 
@@ -48,16 +47,17 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     let confirmHotellambda = this.createLambda(this, 'confirmHotelLambdaHandler', 'confirmHotel.handler', bookingsTable);
     let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', bookingsTable);
 
-    // 3) Rental Car 
-    let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', bookingsTable);
-    let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', bookingsTable);
-
-    // 4) Payment For Holiday
+    // 3) Payment For Holiday
     let takePaymentLambda = this.createLambda(this, 'takePaymentLambdaHandler', 'takePayment.handler', bookingsTable);
     let refundPaymentLambda = this.createLambda(this, 'refundPaymentLambdaHandler', 'refundPayment.handler', bookingsTable);
 
     /**
      * Saga Pattern Stepfunction
+     * 
+     * Follows a strict order:
+     * 1) Reserve Flights and Hotel
+     * 2) Take Payment
+     * 3) Confirm Flight and Hotel booking
      */
 
     // Our two end states
@@ -65,7 +65,9 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     const bookingSucceeded = new sfn.Succeed(this, 'We have made your booking!');
 
 
-    // Reservations
+    /**
+     * 1) Reserve Flights and Hotel
+     */
     const cancelHotelReservation = new sfn.Task(this, 'CancelHotelReservation', {
       task: new tasks.InvokeFunction(cancelHotelLambda),
       resultPath: '$.CancelHotelReservationResult',
@@ -92,7 +94,9 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
       resultPath: "$.ReserveFlightError"
     });
 
-    // Payment
+    /**
+     * 2) Take Payment
+     */
     const refundPayment = new sfn.Task(this, 'RefundPayment', {
       task: new tasks.InvokeFunction(refundPaymentLambda),
       resultPath: '$.RefundPaymentResult',
@@ -106,7 +110,9 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
       resultPath: "$.TakePaymentError"
     });
 
-    // Confirmations
+    /**
+     * Confirm Flight and Hotel booking
+     */
     const confirmHotelBooking = new sfn.Task(this, 'ConfirmHotelBooking', {
       task: new tasks.InvokeFunction(confirmHotellambda),
       resultPath: '$.ConfirmHotelBookingResult',
@@ -120,22 +126,6 @@ export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
     }).addCatch(refundPayment, {
       resultPath: "$.ConfirmFlightError"
     });
-
-/*
-
-    // Rental Car
-    const cancelRental = new sfn.Task(this, 'CancelRental', {
-      task: new tasks.InvokeFunction(cancelRentalLambda),
-      resultPath: '$.CancelRentalResult',
-    }).addRetry({maxAttempts:3}) // retry this task a max of 3 times if it fails
-    .next(cancelFlight);
-
-    const bookRental = new sfn.Task(this, 'BookRental', {
-      task: new tasks.InvokeFunction(bookRentalLambda),
-      resultPath: '$.BookRentalResult',
-    }).addCatch(cancelRental, {
-      resultPath: "$.CancelRentalError"
-    });*/
 
     //Step function definition
     const definition = sfn.Chain
