@@ -35,11 +35,11 @@ exports.handler = async function(event:any) {
       'sk' : {S: 'HOTEL#'+hotelBookingID},
       'trip_id' : {S: event.trip_id},
       'type': {S: 'Hotel'},
-      'booking_id': {S: hotelBookingID},
+      'id': {S: hotelBookingID},
       'hotel' : {S: event.hotel},
       'check_in': {S: event.check_in},
       'check_out': {S: event.check_out},
-      'reservation_status': {S: 'pending'}
+      'status': {S: 'pending'}
     }
   };
   
