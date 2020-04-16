@@ -5,7 +5,7 @@ import apigw = require('@aws-cdk/aws-apigateway');
 import sfn = require('@aws-cdk/aws-stepfunctions');
 import tasks = require('@aws-cdk/aws-stepfunctions-tasks');
 
-export class TheSagaStepfunctionStack extends cdk.Stack {
+export class TheSagaStepfunctionSingleTableStack extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -13,26 +13,22 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     /**
      * DynamoDB Tables
      * 
-     * We store Flight, Hotel and Rental Car bookings in separate tables
+     * We store Flight, Hotel and Rental Car bookings in the same table.
+     * 
+     * pk - the trip_id e.g. 1234
+     * sk - bookingtype#booking_id e.g. HOTEL#345634, FLIGHT#574576, RENTAL#45245
      */
 
-    const flightBookingsTable = new dynamodb.Table(this, 'FlightBookings', {
-      partitionKey: { name: 'trip_id', type: dynamodb.AttributeType.STRING }
-    });
-
-    const hotelBookingsTable = new dynamodb.Table(this, 'HotelBookings', {
-      partitionKey: { name: 'trip_id', type: dynamodb.AttributeType.STRING }
-    });
-
-    const rentalBookingsTable = new dynamodb.Table(this, 'RentalBookings', {
-      partitionKey: { name: 'trip_id', type: dynamodb.AttributeType.STRING }
+    const bookingsTable = new dynamodb.Table(this, 'Bookings', {
+      partitionKey: { name: 'pk', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'sk', type: dynamodb.AttributeType.STRING }
     });
 
     /**
      * Lambda Functions
      * 
      * We need Booking and Cancellation functions for our 3 services
-     * All functions need access to one of the DynamoDB tables above
+     * All functions need access to our DynamoDB table above
      * 
      * 1) Flights
      * 2) Hotel
@@ -40,16 +36,16 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
      */
 
     // 1) Flights 
-    let bookFlightLambda = this.createLambda(this, 'bookFlightLambdaHandler', 'bookFlight.handler', flightBookingsTable);
-    let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', flightBookingsTable);
+    let bookFlightLambda = this.createLambda(this, 'bookFlightLambdaHandler', 'bookFlight.handler', bookingsTable);
+    let cancelFlightLambda = this.createLambda(this, 'cancelFlightLambdaHandler', 'cancelFlight.handler', bookingsTable);
 
     // 2) Hotel 
-    let bookHotelLambda = this.createLambda(this, 'bookHotelLambdaHandler', 'bookHotel.handler', hotelBookingsTable);
-    let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', hotelBookingsTable);
+    let bookHotelLambda = this.createLambda(this, 'bookHotelLambdaHandler', 'bookHotel.handler', bookingsTable);
+    let cancelHotelLambda = this.createLambda(this, 'cancelHotelLambdaHandler', 'cancelHotel.handler', bookingsTable);
 
     // 3) Rental Car 
-    let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', rentalBookingsTable);
-    let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', rentalBookingsTable);
+    let bookRentalLambda = this.createLambda(this, 'bookRentalLambdaHandler', 'bookRental.handler', bookingsTable);
+    let cancelRentalLambda = this.createLambda(this, 'cancelRentalLambdaHandler', 'cancelRental.handler', bookingsTable);
 
     /**
      * Saga Pattern Stepfunction
@@ -105,8 +101,6 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     //Step function definition
     const definition = sfn.Chain
     .start(bookHotel)
-    .next(bookFlight)
-    .next(bookRental)
     .next(bookingSucceeded)
 
     let saga = new sfn.StateMachine(this, 'BookingSaga', {
@@ -148,7 +142,7 @@ export class TheSagaStepfunctionStack extends cdk.Stack {
     // Create a Node Lambda with the table name passed in as an environment variable
     let fn =  new lambda.Function(scope, id, {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas/multiTable'),
+      code: lambda.Code.asset('lambdas/singleTable'),
       handler:handler,
       environment: {
         TABLE_NAME: table.tableName
