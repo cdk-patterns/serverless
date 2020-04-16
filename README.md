@@ -132,6 +132,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
@@ -201,6 +207,10 @@ npx cdk deploy
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
   ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
 
   <br /><hr /><br />
 
@@ -327,7 +337,10 @@ npx cdk deploy
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
   See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
   ![Architecture](the-lambda-trilogy/img/arch2.png)
-  
+
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
 
 </details>
 <details>
@@ -363,6 +376,12 @@ npx cdk deploy
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
   ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
 
   <br /><hr /><br />
 
