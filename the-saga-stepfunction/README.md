@@ -97,6 +97,20 @@ let input = {
 | Confirm Hotel | Updates the record in DynamoDB for transaction_status to confirmed |
 | Confirm Flight | Updates the record in DynamoDB for transaction_status to confirmed |
 
+### Error Handling and Retry Logic
+
+If an error occurs in any of the reserve tasks, confirm tasks or the take payment task (either by you manually passing the trigger or a real error) we have step function catch logic to route to the appropriate cancel event.
+
+You also need to account for errors in the cancel functions. That is why there is a random fail trigger in each cancel function. 
+
+```javascript
+if (Math.random() < 0.4) {
+    throw new Error("Internal Server Error");
+}
+```
+
+To handle this each cancel function has a built in retry policy of 3 attempts as part of the step function definition.
+
 ### DynamoDB Table
 
 We have 3 separate entities inside the one DynamoDB table, this was inspired by [Alex Debrie](https://twitter.com/alexbdebrie) and his brilliant [book](https://www.dynamodbbook.com/). If you want to learn more about advanced single table DynamoDB patterns it is worth a purchase.
@@ -176,9 +190,9 @@ https://{api gateway url}?tripID={whatever you want}
 
 ```
 
-It is important to note that the Cancel Lambdas all have a random failure built in and retry logic up to a max of 3. So when you look at the execution of your stepfunction in the aws console if you see failures in the cancel lambdas this is intentional. The reason why is to teach you that the cancel logic should attempt to self recover in the event of an error.
+It is important to note that the Cancel Lambdas all have a random failure built in and retry logic up to a max of 3. So when you look at the execution of your stepfunction in the aws console if you see failures in the cancel lambdas this is intentional. The reason why is to teach you that the cancel logic should attempt to self recover in the event of an error. Given that they only retry 3 times it is still possible for the cancel process to fail 3 times and the step function to terminate early. 
 
-To actually view what happened you will need to log into the AWS console and navigate to the step functions section where you can see every execution of your saga step function. You can also look inside the 3 DynamoDB tables at the records inserted.
+To actually view what happened you will need to log into the AWS console and navigate to the step functions section where you can see every execution of your saga step function. You can also look inside the DynamoDB table at the records inserted. If you are fast enough with refresh you can watch them go from pending to confirmed status.
 
 ## Available Versions
 
