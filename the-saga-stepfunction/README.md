@@ -61,7 +61,7 @@ If the first BookHotel task had failed the only difference is the number of Canc
 
 We have an API Gateway connected to a Lambda through a {proxy+} setup. This lambda starts a stepfunction workflow representing the flows above. 6 lambdas inside that workflow communicate with 3 different DynamoDB tables to complete a travel booking transaction:
 
-![flow](img/arch_saga.png)
+![flow](img/saga_architecture.png)
 
 ## How Do I Test This After Deployment?
 
