@@ -65,5 +65,5 @@ function hashCode(s:string) {
     h = Math.imul(31, h) + s.charCodeAt(i) | 0;
   }
 
-  return ''+h;
+  return ''+Math.abs(h);
 }
