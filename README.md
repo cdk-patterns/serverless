@@ -132,6 +132,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Saga Step Function](the-saga-stepfunction/README.md)
+  A mechanism for handling distributed transactions within your system.
+  ![Architecture](the-saga-stepfunction/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
