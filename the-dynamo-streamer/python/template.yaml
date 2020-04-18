@@ -69,7 +69,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3BucketC07C49DB
+          Ref: AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1S3Bucket2A7A58E1
         S3Key:
           Fn::Join:
             - ""
@@ -77,23 +77,24 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0
+                      - Ref: AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1S3VersionKey4978E0AF
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0
+                      - Ref: AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1S3VersionKey4978E0AF
       Handler: lambda.handler
       Role:
         Fn::GetAtt:
           - DynamoLambdaHandlerServiceRole4C867B01
           - Arn
-      Runtime: nodejs12.x
+      Runtime: python3.8
     DependsOn:
       - DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090
       - DynamoLambdaHandlerServiceRole4C867B01
     Metadata:
       aws:cdk:path: the-dynamo-streamer/DynamoLambdaHandler/Resource
+      aws:asset:path: asset.8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1
       aws:asset:property: Code
   DynamoLambdaHandlerDynamoDBEventSourcethedynamostreamerTheDynamoStreamerD730D0607DE8FA51:
     Type: AWS::Lambda::EventSourceMapping
@@ -317,18 +318,18 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.23.0,@aws-cdk/assets=1.23.0,@aws-cdk/aws-apigateway=1.23.0,@aws-cdk/aws-applicationautoscaling=1.23.0,@aws-cdk/aws-autoscaling-common=1.23.0,@aws-cdk/aws-certificatemanager=1.23.0,@aws-cdk/aws-cloudformation=1.23.0,@aws-cdk/aws-cloudwatch=1.23.0,@aws-cdk/aws-dynamodb=1.23.0,@aws-cdk/aws-ec2=1.23.0,@aws-cdk/aws-elasticloadbalancingv2=1.23.0,@aws-cdk/aws-events=1.23.0,@aws-cdk/aws-iam=1.23.0,@aws-cdk/aws-kinesis=1.23.0,@aws-cdk/aws-kms=1.23.0,@aws-cdk/aws-lambda=1.23.0,@aws-cdk/aws-lambda-event-sources=1.23.0,@aws-cdk/aws-logs=1.23.0,@aws-cdk/aws-route53=1.23.0,@aws-cdk/aws-s3=1.23.0,@aws-cdk/aws-s3-assets=1.23.0,@aws-cdk/aws-s3-notifications=1.23.0,@aws-cdk/aws-sns=1.23.0,@aws-cdk/aws-sns-subscriptions=1.23.0,@aws-cdk/aws-sqs=1.23.0,@aws-cdk/aws-ssm=1.23.0,@aws-cdk/core=1.23.0,@aws-cdk/cx-api=1.23.0,@aws-cdk/region-info=1.23.0,jsii-runtime=Python/3.6.3
+      Modules: aws-cdk=1.32.2,@aws-cdk/assets=1.31.0,@aws-cdk/aws-apigateway=1.31.0,@aws-cdk/aws-applicationautoscaling=1.31.0,@aws-cdk/aws-autoscaling=1.31.0,@aws-cdk/aws-autoscaling-common=1.31.0,@aws-cdk/aws-autoscaling-hooktargets=1.31.0,@aws-cdk/aws-batch=1.31.0,@aws-cdk/aws-certificatemanager=1.31.0,@aws-cdk/aws-cloudformation=1.31.0,@aws-cdk/aws-cloudfront=1.31.0,@aws-cdk/aws-cloudwatch=1.31.0,@aws-cdk/aws-dynamodb=1.31.0,@aws-cdk/aws-ec2=1.31.0,@aws-cdk/aws-ecr=1.31.0,@aws-cdk/aws-ecr-assets=1.31.0,@aws-cdk/aws-ecs=1.31.0,@aws-cdk/aws-elasticloadbalancing=1.31.0,@aws-cdk/aws-elasticloadbalancingv2=1.31.0,@aws-cdk/aws-events=1.31.0,@aws-cdk/aws-glue=1.31.0,@aws-cdk/aws-iam=1.31.0,@aws-cdk/aws-kinesis=1.31.0,@aws-cdk/aws-kms=1.31.0,@aws-cdk/aws-lambda=1.31.0,@aws-cdk/aws-lambda-event-sources=1.31.0,@aws-cdk/aws-logs=1.31.0,@aws-cdk/aws-route53=1.31.0,@aws-cdk/aws-route53-targets=1.31.0,@aws-cdk/aws-s3=1.31.0,@aws-cdk/aws-s3-assets=1.31.0,@aws-cdk/aws-s3-notifications=1.31.0,@aws-cdk/aws-sam=1.31.0,@aws-cdk/aws-secretsmanager=1.31.0,@aws-cdk/aws-servicediscovery=1.31.0,@aws-cdk/aws-sns=1.31.0,@aws-cdk/aws-sns-subscriptions=1.31.0,@aws-cdk/aws-sqs=1.31.0,@aws-cdk/aws-ssm=1.31.0,@aws-cdk/aws-stepfunctions=1.31.0,@aws-cdk/aws-stepfunctions-tasks=1.31.0,@aws-cdk/core=1.31.0,@aws-cdk/custom-resources=1.31.0,@aws-cdk/cx-api=1.31.0,@aws-cdk/region-info=1.31.0,jsii-runtime=Python/3.6.3
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3BucketC07C49DB:
+  AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1S3Bucket2A7A58E1:
     Type: String
-    Description: S3 bucket for asset "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
-  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdS3VersionKey5A234FB0:
+    Description: S3 bucket for asset "8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1"
+  AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1S3VersionKey4978E0AF:
     Type: String
-    Description: S3 key for asset version "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
-  AssetParametersa82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccdArtifactHashEE79E413:
+    Description: S3 key for asset version "8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1"
+  AssetParameters8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1ArtifactHash6126A645:
     Type: String
-    Description: Artifact hash for asset "a82b27f99acf3f3a51053e60d582d3478d52348921ae507252bb67576c507ccd"
+    Description: Artifact hash for asset "8f04ee1aab90a3ea6393cd0b7ec3f182f5263b522ffbef2f106a09b0d84844d1"
 Outputs:
   DynamoStreamerAPIEndpointA76F4941:
     Value:
