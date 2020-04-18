@@ -28,6 +28,9 @@ npx cdkp list
 ```
 
 ### 2) Download Pattern In Python or Typescript CDK
+>Something to be aware of is that the Python version may reuse the JS lambdas from the TypeScript version. This is to reduce the amount of development effort when creating these patterns. It means at launch the TypeScript and Python patterns are effectively identical when deployed but you get the choice of Python or TypeScript for the CDK implementation.
+>
+>I will look to refactor the Python patterns slowly to full Python after initial launch. If you want to help with this effort, pull requests are always welcome!
 <details>
   <summary>TypeScript</summary>
   <br />
