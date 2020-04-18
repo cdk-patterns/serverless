@@ -24,7 +24,7 @@ class TheDynamoStreamerStack(core.Stack):
 
         # defines an AWS  Lambda resource
         subscriber_lambda = _lambda.Function(self, "DynamoLambdaHandler",
-                                             runtime=_lambda.Runtime.NODEJS_12_X,
+                                             runtime=_lambda.Runtime.PYTHON_3_8,
                                              handler="lambda.handler",
                                              code=_lambda.Code.from_asset("lambdas/subscribe")
                                              )
