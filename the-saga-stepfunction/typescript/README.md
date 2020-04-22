@@ -18,6 +18,11 @@ After doing research I found some other references:
 | [Chaos Gears](https://medium.com/@chaosgears) | [Blog Post](https://medium.com/@chaosgears/saga-patterns-inside-step-functions-world-b330c40fb9d5) |
 | [Yos Riady](https://dzone.com/users/3207440/yosriady.html) | [Blog Post](https://dzone.com/articles/distributed-sagas-for-microservices) |
 
+## Desconstructing The Saga Step Function
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+
+[![Alt text](https://img.youtube.com/vi/1nJNx6_KSRU/0.jpg)](https://www.youtube.com/watch?v=1nJNx6_KSRU)
+
 ## What Is The Saga Pattern?
 
 Hector Garcia-Molina described it in his [paper](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) as follows:
