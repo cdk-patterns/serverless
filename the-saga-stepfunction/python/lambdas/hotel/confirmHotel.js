@@ -9,7 +9,7 @@ exports.handler = async function (event) {
         throw new Error('Failed to confirm the hotel booking');
     }
     if (typeof event.ReserveHotelResult !== 'undefined') {
-        bookingID = event.ReserveHotelResult.booking_id;
+        bookingID = event.ReserveHotelResult.Payload.booking_id;
     }
     // create AWS SDK clients
     const dynamo = new DynamoDB();

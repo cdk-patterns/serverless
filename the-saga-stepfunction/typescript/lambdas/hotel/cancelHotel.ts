@@ -10,7 +10,7 @@ exports.handler = async function(event:any) {
 
   let bookingID = '';
   if (typeof event.ReserveHotelResult !== 'undefined') {
-      bookingID = event.ReserveHotelResult.booking_id;
+      bookingID = event.ReserveHotelResult.Payload.booking_id;
   }
 
   // create AWS SDK clients

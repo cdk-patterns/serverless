@@ -47,29 +47,45 @@ test('Saga State Machine Created', () => {
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::StepFunctions::StateMachine", {
      "DefinitionString": {
-          "Fn::Join": [
-            "",
-            [
-              "{\"StartAt\":\"ReserveHotel\",\"States\":{\"ReserveHotel\":{\"Next\":\"ReserveFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveHotelError\",\"Next\":\"CancelHotelReservation\"}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.ReserveHotelResult\"},\"ReserveFlight\":{\"Next\":\"TakePayment\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveFlightError\",\"Next\":\"CancelFlightReservation\"}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.ReserveFlightResult\"},\"TakePayment\":{\"Next\":\"ConfirmHotelBooking\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.TakePaymentError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.TakePaymentResult\"},\"ConfirmHotelBooking\":{\"Next\":\"ConfirmFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmHotelBookingError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.ConfirmHotelBookingResult\"},\"ConfirmFlight\":{\"Next\":\"We have made your booking!\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmFlightError\",\"Next\":\"RefundPayment\"}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.ConfirmFlightResult\"},\"We have made your booking!\":{\"Type\":\"Succeed\"},\"RefundPayment\":{\"Next\":\"CancelFlightReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.RefundPaymentResult\"},\"CancelFlightReservation\":{\"Next\":\"CancelHotelReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.CancelFlightReservationResult\"},\"CancelHotelReservation\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Type\":\"Task\",\"Resource\":\"",
-              {},
-              "\",\"ResultPath\":\"$.CancelHotelReservationResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
-            ]
-          ]
-        }
+      "Fn::Join": [
+        "",
+        [
+          "{\"StartAt\":\"ReserveHotel\",\"States\":{\"ReserveHotel\":{\"Next\":\"ReserveFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveHotelError\",\"Next\":\"CancelHotelReservation\"}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.ReserveHotelResult\"},\"ReserveFlight\":{\"Next\":\"TakePayment\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ReserveFlightError\",\"Next\":\"CancelFlightReservation\"}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.ReserveFlightResult\"},\"TakePayment\":{\"Next\":\"ConfirmHotelBooking\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.TakePaymentError\",\"Next\":\"RefundPayment\"}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.TakePaymentResult\"},\"ConfirmHotelBooking\":{\"Next\":\"ConfirmFlight\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmHotelBookingError\",\"Next\":\"RefundPayment\"}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.ConfirmHotelBookingResult\"},\"ConfirmFlight\":{\"Next\":\"We have made your booking!\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"ResultPath\":\"$.ConfirmFlightError\",\"Next\":\"RefundPayment\"}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.ConfirmFlightResult\"},\"We have made your booking!\":{\"Type\":\"Succeed\"},\"RefundPayment\":{\"Next\":\"CancelFlightReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.RefundPaymentResult\"},\"CancelFlightReservation\":{\"Next\":\"CancelHotelReservation\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.CancelFlightReservationResult\"},\"CancelHotelReservation\":{\"Next\":\"Sorry, We Couldn't make the booking\",\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"MaxAttempts\":3}],\"Parameters\":{\"FunctionName\":\"",
+          {},
+          "\",\"Payload.$\":\"$\"},\"Type\":\"Task\",\"Resource\":\"arn:",
+          {},
+          ":states:::lambda:invoke\",\"ResultPath\":\"$.CancelHotelReservationResult\"},\"Sorry, We Couldn't make the booking\":{\"Type\":\"Fail\"}},\"TimeoutSeconds\":300}"
+        ]
+      ]
+    }
   }
   ));
 });

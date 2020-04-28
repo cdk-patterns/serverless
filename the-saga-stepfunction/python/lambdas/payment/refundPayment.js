@@ -8,7 +8,7 @@ exports.handler = async function (event) {
     }
     let paymentID = '';
     if (typeof event.TakePaymentResult !== 'undefined') {
-        paymentID = event.TakePaymentResult.payment_id;
+        paymentID = event.TakePaymentResult.Payload.payment_id;
     }
     // create AWS SDK clients
     const dynamo = new DynamoDB();
