@@ -74,44 +74,44 @@ class TheSagaStepfunctionStack(core.Stack):
 
         # 1) Reserve Flights and Hotel
         cancel_hotel_reservation = step_fn.Task(self, 'CancelHotelReservation',
-                                                task=step_fn_tasks.InvokeFunction(cancel_hotel_lambda),
+                                                task=step_fn_tasks.RunLambdaTask(cancel_hotel_lambda),
                                                 result_path='$.CancelHotelReservationResult'
                                                 ).add_retry(max_attempts=3).next(booking_failed)
 
         reserve_hotel = step_fn.Task(self, 'ReserveHotel',
-                                     task=step_fn_tasks.InvokeFunction(reserve_hotel_lambda),
+                                     task=step_fn_tasks.RunLambdaTask(reserve_hotel_lambda),
                                      result_path='$.ReserveHotelResult'
                                      ).add_catch(cancel_hotel_reservation, result_path="$.ReserveHotelError")
 
         cancel_flight_reservation = step_fn.Task(self, 'CancelFlightReservation',
-                                                 task=step_fn_tasks.InvokeFunction(cancel_flight_lambda),
+                                                 task=step_fn_tasks.RunLambdaTask(cancel_flight_lambda),
                                                  result_path='$.CancelFlightReservationResult'
                                                  ).add_retry(max_attempts=3).next(cancel_hotel_reservation)
 
         reserve_flight = step_fn.Task(self, 'ReserveFlight',
-                                      task=step_fn_tasks.InvokeFunction(reserve_flight_lambda),
+                                      task=step_fn_tasks.RunLambdaTask(reserve_flight_lambda),
                                       result_path='$.ReserveFlightResult'
                                       ).add_catch(cancel_flight_reservation, result_path="$.ReserveFlightError")
 
         # 2) Take Payment
         refund_payment = step_fn.Task(self, 'RefundPayment',
-                                      task=step_fn_tasks.InvokeFunction(refund_payment_lambda),
+                                      task=step_fn_tasks.RunLambdaTask(refund_payment_lambda),
                                       result_path='$.RefundPaymentResult'
                                       ).add_retry(max_attempts=3).next(cancel_flight_reservation)
 
         take_payment = step_fn.Task(self, 'TakePayment',
-                                    task=step_fn_tasks.InvokeFunction(take_payment_lambda),
+                                    task=step_fn_tasks.RunLambdaTask(take_payment_lambda),
                                     result_path='$.TakePaymentResult'
                                     ).add_catch(refund_payment, result_path="$.TakePaymentError")
 
         # 3) Confirm Flight and Hotel Booking
         confirm_hotel = step_fn.Task(self, 'ConfirmHotelBooking',
-                                     task=step_fn_tasks.InvokeFunction(confirm_hotel_lambda),
+                                     task=step_fn_tasks.RunLambdaTask(confirm_hotel_lambda),
                                      result_path='$.ConfirmHotelBookingResult'
                                      ).add_catch(refund_payment, result_path="$.ConfirmHotelBookingError")
 
         confirm_flight = step_fn.Task(self, 'ConfirmFlight',
-                                      task=step_fn_tasks.InvokeFunction(confirm_flight_lambda),
+                                      task=step_fn_tasks.RunLambdaTask(confirm_flight_lambda),
                                       result_path='$.ConfirmFlightResult'
                                       ).add_catch(refund_payment, result_path="$.ConfirmFlightError")
 
