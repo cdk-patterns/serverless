@@ -59,6 +59,10 @@ One final improvement that we could make if implementing this in a production sy
 
 ![More scalable Webhook](img/more_scalable_webhook.png)
 
+If you want an AWS managed service to try and help with this scalability problem you can check out [AWS RDS Proxy](https://aws.amazon.com/rds/proxy/) which is in preview
+
+![rds proxy](img/rds_proxy.png)
+
 ## How to test pattern
 
 When you deploy this you will have an API Gateway where any url is routed through to the publish lambda. If you modify the url from / to say /hello this url will be sent as a message via sqs to a lambda
