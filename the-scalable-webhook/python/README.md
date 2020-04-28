@@ -7,6 +7,10 @@ An advanced version of this pattern was talked about by [Heitor Lessa](https://t
 * [Youtube Recording](https://www.youtube.com/watch?v=9IYpGTS7Jy0)
 * [Static Slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf)
 
+## Desconstructing The Scalable Webhook
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+
+[![Alt text](https://img.youtube.com/vi/kRI7QJfGBI8/0.jpg)](https://www.youtube.com/watch?v=kRI7QJfGBI8)
 
 ## High Level Description
 You would use this pattern when you have a non serverless resource like an RDS DB in direct contact with a serverless resource like a lambda. You need to make
