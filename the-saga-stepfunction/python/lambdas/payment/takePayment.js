@@ -19,11 +19,11 @@ exports.handler = async function (event) {
     console.log("request:", JSON.stringify(event, undefined, 2));
     let flightBookingID = '';
     if (typeof event.ReserveFlightResult !== 'undefined') {
-        flightBookingID = event.ReserveFlightResult.booking_id;
+        flightBookingID = event.ReserveFlightResult.Payload.booking_id;
     }
     let hotelBookingID = '';
     if (typeof event.ReserveHotelResult !== 'undefined') {
-        hotelBookingID = event.ReserveHotelResult.booking_id;
+        hotelBookingID = event.ReserveHotelResult.Payload.booking_id;
     }
     let paymentID = hashCode('' + event.trip_id + hotelBookingID + flightBookingID);
     // If we passed the parameter to fail this step 
