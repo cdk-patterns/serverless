@@ -26,9 +26,21 @@ export class TheXrayTracerStack extends cdk.Stack {
      // grant the lambda role read/write permissions to our table
      table.grantReadWriteData(dynamoLambda);
 
+     // defines an AWS Lambda resource
+     const orchLambda = new lambda.Function(this, 'OrchLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'orchestrator.handler',
+      environment: {
+        DYNAMO_FN_ARN: dynamoLambda.functionArn
+      },
+      tracing: lambda.Tracing.ACTIVE
+    });
+    dynamoLambda.grantInvoke(orchLambda);
+
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'X-Ray_Endpoint', {
-      handler: dynamoLambda,
+      handler: orchLambda,
       options: {
         deployOptions: {
           loggingLevel: apigw.MethodLoggingLevel.INFO,

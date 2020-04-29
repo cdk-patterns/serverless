@@ -1,0 +1,14 @@
+export {};
+const AWSXRay = require('aws-xray-sdk');
+const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+
+exports.handler = async function(event:any) {
+    var params = {
+        FunctionName: process.env.DYNAMO_FN_ARN, 
+        Payload: JSON.stringify({path:"test"}), 
+       };
+    AWS.lambda.invoke(params, function(err:any, data:any) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+}
