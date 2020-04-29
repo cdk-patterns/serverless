@@ -3,6 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import sqs = require('@aws-cdk/aws-sqs');
+import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 export class TheXrayTracerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -53,7 +54,20 @@ export class TheXrayTracerStack extends cdk.Stack {
       },
       tracing: lambda.Tracing.ACTIVE
     });
-    queue.grantSendMessages(sqslambda)
+    queue.grantSendMessages(sqslambda);
+
+    // defines an AWS Lambda resource to pull from our queue
+    const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
+      code: lambda.Code.asset('lambdas'),  // code loaded from the "lambdas/subscribe" directory
+      handler: 'sqs_subscribe.handler',                // file is "lambda", function is "handler"
+      reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
+      environment: {
+        queueURL: queue.queueUrl
+      },
+    });
+    queue.grantConsumeMessages(sqsSubscribeLambda);
+    sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
 
      // defines an AWS Lambda resource
      const orchLambda = new lambda.Function(this, 'OrchLambdaHandler', {
