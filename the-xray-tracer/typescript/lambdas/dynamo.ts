@@ -2,13 +2,6 @@ const AWSXRay = require('aws-xray-sdk');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 var https = AWSXRay.captureHTTPs(require('https'));
 
-const options = {
-  hostname: 'jsonplaceholder.typicode.com',
-  port: 443,
-  path: '/todos/1',
-  method: 'GET'
-}
-
 exports.handler = async function(event:any) {
   const segment = AWSXRay.getSegment(); //returns the facade segment
   console.log("request:", JSON.stringify(event, undefined, 2));
@@ -33,7 +26,7 @@ exports.handler = async function(event:any) {
   let response = await new Promise((resolve:any, reject:any) => {
     let dataString = '';
     // Make a call to a webservice
-    const req = https.request(options, (res:any) => {
+    const req = https.get("https://jsonplaceholder.typicode.com/todos/1", (res:any) => {
         console.log(`statusCode: ${res.statusCode}`);
 
         res.on('data', (chunk:any) => {
