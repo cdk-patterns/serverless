@@ -65,6 +65,7 @@ export class TheXrayTracerStack extends cdk.Stack {
       environment: {
         queueURL: queue.queueUrl
       },
+      tracing: lambda.Tracing.ACTIVE
     });
     queue.grantConsumeMessages(sqsSubscribeLambda);
     sqsSubscribeLambda.addEventSource(new SqsEventSource(queue, {}));
