@@ -11,7 +11,7 @@ exports.handler = async function(event:any) {
   const dynamo = new AWS.DynamoDB();
 
   dynamoSegment.addAnnotation("path", event.path);
-  dynamoSegment.putMetadata("event", event)
+  dynamoSegment.addMetadata("event", event)
 
   // update dynamo entry for "path" with hits++
   await dynamo.updateItem({
