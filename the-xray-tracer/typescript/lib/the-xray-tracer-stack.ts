@@ -27,16 +27,27 @@ export class TheXrayTracerStack extends cdk.Stack {
      table.grantReadWriteData(dynamoLambda);
 
      // defines an AWS Lambda resource
+     const httpLambda = new lambda.Function(this, 'httpLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'http.handler',
+      tracing: lambda.Tracing.ACTIVE
+    });
+
+     // defines an AWS Lambda resource
      const orchLambda = new lambda.Function(this, 'OrchLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambdas'),
       handler: 'orchestrator.handler',
+      timeout: cdk.Duration.seconds(30),
       environment: {
-        DYNAMO_FN_ARN: dynamoLambda.functionArn
+        DYNAMO_FN_ARN: dynamoLambda.functionArn,
+        HTTP_FN_ARN: httpLambda.functionArn
       },
       tracing: lambda.Tracing.ACTIVE
     });
     dynamoLambda.grantInvoke(orchLambda);
+    httpLambda.grantInvoke(orchLambda);
 
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'X-Ray_Endpoint', {

@@ -1,6 +1,5 @@
 const AWSXRay = require('aws-xray-sdk');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
-var https = AWSXRay.captureHTTPs(require('https'));
 
 exports.handler = async function(event:any) {
   const segment = AWSXRay.getSegment(); //returns the facade segment
@@ -24,44 +23,7 @@ exports.handler = async function(event:any) {
   console.log('inserted counter for '+ event.path);
 
   dynamoSegment.close();
-  const subsegment = segment.addNewSubsegment('external HTTP Request');
-  
-  let response = await new Promise((resolve:any, reject:any) => {
-    let dataString = '';
-    // Make a call to a webservice
-    const req = https.get("https://jsonplaceholder.typicode.com/todos/1", (res:any) => {
-        console.log(`statusCode: ${res.statusCode}`);
-
-        res.on('data', (chunk:any) => {
-            dataString += chunk;
-        });
-
-        res.on('end', () => {
-            resolve({
-                data: JSON.parse(dataString)
-            })
-        });
-    });
-
-    req.on('error', (e:any) => {
-        reject(e)
-    });
-  });
-
-  console.log(response);
-  subsegment.close();
 
   // return response back to upstream caller
-  return sendRes(200, 'You have connected with the Lambda!');
-};
-
-const sendRes = (status:number, body:string) => {
-  var response = {
-    statusCode: status,
-    headers: {
-      "Content-Type": "text/html"
-    },
-    body: body
-  };
-  return response;
+  return {"status": "success"};
 };
