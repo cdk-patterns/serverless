@@ -70,6 +70,7 @@ export class TheXrayTracerStack extends cdk.Stack {
     });
     dynamoLambda.grantInvoke(orchLambda);
     httpLambda.grantInvoke(orchLambda);
+    sqslambda.grantInvoke(orchLambda)
 
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'X-Ray_Endpoint', {
