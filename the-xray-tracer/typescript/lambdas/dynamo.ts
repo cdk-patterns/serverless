@@ -10,6 +10,9 @@ exports.handler = async function(event:any) {
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
 
+  dynamoSegment.putAnnotation("path", event.path);
+  dynamoSegment.putMetadata("dynamo", "event", event)
+
   // update dynamo entry for "path" with hits++
   await dynamo.updateItem({
     TableName: process.env.HITS_TABLE_NAME,
@@ -35,7 +38,7 @@ exports.handler = async function(event:any) {
 
         res.on('end', () => {
             resolve({
-                data: dataString
+                data: JSON.parse(dataString)
             })
         });
     });
