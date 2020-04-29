@@ -10,8 +10,8 @@ exports.handler = async function(event:any) {
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
 
-  dynamoSegment.putAnnotation("path", event.path);
-  dynamoSegment.putMetadata("dynamo", "event", event)
+  dynamoSegment.addAnnotation("path", event.path);
+  dynamoSegment.putMetadata("event", event)
 
   // update dynamo entry for "path" with hits++
   await dynamo.updateItem({
