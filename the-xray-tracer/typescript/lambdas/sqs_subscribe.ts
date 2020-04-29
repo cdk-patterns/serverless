@@ -10,7 +10,7 @@ exports.handler = async function(event:any) {
 
     let traceHeaderStr = records[index].attributes.AWSTraceHeader;
     const segment = AWSXRay.getSegment(); //returns the facade segment
-    AWSXRay.utils.populateTraceData(segment, traceHeaderStr);
+    AWSXRay.utils.LambdaUtils.populateTraceData(segment, traceHeaderStr);
     const subscriberSegment = segment.addNewSubsegment('Logging SQS Message');
     console.log('received message ' + records[index].body);  
 
