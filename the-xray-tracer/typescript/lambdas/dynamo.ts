@@ -1,10 +1,11 @@
-const { DynamoDB, Lambda } = require('aws-sdk');
+const AWSXRay = require('aws-xray-sdk');
+const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
 
   // create AWS SDK clients
-  const dynamo = new DynamoDB();
+  const dynamo = new AWS.DynamoDB();
 
   // update dynamo entry for "path" with hits++
   await dynamo.updateItem({
