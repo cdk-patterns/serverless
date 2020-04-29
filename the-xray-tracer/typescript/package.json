@@ -5,7 +5,8 @@
     "the-xray-tracer": "bin/the-xray-tracer.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build-lambda": "cd lambdas && npm i && cd ../",
+    "build": "npm run build-lambda && tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
