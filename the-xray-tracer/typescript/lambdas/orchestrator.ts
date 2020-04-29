@@ -7,6 +7,7 @@ exports.handler = async function(event:any) {
     var params = {
         FunctionName: process.env.DYNAMO_FN_ARN, 
         Payload: JSON.stringify({path:"test"}), 
+        InvocationType: "Event"
        };
     await lambda.invoke(params, function(err:any, data:any) {
         if (err) console.log(err, err.stack); // an error occurred
