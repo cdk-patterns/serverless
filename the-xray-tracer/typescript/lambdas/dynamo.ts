@@ -1,5 +1,13 @@
 const AWSXRay = require('aws-xray-sdk');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+var https = AWSXRay.captureHTTPs(require('https'));
+
+const options = {
+  hostname: 'jsonplaceholder.typicode.com',
+  port: 443,
+  path: '/todos/1',
+  method: 'GET'
+}
 
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
@@ -16,6 +24,21 @@ exports.handler = async function(event:any) {
   }).promise();
 
   console.log('inserted counter for '+ event.path);
+
+  // Make a call to a webservice
+  const req = https.request(options, (res:any) => {
+    console.log(`statusCode: ${res.statusCode}`)
+  
+    res.on('data', (d:any) => {
+      console.log(d)
+    })
+  })
+
+  req.on('error', (error:any) => {
+    console.error(error)
+  })
+  
+  req.end()
 
   // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');
