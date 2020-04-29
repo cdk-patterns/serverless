@@ -29,10 +29,10 @@ exports.handler = async function(event:any) {
   await sqs.sendMessage(params, function(err:any, data:any) {
     if (err) {
       console.log("Error", err);
-      response = sendRes(500, err)
+      //response = sendRes(500, err)
     } else {
       console.log("Success", data.MessageId);
-      response = sendRes(200, 'You have added a message to the queue! Message ID is '+data.MessageId)
+      //response = sendRes(200, 'You have added a message to the queue! Message ID is '+data.MessageId)
     }
   }).promise();
 
