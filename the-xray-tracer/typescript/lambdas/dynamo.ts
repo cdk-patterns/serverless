@@ -10,8 +10,10 @@ const options = {
 }
 
 exports.handler = async function(event:any) {
+  const segment = AWSXRay.getSegment(); //returns the facade segment
   console.log("request:", JSON.stringify(event, undefined, 2));
 
+  const dynamoSegment = segment.addNewSubsegment('DynamoDB Query');
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
 
@@ -25,20 +27,33 @@ exports.handler = async function(event:any) {
 
   console.log('inserted counter for '+ event.path);
 
-  // Make a call to a webservice
-  const req = https.request(options, (res:any) => {
-    console.log(`statusCode: ${res.statusCode}`)
+  dynamoSegment.close();
+  const subsegment = segment.addNewSubsegment('external HTTP Request');
   
-    res.on('data', (d:any) => {
-      console.log(d)
-    })
-  })
+  let response = await new Promise((resolve:any, reject:any) => {
+    let dataString = '';
+    // Make a call to a webservice
+    const req = https.request(options, (res:any) => {
+        console.log(`statusCode: ${res.statusCode}`);
 
-  req.on('error', (error:any) => {
-    console.error(error)
-  })
-  
-  req.end()
+        res.on('data', (chunk:any) => {
+            dataString += chunk;
+        });
+
+        res.on('end', () => {
+            resolve({
+                data: dataString
+            })
+        });
+    });
+
+    req.on('error', (e:any) => {
+        reject(e)
+    });
+  });
+
+  console.log(response);
+  subsegment.close();
 
   // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');
