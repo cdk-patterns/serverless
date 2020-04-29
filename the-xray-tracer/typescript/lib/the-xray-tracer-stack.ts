@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
+import sqs = require('@aws-cdk/aws-sqs');
 
 export class TheXrayTracerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -34,6 +35,26 @@ export class TheXrayTracerStack extends cdk.Stack {
       tracing: lambda.Tracing.ACTIVE
     });
 
+    /**
+     * Queue Setup
+     * SQS creation
+     */
+    const queue = new sqs.Queue(this, 'RDSPublishQueue', {
+      visibilityTimeout: cdk.Duration.seconds(300)
+    });
+
+    // defines an AWS Lambda resource
+    const sqslambda = new lambda.Function(this, 'sqsLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas'),
+      handler: 'sqs.handler',
+      environment: {
+        SQS_URL: queue.queueUrl
+      },
+      tracing: lambda.Tracing.ACTIVE
+    });
+    queue.grantSendMessages(sqslambda)
+
      // defines an AWS Lambda resource
      const orchLambda = new lambda.Function(this, 'OrchLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -42,7 +63,8 @@ export class TheXrayTracerStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       environment: {
         DYNAMO_FN_ARN: dynamoLambda.functionArn,
-        HTTP_FN_ARN: httpLambda.functionArn
+        HTTP_FN_ARN: httpLambda.functionArn,
+        SQS_FN_ARN: sqslambda.functionArn
       },
       tracing: lambda.Tracing.ACTIVE
     });

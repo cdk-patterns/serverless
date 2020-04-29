@@ -6,12 +6,15 @@ exports.handler = async function(event:any) {
     var lambda = new AWS.Lambda();
     var params = {
         FunctionName: process.env.DYNAMO_FN_ARN, 
-        Payload: JSON.stringify({path:"test"}), 
+        Payload: JSON.stringify({path:event.path}), 
         InvocationType: "Event"
        };
     await lambda.invoke(params).promise();
 
     params.FunctionName = process.env.HTTP_FN_ARN;
+    await lambda.invoke(params).promise();
+
+    params.FunctionName = process.env.SQS_FN_ARN;
     await lambda.invoke(params).promise();
 
     // return response back to upstream caller
