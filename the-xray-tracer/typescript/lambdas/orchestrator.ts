@@ -9,10 +9,10 @@ exports.handler = async function(event:any) {
         Payload: JSON.stringify({path:"test"}), 
         InvocationType: "Event"
        };
-    await lambda.invoke(params, function(err:any, data:any) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else     console.log(data);           // successful response
-    }).promise();
+    await lambda.invoke(params).promise();
+
+    params.FunctionName = process.env.HTTP_FN_ARN;
+    await lambda.invoke(params).promise();
 
     // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');
