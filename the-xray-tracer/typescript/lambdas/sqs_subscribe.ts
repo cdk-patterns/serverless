@@ -9,7 +9,7 @@ exports.handler = async function(event:any) {
   for(let index in records) {
 
     let traceHeaderStr = records[index].attributes.AWSTraceHeader;
-    let traceData = AWSXRay.utils.LambdaUtils.processTraceData(traceHeaderStr);
+    let traceData = AWSXRay.utils.processTraceData(traceHeaderStr);
     const segment = new AWSXRay.Segment('Logging SQS Message', traceData.Root, traceData.Parent);
     AWSXRay.middleware.resolveSampling(traceData, segment);
     console.log('received message ' + records[index].body);  
