@@ -9,11 +9,13 @@ exports.handler = async function(event:any) {
   for(let index in records) {
 
     let traceHeaderStr = records[index].attributes.AWSTraceHeader;
-    const segment = AWSXRay.getSegment(); //returns the facade segment
-    AWSXRay.utils.LambdaUtils.populateTraceData(segment, traceHeaderStr);
-    const subscriberSegment = segment.addNewSubsegment('Logging SQS Message');
+    let traceData = AWSXRay.utils.LambdaUtils.processTraceData(traceHeaderStr);
+    const segment = new AWSXRay.Segment('Logging SQS Message', traceData.Root, traceData.Parent);
+    AWSXRay.middleware.resolveSampling(traceData, segment);
     console.log('received message ' + records[index].body);  
 
-    subscriberSegment.addMetadata("message", records[index].body)
+    segment.addMetadata("message", records[index].body)
+
+    segment.close();
   }
 };
