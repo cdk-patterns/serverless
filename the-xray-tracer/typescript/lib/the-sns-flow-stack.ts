@@ -37,7 +37,7 @@ export class TheSnsFlowStack extends cdk.Stack {
   
         // subscribe SQS to our SNS Topic
         topic.addSubscription(new sns_sub.SqsSubscription(createdStatusQueue, {
-            rawMessageDelivery: true
+            rawMessageDelivery: false
         }));
     }
 }
