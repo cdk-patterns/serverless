@@ -6,6 +6,7 @@ export interface XrayTraceStackProps extends cdk.StackProps{
   readonly dynamoFlowLambda: lambda.Function;
   readonly sqsFlowLambda: lambda.Function;
   readonly httpFlowLambda: lambda.Function;
+  readonly snsFlowLambda: lambda.Function;
 }
 
 export class TheXrayTracerStack extends cdk.Stack {
@@ -21,13 +22,15 @@ export class TheXrayTracerStack extends cdk.Stack {
       environment: {
         DYNAMO_FN_ARN: props.dynamoFlowLambda.functionArn,
         HTTP_FN_ARN: props.httpFlowLambda.functionArn,
-        SQS_FN_ARN: props.sqsFlowLambda.functionArn
+        SQS_FN_ARN: props.sqsFlowLambda.functionArn,
+        SNS_FN_ARN: props.snsFlowLambda.functionArn
       },
       tracing: lambda.Tracing.ACTIVE
     });
     props.dynamoFlowLambda.grantInvoke(orchLambda);
     props.httpFlowLambda.grantInvoke(orchLambda);
-    props.sqsFlowLambda.grantInvoke(orchLambda)
+    props.sqsFlowLambda.grantInvoke(orchLambda);
+    props.snsFlowLambda.grantInvoke(orchLambda);
 
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'X-Ray_Endpoint', {

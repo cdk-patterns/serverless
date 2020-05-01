@@ -17,6 +17,9 @@ exports.handler = async function(event:any) {
     params.FunctionName = process.env.SQS_FN_ARN;
     await lambda.invoke(params).promise();
 
+    params.FunctionName = process.env.SNS_FN_ARN;
+    await lambda.invoke(params).promise();
+
     // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');
 }

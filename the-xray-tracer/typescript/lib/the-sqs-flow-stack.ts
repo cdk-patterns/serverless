@@ -1,7 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import apigw = require('@aws-cdk/aws-apigateway');
-import dynamodb = require('@aws-cdk/aws-dynamodb');
 import sqs = require('@aws-cdk/aws-sqs');
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 

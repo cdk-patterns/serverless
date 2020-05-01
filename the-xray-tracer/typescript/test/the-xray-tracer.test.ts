@@ -16,7 +16,8 @@ test('Empty Stack', () => {
     const stack = new TheXrayTracer.TheXrayTracerStack(app, 'MyTestStack', {
       dynamoFlowLambda: mockFunction,
       httpFlowLambda: mockFunction,
-      sqsFlowLambda: mockFunction
+      sqsFlowLambda: mockFunction,
+      snsFlowLambda: mockFunction
   });
     // THEN
     expectCDK(stack).to(matchTemplate({
