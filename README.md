@@ -440,7 +440,7 @@ I will now group patterns by their relevant pillar:
   </summary>
   <br />
   
-  The [cost optimization pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=82) includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
+  The [cost optimization pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=67) includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
 
   #### [The Big Fan](/the-big-fan/README.md)  
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
