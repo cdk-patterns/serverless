@@ -367,6 +367,7 @@ I will now group patterns by their relevant pillar:
     <strong>Operational Excellence Pillar</strong>
   </summary>
   <br />
+  
   The [operational excellence pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=28) includes the ability to run and monitor systems to deliver business value and to continually improve supporting processes and procedures.
 
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
