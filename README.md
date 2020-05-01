@@ -379,7 +379,7 @@ I will now group patterns by their relevant pillar:
 
 <details>
   <summary>
-    <strong>Security Pillar<strong>
+    <strong>Security Pillar</strong>
   </summary>
   <br />
 
