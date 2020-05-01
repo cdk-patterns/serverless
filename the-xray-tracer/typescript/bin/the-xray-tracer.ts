@@ -2,6 +2,21 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { TheXrayTracerStack } from '../lib/the-xray-tracer-stack';
+import { TheDynamoFlowStack } from '../lib/the-dynamo-flow-stack';
+import { TheHttpFlowStack } from '../lib/the-http-flow-stack';
+import { TheSqsFlowStack } from '../lib/the-sqs-flow-stack';
 
 const app = new cdk.App();
-new TheXrayTracerStack(app, 'TheXrayTracerStack');
+let dynamoFlow = new TheDynamoFlowStack(app, 'TheXrayDynamoFlow');
+let httpFlow = new TheHttpFlowStack(app, 'TheXrayHttpFlow');
+let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow');
+
+let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {
+    dynamoFlowLambda: dynamoFlow.dynamoLambda,
+    httpFlowLambda: httpFlow.httpLambda,
+    sqsFlowLambda: sqsFlow.sqslambda
+});
+
+xrayStack.addDependency(dynamoFlow, 'needs the lambda to trigger the DynamoDB flow');
+xrayStack.addDependency(httpFlow, 'needs the lambda to trigger the http flow');
+xrayStack.addDependency(sqsFlow, 'needs the lambda to trigger the sqs flow')
