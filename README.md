@@ -367,7 +367,7 @@ I will now group patterns by their relevant pillar:
     <strong>Operational Excellence Pillar</strong>
   </summary>
   <br />
-  
+
   The [operational excellence pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=28) includes the ability to run and monitor systems to deliver business value and to continually improve supporting processes and procedures.
 
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
@@ -379,9 +379,10 @@ I will now group patterns by their relevant pillar:
 
 <details>
   <summary>
-    Security Pillar
+    <strong>Security Pillar<strong>
   </summary>
-  
+  <br />
+
   The [security pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=38) includes the ability to protect information, systems, and assets while delivering business value through risk assessments and mitigation strategies.
 
   There are currently no CDK Patterns related to this pillar
@@ -390,9 +391,10 @@ I will now group patterns by their relevant pillar:
 
 <details>
   <summary>
-    Reliability Pillar
+    <strong>Reliability Pillar</strong>
   </summary>
-  
+  <br />
+
   The [reliability pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=48) includes the ability of a system to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, and mitigate disruptions such as misconfigurations or transient network issues.
 
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
@@ -415,9 +417,10 @@ I will now group patterns by their relevant pillar:
 
 <details>
   <summary>
-    Performance Efficiency Pillar
+    <strong>Performance Efficiency Pillar</strong>
   </summary>
-  
+  <br />
+
   The [performance efficiency pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=56) focuses on the efficient use of computing resources to meet requirements and the maintenance of that efficiency as demand changes and technologies evolve.
 
   #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
@@ -433,8 +436,9 @@ I will now group patterns by their relevant pillar:
 
 <details>
   <summary>
-    Cost Optimization Pillar
+    <strong>Cost Optimization Pillar</strong>
   </summary>
+  <br />
   
   The [cost optimization pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=82) includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
 
