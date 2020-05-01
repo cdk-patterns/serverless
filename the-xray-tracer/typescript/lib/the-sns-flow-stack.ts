@@ -29,15 +29,13 @@ export class TheSnsFlowStack extends cdk.Stack {
         });
         topic.grantPublish(this.snsLambda);
 
-        // SNS Subscriber Queue
-        const createdStatusQueue = new sqs.Queue(this, 'XRayTracerSnsSubscriberQueue', {
-            visibilityTimeout: cdk.Duration.seconds(300),
-            queueName: 'XRayTracerSnsSubscriberQueue',
+        // Have a Lambda subscribe to our topic
+        let snsSubscribeLambda = new lambda.Function(this, 'snsSubscriptionLambdaHandler', {
+            runtime: lambda.Runtime.NODEJS_12_X,
+            code: lambda.Code.asset('lambdas'),
+            handler: 'sns_subscribe.handler',
+            tracing: lambda.Tracing.ACTIVE
         });
-  
-        // subscribe SQS to our SNS Topic
-        topic.addSubscription(new sns_sub.SqsSubscription(createdStatusQueue, {
-            rawMessageDelivery: false
-        }));
+        topic.addSubscription(new sns_sub.LambdaSubscription(snsSubscribeLambda));
     }
 }
