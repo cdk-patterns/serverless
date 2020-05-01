@@ -14,7 +14,7 @@ exports.handler = async function(event:any) {
     Message: 'Simulated Message', 
     TopicArn: process.env.TOPIC_ARN
   };
-  var publishResponse = await new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+  var publishResponse = await new AWS.SNS().publish(params).promise();
 
   snsSegment.addAnnotation("message", params.Message);
   snsSegment.addMetadata("params", params)
