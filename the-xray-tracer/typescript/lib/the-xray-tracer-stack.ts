@@ -68,10 +68,7 @@ export class TheXrayTracerStack extends cdk.Stack {
           'application/json': "Action=Publish&"+
                               "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
                               "Message=$util.urlEncode($context.path)&"+
-                              "Version=2010-03-31&"+
-                              "MessageAttributes.entry.1.Name=status&"+
-                              "MessageAttributes.entry.1.Value.DataType=String&"+
-                              "MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.path('$.status'))"
+                              "Version=2010-03-31"
         },
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         integrationResponses: [
