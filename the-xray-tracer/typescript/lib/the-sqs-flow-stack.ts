@@ -2,10 +2,16 @@ import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import sqs = require('@aws-cdk/aws-sqs');
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
+import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
+import sns = require('@aws-cdk/aws-sns');
+
+export interface SQSFlowStackProps extends cdk.StackProps{
+    readonly snsTopicARN: string;
+}
 
 export class TheSqsFlowStack extends cdk.Stack {
     sqslambda: lambda.Function;
-    constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    constructor(scope: cdk.Construct, id: string, props: SQSFlowStackProps) {
         super(scope, id, props);
 
         /**
@@ -27,6 +33,9 @@ export class TheSqsFlowStack extends cdk.Stack {
             tracing: lambda.Tracing.ACTIVE
         });
         queue.grantSendMessages(this.sqslambda);
+
+        let topic = sns.Topic.fromTopicArn(this, 'SNSTopic', props.snsTopicARN);
+        topic.addSubscription(new sns_sub.LambdaSubscription(this.sqslambda));
 
         // defines an AWS Lambda resource to pull from our queue
         const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {

@@ -8,18 +8,25 @@ import { TheSqsFlowStack } from '../lib/the-sqs-flow-stack';
 //import { TheSnsFlowStack } from '../lib/the-sns-flow-stack';
 
 const app = new cdk.App();
-let dynamoFlow = new TheDynamoFlowStack(app, 'TheXrayDynamoFlow');
-let httpFlow = new TheHttpFlowStack(app, 'TheXrayHttpFlow');
-let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow');
+
+let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {});
+
+let dynamoFlow = new TheDynamoFlowStack(app, 'TheXrayDynamoFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+let httpFlow = new TheHttpFlowStack(app, 'TheXrayHttpFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
 //let snsFlow = new TheSnsFlowStack(app, 'TheXraySnsFlow');
 
-let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {
-    lambdasToInvoke: [dynamoFlow.dynamoLambda, 
-                        httpFlow.httpLambda, 
-                        sqsFlow.sqslambda]
-});
+httpFlow.addDependency(xrayStack, 'need to know the topic arn');
+dynamoFlow.addDependency(xrayStack, 'need to know the topic arn');
+sqsFlow.addDependency(xrayStack, 'need to know the topic arn');
 
-xrayStack.addDependency(dynamoFlow, 'needs the lambda to trigger the DynamoDB flow');
-xrayStack.addDependency(httpFlow, 'needs the lambda to trigger the http flow');
-xrayStack.addDependency(sqsFlow, 'needs the lambda to trigger the sqs flow');
+//xrayStack.addDependency(dynamoFlow, 'needs the lambda to trigger the DynamoDB flow');
+//xrayStack.addDependency(httpFlow, 'needs the lambda to trigger the http flow');
+//xrayStack.addDependency(sqsFlow, 'needs the lambda to trigger the sqs flow');
 //xrayStack.addDependency(snsFlow, 'needs the lambda to trigger the sns flow')

@@ -5,21 +5,16 @@ import sns = require('@aws-cdk/aws-sns');
 import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
 import iam = require('@aws-cdk/aws-iam');
 
-export interface XrayTraceStackProps extends cdk.StackProps{
-  readonly lambdasToInvoke: lambda.Function[];
-}
-
 export class TheXrayTracerStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: XrayTraceStackProps) {
+  public snsTopicARN: string;
+
+  constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
     const topic = new sns.Topic(this, 'TheXRayTracerSnsFanOutTopic', {
       displayName: "The XRay Tracer Fan Out Topic",
     });
-
-    for(let lambda of props.lambdasToInvoke) {
-      topic.addSubscription(new sns_sub.LambdaSubscription(lambda));
-    }
+    this.snsTopicARN = topic.topicArn;
 
     /**
      * API Gateway Creation
@@ -42,8 +37,23 @@ export class TheXrayTracerStack extends cdk.Stack {
     });
     topic.grantPublish(apigwSnsRole);
 
-    gateway.root.addProxy({
-      defaultIntegration: new apigw.Integration({
+    //Because this isn't a proxy integration, we need to define our response model
+    const responseModel = gateway.addModel('ResponseModel', {
+      contentType: 'application/json',
+      modelName: 'ResponseModel',
+      schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'pollResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'message': { 'type': apigw.JsonSchemaType.STRING } } }
+    });
+    
+    // We define the JSON Schema for the transformed error response
+    const errorResponseModel = gateway.addModel('ErrorResponseModel', {
+      contentType: 'application/json',
+      modelName: 'ErrorResponseModel',
+      schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'errorResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'state': { 'type': apigw.JsonSchemaType.STRING }, 'message': { 'type': apigw.JsonSchemaType.STRING } } }
+    });
+
+    //Create an endpoint '/InsertItem' which accepts a JSON payload on a POST verb
+    gateway.root.addResource('{proxy+}')
+      .addMethod('GET', new apigw.Integration({
         type: apigw.IntegrationType.AWS, //native aws integration
         integrationHttpMethod: "POST",
         uri: 'arn:aws:apigateway:us-east-1:sns:path//', // This is how we setup an SNS Topic publish operation.
@@ -89,7 +99,36 @@ export class TheXrayTracerStack extends cdk.Stack {
           }
         ]
         }
+      }),
+      {
+        methodResponses: [ //We need to define what models are allowed on our method response
+          {
+            // Successful response from the integration
+            statusCode: '200',
+            // Define what parameters are allowed or not
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true
+            },
+            // Validate the schema on the response
+            responseModels: {
+              'application/json': responseModel
+            }
+          },
+          {
+            // Same thing for the error responses
+            statusCode: '400',
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true
+            },
+            responseModels: {
+              'application/json': errorResponseModel
+            }
+          }
+        ]
       })
-    });
   }
 }
