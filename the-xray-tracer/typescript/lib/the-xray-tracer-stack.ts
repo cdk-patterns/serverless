@@ -13,8 +13,8 @@ export class TheXrayTracerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: XrayTraceStackProps) {
     super(scope, id, props);
 
-    const topic = new sns.Topic(this, 'TheXRayTracerSnsTopic', {
-      displayName: "The XRay Tracer CDK Pattern Topic",
+    const topic = new sns.Topic(this, 'TheXRayTracerSnsFanOutTopic', {
+      displayName: "The XRay Tracer Fan Out Topic",
     });
 
     for(let lambda of props.lambdasToInvoke) {
