@@ -3,15 +3,14 @@ import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigateway');
 
 export interface XrayTraceStackProps extends cdk.StackProps{
-  readonly dynamoFlowLambda: lambda.Function;
-  readonly sqsFlowLambda: lambda.Function;
-  readonly httpFlowLambda: lambda.Function;
-  readonly snsFlowLambda: lambda.Function;
+  readonly lambdasToInvoke: lambda.Function[];
 }
 
 export class TheXrayTracerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: XrayTraceStackProps) {
     super(scope, id, props);
+
+    const lambdaARNs:string[] = Array.from(props.lambdasToInvoke, (lambda) => lambda.functionArn);
 
      // defines an AWS Lambda resource that kicks off all the flows
      const orchLambda = new lambda.Function(this, 'OrchLambdaHandler', {
@@ -20,17 +19,14 @@ export class TheXrayTracerStack extends cdk.Stack {
       handler: 'orchestrator.handler',
       timeout: cdk.Duration.seconds(30),
       environment: {
-        DYNAMO_FN_ARN: props.dynamoFlowLambda.functionArn,
-        HTTP_FN_ARN: props.httpFlowLambda.functionArn,
-        SQS_FN_ARN: props.sqsFlowLambda.functionArn,
-        SNS_FN_ARN: props.snsFlowLambda.functionArn
+        LAMBDA_ARNS_TO_INVOKE: JSON.stringify(lambdaARNs)
       },
       tracing: lambda.Tracing.ACTIVE
     });
-    props.dynamoFlowLambda.grantInvoke(orchLambda);
-    props.httpFlowLambda.grantInvoke(orchLambda);
-    props.sqsFlowLambda.grantInvoke(orchLambda);
-    props.snsFlowLambda.grantInvoke(orchLambda);
+
+    props.lambdasToInvoke.forEach((lambda)=>{
+      lambda.grantInvoke(orchLambda);
+    });
 
     // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
     new apigw.LambdaRestApi(this, 'X-Ray_Endpoint', {
