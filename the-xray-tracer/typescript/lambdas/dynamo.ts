@@ -8,8 +8,9 @@ exports.handler = async function(event:any) {
   const dynamoSegment = segment.addNewSubsegment('DynamoDB Query');
   // create AWS SDK clients
   const dynamo = new AWS.DynamoDB();
+  let path = event.Records[0].Sns.Message;
 
-  dynamoSegment.addAnnotation("path", event.path);
+  dynamoSegment.addAnnotation("path", path);
   dynamoSegment.addMetadata("event", event)
 
   // update dynamo entry for "path" with hits++
@@ -20,7 +21,7 @@ exports.handler = async function(event:any) {
     ExpressionAttributeValues: { ':incr': { N: '1' } }
   }).promise();
 
-  console.log('inserted counter for '+ event.path);
+  console.log('inserted counter for '+ path);
 
   dynamoSegment.close();
 
