@@ -13,6 +13,7 @@ exports.handler = async function(event:any) {
 
       lambdasARNsToInvoke.forEach(async (lambdaARN:string) => {
 
+        // Create a custom X-Ray segment for this Lambda Function Inokation
         const lambdaInvokeSegment = segment.addNewSubsegment(`${lambdaARN} Invoke Logic`);
 
         let params = {
@@ -24,6 +25,7 @@ exports.handler = async function(event:any) {
          lambdaInvokeSegment.addAnnotation("functionARN", lambdaARN);
          lambdaInvokeSegment.addMetadata("params", params)
 
+         // Invoke the lambda
          await lambda.invoke(params).promise();
 
          lambdaInvokeSegment.close();
@@ -32,7 +34,7 @@ exports.handler = async function(event:any) {
     }
 
     // return response back to upstream caller
-  return sendRes(200, 'You have connected with the Lambda!');
+  return sendRes(200, 'You have kicked off the orchestrator flow!');
 }
 
 const sendRes = (status:number, body:string) => {
