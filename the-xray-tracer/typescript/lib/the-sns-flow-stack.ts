@@ -4,9 +4,13 @@ import sqs = require('@aws-cdk/aws-sqs');
 import sns = require('@aws-cdk/aws-sns');
 import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
 
+export interface SNSFlowStackProps extends cdk.StackProps{
+    readonly snsTopicARN: string;
+}
+
 export class TheSnsFlowStack extends cdk.Stack {
     snsLambda: lambda.Function;
-    constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    constructor(scope: cdk.Construct, id: string, props: SNSFlowStackProps) {
         super(scope, id, props);
 
         /**
@@ -28,6 +32,8 @@ export class TheSnsFlowStack extends cdk.Stack {
             tracing: lambda.Tracing.ACTIVE
         });
         topic.grantPublish(this.snsLambda);
+        let apigwTopic = sns.Topic.fromTopicArn(this, 'SNSTopic', props.snsTopicARN);
+        apigwTopic.addSubscription(new sns_sub.LambdaSubscription(this.snsLambda));
 
         // Have a Lambda subscribe to our topic
         let snsSubscribeLambda = new lambda.Function(this, 'snsSubscriptionLambdaHandler', {

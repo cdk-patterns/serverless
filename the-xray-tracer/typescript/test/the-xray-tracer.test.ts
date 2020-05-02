@@ -13,9 +13,7 @@ test('Empty Stack', () => {
     });
 
     // WHEN
-    const stack = new TheXrayTracer.TheXrayTracerStack(app, 'MyTestStack', {
-      lambdasToInvoke: [mockFunction]
-  });
+    const stack = new TheXrayTracer.TheXrayTracerStack(app, 'MyTestStack', {});
     // THEN
     expectCDK(stack).to(matchTemplate({
       "Resources": {}
