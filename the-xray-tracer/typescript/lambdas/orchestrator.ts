@@ -11,10 +11,10 @@ exports.handler = async function(event:any) {
     if(typeof lambdaString != 'undefined'){
       let lambdasARNsToInvoke:string[] = JSON.parse(lambdaString);
 
-      lambdasARNsToInvoke.forEach(async (lambdaARN:string) => {
+      for(let lambdaARN of lambdasARNsToInvoke){
 
         // Create a custom X-Ray segment for this Lambda Function Inokation
-        const lambdaInvokeSegment = segment.addNewSubsegment(`${lambdaARN} Invoke Logic`);
+        let lambdaInvokeSegment = segment.addNewSubsegment(`${lambdaARN} Invoke Logic`);
 
         let params = {
           FunctionName: lambdaARN, 
@@ -30,7 +30,7 @@ exports.handler = async function(event:any) {
 
          lambdaInvokeSegment.close();
 
-      })
+      }
     }
 
     // return response back to upstream caller
