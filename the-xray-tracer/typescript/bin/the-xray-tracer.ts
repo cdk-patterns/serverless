@@ -14,10 +14,10 @@ let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow');
 let snsFlow = new TheSnsFlowStack(app, 'TheXraySnsFlow');
 
 let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {
-    dynamoFlowLambda: dynamoFlow.dynamoLambda,
-    httpFlowLambda: httpFlow.httpLambda,
-    sqsFlowLambda: sqsFlow.sqslambda,
-    snsFlowLambda: snsFlow.snsLambda
+    lambdasToInvoke: [dynamoFlow.dynamoLambda, 
+                        httpFlow.httpLambda, 
+                        sqsFlow.sqslambda, 
+                        snsFlow.snsLambda]
 });
 
 xrayStack.addDependency(dynamoFlow, 'needs the lambda to trigger the DynamoDB flow');

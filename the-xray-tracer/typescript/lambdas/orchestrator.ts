@@ -4,21 +4,32 @@ const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
 exports.handler = async function(event:any) {
     var lambda = new AWS.Lambda();
-    var params = {
-        FunctionName: process.env.DYNAMO_FN_ARN, 
-        Payload: JSON.stringify({path:event.path}), 
-        InvocationType: "Event"
-       };
-    await lambda.invoke(params).promise();
+    const segment = AWSXRay.getSegment(); //returns the facade segment
 
-    params.FunctionName = process.env.HTTP_FN_ARN;
-    await lambda.invoke(params).promise();
+    let lambdaString = process.env.LAMBDA_ARNS_TO_INVOKE;
 
-    params.FunctionName = process.env.SQS_FN_ARN;
-    await lambda.invoke(params).promise();
+    if(typeof lambdaString != 'undefined'){
+      let lambdasARNsToInvoke:string[] = JSON.parse(lambdaString);
 
-    params.FunctionName = process.env.SNS_FN_ARN;
-    await lambda.invoke(params).promise();
+      lambdasARNsToInvoke.forEach(async (lambdaARN:string) => {
+
+        const lambdaInvokeSegment = segment.addNewSubsegment(`${lambdaARN} Invoke Logic`);
+
+        let params = {
+          FunctionName: lambdaARN, 
+          Payload: JSON.stringify({path:event.path}), 
+          InvocationType: "Event"
+         };
+
+         lambdaInvokeSegment.addAnnotation("functionARN", lambdaARN);
+         lambdaInvokeSegment.addMetadata("params", params)
+
+         await lambda.invoke(params).promise();
+
+         lambdaInvokeSegment.close();
+
+      })
+    }
 
     // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');
