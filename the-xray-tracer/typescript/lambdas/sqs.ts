@@ -10,6 +10,12 @@ exports.handler = async function(event:any) {
   // Create an SQS service object
   var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
+  AWSXRay.captureFunc('process_message', function(subsegment:any) {
+    var message = event.Records[0].Sns.Message;
+    subsegment.addAnnotation('message_content', message);
+    subsegment.close();
+  });
+
   var params = {
     DelaySeconds: 1,
     MessageAttributes: {
@@ -24,7 +30,6 @@ exports.handler = async function(event:any) {
   sqsSegment.addAnnotation("message", params.MessageBody);
   sqsSegment.addMetadata("params", params)
 
-  let response;
 
   await sqs.sendMessage(params, function(err:any, data:any) {
     if (err) {
