@@ -9,22 +9,17 @@ exports.handler = async function(event:any) {
 
   // Create an SQS service object
   var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-
-  AWSXRay.captureFunc('process_message', function(subsegment:any) {
-    var message = event.Records[0].Sns.Message;
-    subsegment.addAnnotation('message_content', message);
-    subsegment.close();
-  });
+  let path = event.Records[0].Sns.Message;
 
   var params = {
     DelaySeconds: 1,
     MessageAttributes: {
       MessageDeduplicationId: {
         DataType: "String",
-        StringValue: event.path + new Date().getTime()
+        StringValue: path + new Date().getTime()
       }
     },
-    MessageBody: "hello from "+event.path,
+    MessageBody: "hello from "+path,
     QueueUrl: process.env.SQS_URL,
   };
   sqsSegment.addAnnotation("message", params.MessageBody);
