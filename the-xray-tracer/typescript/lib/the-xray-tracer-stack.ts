@@ -21,7 +21,59 @@ export class TheXrayTracerStack extends cdk.Stack {
      * This is complicated because it transforms the incoming json payload into a query string url
      * this url is used to post the payload to sns without a lambda inbetween 
      */
+    //Give our gateway permissions to interact with SNS
+    let apigwSnsRole = new iam.Role(this, 'ApiGatewaySNSRole', {
+      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
+    });
+    topic.grantPublish(apigwSnsRole);
+
+    let defaultIntegration = new apigw.Integration({
+      type: apigw.IntegrationType.AWS, //native aws integration
+      integrationHttpMethod: "POST",
+      uri: 'arn:aws:apigateway:us-east-1:sns:path//', // This is how we setup an SNS Topic publish operation.
+      options: {
+        credentialsRole: apigwSnsRole,
+        requestParameters: {
+          'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'" // Tell api gw to send our payload as query params
+        },
+        requestTemplates: {
+        // This is the VTL to transform our incoming request to post to our SNS topic
+        // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+        'application/json': "Action=Publish&"+
+                            "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
+                            "Message=$util.urlEncode($context.path)&"+
+                            "Version=2010-03-31"
+      },
+      passthroughBehavior: apigw.PassthroughBehavior.NEVER,
+      integrationResponses: [
+        {
+          // Tells APIGW which response to use based on the returned code from the service
+          statusCode: "200",
+          responseTemplates: {
+            // Just respond with a generic message
+            // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+            'application/json': JSON.stringify({ message: 'message added to SNS topic'})
+          }
+        },
+        {
+          // For errors, we check if the response contains the words BadRequest
+          selectionPattern: '^\[Error\].*',
+          statusCode: "400",
+          responseTemplates: {
+              'application/json': JSON.stringify({ state: 'error', message: "$util.escapeJavaScript($input.path('$.errorMessage'))" })
+          },
+          responseParameters: {
+              'method.response.header.Content-Type': "'application/json'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
+              'method.response.header.Access-Control-Allow-Credentials': "'true'"
+          }
+        }
+      ]
+      }
+    });
+
     let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
+      defaultIntegration: defaultIntegration,
       deployOptions: {
         metricsEnabled: true,
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -30,12 +82,6 @@ export class TheXrayTracerStack extends cdk.Stack {
         stageName: 'prod'
       }
     });
-
-    //Give our gateway permissions to interact with SNS
-    let apigwSnsRole = new iam.Role(this, 'ApiGatewaySNSRole', {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
-    });
-    topic.grantPublish(apigwSnsRole);
 
     //Because this isn't a proxy integration, we need to define our response model
     const responseModel = gateway.addModel('ResponseModel', {
@@ -51,52 +97,10 @@ export class TheXrayTracerStack extends cdk.Stack {
       schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'errorResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'state': { 'type': apigw.JsonSchemaType.STRING }, 'message': { 'type': apigw.JsonSchemaType.STRING } } }
     });
 
+
     //Create a {proxy+} endpoint where the URL is used as the payload for all processes
     gateway.root.addResource('{proxy+}')
-      .addMethod('GET', new apigw.Integration({
-        type: apigw.IntegrationType.AWS, //native aws integration
-        integrationHttpMethod: "POST",
-        uri: 'arn:aws:apigateway:us-east-1:sns:path//', // This is how we setup an SNS Topic publish operation.
-        options: {
-          credentialsRole: apigwSnsRole,
-          requestParameters: {
-            'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'" // Tell api gw to send our payload as query params
-          },
-          requestTemplates: {
-          // This is the VTL to transform our incoming request to post to our SNS topic
-          // Check: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-          'application/json': "Action=Publish&"+
-                              "TargetArn=$util.urlEncode('"+topic.topicArn+"')&"+
-                              "Message=$util.urlEncode($context.path)&"+
-                              "Version=2010-03-31"
-        },
-        passthroughBehavior: apigw.PassthroughBehavior.NEVER,
-        integrationResponses: [
-          {
-            // Tells APIGW which response to use based on the returned code from the service
-            statusCode: "200",
-            responseTemplates: {
-              // Just respond with a generic message
-              // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-              'application/json': JSON.stringify({ message: 'message added to SNS topic'})
-            }
-          },
-          {
-            // For errors, we check if the response contains the words BadRequest
-            selectionPattern: '^\[Error\].*',
-            statusCode: "400",
-            responseTemplates: {
-                'application/json': JSON.stringify({ state: 'error', message: "$util.escapeJavaScript($input.path('$.errorMessage'))" })
-            },
-            responseParameters: {
-                'method.response.header.Content-Type': "'application/json'",
-                'method.response.header.Access-Control-Allow-Origin': "'*'",
-                'method.response.header.Access-Control-Allow-Credentials': "'true'"
-            }
-          }
-        ]
-        }
-      }),
+      .addMethod('GET', defaultIntegration,
       {
         methodResponses: [ //We need to define what models are allowed on our method response
           {
