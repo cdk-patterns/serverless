@@ -21,7 +21,7 @@ export class TheXrayTracerStack extends cdk.Stack {
      * This is complicated because it transforms the incoming json payload into a query string url
      * this url is used to post the payload to sns without a lambda inbetween 
      */
-    let gateway = new apigw.RestApi(this, 'theBigFanAPI', {
+    let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
       deployOptions: {
         metricsEnabled: true,
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -32,7 +32,7 @@ export class TheXrayTracerStack extends cdk.Stack {
     });
 
     //Give our gateway permissions to interact with SNS
-    let apigwSnsRole = new iam.Role(this, 'DefaultLambdaHanderRole', {
+    let apigwSnsRole = new iam.Role(this, 'ApiGatewaySNSRole', {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
     });
     topic.grantPublish(apigwSnsRole);
@@ -51,7 +51,7 @@ export class TheXrayTracerStack extends cdk.Stack {
       schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'errorResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'state': { 'type': apigw.JsonSchemaType.STRING }, 'message': { 'type': apigw.JsonSchemaType.STRING } } }
     });
 
-    //Create an endpoint '/InsertItem' which accepts a JSON payload on a POST verb
+    //Create a {proxy+} endpoint where the URL is used as the payload for all processes
     gateway.root.addResource('{proxy+}')
       .addMethod('GET', new apigw.Integration({
         type: apigw.IntegrationType.AWS, //native aws integration
@@ -78,7 +78,7 @@ export class TheXrayTracerStack extends cdk.Stack {
             responseTemplates: {
               // Just respond with a generic message
               // Check https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
-              'application/json': JSON.stringify({ message: 'message added to topic'})
+              'application/json': JSON.stringify({ message: 'message added to SNS topic'})
             }
           },
           {
