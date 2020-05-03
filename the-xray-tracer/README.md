@@ -11,6 +11,7 @@ Some useful references:
 | AWS Serverless Lens Whitepaper | [Serverless Lens Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf) |
 | AWS Well Architected Whitepaper | [Well Architected Whitepaper](http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf) |
 | [Julian Wood](https://twitter.com/julian_wood) | [Building Well Architected Applications](https://aws.amazon.com/blogs/compute/building-well-architected-serverless-applications-understanding-application-health-part-2/) |
+| AWS Developer Blog | [Category: AWS X-Ray](https://aws.amazon.com/blogs/developer/category/developer-tools/aws-x-ray/) |
 
 
 ![high level image](img/arch.png)
