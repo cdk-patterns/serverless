@@ -2,7 +2,8 @@
 
 This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens.
 
-[X-Ray Developer Guide](https://docs.amazonaws.cn/en_us/xray/latest/devguide/xray-guide.pdf)
+[X-Ray Developer Guide](https://docs.amazonaws.cn/en_us/xray/latest/devguide/xray-guide.pdf) <br />
+[X-Ray Concepts](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html)
 
 ![high level image](img/arch.png)
 
@@ -77,7 +78,9 @@ Trace details showing error:
 ## Subsegmemts, Metadata and Annotations
 
 ### Subsegments
-I have included some custom subsegments in this pattern, like "external HTTP Request" below:
+> A segment can break down the data about the work done into subsegments. [Subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.
+
+I have included some custom [subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) in this pattern, like "external HTTP Request" below:
 ![subsegment](img/subsegment.png)
 
 These are easy to create inside the Lambda Functions:
