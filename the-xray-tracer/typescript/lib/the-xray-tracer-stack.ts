@@ -18,16 +18,28 @@ export class TheXrayTracerStack extends cdk.Stack {
 
     /**
      * API Gateway Creation
-     * This is complicated because it transforms the incoming json payload into a query string url
-     * this url is used to post the payload to sns without a lambda inbetween 
+     * This is complicated because it is a direct SNS integration through VTL not a proxy integration
+     * Tracing is enabled for X-Ray
      */
-    //Give our gateway permissions to interact with SNS
+
+    let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
+      deployOptions: {
+        metricsEnabled: true,
+        loggingLevel: apigw.MethodLoggingLevel.INFO,
+        dataTraceEnabled: true,
+        tracingEnabled: true,
+        stageName: 'prod'
+      }
+    });
+
+    // We need a role to let our gateway publish to SNS
     let apigwSnsRole = new iam.Role(this, 'ApiGatewaySNSRole', {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com')
     });
     topic.grantPublish(apigwSnsRole);
 
-    let defaultIntegration = new apigw.Integration({
+    // This is our direct VTL integration with SNS
+    let snsIntegration = new apigw.Integration({
       type: apigw.IntegrationType.AWS, //native aws integration
       integrationHttpMethod: "POST",
       uri: 'arn:aws:apigateway:us-east-1:sns:path//', // This is how we setup an SNS Topic publish operation.
@@ -69,17 +81,6 @@ export class TheXrayTracerStack extends cdk.Stack {
           }
         }
       ]
-      }
-    });
-
-    let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
-      defaultIntegration: defaultIntegration,
-      deployOptions: {
-        metricsEnabled: true,
-        loggingLevel: apigw.MethodLoggingLevel.INFO,
-        dataTraceEnabled: true,
-        tracingEnabled: true,
-        stageName: 'prod'
       }
     });
 
@@ -128,11 +129,12 @@ export class TheXrayTracerStack extends cdk.Stack {
       ]
     }
 
+    // Integration for users hitting / endpoint
     gateway.root
-      .addMethod('GET', defaultIntegration, methodOptions);
+      .addMethod('GET', snsIntegration, methodOptions);
 
-    //Create a {proxy+} endpoint where the URL is used as the payload for all processes
+    //Create a /{proxy+} endpoint where the URL is used as the payload for all processes
     gateway.root.addResource('{proxy+}')
-      .addMethod('GET', defaultIntegration, methodOptions);
+      .addMethod('GET', snsIntegration, methodOptions);
   }
 }
