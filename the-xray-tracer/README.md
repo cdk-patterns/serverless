@@ -74,6 +74,17 @@ Service map showing something isn't healthy:
 Trace details showing error:
 ![error hover](img/error_hover.png)
 
+## Metadata and Annotations
+
+I have included some custom subsegments in this pattern, like "external HTTP Request" below:
+![subsegment](img/subsegment.png)
+
+These have custom Metadata and annotations:
+![metadata](img/metadata.png)
+
+Some other places have annotations like:
+![annotations](img/annotations.png)
+
 ## Known X-Ray "Quirks"
 
 There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later. If these are a deal breaker for you there are other tools out there for tracing that I have been promised will integrate with no extra code changes like [Epsagon](https://epsagon.com/)
