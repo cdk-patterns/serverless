@@ -80,12 +80,15 @@ Trace details showing error:
 I have included some custom subsegments in this pattern, like "external HTTP Request" below:
 ![subsegment](img/subsegment.png)
 
+These are easy to create inside the Lambda Functions:
+![subsegment code](img/subsegment_logic.png)
+
 ### Metadata
-These have custom Metadata and annotations:
+You are allowed to put whole objects inside metadata, this is brilliant for showing things like the response from a webservice. Metadata does not however get indexed for search unlike annotations.
 ![metadata](img/metadata.png)
 
 ### Annotations
-Some other places have annotations like:
+Annotations are simple key:value strings but they can be used to search for particular events in your traces.
 ![annotations](img/annotations.png)
 
 ## Known X-Ray "Quirks"
