@@ -100,7 +100,7 @@ You are allowed to put whole objects inside metadata, this is brilliant for show
 
 ## Known X-Ray "Quirks"
 
-There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later. If these are a deal breaker for you there are other tools out there for tracing that I have been promised will integrate with no extra code changes like [Epsagon](https://epsagon.com/)
+There are a couple of X-Ray quirks that I need to document, I thought it better to show them than refactor the pattern to hide them then you hit one later. If these are a deal breaker for you there are other tools out there for tracing that I have been promised will integrate with no extra code changes like [Epsagon](https://epsagon.com/)
 
 ### SQS -> Lambda Traces
 There is a [known bug](https://github.com/aws/aws-xray-sdk-node/issues/208) where this doesn't connect and you end up with two paths on your service map.
