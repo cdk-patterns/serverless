@@ -64,7 +64,7 @@ Which produces an X-Ray service map something like (You get two circles per Lamb
 
 ![xray service map](img/flow_service_map_icons.png)
 
-## Deliberate Random Errors
+## Deliberate Random Errors
 
 I introduced a random SSL Cert error into the Lambda that connects to the External Http Endpoint to let you experiment with using X-Ray to source an error
 
