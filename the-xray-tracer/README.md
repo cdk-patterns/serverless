@@ -56,6 +56,10 @@ I wanted to make this pattern as "real" as possible for people so I included mos
 - Lambda -> External Http Endpoint
 - Lambda -> SNS -> Lambda
 
+I introduced a random SSL Cert error into the Lambda that connects to the External Http Endpoint to let you play with using X-Ray to source an error
+
+![error hover](img/error_hover.png)
+
 There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later.
 
 ### SQS -> Lambda Traces
