@@ -2,8 +2,14 @@
 
 This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens.
 
-[X-Ray Developer Guide](https://docs.amazonaws.cn/en_us/xray/latest/devguide/xray-guide.pdf) <br />
-[X-Ray Concepts](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html)
+| Author        | Link           |
+| ------------- | ------------- |
+| AWS X-Ray Developer Guide      | [X-Ray Developer Guide](https://docs.amazonaws.cn/en_us/xray/latest/devguide/xray-guide.pdf)  |
+| AWS X-Ray Concepts | [X-Ray Concepts](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html) |
+| AWS Serverless Lens Whitepaper | [Serverless Lens Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf) |
+| AWS Well Architected Whitepaper | [Well Architected Whitepaper](http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf) |
+| [Julian Wood](https://twitter.com/julian_wood) | [Building Well Architected Applications](https://aws.amazon.com/blogs/compute/building-well-architected-serverless-applications-understanding-application-health-part-2/) |
+
 
 ![high level image](img/arch.png)
 
