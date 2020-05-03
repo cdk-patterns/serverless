@@ -102,6 +102,31 @@ Service map showing something isn't healthy:
 Trace details showing error:
 ![error hover](img/error_hover.png)
 
+## Enabling X-Ray
+Depending on the component you are using and what it is integrating with you need to enable X-Ray in a different way.
+
+### API Gateway
+This is done by simply setting a property of `tracingEnabled: true` on deployOptions:
+![api gateway](img/enable_apigw.png)
+
+### Lambda
+You set a tracing property to `lambda.Tracing.ACTIVE`
+![lambda](img/enable_lambda.png)
+
+### SNS/SQS/DynamoDB
+These just pick up when being called from a component with tracing enabled, they do not need a specific setting to enable it. 
+
+### AWS SDK Calls
+You need to make sure your AWS SDK code is wrapped with X-Ray during invocation. This is true of any SDK calls e.g. Lambda to Lambda direct invoke, DynamoDB queries, Publishing to SNS etc
+
+![sdk](img/enable_sdk.png)
+
+### External HTTP Requests
+
+You need to wrap the https module with X-Ray:
+
+![https](img/enable_https.png)
+
 ## Subsegments, Metadata and Annotations
 
 ### Subsegments
