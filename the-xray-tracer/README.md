@@ -74,7 +74,7 @@ Service map showing something isn't healthy:
 Trace details showing error:
 ![error hover](img/error_hover.png)
 
-## Metadata and Annotations
+## Subsegmemts, Metadata and Annotations
 
 ### Subsegments
 I have included some custom subsegments in this pattern, like "external HTTP Request" below:
@@ -84,11 +84,15 @@ These are easy to create inside the Lambda Functions:
 ![subsegment code](img/subsegment_logic.png)
 
 ### Metadata
-You are allowed to put whole objects inside metadata, this is brilliant for showing things like the response from a webservice. Metadata does not however get indexed for search unlike annotations.
+You are allowed to put whole objects inside metadata, this is brilliant for showing things like the response from a webservice. 
+
+> Metadata are key-value pairs that can have values of any type, including objects and lists, but are not indexed for use with filter expressions. Use metadata to record additional data that you want stored in the trace but don't need to use with search.
+
 ![metadata](img/metadata.png)
 
 ### Annotations
-Annotations are simple key:value strings but they can be used to search for particular events in your traces.
+> Annotations are key-value pairs with string, number, or Boolean values. Annotations are indexed for use with filter expressions. Use annotations to record data that you want to use to group traces in the console, or when calling the GetTraceSummaries API.
+
 ![annotations](img/annotations.png)
 
 ## Known X-Ray "Quirks"
