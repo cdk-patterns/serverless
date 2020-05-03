@@ -2,6 +2,8 @@
 
 This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens.
 
+[X-Ray Developer Guide](https://docs.amazonaws.cn/en_us/xray/latest/devguide/xray-guide.pdf)
+
 ![high level image](img/arch.png)
 
 ## Well Architected Framework
