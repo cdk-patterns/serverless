@@ -60,6 +60,8 @@ I introduced a random SSL Cert error into the Lambda that connects to the Extern
 
 ![error hover](img/error_hover.png)
 
+## Known X-Ray "Quirks"
+
 There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later.
 
 ### SQS -> Lambda Traces
