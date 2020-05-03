@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import sqs = require('@aws-cdk/aws-sqs');
 import sns = require('@aws-cdk/aws-sns');
 import sns_sub = require('@aws-cdk/aws-sns-subscriptions');
 
