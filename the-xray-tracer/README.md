@@ -60,7 +60,7 @@ I wanted to make this pattern as "real" as possible for people so I included mos
 
 ![flow](img/flow.png)
 
-Which produces an X-Ray service map something like:
+Which produces an X-Ray service map something like (You get two circles per Lambda):
 
 ![xray service map](img/flow_service_map.png)
 
