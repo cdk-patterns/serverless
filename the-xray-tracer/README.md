@@ -75,6 +75,6 @@ X-Ray does work as expected with SNS when using the AWS SDK but for some reason 
 ![sns bug](img/sns_bug.png)
 
 ### Service Map Changes Design Randomly
-Unlike other tracing solutions I have used that let you position all of the circles where they give a feeling of inner calmness based on personal OCD; X-Ray randomly positions the circles on every refresh which can lead to some interesting map layouts
+Unlike other tracing solutions I have used that let you position all of the circles where they give a feeling of inner calmness based on personal OCD; X-Ray randomly positions the circles on every refresh which can lead to some interesting map layouts. The important thing is being able to spot anomalies which you can definitely still do so this is purely aesthetic. 
 
 ![service map positioning](img/service_map_positioning.png)
