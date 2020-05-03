@@ -1,6 +1,6 @@
 # The X-Ray Tracer
 
-This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens.
+This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens. A fully well architected solution would use embedded metric format for the logs like in the Julian Wood reference below but I am saving that for another pattern so as not to confuse the concepts.
 
 Some useful references:
 
@@ -87,7 +87,7 @@ Service map showing something isn't healthy:
 Trace details showing error:
 ![error hover](img/error_hover.png)
 
-## Subsegmemts, Metadata and Annotations
+## Subsegments, Metadata and Annotations
 
 ### Subsegments
 > A segment can break down the data about the work done into subsegments. [Subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.
