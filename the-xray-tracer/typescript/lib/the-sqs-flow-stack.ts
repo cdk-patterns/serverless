@@ -18,7 +18,7 @@ export class TheSqsFlowStack extends cdk.Stack {
          * SQS Flow
          * SQS creation
          */
-        const queue = new sqs.Queue(this, 'RDSPublishQueue', {
+        const queue = new sqs.Queue(this, 'Queue', {
             visibilityTimeout: cdk.Duration.seconds(300)
         });
 
