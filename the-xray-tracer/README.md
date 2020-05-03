@@ -58,6 +58,8 @@ I wanted to make this pattern as "real" as possible for people so I included mos
 - Lambda -> External Http Endpoint
 - Lambda -> SNS -> Lambda
 
+![flow](img/flow.png)
+
 I introduced a random SSL Cert error into the Lambda that connects to the External Http Endpoint to let you experiment with using X-Ray to source an error
 
 ![error hover](img/error_hover.png)
