@@ -62,7 +62,7 @@ I wanted to make this pattern as "real" as possible for people so I included mos
 
 Which produces an X-Ray service map something like (You get two circles per Lambda):
 
-![xray service map](img/flow_service_map.png)
+![xray service map](img/flow_service_map_icons.png)
 
 I introduced a random SSL Cert error into the Lambda that connects to the External Http Endpoint to let you experiment with using X-Ray to source an error
 
