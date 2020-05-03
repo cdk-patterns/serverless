@@ -97,39 +97,42 @@ export class TheXrayTracerStack extends cdk.Stack {
       schema: { 'schema': apigw.JsonSchemaVersion.DRAFT4, 'title': 'errorResponse', 'type': apigw.JsonSchemaType.OBJECT, 'properties': { 'state': { 'type': apigw.JsonSchemaType.STRING }, 'message': { 'type': apigw.JsonSchemaType.STRING } } }
     });
 
+    let methodOptions: apigw.MethodOptions = {
+      methodResponses: [ //We need to define what models are allowed on our method response
+        {
+          // Successful response from the integration
+          statusCode: '200',
+          // Define what parameters are allowed or not
+          responseParameters: {
+            'method.response.header.Content-Type': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Access-Control-Allow-Credentials': true
+          },
+          // Validate the schema on the response
+          responseModels: {
+            'application/json': responseModel
+          }
+        },
+        {
+          // Same thing for the error responses
+          statusCode: '400',
+          responseParameters: {
+            'method.response.header.Content-Type': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Access-Control-Allow-Credentials': true
+          },
+          responseModels: {
+            'application/json': errorResponseModel
+          }
+        }
+      ]
+    }
+
+    gateway.root.addResource('/')
+      .addMethod('GET', defaultIntegration, methodOptions);
 
     //Create a {proxy+} endpoint where the URL is used as the payload for all processes
     gateway.root.addResource('{proxy+}')
-      .addMethod('GET', defaultIntegration,
-      {
-        methodResponses: [ //We need to define what models are allowed on our method response
-          {
-            // Successful response from the integration
-            statusCode: '200',
-            // Define what parameters are allowed or not
-            responseParameters: {
-              'method.response.header.Content-Type': true,
-              'method.response.header.Access-Control-Allow-Origin': true,
-              'method.response.header.Access-Control-Allow-Credentials': true
-            },
-            // Validate the schema on the response
-            responseModels: {
-              'application/json': responseModel
-            }
-          },
-          {
-            // Same thing for the error responses
-            statusCode: '400',
-            responseParameters: {
-              'method.response.header.Content-Type': true,
-              'method.response.header.Access-Control-Allow-Origin': true,
-              'method.response.header.Access-Control-Allow-Credentials': true
-            },
-            responseModels: {
-              'application/json': errorResponseModel
-            }
-          }
-        ]
-      })
+      .addMethod('GET', defaultIntegration, methodOptions);
   }
 }
