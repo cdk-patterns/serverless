@@ -90,7 +90,7 @@ After you deploy this pattern you will have an API Gateway with the URL being ou
 
 Any URL you hit on that gateway will trigger this flow, it uses your URL as the message sent to SNS.
 
-This URL is inserted into DynamoDB with a counter of how many times it was hit, the SNS and the SQS consumer lambdas both log the message.
+This URL is inserted into DynamoDB with a counter of how many times it was hit, the SNS and the SQS consumer lambdas both log the message to CloudWatch.
 
 ## Deliberate Random Errors
 
