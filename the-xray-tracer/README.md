@@ -67,9 +67,11 @@ I wanted to make this pattern as "real" as possible for people so I included mos
 - Lambda -> External Http Endpoint
 - Lambda -> SNS -> Lambda
 
+When I map the flow in a high level conceptual image it looks like this:
+
 ![flow](img/flow.png)
 
-Which produces an X-Ray service map something like (You get two circles per Lambda):
+After deployment, the X-Ray service map looks something like (You get two circles per Lambda):
 
 ![xray service map](img/flow_service_map_icons.png)
 
@@ -77,6 +79,7 @@ Or if you look at CloudWatch Service Lens:
 
 ![cloudwatch service map](img/cloudwatch_service_lens.png)
 
+You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. It cannot be that out of date diagram you found on a wiki created 12 months ago, it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it.
 
 ## Testing This Pattern
 
