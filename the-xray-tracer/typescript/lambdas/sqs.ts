@@ -13,12 +13,6 @@ exports.handler = async function(event:any) {
 
   var params = {
     DelaySeconds: 1,
-    MessageAttributes: {
-      MessageDeduplicationId: {
-        DataType: "String",
-        StringValue: path + new Date().getTime()
-      }
-    },
     MessageBody: "hello from "+path,
     QueueUrl: process.env.SQS_URL,
   };
