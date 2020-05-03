@@ -81,7 +81,7 @@ Or if you look at CloudWatch Service Lens:
 
 ![cloudwatch service map](img/cloudwatch_service_lens.png)
 
-You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. It cannot be that out of date diagram you found on a wiki created 12 months ago, it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it.
+You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. When viewed through the AWS Console, it cannot become the out of date diagram you found on a wiki last updated 12 months ago - it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it immediately.
 
 ## Testing This Pattern
 
