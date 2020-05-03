@@ -8,6 +8,7 @@ exports.handler = async function(event:any) {
   
   for(let index in records) {
 
+    // Try and get our trace information associated to the right parent
     let traceHeaderStr = records[index].attributes.AWSTraceHeader;
     let traceData = AWSXRay.utils.processTraceData(traceHeaderStr);
     const segment = new AWSXRay.Segment('Logging SQS Message', traceData.Root, traceData.Parent);
