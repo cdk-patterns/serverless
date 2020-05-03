@@ -28,8 +28,3 @@ httpFlow.addDependency(xrayStack, 'need to know the topic arn');
 dynamoFlow.addDependency(xrayStack, 'need to know the topic arn');
 sqsFlow.addDependency(xrayStack, 'need to know the topic arn');
 snsFlow.addDependency(xrayStack, 'need to know the topic arn');
-
-//xrayStack.addDependency(dynamoFlow, 'needs the lambda to trigger the DynamoDB flow');
-//xrayStack.addDependency(httpFlow, 'needs the lambda to trigger the http flow');
-//xrayStack.addDependency(sqsFlow, 'needs the lambda to trigger the sqs flow');
-//xrayStack.addDependency(snsFlow, 'needs the lambda to trigger the sns flow')
