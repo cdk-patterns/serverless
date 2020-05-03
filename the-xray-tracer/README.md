@@ -78,7 +78,8 @@ Or if you look at CloudWatch Service Lens:
 ![cloudwatch service map](img/cloudwatch_service_lens.png)
 
 
-##Testing This Pattern
+## Testing This Pattern
+
 
 After you deploy this pattern you will have an API Gateway with the URL being output in the CDK Deploy logs.
 
