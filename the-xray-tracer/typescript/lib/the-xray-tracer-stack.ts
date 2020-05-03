@@ -128,7 +128,7 @@ export class TheXrayTracerStack extends cdk.Stack {
       ]
     }
 
-    gateway.root.addResource('/')
+    gateway.root
       .addMethod('GET', defaultIntegration, methodOptions);
 
     //Create a {proxy+} endpoint where the URL is used as the payload for all processes
