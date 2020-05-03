@@ -73,3 +73,8 @@ I have included some logic inside the SQS subscriber lambda to move an X-Ray cus
 X-Ray does work as expected with SNS when using the AWS SDK but for some reason when I do a direct integration with API Gateway through VTL the service map shows the subscribers of the SNS topic as being connected to API GW rather than SNS which is fine because I am not missing information but it's not correct. If I workout a fix for this I will update the pattern.
 
 ![sns bug](img/sns_bug.png)
+
+### Service Map Changes Design Randomly
+Unlike other tracing solutions I have used where you can position all of the circles where they give a feeling of inner calmness based on personal OCD; X-Ray randomly positions the circles on every refresh which can lead to some interesting map layouts
+
+![service map positioning](img/service_map_positioning.png)
