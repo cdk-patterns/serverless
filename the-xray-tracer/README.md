@@ -48,7 +48,15 @@ database, or how long it takes to process pictures with large crowds.
 
 ## What is Included In This Pattern?
 
-I wanted to make this pattern as "real" as possible for people so I included most of the serverless components you will use everyday. There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later.
+I wanted to make this pattern as "real" as possible for people so I included most of the serverless components you will use everyday. I have included:
+
+- API Gateway -> SNS -> Lambda (not SQS for reasons [documented later](#sqs---lambda-traces))
+- Lambda -> DynamoDB
+- Lambda -> SQS -> Lambda
+- Lambda -> External Http Endpoint
+- Lambda -> SNS -> Lambda
+
+There are a couple of X-Ray quirks that I need to document upfront, I thought it better to show them than refactor the pattern to hide them then you hit one later.
 
 ### SQS -> Lambda Traces
 There is a [known bug](https://github.com/aws/aws-xray-sdk-node/issues/208) where this doesn't connect and you end up with two paths on your service map.
