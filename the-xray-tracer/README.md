@@ -76,12 +76,15 @@ Trace details showing error:
 
 ## Metadata and Annotations
 
+### Subsegments
 I have included some custom subsegments in this pattern, like "external HTTP Request" below:
 ![subsegment](img/subsegment.png)
 
+### Metadata
 These have custom Metadata and annotations:
 ![metadata](img/metadata.png)
 
+### Annotations
 Some other places have annotations like:
 ![annotations](img/annotations.png)
 
