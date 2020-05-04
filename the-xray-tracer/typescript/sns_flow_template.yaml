@@ -1,0 +1,213 @@
+Resources:
+  TheXRayTracerSnsTopicCCE2005E:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      DisplayName: The XRay Tracer CDK Pattern Topic
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/TheXRayTracerSnsTopic/Resource
+  snsLambdaHandlerServiceRole7F428B88:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsLambdaHandler/ServiceRole/Resource
+  snsLambdaHandlerServiceRoleDefaultPolicy80707B6B:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 'xray:PutTraceSegments'
+              - 'xray:PutTelemetryRecords'
+            Effect: Allow
+            Resource: '*'
+          - Action: 'sns:Publish'
+            Effect: Allow
+            Resource: !Ref TheXRayTracerSnsTopicCCE2005E
+        Version: 2012-10-17
+      PolicyName: snsLambdaHandlerServiceRoleDefaultPolicy80707B6B
+      Roles:
+        - !Ref snsLambdaHandlerServiceRole7F428B88
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  snsLambdaHandlerE7B0ABE3:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Ref >-
+          AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3BucketFEB1737B
+        S3Key: !Join 
+          - ''
+          - - !Select 
+              - 0
+              - !Split 
+                - '||'
+                - !Ref >-
+                  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3VersionKey433D325F
+            - !Select 
+              - 1
+              - !Split 
+                - '||'
+                - !Ref >-
+                  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3VersionKey433D325F
+      Handler: sns_publish.handler
+      Role: !GetAtt 
+        - snsLambdaHandlerServiceRole7F428B88
+        - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref TheXRayTracerSnsTopicCCE2005E
+      TracingConfig:
+        Mode: Active
+    DependsOn:
+      - snsLambdaHandlerServiceRoleDefaultPolicy80707B6B
+      - snsLambdaHandlerServiceRole7F428B88
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsLambdaHandler/Resource
+      'aws:asset:path': asset.4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04b
+      'aws:asset:property': Code
+  snsLambdaHandlerAllowInvokeTheXraySnsFlowSNSTopic80B9595935AF18F0:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt 
+        - snsLambdaHandlerE7B0ABE3
+        - Arn
+      Principal: sns.amazonaws.com
+      SourceArn: !ImportValue >-
+        TheXrayTracerStack:ExportsOutputRefTheXRayTracerSnsFanOutTopicDE7E70F8D479F0D6
+    Metadata:
+      'aws:cdk:path': >-
+        TheXraySnsFlow/snsLambdaHandler/AllowInvoke:TheXraySnsFlowSNSTopic80B95959
+  snsLambdaHandlerSNSTopic3B2CFF1D:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      Protocol: lambda
+      TopicArn: !ImportValue >-
+        TheXrayTracerStack:ExportsOutputRefTheXRayTracerSnsFanOutTopicDE7E70F8D479F0D6
+      Endpoint: !GetAtt 
+        - snsLambdaHandlerE7B0ABE3
+        - Arn
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsLambdaHandler/SNSTopic/Resource
+  snsSubscriptionLambdaHandlerServiceRole215E543C:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - !Join 
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsSubscriptionLambdaHandler/ServiceRole/Resource
+  snsSubscriptionLambdaHandlerServiceRoleDefaultPolicy23353421:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 'xray:PutTraceSegments'
+              - 'xray:PutTelemetryRecords'
+            Effect: Allow
+            Resource: '*'
+        Version: 2012-10-17
+      PolicyName: snsSubscriptionLambdaHandlerServiceRoleDefaultPolicy23353421
+      Roles:
+        - !Ref snsSubscriptionLambdaHandlerServiceRole215E543C
+    Metadata:
+      'aws:cdk:path': >-
+        TheXraySnsFlow/snsSubscriptionLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  snsSubscriptionLambdaHandler68619CD8:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Ref >-
+          AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3BucketFEB1737B
+        S3Key: !Join 
+          - ''
+          - - !Select 
+              - 0
+              - !Split 
+                - '||'
+                - !Ref >-
+                  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3VersionKey433D325F
+            - !Select 
+              - 1
+              - !Split 
+                - '||'
+                - !Ref >-
+                  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3VersionKey433D325F
+      Handler: sns_subscribe.handler
+      Role: !GetAtt 
+        - snsSubscriptionLambdaHandlerServiceRole215E543C
+        - Arn
+      Runtime: nodejs12.x
+      TracingConfig:
+        Mode: Active
+    DependsOn:
+      - snsSubscriptionLambdaHandlerServiceRoleDefaultPolicy23353421
+      - snsSubscriptionLambdaHandlerServiceRole215E543C
+    Metadata:
+      'aws:cdk:path': TheXraySnsFlow/snsSubscriptionLambdaHandler/Resource
+      'aws:asset:path': asset.4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04b
+      'aws:asset:property': Code
+  snsSubscriptionLambdaHandlerAllowInvokeTheXraySnsFlowTheXRayTracerSnsTopic86AE60703F758919:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt 
+        - snsSubscriptionLambdaHandler68619CD8
+        - Arn
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref TheXRayTracerSnsTopicCCE2005E
+    Metadata:
+      'aws:cdk:path': >-
+        TheXraySnsFlow/snsSubscriptionLambdaHandler/AllowInvoke:TheXraySnsFlowTheXRayTracerSnsTopic86AE6070
+  snsSubscriptionLambdaHandlerTheXRayTracerSnsTopic6FDB75DD:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref TheXRayTracerSnsTopicCCE2005E
+      Endpoint: !GetAtt 
+        - snsSubscriptionLambdaHandler68619CD8
+        - Arn
+    Metadata:
+      'aws:cdk:path': >-
+        TheXraySnsFlow/snsSubscriptionLambdaHandler/TheXRayTracerSnsTopic/Resource
+Parameters:
+  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3BucketFEB1737B:
+    Type: String
+    Description: >-
+      S3 bucket for asset
+      "4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04b"
+  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bS3VersionKey433D325F:
+    Type: String
+    Description: >-
+      S3 key for asset version
+      "4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04b"
+  AssetParameters4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04bArtifactHash92535D2D:
+    Type: String
+    Description: >-
+      Artifact hash for asset
+      "4f78fd1f05a29f6ed80acaaf918f6337a7e9be2d13311f31f93ad08228d0a04b"
