@@ -143,7 +143,7 @@ You need to make sure your AWS SDK code is wrapped with X-Ray during invocation.
 
 ```javascript
 const AWSXRay = require('aws-xray-sdk');
-const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+const AWS = AWSXRay.captureAWS(require('aws-sdk')); // Wrap AWS SDK
 
 exports.handler = async function(event:any) {
 
@@ -156,7 +156,7 @@ exports.handler = async function(event:any) {
 You need to wrap the https module with X-Ray:
 ```javascript
 const AWSXRay = require('aws-xray-sdk');
-var https = AWSXRay.captureHTTPs(require('https'));
+var https = AWSXRay.captureHTTPs(require('https')); // Wrap HTTPS
 
 exports.handler = async function(event:any) {
 
