@@ -101,11 +101,12 @@ Alternatively you can go to CloudWatch in the AWS Console and click "Service Len
 
 I introduced a random SSL Cert error into the Lambda that connects to the External Http Endpoint to let you experiment with using X-Ray to source an error
 
-Service map showing something isn't healthy:
+Service map showing something isn't healthy:<br /><br />
 ![unhealthy service map](img/unhealthy_service_map.png)
 
 Trace details showing error:
-![error hover](img/error_hover.png)
+<br /><br />
+<img src="img/error_hover.png" alt="error showing in hover in console" width="800" />
 
 ## Enabling X-Ray
 Depending on the component you are using and what it is integrating with you need to enable X-Ray in a different way.
