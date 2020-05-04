@@ -143,11 +143,12 @@ You need to make sure your AWS SDK code is wrapped with X-Ray during invocation.
 
 ```javascript
 const AWSXRay = require('aws-xray-sdk');
-const AWS = AWSXRay.captureAWS(require('aws-sdk')); // Wrap AWS SDK
+// Wrap AWS SDK with X-Ray
+const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
 exports.handler = async function(event:any) {
 
-  // Create an SQS service object
+  // Create an SQS service object as normal
   var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 ```
 
@@ -156,12 +157,13 @@ exports.handler = async function(event:any) {
 You need to wrap the https module with X-Ray:
 ```javascript
 const AWSXRay = require('aws-xray-sdk');
-var https = AWSXRay.captureHTTPs(require('https')); // Wrap HTTPS
+// Wrap HTTPS module with X-Ray
+var https = AWSXRay.captureHTTPs(require('https'));
 
 exports.handler = async function(event:any) {
 
   let response = await new Promise((resolve:any, reject:any) => {
-    // Make a call to a webservice
+    // Make a call to a webservice as normal
     const req = https.get("https://url.com", (res:any) => {
 ```
 
