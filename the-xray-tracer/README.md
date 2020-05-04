@@ -16,7 +16,7 @@ Some useful references:
 | AWS Developer Blog | [Category: AWS X-Ray](https://aws.amazon.com/blogs/developer/category/developer-tools/aws-x-ray/) |
 | AWS Training | [Introduction to AWS X-Ray](https://www.aws.training/Details/Video?id=16450) |
 
-<br /><br />
+<br />
 
 ![well architected](img/well_architected.png)
 
