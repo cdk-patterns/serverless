@@ -90,26 +90,17 @@ I separated each of the different SNS subscriber flows above into their own CDK 
 
 if you look inside bin/the-xray-tracer.ts you will see how this works:
 
-```javascript
-let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {});
+```python
+xray_tracer = TheXrayTracerStack(app, "the-xray-tracer")
+http_flow = TheHttpFlowStack(app, 'the-http-flow-stack', sns_topic_arn=xray_tracer.sns_topic_arn)
+dynamo_flow = TheDynamoFlowStack(app, 'the-dynamo-flow-stack', sns_topic_arn=xray_tracer.sns_topic_arn)
+sns_flow = TheSnsFlowStack(app, 'the-sns-flow-stack', sns_topic_arn=xray_tracer.sns_topic_arn)
+sqs_flow = TheSqsFlowStack(app, 'the-sqs-flow-stack', sns_topic_arn=xray_tracer.sns_topic_arn)
 
-let dynamoFlow = new TheDynamoFlowStack(app, 'TheXrayDynamoFlow', {
-    snsTopicARN: xrayStack.snsTopicARN
-});
-let httpFlow = new TheHttpFlowStack(app, 'TheXrayHttpFlow', {
-    snsTopicARN: xrayStack.snsTopicARN
-});
-let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow', {
-    snsTopicARN: xrayStack.snsTopicARN
-});
-let snsFlow = new TheSnsFlowStack(app, 'TheXraySnsFlow', {
-    snsTopicARN: xrayStack.snsTopicARN
-});
-
-httpFlow.addDependency(xrayStack, 'need to know the topic arn');
-dynamoFlow.addDependency(xrayStack, 'need to know the topic arn');
-sqsFlow.addDependency(xrayStack, 'need to know the topic arn');
-snsFlow.addDependency(xrayStack, 'need to know the topic arn');
+http_flow.add_dependency(xray_tracer)
+dynamo_flow.add_dependency(xray_tracer)
+sns_flow.add_dependency(xray_tracer)
+sqs_flow.add_dependency(xray_tracer)
 ```
 
 All of this logic could have reasonably lived in one stack but this way I can add more technologies later that integrate with X-Ray without increasing the overall complexity of the pattern.
@@ -149,28 +140,27 @@ Trace details showing error:
 Depending on the component you are using and what it is integrating with you need to enable X-Ray in a different way.
 
 ### API Gateway
-This is done by simply setting a property of `tracingEnabled: true` on deployOptions:
-```javascript
-let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
-    deployOptions: {
-    metricsEnabled: true,
-    loggingLevel: apigw.MethodLoggingLevel.INFO,
-    dataTraceEnabled: true,
-    tracingEnabled: true,
-    stageName: 'prod'
-    }
-});
+This is done by simply setting a property of `tracing_enabled=True` on deployOptions:
+```python
+api_gw.RestApi(self, 'xrayTracerAPI',
+               deploy_options=api_gw.StageOptions(
+                    metrics_enabled=True,
+                    logging_level=api_gw.MethodLoggingLevel.INFO,
+                    data_trace_enabled=True,
+                    tracing_enabled=True,
+                    stage_name='prod'
+               ))
 ```
 
 ### Lambda
-You set a tracing property to `lambda.Tracing.ACTIVE`
-```javascript
-this.httpLambda = new lambda.Function(this, 'httpLambdaHandler', {
-    runtime: lambda.Runtime.NODEJS_12_X,
-    code: lambda.Code.asset('lambdas'),
-    handler: 'http.handler',
-    tracing: lambda.Tracing.ACTIVE
-});
+You set a tracing property to `_lambda.Tracing.ACTIVE`
+```python
+_lambda.Function(self, "httpLambdaHandler",
+                 runtime=_lambda.Runtime.NODEJS_12_X,
+                 handler="http.handler",
+                 code=_lambda.Code.from_asset("lambdas"),
+                 tracing=_lambda.Tracing.ACTIVE
+                 )
 ```
 
 ### SNS/SQS/DynamoDB

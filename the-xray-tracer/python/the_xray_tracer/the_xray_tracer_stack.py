@@ -25,12 +25,13 @@ class TheXrayTracerStack(core.Stack):
         ###
 
         gateway = api_gw.RestApi(self, 'xrayTracerAPI',
-                                 deploy_options=api_gw.StageOptions(metrics_enabled=True,
-                                                                    logging_level=api_gw.MethodLoggingLevel.INFO,
-                                                                    data_trace_enabled=True,
-                                                                    tracing_enabled=True,
-                                                                    stage_name='prod'
-                                                                    ))
+                                 deploy_options=api_gw.StageOptions(
+                                     metrics_enabled=True,
+                                     logging_level=api_gw.MethodLoggingLevel.INFO,
+                                     data_trace_enabled=True,
+                                     tracing_enabled=True,
+                                     stage_name='prod'
+                                 ))
 
         # Give our gateway permissions to interact with SNS
         api_gw_sns_role = iam.Role(self, 'ApiGatewaySNSRole',
