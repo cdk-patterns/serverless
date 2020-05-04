@@ -25,6 +25,7 @@ setuptools.setup(
         "aws-cdk.aws_apigateway==1.36.1",
         "aws-cdk.aws-sns==1.36.1",
         "aws-cdk.aws-sns-subscriptions==1.36.1",
+        "aws-cdk.aws-dynamodb==1.36.1",
     ],
 
     python_requires=">=3.6",
