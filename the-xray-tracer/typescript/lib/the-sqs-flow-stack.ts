@@ -38,14 +38,10 @@ export class TheSqsFlowStack extends cdk.Stack {
         topic.addSubscription(new sns_sub.LambdaSubscription(this.sqslambda));
 
         // defines an AWS Lambda resource to pull from our queue
-        const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
-            runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-            code: lambda.Code.asset('lambdas'),  // code loaded from the "lambdas/subscribe" directory
-            handler: 'sqs_subscribe.handler',                // file is "lambda", function is "handler"
-            reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
-            environment: {
-                queueURL: queue.queueUrl
-            },
+        const sqsSubscribeLambda = new lambda.Function(this, 'sqsSubscribeLambdaHandler', {
+            runtime: lambda.Runtime.NODEJS_12_X,
+            code: lambda.Code.asset('lambdas'),
+            handler: 'sqs_subscribe.handler', 
             tracing: lambda.Tracing.ACTIVE
         });
         queue.grantConsumeMessages(sqsSubscribeLambda);
