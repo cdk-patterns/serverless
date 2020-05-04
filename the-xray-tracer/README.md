@@ -172,7 +172,8 @@ exports.handler = async function(event:any) {
 > A segment can break down the data about the work done into subsegments. [Subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.
 
 I have included some custom [subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) in this pattern, like "external HTTP Request" below:
-![subsegment](img/subsegment.png)
+<br />
+<img src="img/subsegment.png" alt="Subsegment showing in console" width="450" />
 
 These are easy to create inside the Lambda Functions:
 ```javascript
