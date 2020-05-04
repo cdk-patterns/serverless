@@ -165,6 +165,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The X-Ray Tracer](the-xray-tracer/README.md)
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  
+  ![Architecture](the-xray-tracer/img/arch.png)
+
+  <br /><hr /><br />
+
 </details>
 <details>
   <summary>
@@ -303,6 +310,11 @@ npx cdk deploy
 
   ![Architecture](the-destined-lambda/img/arch.png)
 
+  #### [The X-Ray Tracer](the-xray-tracer/README.md)
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  
+  ![Architecture](the-xray-tracer/img/arch.png)
+
   <br /><hr /><br />
 
   ### Thorsten Hoeger
@@ -371,7 +383,8 @@ I will now group patterns by their relevant pillar:
   The [operational excellence pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=28) includes the ability to run and monitor systems to deliver business value and to continually improve supporting processes and procedures.
 
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
-  A system with X-Ray enabled containing API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  
   ![Architecture](the-xray-tracer/img/arch.png)
 
 <br /><hr /><br />
