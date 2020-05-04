@@ -1,8 +1,8 @@
 # The X-Ray Tracer
 
-This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens. A fully well architected solution would use embedded metric format for the logs like in the Julian Wood reference below but I am saving that for another pattern so as not to confuse the concepts.
-
 ![high level image](img/arch_lite.png)
+
+This is a pattern not defined by the components used but how they send information back to the AWS X-Ray service to help you make your application perform better when viewed through the Serverless [Well-Architected](https://aws.amazon.com/architecture/well-architected/) lens. A fully well architected solution would use embedded metric format for the logs like in the Julian Wood reference below but I am saving that for another pattern so as not to confuse the concepts.
 
 Some useful references:
 
