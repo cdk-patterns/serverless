@@ -172,8 +172,8 @@ exports.handler = async function(event:any) {
 > A segment can break down the data about the work done into subsegments. [Subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) provide more granular timing information and details about downstream calls that your application made to fulfill the original request. A subsegment can contain additional details about a call to an AWS service, an external HTTP API, or an SQL database. You can even define arbitrary subsegments to instrument specific functions or lines of code in your application.
 
 I have included some custom [subsegments](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-subsegments) in this pattern, like "external HTTP Request" below:
-<br />
-<img src="img/subsegment.png" alt="Subsegment showing in console" width="450" />
+<br /><br />
+<img src="img/subsegment.png" alt="Subsegment showing in console" width="600" />
 
 These are easy to create inside the Lambda Functions:
 ```javascript
@@ -196,12 +196,15 @@ You are allowed to put whole objects inside metadata, this is brilliant for show
 
 > Metadata are key-value pairs that can have values of any type, including objects and lists, but are not indexed for use with filter expressions. Use metadata to record additional data that you want stored in the trace but don't need to use with search.
 
-![metadata](img/metadata.png)
+<br /><br />
+<img src="img/metadata.png" alt="metadata on segment in console" width="600" />
 
 ### Annotations
 > Annotations are key-value pairs with string, number, or Boolean values. Annotations are indexed for use with filter expressions. Use annotations to record data that you want to use to group traces in the console, or when calling the GetTraceSummaries API.
 
-![annotations](img/annotations.png)
+<br /><br />
+<img src="img/annotations.png" alt="annotations on segment in console" width="600" />
+
 
 ## Known X-Ray "Quirks"
 
