@@ -84,6 +84,14 @@ Or if you look at CloudWatch Service Lens:
 
 You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. When viewed through the AWS Console, it cannot become the out of date diagram you found on a wiki last updated 12 months ago - it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it immediately.
 
+### Node Lambda Dependencies
+I will eventually refactor this pattern to be pure python but as of right now the lambdas are node.js and they need to install an external dependency that is X-Ray. To accomodate this I added an extra line into app.py to do this for you 
+
+```python
+# install node dependencies for lambdas
+subprocess.check_call("npm i".split(), cwd="lambdas")
+```
+
 ### Project Structure
 
 I separated each of the different SNS subscriber flows above into their own CDK stacks and passed in the SNS Topic ARN as a parameter. Note, in a production system if you want to properly separate these stacks you could use [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html) for the SNS Topic ARN.
