@@ -165,6 +165,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The X-Ray Tracer](the-xray-tracer/README.md)
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
+
+  <br /><hr /><br />
+
 </details>
 <details>
   <summary>
@@ -303,6 +310,11 @@ npx cdk deploy
 
   ![Architecture](the-destined-lambda/img/arch.png)
 
+  #### [The X-Ray Tracer](the-xray-tracer/README.md)
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
+  
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
+
   <br /><hr /><br />
 
   ### Thorsten Hoeger
@@ -346,35 +358,57 @@ npx cdk deploy
   ![Architecture](the-saga-stepfunction/img/arch.png)
 
 </details>
+
+## Serverless Well Architected Pattern Matcher
+
+The [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) Framework helps you understand the pros and cons of
+decisions you make while building systems on AWS. By using the Framework, you will
+learn architectural best practices for designing and operating reliable, secure, efficient,
+and cost-effective systems in the cloud. It provides a way for you to consistently
+measure your architectures against best practices and identify areas for improvement.
+We believe that having well-architected systems greatly increases the likelihood of
+business success.
+
+[Serverless Lens Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf) <br />
+[Well Architected Whitepaper](http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf)
+
+I will now group patterns by their relevant pillar:
+
 <details>
   <summary>
-    Resiliency Focused Patterns
+    <strong>Operational Excellence Pillar</strong>
   </summary>
+  <br />
 
-  #### [The Big Fan](/the-big-fan/README.md)  
-  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+  The [operational excellence pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=28) includes the ability to run and monitor systems to deliver business value and to continually improve supporting processes and procedures.
 
-  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
+  #### [The X-Ray Tracer](the-xray-tracer/README.md)
+  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
 
-  <br /><hr /><br />
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
 
-  #### [The Destined Lambda](/the-destined-lambda/README.md)
-  This is a stock implementation of Lambda Destinations with Amazon EventBridge
+<br /><hr /><br />
+</details>
+
+<details>
+  <summary>
+    <strong>Security Pillar</strong>
+  </summary>
+  <br />
+
+  The [security pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=38) includes the ability to protect information, systems, and assets while delivering business value through risk assessments and mitigation strategies.
+
+  There are currently no CDK Patterns related to this pillar
   
-  You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations. This is resiliency focused because the failure events include the full event that triggered the lambda to fail, meaning you can craft retry logic or do manual investigations from a DLQ.
+</details>
 
-  ![Architecture](the-destined-lambda/img/arch.png)
+<details>
+  <summary>
+    <strong>Reliability Pillar</strong>
+  </summary>
+  <br />
 
-  <br /><hr /><br />
-
-  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
-  
-  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
-
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
-
-  <br /><hr /><br />
+  The [reliability pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=48) includes the ability of a system to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, and mitigate disruptions such as misconfigurations or transient network issues.
 
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
@@ -391,9 +425,52 @@ npx cdk deploy
   #### [The Scalable Webhook](/the-scalable-webhook/README.md)
   Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
+  
+</details>
+
+<details>
+  <summary>
+    <strong>Performance Efficiency Pillar</strong>
+  </summary>
+  <br />
+
+  The [performance efficiency pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=56) focuses on the efficient use of computing resources to meet requirements and the maintenance of that efficiency as demand changes and technologies evolve.
+
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+  
+</details>
+
+<details>
+  <summary>
+    <strong>Cost Optimization Pillar</strong>
+  </summary>
+  <br />
+  
+  The [cost optimization pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=67) includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
+
+  #### [The Big Fan](/the-big-fan/README.md)  
+  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
+
+  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
 
   <br /><hr /><br />
 
+  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
+  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
+  
+  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+  
 </details>
 
 ## External Patterns
