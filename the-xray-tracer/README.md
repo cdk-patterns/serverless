@@ -162,7 +162,6 @@ var https = AWSXRay.captureHTTPs(require('https'));
 
 exports.handler = async function(event:any) {
 
-  let response = await new Promise((resolve:any, reject:any) => {
     // Make a call to a webservice as normal
     const req = https.get("https://url.com", (res:any) => {
 ```
