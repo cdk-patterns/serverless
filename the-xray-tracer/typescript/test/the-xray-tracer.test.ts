@@ -1,21 +1,66 @@
-import { expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
+import { expect as expectCDK, countResourcesLike, haveResourceLike, MatchStyle } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import * as TheXrayTracer from '../lib/the-xray-tracer-stack';
-import lambda = require('@aws-cdk/aws-lambda'); 
+import TheXrayTracer = require('../lib/the-xray-tracer-stack');
 
-test('Empty Stack', () => {
-    const app = new cdk.App();
+test('SNS Topic Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheXrayTracer.TheXrayTracerStack(app, 'TheXrayTracerStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::SNS::Topic", {
+  }));
+});
 
-    let mockFunction = new lambda.Function(app, 'TestFunction', {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.inline(''),
-      handler: 'test'
-    });
+test('SNS Publish IAM Policy Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheXrayTracer.TheXrayTracerStack(app, 'TheXrayTracerStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
+    "PolicyDocument": {
+      "Statement": [
+        {
+          "Action": "sns:Publish",
+          "Effect": "Allow"
+        }]
+    }
+  }
+  ));
+});
 
-    // WHEN
-    const stack = new TheXrayTracer.TheXrayTracerStack(app, 'MyTestStack', {});
-    // THEN
-    expectCDK(stack).to(matchTemplate({
-      "Resources": {}
-    }, MatchStyle.EXACT))
+test('API Gateway /{proxy+} URL Created', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheXrayTracer.TheXrayTracerStack(app, 'TheXrayTracerStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Resource", {
+    "PathPart": "{proxy+}",
+  }
+  ));
+});
+
+test('Two API Gateway Methods Created, one for / and one for {proxy+}', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheXrayTracer.TheXrayTracerStack(app, 'TheXrayTracerStack');
+  // THEN
+  expectCDK(stack).to(countResourcesLike("AWS::ApiGateway::Method", 2, {}))
+});
+
+test('API Gateway Tracing Enabled', () => {
+  const app = new cdk.App();
+  // WHEN
+  const stack = new TheXrayTracer.TheXrayTracerStack(app, 'TheXrayTracerStack');
+  // THEN
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Stage", {
+    "MethodSettings": [{
+      "DataTraceEnabled": true,
+      "HttpMethod": "*",
+      "LoggingLevel": "INFO",
+      "MetricsEnabled": true,
+      "ResourcePath": "/*"
+    }],
+    "TracingEnabled": true
+  }
+  ));
 });

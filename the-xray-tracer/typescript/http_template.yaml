@@ -1,0 +1,4 @@
+
+> the-xray-tracer@0.1.0 cdk /Users/n0173226/Documents/cdkpatterns/serverless/the-xray-tracer/typescript
+> cdk "synth" "TheXrayHttpFlow"
+
