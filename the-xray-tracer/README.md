@@ -16,8 +16,9 @@ Some useful references:
 | AWS Developer Blog | [Category: AWS X-Ray](https://aws.amazon.com/blogs/developer/category/developer-tools/aws-x-ray/) |
 | AWS Training | [Introduction to AWS X-Ray](https://www.aws.training/Details/Video?id=16450) |
 
+<br /><br />
 
-## Well Architected Framework
+![well architected](img/well_architected.png)
 
 The [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) Framework helps you understand the pros and cons of
 decisions you make while building systems on AWS. By using the Framework, you will learn architectural best practices for designing and operating reliable, secure, efficient, and cost-effective systems in the cloud. It provides a way for you to consistently measure your architectures against best practices and identify areas for improvement.
