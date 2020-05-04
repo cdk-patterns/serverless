@@ -6,7 +6,7 @@ import iam = require('@aws-cdk/aws-iam');
 export class TheXrayTracerStack extends cdk.Stack {
   public snsTopicARN: string;
 
-  constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const topic = new sns.Topic(this, 'TheXRayTracerSnsFanOutTopic', {

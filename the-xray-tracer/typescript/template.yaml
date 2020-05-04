@@ -1,0 +1,354 @@
+Resources:
+  TheXRayTracerSnsFanOutTopicDE7E70F8:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: The XRay Tracer Fan Out Topic
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/TheXRayTracerSnsFanOutTopic/Resource
+  xrayTracerAPIA84CAE80:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: xrayTracerAPI
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Resource
+  xrayTracerAPIDeploymentB3CB89A0a689bf68bef2302d0715c2d1a50794fc:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - xrayTracerAPIproxyGET4E348609
+      - xrayTracerAPIproxy719DA214
+      - xrayTracerAPIGET7490A366
+      - xrayTracerAPIErrorResponseModel24719E91
+      - xrayTracerAPIResponseModel2591E14E
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Deployment/Resource
+  xrayTracerAPIDeploymentStageprod85442A48:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      DeploymentId:
+        Ref: xrayTracerAPIDeploymentB3CB89A0a689bf68bef2302d0715c2d1a50794fc
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+      StageName: prod
+      TracingEnabled: true
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/DeploymentStage.prod/Resource
+  xrayTracerAPICloudWatchRoleCCB113F4:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/CloudWatchRole/Resource
+  xrayTracerAPIAccount092EDE74:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - xrayTracerAPICloudWatchRoleCCB113F4
+          - Arn
+    DependsOn:
+      - xrayTracerAPIA84CAE80
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Account
+  xrayTracerAPIGET7490A366:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Fn::GetAtt:
+          - xrayTracerAPIA84CAE80
+          - RootResourceId
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      AuthorizationType: NONE
+      Integration:
+        Credentials:
+          Fn::GetAtt:
+            - ApiGatewaySNSRole1BAAAE75
+            - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: '{"message":"message added to SNS topic"}'
+            StatusCode: "200"
+          - ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+            SelectionPattern: ^[Error].*
+            StatusCode: "400"
+        PassthroughBehavior: NEVER
+        RequestParameters:
+          integration.request.header.Content-Type: "'application/x-www-form-urlencoded'"
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+              - ""
+              - - Action=Publish&TargetArn=$util.urlEncode('
+                - Ref: TheXRayTracerSnsFanOutTopicDE7E70F8
+                - "')&Message=$util.urlEncode($context.path)&Version=2010-03-31"
+        Type: AWS
+        Uri: arn:aws:apigateway:us-east-1:sns:path//
+      MethodResponses:
+        - ResponseModels:
+            application/json:
+              Ref: xrayTracerAPIResponseModel2591E14E
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "200"
+        - ResponseModels:
+            application/json:
+              Ref: xrayTracerAPIErrorResponseModel24719E91
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "400"
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Default/GET/Resource
+  xrayTracerAPIproxy719DA214:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - xrayTracerAPIA84CAE80
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Default/{proxy+}/Resource
+  xrayTracerAPIproxyGET4E348609:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: xrayTracerAPIproxy719DA214
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      AuthorizationType: NONE
+      Integration:
+        Credentials:
+          Fn::GetAtt:
+            - ApiGatewaySNSRole1BAAAE75
+            - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseTemplates:
+              application/json: '{"message":"message added to SNS topic"}'
+            StatusCode: "200"
+          - ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: "{\"state\":\"error\",\"message\":\"$util.escapeJavaScript($input.path('$.errorMessage'))\"}"
+            SelectionPattern: ^[Error].*
+            StatusCode: "400"
+        PassthroughBehavior: NEVER
+        RequestParameters:
+          integration.request.header.Content-Type: "'application/x-www-form-urlencoded'"
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+              - ""
+              - - Action=Publish&TargetArn=$util.urlEncode('
+                - Ref: TheXRayTracerSnsFanOutTopicDE7E70F8
+                - "')&Message=$util.urlEncode($context.path)&Version=2010-03-31"
+        Type: AWS
+        Uri: arn:aws:apigateway:us-east-1:sns:path//
+      MethodResponses:
+        - ResponseModels:
+            application/json:
+              Ref: xrayTracerAPIResponseModel2591E14E
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "200"
+        - ResponseModels:
+            application/json:
+              Ref: xrayTracerAPIErrorResponseModel24719E91
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+          StatusCode: "400"
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/Default/{proxy+}/GET/Resource
+  xrayTracerAPIResponseModel2591E14E:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      ContentType: application/json
+      Name: ResponseModel
+      Schema:
+        $schema: http://json-schema.org/draft-04/schema#
+        title: pollResponse
+        type: object
+        properties:
+          message:
+            type: string
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/ResponseModel/Resource
+  xrayTracerAPIErrorResponseModel24719E91:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: xrayTracerAPIA84CAE80
+      ContentType: application/json
+      Name: ErrorResponseModel
+      Schema:
+        $schema: http://json-schema.org/draft-04/schema#
+        title: errorResponse
+        type: object
+        properties:
+          state:
+            type: string
+          message:
+            type: string
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/xrayTracerAPI/ErrorResponseModel/Resource
+  ApiGatewaySNSRole1BAAAE75:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/ApiGatewaySNSRole/Resource
+  ApiGatewaySNSRoleDefaultPolicyCA5D0260:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sns:Publish
+            Effect: Allow
+            Resource:
+              Ref: TheXRayTracerSnsFanOutTopicDE7E70F8
+        Version: "2012-10-17"
+      PolicyName: ApiGatewaySNSRoleDefaultPolicyCA5D0260
+      Roles:
+        - Ref: ApiGatewaySNSRole1BAAAE75
+    Metadata:
+      aws:cdk:path: TheXrayTracerStack/ApiGatewaySNSRole/DefaultPolicy/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.36.1,@aws-cdk/assets=1.36.1,@aws-cdk/aws-apigateway=1.36.1,@aws-cdk/aws-applicationautoscaling=1.36.1,@aws-cdk/aws-autoscaling-common=1.36.1,@aws-cdk/aws-cloudformation=1.36.1,@aws-cdk/aws-cloudwatch=1.36.1,@aws-cdk/aws-dynamodb=1.36.1,@aws-cdk/aws-ec2=1.36.1,@aws-cdk/aws-events=1.36.1,@aws-cdk/aws-iam=1.36.1,@aws-cdk/aws-kms=1.36.1,@aws-cdk/aws-lambda=1.36.1,@aws-cdk/aws-lambda-event-sources=1.36.1,@aws-cdk/aws-logs=1.36.1,@aws-cdk/aws-s3=1.36.1,@aws-cdk/aws-s3-assets=1.36.1,@aws-cdk/aws-s3-notifications=1.36.1,@aws-cdk/aws-sns=1.36.1,@aws-cdk/aws-sns-subscriptions=1.36.1,@aws-cdk/aws-sqs=1.36.1,@aws-cdk/aws-ssm=1.36.1,@aws-cdk/cloud-assembly-schema=1.36.1,@aws-cdk/core=1.36.1,@aws-cdk/custom-resources=1.36.1,@aws-cdk/cx-api=1.36.1,@aws-cdk/region-info=1.36.1,jsii-runtime=node.js/v13.12.0
+    Condition: CDKMetadataAvailable
+Outputs:
+  xrayTracerAPIEndpointA106537B:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: xrayTracerAPIA84CAE80
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: xrayTracerAPIDeploymentStageprod85442A48
+          - /
+  ExportsOutputRefTheXRayTracerSnsFanOutTopicDE7E70F8D479F0D6:
+    Value:
+      Ref: TheXRayTracerSnsFanOutTopicDE7E70F8
+    Export:
+      Name: TheXrayTracerStack:ExportsOutputRefTheXRayTracerSnsFanOutTopicDE7E70F8D479F0D6
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
