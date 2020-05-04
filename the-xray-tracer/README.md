@@ -197,13 +197,13 @@ You are allowed to put whole objects inside metadata, this is brilliant for show
 
 > Metadata are key-value pairs that can have values of any type, including objects and lists, but are not indexed for use with filter expressions. Use metadata to record additional data that you want stored in the trace but don't need to use with search.
 
-<br /><br />
+<br />
 <img src="img/metadata.png" alt="metadata on segment in console" width="600" />
 
 ### Annotations
 > Annotations are key-value pairs with string, number, or Boolean values. Annotations are indexed for use with filter expressions. Use annotations to record data that you want to use to group traces in the console, or when calling the GetTraceSummaries API.
 
-<br /><br />
+<br />
 <img src="img/annotations.png" alt="annotations on segment in console" width="600" />
 
 
