@@ -26,6 +26,8 @@ setuptools.setup(
         "aws-cdk.aws-sns==1.36.1",
         "aws-cdk.aws-sns-subscriptions==1.36.1",
         "aws-cdk.aws-dynamodb==1.36.1",
+        "aws-cdk.aws-sqs==1.36.1",
+        "aws-cdk.aws-lambda-event-sources==1.36.1"
     ],
 
     python_requires=">=3.6",
