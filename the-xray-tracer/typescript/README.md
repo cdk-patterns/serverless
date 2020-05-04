@@ -86,7 +86,9 @@ You can see that these two diagrams aren't a massive distance away from my high 
 
 ### Project Structure
 
-I separated each of the different SNS subscriber flows above into their own CDK stacks and passed in the SNS Topic ARN as a parameter. if you look inside bin/the-xray-tracer.ts you will see how this works:
+I separated each of the different SNS subscriber flows above into their own CDK stacks and passed in the SNS Topic ARN as a parameter. Note, in a production system if you want to properly separate these stacks you could use [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html) for the SNS Topic ARN.
+
+if you look inside bin/the-xray-tracer.ts you will see how this works:
 
 ```javascript
 let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {});
