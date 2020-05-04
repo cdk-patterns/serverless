@@ -15,7 +15,7 @@ Some useful references:
 | AWS Training | [Introduction to AWS X-Ray](https://www.aws.training/Details/Video?id=16450) |
 
 
-![high level image](img/arch.png)
+![high level image](img/arch_lite.png)
 
 ## Well Architected Framework
 
