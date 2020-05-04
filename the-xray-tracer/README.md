@@ -175,7 +175,20 @@ I have included some custom [subsegments](https://docs.aws.amazon.com/xray/lates
 ![subsegment](img/subsegment.png)
 
 These are easy to create inside the Lambda Functions:
-![subsegment code](img/subsegment_logic.png)
+```javascript
+const subsegment = segment.addNewSubsegment('external HTTP Request');
+  
+let response = await new Promise((resolve:any, reject:any) => {
+    // Make a call to a webservice
+    const req = https.get("https://url.com", (res:any) => {
+        ... //resolve promise
+    });
+    ... //reject promise
+});
+
+subsegment.addMetadata("response", response)
+subsegment.close();
+```
 
 ### Metadata
 You are allowed to put whole objects inside metadata, this is brilliant for showing things like the response from a webservice. 
