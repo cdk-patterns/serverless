@@ -12,10 +12,7 @@ export class TheSnsFlowStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props: SNSFlowStackProps) {
         super(scope, id, props);
 
-        /**
-         * SNS Topic Creation
-         * Our API Gateway posts messages directly to this
-         */
+        // Create an SNS Topic
         const topic = new sns.Topic(this, 'TheXRayTracerSnsTopic', {
                 displayName: "The XRay Tracer CDK Pattern Topic",
         });
