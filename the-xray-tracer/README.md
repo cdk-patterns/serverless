@@ -112,11 +112,28 @@ Depending on the component you are using and what it is integrating with you nee
 
 ### API Gateway
 This is done by simply setting a property of `tracingEnabled: true` on deployOptions:
-![api gateway](img/enable_apigw.png)
+```javascript
+let gateway = new apigw.RestApi(this, 'xrayTracerAPI', {
+    deployOptions: {
+    metricsEnabled: true,
+    loggingLevel: apigw.MethodLoggingLevel.INFO,
+    dataTraceEnabled: true,
+    tracingEnabled: true,
+    stageName: 'prod'
+    }
+});
+```
 
 ### Lambda
 You set a tracing property to `lambda.Tracing.ACTIVE`
-![lambda](img/enable_lambda.png)
+```javascript
+this.httpLambda = new lambda.Function(this, 'httpLambdaHandler', {
+    runtime: lambda.Runtime.NODEJS_12_X,
+    code: lambda.Code.asset('lambdas'),
+    handler: 'http.handler',
+    tracing: lambda.Tracing.ACTIVE
+});
+```
 
 ### SNS/SQS/DynamoDB
 These just pick up when being called from a component with tracing enabled, they do not need a specific setting to enable it. 
@@ -124,13 +141,29 @@ These just pick up when being called from a component with tracing enabled, they
 ### AWS SDK Calls
 You need to make sure your AWS SDK code is wrapped with X-Ray during invocation. This is true of any SDK calls e.g. Lambda to Lambda direct invoke, DynamoDB queries, Publishing to SNS etc
 
-![sdk](img/enable_sdk.png)
+```javascript
+const AWSXRay = require('aws-xray-sdk');
+const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+
+exports.handler = async function(event:any) {
+
+  // Create an SQS service object
+  var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+```
 
 ### External HTTP Requests
 
 You need to wrap the https module with X-Ray:
+```javascript
+const AWSXRay = require('aws-xray-sdk');
+var https = AWSXRay.captureHTTPs(require('https'));
 
-![https](img/enable_https.png)
+exports.handler = async function(event:any) {
+
+  let response = await new Promise((resolve:any, reject:any) => {
+    // Make a call to a webservice
+    const req = https.get("https://url.com", (res:any) => {
+```
 
 ## Subsegments, Metadata and Annotations
 
