@@ -168,7 +168,7 @@ npx cdk deploy
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
   Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
   
-  ![Architecture](the-xray-tracer/img/arch.png)
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
 
   <br /><hr /><br />
 
@@ -313,7 +313,7 @@ npx cdk deploy
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
   Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
   
-  ![Architecture](the-xray-tracer/img/arch.png)
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
 
   <br /><hr /><br />
 
@@ -384,8 +384,8 @@ I will now group patterns by their relevant pillar:
 
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
   Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
-  
-  ![Architecture](the-xray-tracer/img/arch.png)
+
+  ![Architecture](the-xray-tracer/img/arch_notitle.png)
 
 <br /><hr /><br />
 </details>
