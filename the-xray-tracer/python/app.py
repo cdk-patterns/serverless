@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import subprocess
 from aws_cdk import core
 
 from the_xray_tracer.the_xray_tracer_stack import TheXrayTracerStack
@@ -7,6 +7,9 @@ from the_xray_tracer.the_http_flow_stack import TheHttpFlowStack
 from the_xray_tracer.the_dynamo_flow_stack import TheDynamoFlowStack
 from the_xray_tracer.the_sns_flow_stack import TheSnsFlowStack
 from the_xray_tracer.the_sqs_flow_stack import TheSqsFlowStack
+
+# install node dependencies for lambdas
+subprocess.check_call("npm i".split(), cwd="lambdas")
 
 app = core.App()
 xray_tracer = TheXrayTracerStack(app, "the-xray-tracer")
