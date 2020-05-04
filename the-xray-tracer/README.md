@@ -79,7 +79,7 @@ After deployment, the X-Ray service map looks something like (You get two circle
 
 Or if you look at CloudWatch Service Lens:
 
-![cloudwatch service map](img/cloudwatch_service_lens.png)
+![cloudwatch service lens](img/cloudwatch_service_lens.png)
 
 You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. When viewed through the AWS Console, it cannot become the out of date diagram you found on a wiki last updated 12 months ago - it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it immediately.
 
@@ -91,6 +91,10 @@ After you deploy this pattern you will have an API Gateway with the URL being ou
 Any URL you hit on that gateway will trigger this flow, it uses your URL as the message sent to SNS.
 
 This URL is inserted into DynamoDB with a counter of how many times it was hit, the SNS and the SQS consumer lambdas both log the message to CloudWatch.
+
+To see the random service errors try to hit the URL at least 10 times then you can either navigate to the X-Ray section of the AWS Console followed by clicking on "Service Map" in the sidebar. Please be aware that sometimes there can be a 30 second or so delay before your calls show up in service map.
+
+Alternatively you can go to CloudWatch in the AWS Console and click "Service Lens" in the sidebar. Both offer views onto the system.
 
 ## Deliberate Random Errors
 
