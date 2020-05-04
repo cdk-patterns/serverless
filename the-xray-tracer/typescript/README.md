@@ -84,6 +84,41 @@ Or if you look at CloudWatch Service Lens:
 
 You can see that these two diagrams aren't a massive distance away from my high level conceptual flow, the difference is the X-Ray generated diagram is 100% accurate because it is created from real traces based on user flow. When viewed through the AWS Console, it cannot become the out of date diagram you found on a wiki last updated 12 months ago - it is always accurate. If a developer checks in a piece of code that changes the flow, you will see it immediately.
 
+### Project Structure
+
+I separated each of the different SNS subscriber flows above into their own CDK stacks and passed in the SNS Topic ARN as a parameter. if you look inside bin/the-xray-tracer.ts you will see how this works:
+
+```javascript
+let xrayStack = new TheXrayTracerStack(app, 'TheXrayTracerStack', {});
+
+let dynamoFlow = new TheDynamoFlowStack(app, 'TheXrayDynamoFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+let httpFlow = new TheHttpFlowStack(app, 'TheXrayHttpFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+let sqsFlow = new TheSqsFlowStack(app, 'TheXraySQSFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+let snsFlow = new TheSnsFlowStack(app, 'TheXraySnsFlow', {
+    snsTopicARN: xrayStack.snsTopicARN
+});
+
+httpFlow.addDependency(xrayStack, 'need to know the topic arn');
+dynamoFlow.addDependency(xrayStack, 'need to know the topic arn');
+sqsFlow.addDependency(xrayStack, 'need to know the topic arn');
+snsFlow.addDependency(xrayStack, 'need to know the topic arn');
+```
+
+All of this logic could have reasonably lived in one stack but this way I can add more technologies later that integrate with X-Ray without increasing the overall complexity of the pattern.
+
+This also means you get 5 vanilla CloudFormation templates bundled:
+- xray_tracer_template.yaml
+- dynamo_flow_template.yaml
+- http_flow_template.yaml
+- sns_flow_template.yaml
+- sqs_flow_template.yaml
+
 ## Testing This Pattern
 
 
