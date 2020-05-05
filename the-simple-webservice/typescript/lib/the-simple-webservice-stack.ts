@@ -26,10 +26,14 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     table.grantReadWriteData(dynamoLambda);
 
     // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
-    new apigw_httpApi.HttpApi(this, 'Endpoint', {
+    let api = new apigw_httpApi.HttpApi(this, 'Endpoint', {
       defaultIntegration: new apigw_httpApi.LambdaProxyIntegration({
         handler: dynamoLambda
       }),
     });
+
+   new cdk.CfnOutput(this, 'HTTP API Url', {
+     value: api.url ?? 'Something went wrong with the deploy'
+   }) ;
   }
 }
