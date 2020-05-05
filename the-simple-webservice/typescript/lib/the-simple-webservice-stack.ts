@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import apigw = require('@aws-cdk/aws-apigateway');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
+import apigw_httpApi = require('@aws-cdk/aws-apigatewayv2');
 
 export class TheSimpleWebserviceStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -12,22 +12,24 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
       partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
     });
 
-     // defines an AWS Lambda resource
-     const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
+    // defines an AWS Lambda resource
+    const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
       code: lambda.Code.asset('lambda'),  // code loaded from the "lambda" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       environment: {
         HITS_TABLE_NAME: table.tableName
-    }
+      }
     });
 
-     // grant the lambda role read/write permissions to our table
-     table.grantReadWriteData(dynamoLambda);
+    // grant the lambda role read/write permissions to our table
+    table.grantReadWriteData(dynamoLambda);
 
-    // defines an API Gateway REST API resource backed by our "dynamoLambda" function.
-    new apigw.LambdaRestApi(this, 'Endpoint', {
-      handler: dynamoLambda
+    // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
+    new apigw_httpApi.HttpApi(this, 'Endpoint', {
+      defaultIntegration: new apigw_httpApi.LambdaProxyIntegration({
+        handler: dynamoLambda
+      }),
     });
   }
 }
