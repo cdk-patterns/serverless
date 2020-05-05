@@ -211,6 +211,14 @@ You are allowed to put whole objects inside metadata, this is brilliant for show
 <br />
 <img src="img/annotations.png" alt="annotations on segment in console" width="600" />
 
+## X-Ray Groups
+> X-Ray groups enable customers to slice and dice their X-Ray service graph and focus on certain workflows, applications, or routes.
+>
+>Customers can create a group by setting a filter expression. All the traces that match the set filter expression will be part of that group. Customers can then view service graphs for the selected group, and understand performance bottlenecks, errors, or faults in services belonging to that service graph.
+
+[Deep dive into AWS X-Ray groups and use cases](https://aws.amazon.com/blogs/developer/deep-dive-into-aws-x-ray-groups-and-use-cases/)
+
+A useful tip is that Annotations can be used in filter expressions so you can easily create groups for smaller bounded contexts within a larger service map and then create CloudWatch alerts per group.
 
 ## Known X-Ray "Quirks"
 
