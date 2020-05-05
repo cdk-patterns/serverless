@@ -30,10 +30,6 @@ class TheSimpleWebserviceStack(core.Stack):
 
 
         # defines an API Gateway Http API resource backed by our "dynamoLambda" function.
-        api = api_gw.HttpApi(self, 'Endpoint', {
-          "defaultIntegration": api_gw.LambdaProxyIntegration(handler=dynamo_lambda),
-        });
+        api = api_gw.HttpApi(self, 'Endpoint', default_integration=api_gw.LambdaProxyIntegration(handler=dynamo_lambda));
     
-        core.cdk.CfnOutput(self, 'HTTP API Url', {
-          "value": api.url
-        });
+        core.CfnOutput(self, 'HTTP API Url', value=api.url);
