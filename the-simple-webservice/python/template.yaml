@@ -66,7 +66,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608S3Bucket123C434D
+          Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3Bucket1D74099F
         S3Key:
           Fn::Join:
             - ""
@@ -74,12 +74,12 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608S3VersionKey76FB7B5A
+                      - Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608S3VersionKey76FB7B5A
+                      - Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE
       Handler: lambda.handler
       Role:
         Fn::GetAtt:
@@ -95,243 +95,90 @@ Resources:
       - DynamoLambdaHandlerServiceRole4C867B01
     Metadata:
       aws:cdk:path: the-simple-webservice/DynamoLambdaHandler/Resource
+      aws:asset:path: asset.eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b
       aws:asset:property: Code
+  DynamoLambdaHandlerthesimplewebserviceEndpointDefaultRouteDFFE769DPermissionC0BB4C3A:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - DynamoLambdaHandlerFB6EB814
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /*/*
+    Metadata:
+      aws:cdk:path: the-simple-webservice/DynamoLambdaHandler/thesimplewebserviceEndpointDefaultRouteDFFE769D-Permission
   EndpointEEF1FD8F:
-    Type: AWS::ApiGateway::RestApi
+    Type: AWS::ApiGatewayV2::Api
     Properties:
       Name: Endpoint
+      ProtocolType: HTTP
     Metadata:
       aws:cdk:path: the-simple-webservice/Endpoint/Resource
-  EndpointDeployment318525DAe471c4d691d27847a9322f9606f5f602:
-    Type: AWS::ApiGateway::Deployment
+  EndpointDefaultRouteDefaultRouteIntegration4584A785:
+    Type: AWS::ApiGatewayV2::Integration
     Properties:
-      RestApiId:
+      ApiId:
         Ref: EndpointEEF1FD8F
-      Description: Automatically created by the RestApi construct
-    DependsOn:
-      - EndpointproxyANYC09721C5
-      - Endpointproxy39E2174E
-      - EndpointANY485C938B
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Deployment/Resource
-  EndpointDeploymentStageprodB78BEEA0:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      RestApiId:
-        Ref: EndpointEEF1FD8F
-      DeploymentId:
-        Ref: EndpointDeployment318525DAe471c4d691d27847a9322f9606f5f602
-      StageName: prod
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/DeploymentStage.prod/Resource
-  EndpointCloudWatchRoleC3C64E0F:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Action: sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service: apigateway.amazonaws.com
-        Version: "2012-10-17"
-      ManagedPolicyArns:
-        - Fn::Join:
-            - ""
-            - - "arn:"
-              - Ref: AWS::Partition
-              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/CloudWatchRole/Resource
-  EndpointAccountB8304247:
-    Type: AWS::ApiGateway::Account
-    Properties:
-      CloudWatchRoleArn:
-        Fn::GetAtt:
-          - EndpointCloudWatchRoleC3C64E0F
-          - Arn
-    DependsOn:
-      - EndpointEEF1FD8F
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Account
-  Endpointproxy39E2174E:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId:
-        Fn::GetAtt:
-          - EndpointEEF1FD8F
-          - RootResourceId
-      PathPart: "{proxy+}"
-      RestApiId:
-        Ref: EndpointEEF1FD8F
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/{proxy+}/Resource
-  EndpointproxyANYApiPermissionthesimplewebserviceEndpoint00BF517CANYproxyB6CB6853:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
         Fn::GetAtt:
           - DynamoLambdaHandlerFB6EB814
           - Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn:
-        Fn::Join:
-          - ""
-          - - "arn:"
-            - Ref: AWS::Partition
-            - ":execute-api:"
-            - Ref: AWS::Region
-            - ":"
-            - Ref: AWS::AccountId
-            - ":"
-            - Ref: EndpointEEF1FD8F
-            - /
-            - Ref: EndpointDeploymentStageprodB78BEEA0
-            - /*/{proxy+}
+      PayloadFormatVersion: "2.0"
     Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/{proxy+}/ANY/ApiPermission.thesimplewebserviceEndpoint00BF517C.ANY..{proxy+}
-  EndpointproxyANYApiPermissionTestthesimplewebserviceEndpoint00BF517CANYproxy4ACF2025:
-    Type: AWS::Lambda::Permission
+      aws:cdk:path: the-simple-webservice/Endpoint/DefaultRoute/DefaultRoute-Integration/Resource
+  EndpointDefaultRouteB7B22F2B:
+    Type: AWS::ApiGatewayV2::Route
     Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-        Fn::GetAtt:
-          - DynamoLambdaHandlerFB6EB814
-          - Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn:
-        Fn::Join:
-          - ""
-          - - "arn:"
-            - Ref: AWS::Partition
-            - ":execute-api:"
-            - Ref: AWS::Region
-            - ":"
-            - Ref: AWS::AccountId
-            - ":"
-            - Ref: EndpointEEF1FD8F
-            - /test-invoke-stage/*/{proxy+}
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.thesimplewebserviceEndpoint00BF517C.ANY..{proxy+}
-  EndpointproxyANYC09721C5:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: ANY
-      ResourceId:
-        Ref: Endpointproxy39E2174E
-      RestApiId:
+      ApiId:
         Ref: EndpointEEF1FD8F
-      AuthorizationType: NONE
-      Integration:
-        IntegrationHttpMethod: POST
-        Type: AWS_PROXY
-        Uri:
-          Fn::Join:
-            - ""
-            - - "arn:"
-              - Ref: AWS::Partition
-              - ":apigateway:"
-              - Ref: AWS::Region
-              - :lambda:path/2015-03-31/functions/
-              - Fn::GetAtt:
-                  - DynamoLambdaHandlerFB6EB814
-                  - Arn
-              - /invocations
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/{proxy+}/ANY/Resource
-  EndpointANYApiPermissionthesimplewebserviceEndpoint00BF517CANYE5FFE615:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-        Fn::GetAtt:
-          - DynamoLambdaHandlerFB6EB814
-          - Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn:
+      RouteKey: $default
+      Target:
         Fn::Join:
           - ""
-          - - "arn:"
-            - Ref: AWS::Partition
-            - ":execute-api:"
-            - Ref: AWS::Region
-            - ":"
-            - Ref: AWS::AccountId
-            - ":"
-            - Ref: EndpointEEF1FD8F
-            - /
-            - Ref: EndpointDeploymentStageprodB78BEEA0
-            - /*/
+          - - integrations/
+            - Ref: EndpointDefaultRouteDefaultRouteIntegration4584A785
     Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/ANY/ApiPermission.thesimplewebserviceEndpoint00BF517C.ANY..
-  EndpointANYApiPermissionTestthesimplewebserviceEndpoint00BF517CANYAC5AF1D7:
-    Type: AWS::Lambda::Permission
+      aws:cdk:path: the-simple-webservice/Endpoint/DefaultRoute/Resource
+  EndpointDefaultStage0AD21F27:
+    Type: AWS::ApiGatewayV2::Stage
     Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-        Fn::GetAtt:
-          - DynamoLambdaHandlerFB6EB814
-          - Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn:
-        Fn::Join:
-          - ""
-          - - "arn:"
-            - Ref: AWS::Partition
-            - ":execute-api:"
-            - Ref: AWS::Region
-            - ":"
-            - Ref: AWS::AccountId
-            - ":"
-            - Ref: EndpointEEF1FD8F
-            - /test-invoke-stage/*/
-    Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/ANY/ApiPermission.Test.thesimplewebserviceEndpoint00BF517C.ANY..
-  EndpointANY485C938B:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: ANY
-      ResourceId:
-        Fn::GetAtt:
-          - EndpointEEF1FD8F
-          - RootResourceId
-      RestApiId:
+      ApiId:
         Ref: EndpointEEF1FD8F
-      AuthorizationType: NONE
-      Integration:
-        IntegrationHttpMethod: POST
-        Type: AWS_PROXY
-        Uri:
-          Fn::Join:
-            - ""
-            - - "arn:"
-              - Ref: AWS::Partition
-              - ":apigateway:"
-              - Ref: AWS::Region
-              - :lambda:path/2015-03-31/functions/
-              - Fn::GetAtt:
-                  - DynamoLambdaHandlerFB6EB814
-                  - Arn
-              - /invocations
+      StageName: $default
+      AutoDeploy: true
     Metadata:
-      aws:cdk:path: the-simple-webservice/Endpoint/Default/ANY/Resource
+      aws:cdk:path: the-simple-webservice/Endpoint/DefaultStage/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.23.0,@aws-cdk/assets=1.23.0,@aws-cdk/aws-apigateway=1.23.0,@aws-cdk/aws-applicationautoscaling=1.23.0,@aws-cdk/aws-autoscaling-common=1.23.0,@aws-cdk/aws-certificatemanager=1.23.0,@aws-cdk/aws-cloudformation=1.23.0,@aws-cdk/aws-cloudwatch=1.23.0,@aws-cdk/aws-dynamodb=1.23.0,@aws-cdk/aws-ec2=1.23.0,@aws-cdk/aws-elasticloadbalancingv2=1.23.0,@aws-cdk/aws-events=1.23.0,@aws-cdk/aws-iam=1.23.0,@aws-cdk/aws-kms=1.23.0,@aws-cdk/aws-lambda=1.23.0,@aws-cdk/aws-logs=1.23.0,@aws-cdk/aws-route53=1.23.0,@aws-cdk/aws-s3=1.23.0,@aws-cdk/aws-s3-assets=1.23.0,@aws-cdk/aws-sns=1.23.0,@aws-cdk/aws-sqs=1.23.0,@aws-cdk/aws-ssm=1.23.0,@aws-cdk/core=1.23.0,@aws-cdk/cx-api=1.23.0,@aws-cdk/region-info=1.23.0,jsii-runtime=Python/3.6.3
+      Modules: aws-cdk=1.36.1,@aws-cdk/assets=1.37.0,@aws-cdk/aws-apigatewayv2=1.37.0,@aws-cdk/aws-applicationautoscaling=1.37.0,@aws-cdk/aws-autoscaling-common=1.37.0,@aws-cdk/aws-cloudformation=1.37.0,@aws-cdk/aws-cloudwatch=1.37.0,@aws-cdk/aws-dynamodb=1.37.0,@aws-cdk/aws-ec2=1.37.0,@aws-cdk/aws-events=1.37.0,@aws-cdk/aws-iam=1.37.0,@aws-cdk/aws-kms=1.37.0,@aws-cdk/aws-lambda=1.37.0,@aws-cdk/aws-logs=1.37.0,@aws-cdk/aws-s3=1.37.0,@aws-cdk/aws-s3-assets=1.37.0,@aws-cdk/aws-sns=1.37.0,@aws-cdk/aws-sqs=1.37.0,@aws-cdk/aws-ssm=1.37.0,@aws-cdk/cloud-assembly-schema=1.37.0,@aws-cdk/core=1.37.0,@aws-cdk/custom-resources=1.37.0,@aws-cdk/cx-api=1.37.0,@aws-cdk/region-info=1.37.0,jsii-runtime=Python/3.6.10
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608S3Bucket123C434D:
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3Bucket1D74099F:
     Type: String
-    Description: S3 bucket for asset "9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608"
-  AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608S3VersionKey76FB7B5A:
+    Description: S3 bucket for asset "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE:
     Type: String
-    Description: S3 key for asset version "9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608"
-  AssetParameters9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608ArtifactHashEAE8B986:
+    Description: S3 key for asset version "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bArtifactHashB16DE2BD:
     Type: String
-    Description: Artifact hash for asset "9dcb326eebe37da9c271c2fb58afc517df381e742ade0b4b812564494133c608"
+    Description: Artifact hash for asset "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
 Outputs:
-  Endpoint8024A810:
+  HTTPAPIUrl:
     Value:
       Fn::Join:
         - ""
@@ -341,8 +188,6 @@ Outputs:
           - Ref: AWS::Region
           - "."
           - Ref: AWS::URLSuffix
-          - /
-          - Ref: EndpointDeploymentStageprodB78BEEA0
           - /
 Conditions:
   CDKMetadataAvailable:
