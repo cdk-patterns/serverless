@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
-import apigw_httpApi = require('@aws-cdk/aws-apigatewayv2');
+import apigw = require('@aws-cdk/aws-apigatewayv2');
 
 export class TheSimpleWebserviceStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -26,8 +26,8 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     table.grantReadWriteData(dynamoLambda);
 
     // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
-    let api = new apigw_httpApi.HttpApi(this, 'Endpoint', {
-      defaultIntegration: new apigw_httpApi.LambdaProxyIntegration({
+    let api = new apigw.HttpApi(this, 'Endpoint', {
+      defaultIntegration: new apigw.LambdaProxyIntegration({
         handler: dynamoLambda
       }),
     });
