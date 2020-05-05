@@ -9,12 +9,12 @@ exports.handler = async function(event:any) {
   // update dynamo entry for "path" with hits++
   await dynamo.updateItem({
     TableName: process.env.HITS_TABLE_NAME,
-    Key: { path: { S: event.path } },
+    Key: { path: { S: event.rawPath } },
     UpdateExpression: 'ADD hits :incr',
     ExpressionAttributeValues: { ':incr': { N: '1' } }
   }).promise();
 
-  console.log('inserted counter for '+ event.path);
+  console.log('inserted counter for '+ event.rawPath);
 
   // return response back to upstream caller
   return sendRes(200, 'You have connected with the Lambda!');

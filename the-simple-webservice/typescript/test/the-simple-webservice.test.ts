@@ -57,13 +57,13 @@ test('DynamoDB Lambda Created', () => {
   ));
 });
 
-test('API Gateway Proxy Created', () => {
+test('API Gateway Http API Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new TheSimpleWebservice.TheSimpleWebserviceStack(app, 'MyTestStack');
   // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Resource", {
-    "PathPart": "{proxy+}"
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGatewayV2::Api", {
+    "ProtocolType": "HTTP"
   }
   ));
 });
