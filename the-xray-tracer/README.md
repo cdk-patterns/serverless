@@ -211,7 +211,7 @@ You are allowed to put whole objects inside metadata, this is brilliant for show
 <br />
 <img src="img/annotations.png" alt="annotations on segment in console" width="600" />
 
-### X-Ray Groups
+## X-Ray Groups
 > X-Ray groups enable customers to slice and dice their X-Ray service graph and focus on certain workflows, applications, or routes.
 >
 >Customers can create a group by setting a filter expression. All the traces that match the set filter expression will be part of that group. Customers can then view service graphs for the selected group, and understand performance bottlenecks, errors, or faults in services belonging to that service graph.
