@@ -29,11 +29,11 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     let api = new apigw.HttpApi(this, 'Endpoint', {
       defaultIntegration: new apigw.LambdaProxyIntegration({
         handler: dynamoLambda
-      }),
+      })
     });
 
    new cdk.CfnOutput(this, 'HTTP API Url', {
      value: api.url ?? 'Something went wrong with the deploy'
-   }) ;
+   });
   }
 }
