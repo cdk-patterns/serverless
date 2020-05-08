@@ -71,7 +71,8 @@ from the list of availabe state machines, pick the power tuner state machine.
 
 Now click "start execution" in the top right
 
-In the input field enter the following JSON and add in the ARN to the lambda you want to test. You can either use the example lambda we bundled by getting the ARN from the cdk deploy logs or any another function in your account if you know the ARN.
+In the input field enter the following JSON and add in the ARN to the lambda you want to test. 
+>You can either use the example lambda we bundled by getting the ARN from the cdk deploy logs or any another function in your account if you know the ARN.
 ```
 {
   "lambdaARN": "your lambda arn to test",
