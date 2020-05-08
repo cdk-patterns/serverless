@@ -8,5 +8,9 @@ test('SQS Queue Created', () => {
   const stack = new TheLambdaPowerTuner.TheLambdaPowerTunerStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Serverless::Application", {
+    "Location": {
+      "ApplicationId": "arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning",
+      "SemanticVersion": "3.2.4"
+    }
   }));
 });
