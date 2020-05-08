@@ -198,7 +198,7 @@ npx cdk deploy
   * [Yan Cui](#yan-cui)
 
   ### Alex Casalboni
-  <img src="img/dev_profiles/alex_casalboni.png" width="120" alt="Alex Casalboni profile pic" /><br />
+  <img src="img/dev_profiles/alex_casalboni.jpg" width="120" alt="Alex Casalboni profile pic" /><br />
 
   Musician, Traveler, Software Engineer from Italy. Developer Advocate at @AWS_Italy<br />
 
