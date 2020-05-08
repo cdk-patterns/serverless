@@ -24,6 +24,9 @@
         "the-eventbridge-etl": {
             "prodReady": false
         },
+        "the-lambda-power-tuner": {
+            "prodReady": false
+        },
         "the-lambda-trilogy": {
             "prodReady": false
         },

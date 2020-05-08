@@ -129,6 +129,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
+  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
+
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Lambda Trilogy](the-lambda-trilogy/README.md)
   See the 3 states of Lambda in action (Single Purpose Function, Fat Lambda and Lambda-lith)
   ![Architecture](the-lambda-trilogy/img/arch2.png)
@@ -179,6 +186,7 @@ npx cdk deploy
   </summary>
   <br />
   
+  * [Alex Casalboni](#alex-casalboni)
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
   * [Hervé Nivon](#hervé-nivon)
@@ -188,6 +196,20 @@ npx cdk deploy
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
   * [Yan Cui](#yan-cui)
+
+  ### Alex Casalboni
+  <img src="img/dev_profiles/alex_casalboni.jpg" width="120" alt="Alex Casalboni profile pic" /><br />
+
+  Musician, Traveler, Software Engineer from Italy. Developer Advocate at @AWS_Italy<br />
+
+  Twitter - [@alex_casalboni](https://twitter.com/alex_casalboni)<br />
+
+  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
+  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
+
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
 
   ### Eric Johnson
   <img src="img/dev_profiles/eric_johnson.png" width="120" alt="Eric Johnson profile pic" /><br />
@@ -444,6 +466,14 @@ I will now group patterns by their relevant pillar:
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
 
   <br /><hr /><br />
+
+  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
+  
+  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
+
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
   
 </details>
 
@@ -468,6 +498,14 @@ I will now group patterns by their relevant pillar:
   You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
+  
+  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
+
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
 
   <br /><hr /><br />
   

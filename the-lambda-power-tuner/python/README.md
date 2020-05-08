@@ -1,0 +1,156 @@
+# The Lambda Power Tuner
+
+This is an AWS CDK project that deploys the awesome [AWS Lambda Power Tuning](https://github.com/alexcasalboni/aws-lambda-power-tuning) project. 
+
+AWS Lambda Power Tuning is an AWS Step Functions state machine that helps you optimize your Lambda functions in a data-driven way.
+
+The state machine is designed to be quick and language agnostic. You can provide any Lambda function as input and the state machine will run it with multiple power configurations (from 128MB to 3GB), analyze execution logs and suggest you the best configuration to minimize cost or maximize performance.
+
+The input function will be executed in your AWS account - performing real HTTP calls, SDK calls, cold starts, etc. The state machine also supports cross-region invocations and you can enable parallel execution to generate results in just a few seconds. Optionally, you can configure the state machine to automatically optimize the function and the end of its execution.
+
+![results graph](img/results.png)
+
+The reason for doing this is that it helps with two of the Serverless Well Architected pillars:
+
+- Performance Efficiency Pillar
+- Cost Optimization Pillar
+
+![AWS Well Architected](img/well_architected.png)
+
+The [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) Framework helps you understand the pros and cons of
+decisions you make while building systems on AWS. By using the Framework, you will learn architectural best practices for designing and operating reliable, secure, efficient, and cost-effective systems in the cloud. It provides a way for you to consistently measure your architectures against best practices and identify areas for improvement.
+
+We believe that having well-architected systems greatly increases the likelihood of business success.
+
+[Serverless Lens Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf) <br />
+[Well Architected Whitepaper](http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf)
+
+## Performance Efficiency Pillar
+The performance efficiency pillar focuses on the efficient use of computing resources to meet requirements and the maintenance of that efficiency as demand changes and technologies evolve.
+
+Performance efficiency in the cloud is composed of four areas:
+- Selection
+- Review
+- Monitoring
+- Tradeoffs
+
+Take a data-driven approach to selecting a high-performance architecture. Gather data on all aspects of the architecture, from the high-level design to the selection and configuration of resource types. By reviewing your choices on a cyclical basis, you will ensure that you are taking advantage of the continually evolving AWS Cloud.
+
+Monitoring will ensure that you are aware of any deviance from expected performance and can take action on it. Finally, you can make tradeoffs in your architecture to improve performance, such as using compression or caching, or by relaxing consistency requirements.
+
+>PER 1: How have you optimized the performance of your serverless application?
+
+### Selection
+Run performance tests on your serverless application using steady and burst rates. Using the result, try tuning capacity units and load test after changes to help you select the best configuration:
+- Lambda: Test different memory settings as CPU, network, and storage IOPS are allocated proportionally. 
+
+## Cost Optimization Pillar
+The cost optimization pillar includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
+
+There are four best practice areas for cost optimization in the cloud:
+- Cost-effective resources
+- Matching supply and demand
+- Expenditure awareness
+- Optimizing over time
+
+> COST 1: How do you optimize your costs?
+
+### Cost-Effective Resources
+Serverless architectures are easier to manage in terms of correct resource allocation. Due to its pay-per-value pricing model and scale based on demand, serverless effectively reduces the capacity planning effort.
+
+As covered in the operational excellence and performance pillars, optimizing your serverless application has a direct impact on the value it produces and its cost.
+
+As Lambda proportionally allocates CPU, network, and storage IOPS based on
+memory, the faster the execution the cheaper and more value your function produces due to 100-ms billing incremental dimension.
+
+## How To Test This Pattern
+
+After deployment, navigate to the step functions section of the AWS Console.
+
+from the list of availabe state machines, pick the power tuner state machine.
+
+Now click "start execution" in the top right
+
+In the input field enter the following JSON and add in the ARN to the lambda you want to test. 
+>You can either use the example lambda we bundled by getting the ARN from the cdk deploy logs or any another function in your account if you know the ARN.
+```
+{
+  "lambdaARN": "your lambda arn to test",
+  "powerValues": [
+    128,
+    256,
+    512,
+    1024,
+    2048,
+    3008
+  ],
+  "num": 10,
+  "payload": {},
+  "parallelInvocation": true,
+  "strategy": "cost"
+}
+```
+
+Click "Start Execution" in the bottom right.
+
+When the tuner has finished your visual workflow should look like:
+
+![state machine success](img/state-machine-success.png)
+
+Then you can scroll down to the very last event and expand it to get the URL for your results graph:
+
+![output](img/output.png)
+
+## Python CDK Setup
+
+This project is set up like a standard Python project.  The initialization
+process also creates a virtualenv within this project, stored under the .env
+directory.  To create the virtualenv it assumes that there is a `python3`
+(or `python` for Windows) executable in your path with access to the `venv`
+package. If for any reason the automatic creation of the virtualenv fails,
+you can create the virtualenv manually.
+
+To manually create a virtualenv on MacOS and Linux:
+
+```
+$ python3 -m venv .env
+```
+
+After the init process completes and the virtualenv is created, you can use the following
+step to activate your virtualenv.
+
+```
+$ source .env/bin/activate
+```
+
+If you are a Windows platform, you would activate the virtualenv like this:
+
+```
+% .env\Scripts\activate.bat
+```
+
+Once the virtualenv is activated, you can install the required dependencies.
+
+```
+$ pip install -r requirements.txt
+```
+
+At this point you can now synthesize the CloudFormation template for this code.
+
+```
+$ cdk synth
+```
+
+To add additional dependencies, for example other CDK libraries, just add
+them to your `setup.py` file and rerun the `pip install -r requirements.txt`
+command.
+
+## Useful commands
+
+ * `cdk ls`          list all stacks in the app
+ * `cdk synth`       emits the synthesized CloudFormation template
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk docs`        open CDK documentation
+
+Enjoy!
