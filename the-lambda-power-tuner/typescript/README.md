@@ -1,6 +1,14 @@
 # The Lambda Power Tuner
 
-This is a project that deploys the awesome [AWS Lambda Power Tuning](https://github.com/alexcasalboni/aws-lambda-power-tuning) stepfunction.
+This is an AWS CDK project that deploys the awesome [AWS Lambda Power Tuning](https://github.com/alexcasalboni/aws-lambda-power-tuning) project. 
+
+AWS Lambda Power Tuning is an AWS Step Functions state machine that helps you optimize your Lambda functions in a data-driven way.
+
+The state machine is designed to be quick and language agnostic. You can provide any Lambda function as input and the state machine will run it with multiple power configurations (from 128MB to 3GB), analyze execution logs and suggest you the best configuration to minimize cost or maximize performance.
+
+The input function will be executed in your AWS account - performing real HTTP calls, SDK calls, cold starts, etc. The state machine also supports cross-region invocations and you can enable parallel execution to generate results in just a few seconds. Optionally, you can configure the state machine to automatically optimize the function and the end of its execution.
+
+![results graph](img/results.png)
 
 The reason for doing this is that it helps with two of the Serverless Well Architected pillars:
 
@@ -55,13 +63,45 @@ As covered in the operational excellence and performance pillars, optimizing you
 As Lambda proportionally allocates CPU, network, and storage IOPS based on
 memory, the faster the execution the cheaper and more value your function produces due to 100-ms billing incremental dimension.
 
-## How This Pattern Helps
+## How To Test This Pattern
 
-After running the step function contained in this stack against one of your lambdas, you will get a report like [this](https://lambda-power-tuning.show/#gAAAAQACAAQACMAL;cT3pQby7I0GW/EpAexQ+QPYonD9toKM/;EalfNBGp3zQRqV81EanfNRGpXzYpQKQ2)
+After deployment, navigate to the step functions section of the AWS Console.
 
-![results graph](img/results.png)
+from the list of availabe state machines, pick the power tuner state machine.
 
-You can use this graph to work out what the best compromise is for your application between speed and cost based on the two lines.
+Now click "start execution" in the top right
+
+In the input field enter the following JSON and add in the ARN to the lambda you want to test
+```
+{
+  "lambdaARN": "your lambda arn to test",
+  "powerValues": [
+    128,
+    256,
+    512,
+    1024,
+    2048,
+    3008
+  ],
+  "num": 10,
+  "payload": {},
+  "parallelInvocation": true,
+  "strategy": "cost"
+}
+```
+
+Click "Start Execution" in the bottom right.
+
+When the tuner has finisged your visual workflow should look like:
+
+![state machine success](img/state-machine-success.png)
+
+Then you can scroll down to the very last event and expand it to get the URL to your results graph:
+
+![output](img/output.png)
+
+
+
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
