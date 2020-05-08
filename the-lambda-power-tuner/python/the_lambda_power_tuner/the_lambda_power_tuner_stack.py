@@ -18,7 +18,6 @@ class TheLambdaPowerTunerStack(core.Stack):
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="index.handler",
                                           code=_lambda.Code.from_inline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }"),
-                                          tracing=_lambda.Tracing.ACTIVE
                                           )
 
         # uncomment to only allow this power tuner to manipulate this defined function
