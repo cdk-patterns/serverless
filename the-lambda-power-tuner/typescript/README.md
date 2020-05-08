@@ -92,11 +92,11 @@ In the input field enter the following JSON and add in the ARN to the lambda you
 
 Click "Start Execution" in the bottom right.
 
-When the tuner has finisged your visual workflow should look like:
+When the tuner has finished your visual workflow should look like:
 
 ![state machine success](img/state-machine-success.png)
 
-Then you can scroll down to the very last event and expand it to get the URL to your results graph:
+Then you can scroll down to the very last event and expand it to get the URL for your results graph:
 
 ![output](img/output.png)
 
