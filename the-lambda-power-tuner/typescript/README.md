@@ -55,6 +55,14 @@ As covered in the operational excellence and performance pillars, optimizing you
 As Lambda proportionally allocates CPU, network, and storage IOPS based on
 memory, the faster the execution the cheaper and more value your function produces due to 100-ms billing incremental dimension.
 
+## How This Pattern Helps
+
+After running the step function contained in this stack against one of your lambdas, you will get a report like [this](https://lambda-power-tuning.show/#gAAAAQACAAQACMAL;cT3pQby7I0GW/EpAexQ+QPYonD9toKM/;EalfNBGp3zQRqV81EanfNRGpXzYpQKQ2)
+
+![results graph](img/results.png)
+
+You can use this graph to work out what the best compromise is for your application between speed and cost based on the two lines.
+
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 ## Useful commands
@@ -62,6 +70,6 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
  * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `npm run deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
