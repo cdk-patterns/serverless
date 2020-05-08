@@ -132,7 +132,7 @@ npx cdk deploy
   #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
-  ![Architecture](the-lambda-power-tuner/img/results.png)
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
 
   <br /><hr /><br />
 
@@ -207,7 +207,7 @@ npx cdk deploy
   #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
-  ![Architecture](the-lambda-power-tuner/img/results.png)
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
 
   <br /><hr /><br />
 
@@ -471,7 +471,7 @@ I will now group patterns by their relevant pillar:
   
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
-  ![Architecture](the-lambda-power-tuner/img/results.png)
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
 
   <br /><hr /><br />
   
@@ -505,7 +505,7 @@ I will now group patterns by their relevant pillar:
   
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
-  ![Architecture](the-lambda-power-tuner/img/results.png)
+  ![Architecture](the-lambda-power-tuner/img/arch.png)
 
   <br /><hr /><br />
   
