@@ -7,6 +7,7 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
     super(scope, id, props);
 
     let powerValues = '128,256,512,1024,1536,3008';
+    let lambdaResource = "*";
 
     // A lambda function to use to test the powertuner
     let exampleLambda = new lambda.Function(this, 'lambdaHandler', {
@@ -14,6 +15,9 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
       code: lambda.Code.fromInline('exports.handler = function(event, ctx, cb) { return cb(null, "hi"); }'),
       handler: 'lambda.handler'
     });
+
+    // Uncomment to only allow this power tuner to manipulate this defined function
+    //lambdaResource = exampleLambda.functionArn;
 
     // Output the Lambda function ARN in the deploy logs to ease testing
     new cdk.CfnOutput(this, 'LambdaARN', {
@@ -27,7 +31,7 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
         semanticVersion: '3.2.4'
       },
       parameters: {
-        "lambdaResource":"*",
+        "lambdaResource": lambdaResource,
         "PowerValues": powerValues
       }
     })
