@@ -63,6 +63,39 @@ As covered in the operational excellence and performance pillars, optimizing you
 As Lambda proportionally allocates CPU, network, and storage IOPS based on
 memory, the faster the execution the cheaper and more value your function produces due to 100-ms billing incremental dimension.
 
+## Default Configuration Settings Provided
+
+There are some variables that you can pass into the SAR app to manipulate the power tuning step function. You can find two that I have set for you at the top of the cdk stack
+
+```python
+power_values = '128,256,512,1024,1536,3008'
+lambda_resource = '*'
+```
+
+the powerValues lets you pick exactly what AWS Lambda memory settings you want to tune against. The full list of allowed values is:
+```
+['128','192','256','320','384','448','512','576','640','704','768','832','896','960','1024','1088','1152','1216','1280','1344','1408','1472','1536','3008']
+```
+
+lambdaResource is about what IAM permissions do you want to give the state machine? In general, you want to give your components the least privileges they require to reduce their blast radius. 
+
+By default the power tuner uses * permissions which means that it has wide scope and can tune any function. If you can scope this down to something more specific that is advisable.
+
+Alex gave me this advice
+
+I can see 3 common patterns :
+1) use * (easy default, not always ideal)
+2) restrict to region or name prefix (better)
+3) restrict to only 1 ARN (not very flexible but ideal for CI/CD scenarios where you’ll delete the stack immediately after tuning)
+
+An example of option 3 is included in the stack but currently commented out, so all you have to do is uncomment it.
+
+```python
+# uncomment to only allow this power tuner to manipulate this defined function
+# lambda_resource = example_lambda.function_arn
+```
+
+
 ## How To Test This Pattern
 
 After deployment, navigate to the step functions section of the AWS Console.
