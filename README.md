@@ -68,6 +68,9 @@ npx cdk deploy
 </details>
 
 ## Patterns
+
+To filter patterns by a serverless component e.g. Lambda or API Gateway HTTP API visit [The Filter Pattern By Component Used Page](https://www.serverless-patterns.co.uk/patterns/) otherwise:
+
 <details>
   <summary>
     Grouped Alphabetically
@@ -394,122 +397,9 @@ business success.
 [Serverless Lens Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf) <br />
 [Well Architected Whitepaper](http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf)
 
-I will now group patterns by their relevant pillar:
+For patterns matched with their best practices from the relevant AWS Well Architected pillar please visit:
 
-<details>
-  <summary>
-    <strong>Operational Excellence Pillar</strong>
-  </summary>
-  <br />
-
-  The [operational excellence pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=28) includes the ability to run and monitor systems to deliver business value and to continually improve supporting processes and procedures.
-
-  #### [The X-Ray Tracer](the-xray-tracer/README.md)
-  Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
-
-  ![Architecture](the-xray-tracer/img/arch_notitle.png)
-
-<br /><hr /><br />
-</details>
-
-<details>
-  <summary>
-    <strong>Security Pillar</strong>
-  </summary>
-  <br />
-
-  The [security pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=38) includes the ability to protect information, systems, and assets while delivering business value through risk assessments and mitigation strategies.
-
-  There are currently no CDK Patterns related to this pillar
-  
-</details>
-
-<details>
-  <summary>
-    <strong>Reliability Pillar</strong>
-  </summary>
-  <br />
-
-  The [reliability pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=48) includes the ability of a system to recover from infrastructure or service disruptions, dynamically acquire computing resources to meet demand, and mitigate disruptions such as misconfigurations or transient network issues.
-
-  #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
-  Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
-  ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
-
-  <br /><hr /><br />
-
-  #### [The Saga Step Function](the-saga-stepfunction/README.md)
-  A mechanism for handling distributed transactions within your system.
-  ![Architecture](the-saga-stepfunction/img/arch.png)
-
-  <br /><hr /><br />
-
-  #### [The Scalable Webhook](/the-scalable-webhook/README.md)
-  Need to integrate a non serverless resource like RDS with a serverless one like Lambda? This is your pattern <br /><br />
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scalable-webhook/img/architecture.png)
-  
-</details>
-
-<details>
-  <summary>
-    <strong>Performance Efficiency Pillar</strong>
-  </summary>
-  <br />
-
-  The [performance efficiency pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=56) focuses on the efficient use of computing resources to meet requirements and the maintenance of that efficiency as demand changes and technologies evolve.
-
-  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
-  
-  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
-
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
-
-  <br /><hr /><br />
-
-  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
-  
-  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
-
-  ![Architecture](the-lambda-power-tuner/img/arch.png)
-
-  <br /><hr /><br />
-  
-</details>
-
-<details>
-  <summary>
-    <strong>Cost Optimization Pillar</strong>
-  </summary>
-  <br />
-  
-  The [cost optimization pillar](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf#page=67) includes the continual process of refinement and improvement of a system over its entire lifecycle. From the initial design of your first proof of concept to the ongoing operation of production workloads, adopting the practices in this document will enable you to build and operate cost-aware systems that achieve business outcomes and minimize costs, thus allowing your business to maximize its return on investment.
-
-  #### [The Big Fan](/the-big-fan/README.md)  
-  You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
-
-  ![Architecture](the-big-fan/img/the-big-fan-arch.png)
-
-  <br /><hr /><br />
-
-  #### [The Dynamo Streamer](/the-dynamo-streamer/README.md)
-  This was taken from this [Tweet](https://twitter.com/edjgeek/status/1220227872511496192?s=20)<br />
-  
-  You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
-
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
-
-  <br /><hr /><br />
-
-  #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
-  
-  Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
-
-  ![Architecture](the-lambda-power-tuner/img/arch.png)
-
-  <br /><hr /><br />
-  
-</details>
+### [The Well Architected Pattern Matcher](https://www.serverless-patterns.co.uk/patterns/well-architected/)
 
 ## External Patterns
 
