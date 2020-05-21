@@ -69,7 +69,7 @@ npx cdk deploy
 
 ## Patterns
 
-To filter patterns by a serverless component e.g. Lambda or API Gateway HTTP API visit [The Filter Pattern By Component Used Page](https://www.serverless-patterns.co.uk/patterns/) otherwise:
+[The Filter Pattern By Component Used Page](https://www.serverless-patterns.co.uk/patterns/) allows you to filter patterns by a serverless component e.g. Lambda or API Gateway HTTP API visit, otherwise:
 
 <details>
   <summary>
