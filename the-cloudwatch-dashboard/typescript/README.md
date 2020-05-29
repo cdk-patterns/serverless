@@ -32,6 +32,11 @@ https://theburningmonk.com/2018/10/we-can-do-better-than-percentile-latencies/
 ## WA Metrics To Define
 https://wa.aws.amazon.com/serv.question.OPS_1.en.html
 
+## DynamoDB Monitoring Advice
+https://www.bluematador.com/blog/how-to-monitor-amazon-dynamodb-with-cloudwatch
+https://www.datadoghq.com/blog/top-dynamodb-performance-metrics/
+https://www.abhayachauhan.com/2018/01/dynamodb-monitoring-capacity/
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
