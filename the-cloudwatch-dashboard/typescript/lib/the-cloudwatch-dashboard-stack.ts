@@ -60,6 +60,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // Gather the % of lambda invocations that error in past 30 mins
     let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
       expression: 'e / i * 100',
+      label: '% of invocations that errored, last 30 mins', 
       usingMetrics: {
         i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
         e: dynamoLambda.metric("Errors", {statistic: 'sum'}),
@@ -70,6 +71,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // note: throttled requests are not counted in total num of invocations
     let dynamoLambdaThrottledPercentage = new cloudwatch.MathExpression({
       expression: 't / (i + t) * 100',
+      label: '% of throttled requests, last 30 mins',
       usingMetrics: {
         i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
         t: dynamoLambda.metric("Throttles", {statistic: 'sum'}),
