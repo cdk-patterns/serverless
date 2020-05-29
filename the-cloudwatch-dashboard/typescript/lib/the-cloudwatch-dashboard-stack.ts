@@ -170,7 +170,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       title: widgetName,
       left: metrics,
       stacked: stacked,
-      width: 9
+      width: 8
     });
   }
 
