@@ -61,8 +61,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
       expression: 'e / i * 100',
       usingMetrics: {
-        i: dynamoLambda.metric("Invocations"),
-        e: dynamoLambda.metric("Errors"),
+        i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
+        e: dynamoLambda.metric("Errors", {statistic: 'sum'}),
       },
       period: cdk.Duration.minutes(30)
     });
@@ -71,8 +71,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     let dynamoLambdaThrottledPercentage = new cloudwatch.MathExpression({
       expression: 't / (i + t) * 100',
       usingMetrics: {
-        i: dynamoLambda.metric("Invocations"),
-        t: dynamoLambda.metric("Throttles"),
+        i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
+        t: dynamoLambda.metric("Throttles", {statistic: 'sum'}),
       },
       period: cdk.Duration.minutes(30)
     });
@@ -113,7 +113,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // Add alarm for throttled reads to dynamo
     new cloudwatch.Alarm(this, 'DynamoDB Table Reads Throttled Alarm', {
-      metric: table.metric('ReadThrottleEvents'),
+      metric: table.metric('ReadThrottleEvents', {statistic: 'sum'}),
       threshold: 1,
       evaluationPeriods: 3,
       datapointsToAlarm: 2,
@@ -122,7 +122,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // Add alarm for throttled writes to dynamo
     new cloudwatch.Alarm(this, 'DynamoDB Table Writes Throttled Alarm', {
-      metric: table.metric('WriteThrottleEvents'),
+      metric: table.metric('WriteThrottleEvents', {statistic: 'sum'}),
       threshold: 1,
       evaluationPeriods: 3,
       datapointsToAlarm: 2,
@@ -131,7 +131,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     
     // Add alarm for if a user executes a bad query against our table
     new cloudwatch.Alarm(this, 'DynamoDB Table User Error Alarm', {
-      metric: table.metric('UserErrors'),
+      metric: table.metric('UserErrors', {statistic: 'sum'}),
       threshold: 1,
       evaluationPeriods: 3,
       datapointsToAlarm: 2,
@@ -140,7 +140,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // Add alarm for if something is wrong with our table
     new cloudwatch.Alarm(this, 'DynamoDB Table System Error Alarm', {
-      metric: table.metric('SystemErrors'),
+      metric: table.metric('SystemErrors', {statistic: 'sum'}),
       threshold: 1,
       evaluationPeriods: 3,
       datapointsToAlarm: 2,
@@ -153,7 +153,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     
     new cloudwatch.Dashboard(this, 'CloudWatchDashBoard').addWidgets(
       this.buildGraphWidget('API GW Count', [
-        this.metricForApiGw(api.httpApiId, 'Count', '# Requests')
+        this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum')
       ]),
       this.buildGraphWidget('API GW Latency', [
         this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p95', 'p95')
