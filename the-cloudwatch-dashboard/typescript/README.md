@@ -4,6 +4,9 @@ This is a blank project for TypeScript development with CDK.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+## Metric Math
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html
+
 ## Lambda Metrics
 https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html
 
@@ -22,6 +25,9 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-clou
 ## Yan CW Lambda Alerts
 https://lumigo.io/blog/how-to-monitor-lambda-with-cloudwatch-metrics/
 https://theburningmonk.com/2019/05/how-to-log-timed-out-lambda-invocations/
+
+## Yan Cui - Monitoring Advice
+https://theburningmonk.com/2018/10/we-can-do-better-than-percentile-latencies/
 
 ## WA Metrics To Define
 https://wa.aws.amazon.com/serv.question.OPS_1.en.html
