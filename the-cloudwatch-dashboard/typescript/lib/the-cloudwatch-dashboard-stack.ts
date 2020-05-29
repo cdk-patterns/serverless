@@ -164,7 +164,11 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       ], true),
       this.buildGraphWidget('Dynamo Lambda Error %', [dynamoLambdaErrorPercentage]),
       this.buildGraphWidget('Dynamo Lambda Average Duration', [dynamoLambda.metricDuration()]),
-      this.buildGraphWidget('Dynamo Lambda Throttle %', [dynamoLambdaThrottledPercentage])
+      this.buildGraphWidget('Dynamo Lambda Throttle %', [dynamoLambdaThrottledPercentage]),
+      this.buildGraphWidget('DynamoDB System Errors', [table.metric('SystemErrors')]),
+      this.buildGraphWidget('DynamoDB User Errors', [table.metric('UserErrors')]),
+      this.buildGraphWidget('DynamoDB Throttled Read', [table.metric('ReadThrottleEvents')]),
+      this.buildGraphWidget('DynamoDB Throttled Write', [table.metric('WriteThrottleEvents')])
     )
 
     new cdk.CfnOutput(this, 'HTTP API Url', {
