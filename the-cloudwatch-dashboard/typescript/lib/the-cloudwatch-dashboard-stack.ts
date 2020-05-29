@@ -81,6 +81,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
      * Alarms
      */
 
+    // Lambda
+
     // Add an alarm for when over 2%
     dynamoLambdaErrorPercentage.createAlarm(this, 'Dynamo Lambda 2% Error Alarm', {
       threshold: 2,
@@ -88,7 +90,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       datapointsToAlarm: 2
     }).addAlarmAction(new SnsAction(errorTopic));
 
-    // Add alarm for Lamdba invocations taking longer than 1 second
+    // Add alarm for Lambda invocations taking longer than 1 second
     new cloudwatch.Alarm(this, 'Dynamo Lambda Long Duration Alarm', {
       metric: dynamoLambda.metricDuration(),
       threshold: 1000,
@@ -103,6 +105,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       evaluationPeriods: 3,
       datapointsToAlarm: 2
     }).addAlarmAction(new SnsAction(errorTopic));
+
+    // DynamoDB
 
     // Add alarm for throttled reads to dynamo
     new cloudwatch.Alarm(this, 'DynamoDB Table Reads Throttled Alarm', {
