@@ -86,7 +86,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // Lambda
 
     // Add an alarm for when over 2%
-    dynamoLambdaErrorPercentage.createAlarm(this, 'Dynamo Lambda 2% Error Alarm', {
+    new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Error Alarm', {
+      metric: dynamoLambdaErrorPercentage,
       threshold: 2,
       evaluationPeriods: 3,
       datapointsToAlarm: 2,
