@@ -13,7 +13,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     /**
      * The Simple Webservice Logic
      * 
-     * API GW HTTP APU, Lambda Fn and DynamoDB
+     * API GW HTTP API, Lambda Fn and DynamoDB
      */
 
     //DynamoDB Table
