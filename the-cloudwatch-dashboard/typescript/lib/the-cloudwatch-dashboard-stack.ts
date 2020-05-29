@@ -87,7 +87,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     dynamoLambdaErrorPercentage.createAlarm(this, 'Dynamo Lambda 2% Error Alarm', {
       threshold: 2,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // Add alarm for Lambda invocations taking longer than 1 second
@@ -95,7 +96,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: dynamoLambda.metricDuration(),
       threshold: 1000,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // Add alarm for if 2% of our calls are throttled
@@ -103,7 +105,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: dynamoLambdaThrottledPercentage,
       threshold: 2,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // DynamoDB
@@ -113,7 +116,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: table.metric('ReadThrottleEvents'),
       threshold: 1,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // Add alarm for throttled writes to dynamo
@@ -121,7 +125,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: table.metric('WriteThrottleEvents'),
       threshold: 1,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
     
     // Add alarm for if a user executes a bad query against our table
@@ -129,7 +134,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: table.metric('UserErrors'),
       threshold: 1,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // Add alarm for if something is wrong with our table
@@ -137,7 +143,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       metric: table.metric('SystemErrors'),
       threshold: 1,
       evaluationPeriods: 3,
-      datapointsToAlarm: 2
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     /**
