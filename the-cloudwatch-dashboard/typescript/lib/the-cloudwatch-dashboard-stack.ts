@@ -97,7 +97,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     });
 
     // Rather than have 2 alerts, let's create one aggregate metric
-    let dynamoDBErrors = new cloudwatch.MathExpression({
+    let dynamoDBTotalErrors = new cloudwatch.MathExpression({
       expression: 'm1 + m2',
       label: 'DynamoDB Errors',
       usingMetrics: {
@@ -196,7 +196,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     
     // There should be 0 DynamoDB errors
     new cloudwatch.Alarm(this, 'DynamoDB Errors > 0', {
-      metric: dynamoDBErrors,
+      metric: dynamoDBTotalErrors,
       threshold: 0,
       evaluationPeriods: 6,
       datapointsToAlarm: 1,
