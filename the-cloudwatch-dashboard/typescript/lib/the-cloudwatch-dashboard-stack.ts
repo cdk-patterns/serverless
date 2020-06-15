@@ -23,7 +23,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // DynamoDB Table
     const table = new dynamodb.Table(this, 'Hits', {
       partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING },
-      
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
     });
 
     // Lambda to interact with DynamoDB
@@ -240,7 +240,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         table.metric('ConsumedReadCapacityUnits'),
         table.metric('ProvisionedWriteCapacityUnits'),
         table.metric('ConsumedWriteCapacityUnits')
-      ], true),
+      ], false),
       this.buildGraphWidget('DynamoDB Throttles', [
         table.metric('ReadThrottleEvents', {statistic: 'sum'}),
         table.metric('WriteThrottleEvents', {statistic: 'sum'})
