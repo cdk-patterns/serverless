@@ -235,9 +235,9 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "DeleteItem"}}),
         table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "Query"}}),
       ], true),
-      this.buildGraphWidget('DynamoDB Errors', [
-        table.metric('UserErrors', {statistic: 'sum'}),
-        table.metric('SystemErrors', {statistic: 'sum'})
+      this.buildGraphWidget('DynamoDB Consumed Read/Write Capacity', [
+        table.metric('ConsumedReadCapacityUnits', {statistic: 'sum'}),
+        table.metric('ConsumedWriteCapacityUnits', {statistic: 'sum'})
       ], true),
       this.buildGraphWidget('DynamoDB Throttles', [
         table.metric('ReadThrottleEvents', {statistic: 'sum'}),
