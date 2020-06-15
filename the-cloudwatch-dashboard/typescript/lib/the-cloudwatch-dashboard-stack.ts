@@ -10,18 +10,22 @@ import sns = require('@aws-cdk/aws-sns');
 export class TheCloudwatchDashboardStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // ---------------------------------------------------------------------------------
     /**
-     * The Simple Webservice Logic
+     * The Simple Webservice Logic - This is what we will be monitoring
      * 
      * API GW HTTP API, Lambda Fn and DynamoDB
+     * https://github.com/cdk-patterns/serverless/tree/master/the-simple-webservice
      */
+    // ---------------------------------------------------------------------------------
 
-    //DynamoDB Table
+    // DynamoDB Table
     const table = new dynamodb.Table(this, 'Hits', {
       partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
     });
 
-    // defines an AWS Lambda resource
+    // Lambda to interact with DynamoDB
     const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.asset('lambda'),
@@ -41,14 +45,16 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       })
     });
 
+    // ---------------------------------------------------------------------------------
     /**
-     * Monitoring Logic
+     * Monitoring Logic Starts Here
      * 
      * This is everything we need to understand the state of our system:
      * - custom metrics
      * - cloudwatch alarms
      * - custom cloudwatch dashboard
      */
+    // ---------------------------------------------------------------------------------  
 
     //SNS Topic so we can hook things into our alerts e.g. email
     const errorTopic = new sns.Topic(this, 'errorTopic');
@@ -100,6 +106,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       period: cdk.Duration.minutes(5)
     });
 
+    // Rather than have 2 alerts, let's create one aggregate metric
     let dynamoDBThrottles = new cloudwatch.MathExpression({
       expression: 'm1 + m2',
       label: 'DynamoDB Throttles',
@@ -116,6 +123,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // API Gateway
 
+    // 4xx are user errors so a large volume indicates a problem
     new cloudwatch.Alarm(this, 'API Gateway 4XX Errors > 1%', {
       metric: apiGateway4xxErrorPercentage,
       threshold: 1,
@@ -124,6 +132,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
+    // 5xx are interal server errors so we want 0 of these
     new cloudwatch.Alarm(this, 'API Gateway 5XX Errors Alarm', {
       metric: this.metricForApiGw(api.httpApiId, '5XXError', '5XX Errors', 'p99'),
       threshold: 0,
@@ -144,7 +153,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // Lambda
 
-    // Add an alarm for when over 2%
+    // 2% of Dynamo Lambda invocations erroring
     new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Error Alarm', {
       metric: dynamoLambdaErrorPercentage,
       threshold: 2,
@@ -153,7 +162,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
-    // Add alarm for Lambda invocations taking longer than 1 second
+    // 1% of Lambda invocations taking longer than 1 second
     new cloudwatch.Alarm(this, 'Dynamo Lambda p99 Long Duration Alarm', {
       metric: dynamoLambda.metricDuration(),
       period: cdk.Duration.minutes(5),
@@ -164,7 +173,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
-    // Add alarm for if 2% of our calls are throttled
+    // 2% of our lambda invocations are throttled
     new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Throttled Alarm', {
       metric: dynamoLambdaThrottledPercentage,
       threshold: 2,
@@ -175,7 +184,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // DynamoDB
 
-    // Add alarm for throttled interactions with dynamo
+    // DynamoDB Interactions are throttled - indicated poorly provisioned
     new cloudwatch.Alarm(this, 'DynamoDB Table Reads/Writes Throttled Alarm', {
       metric: dynamoDBThrottles,
       threshold: 1,
@@ -184,7 +193,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
     
-    // Add alarm for aggregate errors from our table
+    // There should be 0 DynamoDB errors
     new cloudwatch.Alarm(this, 'DynamoDB Errors > 0', {
       metric: dynamoDBErrors,
       threshold: 0,
@@ -203,19 +212,32 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum')
       ]),
       this.buildGraphWidget('API GW Latency', [
-        this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p95', 'p95')
-      ]),
+        this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p90', 'p90'),
+        this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p99', 'p99')
+      ], true),
       this.buildGraphWidget('API GW Errors', [
         this.metricForApiGw(api.httpApiId, '4XXError', '4XX Errors', 'sum'),
         this.metricForApiGw(api.httpApiId, '5XXError', '5XX Errors', 'sum')
       ], true),
       this.buildGraphWidget('Dynamo Lambda Error %', [dynamoLambdaErrorPercentage]),
-      this.buildGraphWidget('Dynamo Lambda Average Duration', [dynamoLambda.metricDuration()]),
+      this.buildGraphWidget('Dynamo Lambda Duration', [
+        dynamoLambda.metricDuration({statistic:"p50"}),
+        dynamoLambda.metricDuration({statistic:"p90"}),
+        dynamoLambda.metricDuration({statistic:"p99"})
+      ], true),
       this.buildGraphWidget('Dynamo Lambda Throttle %', [dynamoLambdaThrottledPercentage]),
-      this.buildGraphWidget('DynamoDB System Errors', [table.metric('SystemErrors')]),
-      this.buildGraphWidget('DynamoDB User Errors', [table.metric('UserErrors')]),
-      this.buildGraphWidget('DynamoDB Throttled Read', [table.metric('ReadThrottleEvents')]),
-      this.buildGraphWidget('DynamoDB Throttled Write', [table.metric('WriteThrottleEvents')])
+      this.buildGraphWidget('DynamoDB Latency', [
+        table.metric('UserErrors', table.metric('SuccessfulRequestLatency', {dimensions:["Operation", "GetItem"]})),
+        table.metric('SystemErrors')
+      ], true),
+      this.buildGraphWidget('DynamoDB Errors', [
+        table.metric('UserErrors'),
+        table.metric('SystemErrors')
+      ], true),
+      this.buildGraphWidget('DynamoDB Throttles', [
+        table.metric('ReadThrottleEvents'),
+        table.metric('WriteThrottleEvents')
+      ], true)
     )
 
     new cdk.CfnOutput(this, 'HTTP API Url', {
