@@ -14,6 +14,14 @@ exports.handler = async function(event:any) {
     ExpressionAttributeValues: { ':incr': { N: '1' } }
   }).promise();
 
+  // invalid dynamo query to test dashboard
+  await dynamo.updateItem({
+    TableName: process.env.HITS_TABLE_NAME,
+    Key: { invalidProperty: { S: event.rawPath } },
+    UpdateExpression: 'ADD hits :incr',
+    ExpressionAttributeValues: { ':incr': { N: '1' } }
+  }).promise();
+
   console.log('inserted counter for '+ event.rawPath);
 
   // return response back to upstream caller
