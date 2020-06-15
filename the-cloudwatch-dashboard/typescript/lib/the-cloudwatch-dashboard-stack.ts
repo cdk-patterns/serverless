@@ -22,7 +22,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // DynamoDB Table
     const table = new dynamodb.Table(this, 'Hits', {
-      partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+      partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING },
+      
     });
 
     // Lambda to interact with DynamoDB
@@ -227,11 +228,11 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       ], true),
       this.buildGraphWidget('Dynamo Lambda Throttle %', [dynamoLambdaThrottledPercentage]),
       this.buildGraphWidget('DynamoDB Latency', [
-        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "GetItem"}}),
-        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "UpdateItem"}}),
-        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "PutItem"}}),
-        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "DeleteItem"}}),
-        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "Query"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "GetItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "UpdateItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "PutItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "DeleteItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "Query"}}),
       ], true),
       this.buildGraphWidget('DynamoDB Errors', [
         table.metric('UserErrors'),
