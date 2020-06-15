@@ -57,15 +57,25 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
      * Custom Metrics
      */
 
-    // Gather the % of lambda invocations that error in past 30 mins
+    let apiGateway4xxErrorPercentage = new cloudwatch.MathExpression({
+      expression: 'm1/m2*100',
+      label: '% API Gateway 4xx Errors',
+      usingMetrics: {
+        m1: this.metricForApiGw(api.httpApiId, '4XXError', '4XX Errors', 'sum'),
+        m2: this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum'),
+      },
+      period: cdk.Duration.minutes(5)
+    });
+
+    // Gather the % of lambda invocations that error in past 5 mins
     let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
       expression: 'e / i * 100',
-      label: '% of invocations that errored, last 30 mins', 
+      label: '% of invocations that errored, last 5 mins', 
       usingMetrics: {
         i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
         e: dynamoLambda.metric("Errors", {statistic: 'sum'}),
       },
-      period: cdk.Duration.minutes(30)
+      period: cdk.Duration.minutes(5)
     });
 
     // note: throttled requests are not counted in total num of invocations
@@ -76,12 +86,61 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
         t: dynamoLambda.metric("Throttles", {statistic: 'sum'}),
       },
-      period: cdk.Duration.minutes(30)
+      period: cdk.Duration.minutes(5)
+    });
+
+    // Rather than have 2 alerts, let's create one aggregate metric
+    let dynamoDBErrors = new cloudwatch.MathExpression({
+      expression: 'm1 + m2',
+      label: 'DynamoDB Errors',
+      usingMetrics: {
+        m1: table.metric('UserErrors', {statistic: 'sum'}),
+        m2: table.metric('SystemErrors', {statistic: 'sum'}),
+      },
+      period: cdk.Duration.minutes(5)
+    });
+
+    let dynamoDBThrottles = new cloudwatch.MathExpression({
+      expression: 'm1 + m2',
+      label: 'DynamoDB Throttles',
+      usingMetrics: {
+        m1: table.metric('ReadThrottleEvents', {statistic: 'sum'}),
+        m2: table.metric('WriteThrottleEvents', {statistic: 'sum'}),
+      },
+      period: cdk.Duration.minutes(5)
     });
     
     /**
      * Alarms
      */
+
+    // API Gateway
+
+    new cloudwatch.Alarm(this, 'API Gateway 4XX Errors > 1%', {
+      metric: apiGateway4xxErrorPercentage,
+      threshold: 1,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+    }).addAlarmAction(new SnsAction(errorTopic));
+
+    new cloudwatch.Alarm(this, 'API Gateway 5XX Errors Alarm', {
+      metric: this.metricForApiGw(api.httpApiId, '5XXError', '5XX Errors', 'p99'),
+      threshold: 0,
+      period: cdk.Duration.minutes(5),
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+    }).addAlarmAction(new SnsAction(errorTopic));
+
+    new cloudwatch.Alarm(this, 'API p99 latency alarm >= 1s', {
+      metric: this.metricForApiGw(api.httpApiId, 'Latency', 'API GW Latency', 'p99'),
+      threshold: 1000,
+      period: cdk.Duration.minutes(5),
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+    }).addAlarmAction(new SnsAction(errorTopic));
 
     // Lambda
 
@@ -89,17 +148,19 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Error Alarm', {
       metric: dynamoLambdaErrorPercentage,
       threshold: 2,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // Add alarm for Lambda invocations taking longer than 1 second
-    new cloudwatch.Alarm(this, 'Dynamo Lambda Long Duration Alarm', {
+    new cloudwatch.Alarm(this, 'Dynamo Lambda p99 Long Duration Alarm', {
       metric: dynamoLambda.metricDuration(),
+      period: cdk.Duration.minutes(5),
       threshold: 1000,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
+      statistic: "p99",
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
@@ -107,55 +168,38 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Throttled Alarm', {
       metric: dynamoLambdaThrottledPercentage,
       threshold: 2,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // DynamoDB
 
-    // Add alarm for throttled reads to dynamo
-    new cloudwatch.Alarm(this, 'DynamoDB Table Reads Throttled Alarm', {
-      metric: table.metric('ReadThrottleEvents', {statistic: 'sum'}),
+    // Add alarm for throttled interactions with dynamo
+    new cloudwatch.Alarm(this, 'DynamoDB Table Reads/Writes Throttled Alarm', {
+      metric: dynamoDBThrottles,
       threshold: 1,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
-      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
-    }).addAlarmAction(new SnsAction(errorTopic));
-
-    // Add alarm for throttled writes to dynamo
-    new cloudwatch.Alarm(this, 'DynamoDB Table Writes Throttled Alarm', {
-      metric: table.metric('WriteThrottleEvents', {statistic: 'sum'}),
-      threshold: 1,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
     
-    // Add alarm for if a user executes a bad query against our table
-    new cloudwatch.Alarm(this, 'DynamoDB Table User Error Alarm', {
-      metric: table.metric('UserErrors', {statistic: 'sum'}),
-      threshold: 1,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
+    // Add alarm for aggregate errors from our table
+    new cloudwatch.Alarm(this, 'DynamoDB Errors > 0', {
+      metric: dynamoDBErrors,
+      threshold: 0,
+      evaluationPeriods: 6,
+      datapointsToAlarm: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
-    // Add alarm for if something is wrong with our table
-    new cloudwatch.Alarm(this, 'DynamoDB Table System Error Alarm', {
-      metric: table.metric('SystemErrors', {statistic: 'sum'}),
-      threshold: 1,
-      evaluationPeriods: 3,
-      datapointsToAlarm: 2,
-      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
-    }).addAlarmAction(new SnsAction(errorTopic));
 
     /**
      * Custom Cloudwatch Dashboard 
      */  
     
     new cloudwatch.Dashboard(this, 'CloudWatchDashBoard').addWidgets(
-      this.buildGraphWidget('API GW Count', [
+      this.buildGraphWidget('Requests', [
         this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum')
       ]),
       this.buildGraphWidget('API GW Latency', [
