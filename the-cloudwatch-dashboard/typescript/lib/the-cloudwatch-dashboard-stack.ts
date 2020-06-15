@@ -3,7 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
 import cloudwatch = require('@aws-cdk/aws-cloudwatch');
-import { GraphWidget, IMetric } from "@aws-cdk/aws-cloudwatch";
+import { GraphWidget, IMetric, Metric } from "@aws-cdk/aws-cloudwatch";
 import { SnsAction } from '@aws-cdk/aws-cloudwatch-actions';
 import sns = require('@aws-cdk/aws-sns');
 
@@ -236,7 +236,9 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "Query"}}),
       ], true),
       this.buildGraphWidget('DynamoDB Consumed Read/Write Capacity', [
+        table.metric('ProvisionedReadCapacityUnits', {statistic: 'Average'}),
         table.metric('ConsumedReadCapacityUnits', {statistic: 'sum'}),
+        table.metric('ProvisionedWriteCapacityUnits', {statistic: 'Average'}),
         table.metric('ConsumedWriteCapacityUnits', {statistic: 'sum'})
       ], true),
       this.buildGraphWidget('DynamoDB Throttles', [
