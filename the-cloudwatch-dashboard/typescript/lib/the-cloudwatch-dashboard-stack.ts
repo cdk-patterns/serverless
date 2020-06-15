@@ -229,7 +229,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       this.buildGraphWidget('DynamoDB Latency', [
         table.metricSuccessfulRequestLatency({statistic:"p50"}),
         table.metricSuccessfulRequestLatency({statistic:"p90"}),
-        table.metricSuccessfulRequestLatency({statistic:"p99"})
+        table.metricSuccessfulRequestLatency({statistic:"p99"}),
+        table.metricSuccessfulRequestLatency()
       ], true),
       this.buildGraphWidget('DynamoDB Errors', [
         table.metric('UserErrors'),
