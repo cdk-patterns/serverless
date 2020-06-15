@@ -213,6 +213,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum')
       ]),
       this.buildGraphWidget('API GW Latency', [
+        this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p50', 'p50'),
         this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p90', 'p90'),
         this.metricForApiGw(api.httpApiId, 'Latency', 'API Latency p99', 'p99')
       ], true),
