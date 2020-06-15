@@ -3,7 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
 import cloudwatch = require('@aws-cdk/aws-cloudwatch');
-import { GraphWidget, IMetric } from "@aws-cdk/aws-cloudwatch";
+import { GraphWidget, IMetric, DimensionHash } from "@aws-cdk/aws-cloudwatch";
 import { SnsAction } from '@aws-cdk/aws-cloudwatch-actions';
 import sns = require('@aws-cdk/aws-sns');
 
@@ -207,6 +207,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
      * Custom Cloudwatch Dashboard 
      */  
     
+    let hash:DimensionHash = {"":""}
+
     new cloudwatch.Dashboard(this, 'CloudWatchDashBoard').addWidgets(
       this.buildGraphWidget('Requests', [
         this.metricForApiGw(api.httpApiId, 'Count', '# Requests', 'sum')
@@ -227,10 +229,11 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       ], true),
       this.buildGraphWidget('Dynamo Lambda Throttle %', [dynamoLambdaThrottledPercentage]),
       this.buildGraphWidget('DynamoDB Latency', [
-        table.metricSuccessfulRequestLatency({statistic:"p50"}),
-        table.metricSuccessfulRequestLatency({statistic:"p90"}),
-        table.metricSuccessfulRequestLatency({statistic:"p99"}),
-        table.metricSuccessfulRequestLatency()
+        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "GetItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "UpdateItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "PutItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "DeleteItem"}}),
+        table.metricSuccessfulRequestLatency({dimensions: {"Operation": "Query"}}),
       ], true),
       this.buildGraphWidget('DynamoDB Errors', [
         table.metric('UserErrors'),
