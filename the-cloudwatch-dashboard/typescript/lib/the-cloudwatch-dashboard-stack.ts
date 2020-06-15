@@ -101,8 +101,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       expression: 'm1 + m2',
       label: 'DynamoDB Errors',
       usingMetrics: {
-        m1: table.metric('UserErrors', {statistic: 'sum'}),
-        m2: table.metric('SystemErrors', {statistic: 'sum'}),
+        m1: table.metricUserErrors(),
+        m2: table.metricSystemErrors(),
       },
       period: cdk.Duration.minutes(5)
     });
