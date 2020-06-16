@@ -178,6 +178,10 @@ CloudWatch from personal experience seems to run about 10-15 minutes behind real
 
 What you can do is deploy this stack and start changing pieces to break or react differently and see how many alerts you trigger or after waiting a few minutes see if it shows on the dashboards.
 
+## Namespaces
+
+If you want to use some of the out of the box metrics you need to know the namespace for that AWS Service e.g. 'aws/dynamodb'. You can mostly guess but for the complete list see [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
+
 ## Metric Math
 Something that is very powerful in CloudWatch is that you can write mathematical expressions based off existing metrics to create a new metric. I have done this several times to produce this dashboard:
 
