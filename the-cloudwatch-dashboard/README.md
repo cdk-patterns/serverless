@@ -183,6 +183,8 @@ What you can do is deploy this stack and start changing pieces to break or react
 If you want to use some of the out of the box metrics you need to know the namespace for that AWS Service e.g. 'aws/dynamodb'. You can mostly guess but for the complete list see [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
 
 ## Metric Math
+[Official AWS Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html)
+
 Something that is very powerful in CloudWatch is that you can write mathematical expressions based off existing metrics to create a new metric. I have done this several times to produce this dashboard:
 
 ```javascript
@@ -199,8 +201,6 @@ let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
 ```
 
 You can see that we took the invocations metric and gave it a name "i" and the errors metric "e" then applied the formula "e / i * 100" to produce the % of invocations that errored.
-
-[Metric Math Official Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html)
 
 ## CloudWatch Metric Dimensions
 [Official AWS Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Dimension)
