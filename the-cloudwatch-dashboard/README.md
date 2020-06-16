@@ -68,8 +68,7 @@ to formulate a plan for new and existing applications when it comes to metrics:
     business goals and are important to know when something is critically
     affecting your overall business, revenue wise or not
 
-    Examples: Orders placed, debit/credit card operations, flights purchased,
-    etc.
+    Examples: Orders placed, debit/credit card operations, flights purchased etc.
 </details>
 
 <details>
@@ -106,8 +105,7 @@ to formulate a plan for new and existing applications when it comes to metrics:
 
     Examples: Number of tickets (successful and unsuccessful resolutions,
     etc.), number of times people on-call were paged, availability, CI/CD pipeline
-    stats (successful/failed deployments, feedback time, cycle and lead time,
-    etc.)
+    stats (successful/failed deployments, feedback time, cycle and lead time etc.)
 </details>
 
 CloudWatch Alarms should be configured at both individual and aggregated levels. An
