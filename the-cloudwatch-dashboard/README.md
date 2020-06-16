@@ -61,42 +61,54 @@ Amazon Web Services Serverless Application Lens that will be processed asynchron
 The following guidelines can be used whether you are creating a dashboard or looking
 to formulate a plan for new and existing applications when it comes to metrics:
 
-##### Business Metrics
-Business KPIs that will measure your application performance against
-business goals and are important to know when something is critically
-affecting your overall business, revenue wise or not
+<details>
+    <summary>Business Metrics</summary>
 
-Examples: Orders placed, debit/credit card operations, flights purchased,
-etc.
+    Business KPIs that will measure your application performance against
+    business goals and are important to know when something is critically
+    affecting your overall business, revenue wise or not
 
-##### Customer Experience Metrics
-Customer experience data dictates not only the overall effectiveness of its
-UI/UX but also whether changes or anomalies are affecting customer
-experience in a particular section of your application. Often times, these are
-measured in percentiles to prevent outliers when trying to understand the
-impact over time and how it’s spread across your customer base.
+    Examples: Orders placed, debit/credit card operations, flights purchased,
+    etc.
+</details>
 
-Examples: Perceived latency, time it takes to add an item to a basket or to
-check out, page load times, etc.
+<details>
+    <summary>Customer Experience Metrics</summary>
 
-##### System Metrics
-Vendor and application metrics are important to underpin root causes from
-the previous sections. They also tell you if your systems are healthy, at risk,
-or already your customers.
+    Customer experience data dictates not only the overall effectiveness of its
+    UI/UX but also whether changes or anomalies are affecting customer
+    experience in a particular section of your application. Often times, these are
+    measured in percentiles to prevent outliers when trying to understand the
+    impact over time and how it’s spread across your customer base.
 
-Examples: Percentage of HTTP errors/success, memory utilization, function
-duration/error/throttling, queue length, stream records length, integration
-latency, etc.
+    Examples: Perceived latency, time it takes to add an item to a basket or to
+    check out, page load times, etc.
+</details>
 
-##### Operational Metrics
-Operational metrics are equally important to understand sustainability and
-maintenance of a given system and crucial to pinpoint how stability
-progressed/degraded over time.
+<details>
+    <summary>System Metrics</summary>
 
-Examples: Number of tickets (successful and unsuccessful resolutions,
-etc.), number of times people on-call were paged, availability, CI/CD pipeline
-stats (successful/failed deployments, feedback time, cycle and lead time,
-etc.)
+    Vendor and application metrics are important to underpin root causes from
+    the previous sections. They also tell you if your systems are healthy, at risk,
+    or already your customers.
+
+    Examples: Percentage of HTTP errors/success, memory utilization, function
+    duration/error/throttling, queue length, stream records length, integration
+    latency, etc.
+</details>
+
+<details>
+    <summary>Operational Metrics</summary>
+
+    Operational metrics are equally important to understand sustainability and
+    maintenance of a given system and crucial to pinpoint how stability
+    progressed/degraded over time.
+
+    Examples: Number of tickets (successful and unsuccessful resolutions,
+    etc.), number of times people on-call were paged, availability, CI/CD pipeline
+    stats (successful/failed deployments, feedback time, cycle and lead time,
+    etc.)
+</details>
 
 CloudWatch Alarms should be configured at both individual and aggregated levels. An
 individual-level example is alarming on the Duration metric from Lambda or
