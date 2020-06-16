@@ -120,6 +120,12 @@ I took one of the other cdk patterns (the simple webservice) and implemented a r
 
 I then added CloudWatch alarms which all post to an SNS topic.
 
+The Simple Webservice:
+![The simple webservice](img/simple-webservice.png)
+
+The Dashboard:
+![Example Dashboard](img/dashboard.png)
+
 The current Dashboard Widgets and Cloudwatch Alarms are:
 
 ### API Gateway
