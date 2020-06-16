@@ -180,7 +180,7 @@ What you can do is deploy this stack and start changing pieces to break or react
 
 ## Namespaces
 
-If you want to use some of the out of the box metrics you need to know the namespace for that AWS Service e.g. 'aws/dynamodb'. You can mostly guess but for the complete list see [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
+If you want to use some of the out of the box metrics you need to know the namespace for that AWS Service e.g. 'AWS/DynamoDB'. You can mostly guess but for the complete list see [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
 
 ## Metric Math
 [Official AWS Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html)
