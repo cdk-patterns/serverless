@@ -14,8 +14,7 @@ Some useful References:
 | AWS Docs    | [Metric Math](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html)  |
 | AWS Docs    | [Lambda Metrics](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html)  |
 | AWS Docs    | [DynamoDB Metrics](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html)  |
-| AWS Docs    | [HTTP API Metrics](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-metrics.html)  |
-| AWS Docs    | [REST API Metrics](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-metrics-and-dimensions.html)  |
+| AWS Docs    | [HTTP API Metrics](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-metrics.html) and [REST API Metrics](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-metrics-and-dimensions.html) |
 | Yan Cui    | [Lambda Alerts](https://lumigo.io/blog/how-to-monitor-lambda-with-cloudwatch-metrics/) and [Logging Timeouts](https://theburningmonk.com/2019/05/how-to-log-timed-out-lambda-invocations/) |
 | Yan Cui    | [Doing Better Than Percentiles](https://theburningmonk.com/2018/10/we-can-do-better-than-percentile-latencies/) |
 | Blue Matador   | [Monitoring DynamoDB](https://www.bluematador.com/blog/how-to-monitor-amazon-dynamodb-with-cloudwatch) |
