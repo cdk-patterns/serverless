@@ -120,41 +120,45 @@ I took one of the other cdk patterns (the simple webservice) and implemented a r
 
 I then added CloudWatch alarms which all post to an SNS topic.
 
-The current Graphs on the dashboard are:
+The current Dashboard Widgets and Cloudwatch Alarms are:
 
 ### API Gateway
+
+#### Widgets
 
 - Number of Requests
 - Latency
 - 4xx and 5xx Errors
 
-### Lambda
-
-- % of Lambda invocations that errored
-- Lambda p50, p90 and p99 Duration
-- % of Lambda invocations that are throttled
-
-### DynamoDB
-
-- Latency
-- Consumed Read/Write Units
-- DynamoDB Read/Write Throttle Events
-
-The Alarms configured are:
-
-### API Gateway
+#### Alarms
 
 - API Gateway 4XX Errors > 1%
 - API Gateway 5XX Errors > 0
 - API p99 latency alarm >= 1s
 
-### Lambda
+### Lambda
+
+#### Widgets
+
+- % of Lambda invocations that errored
+- Lambda p50, p90 and p99 Duration
+- % of Lambda invocations that are throttled
+
+#### Alarms
 
 - Dynamo Lambda 2% Error
 - Dynamo Lambda p99 Long Duration (>1s)
 - Dynamo Lambda 2% Throttled
 
 ### DynamoDB
+
+#### Widgets
+
+- Latency
+- Consumed Read/Write Units
+- DynamoDB Read/Write Throttle Events
+
+#### Alarms
 
 - DynamoDB Table Reads/Writes Throttled
 - DynamoDB Errors > 0
