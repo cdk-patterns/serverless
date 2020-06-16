@@ -96,7 +96,10 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       period: cdk.Duration.minutes(5)
     });
 
-    // Rather than have 2 alerts, let's create one aggregate metric
+    // I think usererrors are at an account level rather than a table level so merging
+    // these two metrics until I can get a definitive answer. I think usererrors
+    // will always show as 0 when scoped to a table so this is still effectively
+    // a system errors count
     let dynamoDBTotalErrors = new cloudwatch.MathExpression({
       expression: 'm1 + m2',
       label: 'DynamoDB Errors',
@@ -235,10 +238,8 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
         table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "DeleteItem"}}),
         table.metricSuccessfulRequestLatency({dimensions: {"TableName":table.tableName, "Operation": "Query"}}),
       ], true),
-      this.buildGraphWidget('DynamoDB Consumed Read/Write Capacity', [
-        table.metric('ProvisionedReadCapacityUnits'),
+      this.buildGraphWidget('DynamoDB Consumed Read/Write Units', [
         table.metric('ConsumedReadCapacityUnits'),
-        table.metric('ProvisionedWriteCapacityUnits'),
         table.metric('ConsumedWriteCapacityUnits')
       ], false),
       this.buildGraphWidget('DynamoDB Throttles', [
