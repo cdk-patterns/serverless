@@ -168,3 +168,11 @@ The current Dashboard Widgets and Cloudwatch Alarms are:
 
 - DynamoDB Table Reads/Writes Throttled
 - DynamoDB Errors > 0
+
+## Testing This Pattern
+
+After you deploy this pattern you will have an API Gateway with a proxy endpoint where any call will hit the dynamo lambda which inserts the path of the url you hit into DynamoDB.
+
+CloudWatch from personal experience seems to run about 10-15 minutes behind real-time so unfortunately you cannot hit the API then immediately open the dashboard and watch the graphs change.
+
+What you can do is deploy this stack and start changing pieces to break or react differently and see how many alerts you trigger or after waiting a few minutes see if it shows on the dashboards.
