@@ -137,7 +137,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // 5xx are interal server errors so we want 0 of these
-    new cloudwatch.Alarm(this, 'API Gateway 5XX Errors Alarm', {
+    new cloudwatch.Alarm(this, 'API Gateway 5XX Errors > 0', {
       metric: this.metricForApiGw(api.httpApiId, '5XXError', '5XX Errors', 'p99'),
       threshold: 0,
       period: cdk.Duration.minutes(5),
@@ -158,7 +158,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // Lambda
 
     // 2% of Dynamo Lambda invocations erroring
-    new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Error Alarm', {
+    new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Error', {
       metric: dynamoLambdaErrorPercentage,
       threshold: 2,
       evaluationPeriods: 6,
@@ -167,7 +167,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // 1% of Lambda invocations taking longer than 1 second
-    new cloudwatch.Alarm(this, 'Dynamo Lambda p99 Long Duration Alarm', {
+    new cloudwatch.Alarm(this, 'Dynamo Lambda p99 Long Duration (>1s)', {
       metric: dynamoLambda.metricDuration(),
       period: cdk.Duration.minutes(5),
       threshold: 1000,
@@ -178,7 +178,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     }).addAlarmAction(new SnsAction(errorTopic));
 
     // 2% of our lambda invocations are throttled
-    new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Throttled Alarm', {
+    new cloudwatch.Alarm(this, 'Dynamo Lambda 2% Throttled', {
       metric: dynamoLambdaThrottledPercentage,
       threshold: 2,
       evaluationPeriods: 6,
@@ -189,7 +189,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // DynamoDB
 
     // DynamoDB Interactions are throttled - indicated poorly provisioned
-    new cloudwatch.Alarm(this, 'DynamoDB Table Reads/Writes Throttled Alarm', {
+    new cloudwatch.Alarm(this, 'DynamoDB Table Reads/Writes Throttled', {
       metric: dynamoDBThrottles,
       threshold: 1,
       evaluationPeriods: 6,
