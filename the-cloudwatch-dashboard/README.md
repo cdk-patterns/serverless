@@ -176,3 +176,21 @@ After you deploy this pattern you will have an API Gateway with a proxy endpoint
 CloudWatch from personal experience seems to run about 10-15 minutes behind real-time so unfortunately you cannot hit the API then immediately open the dashboard and watch the graphs change.
 
 What you can do is deploy this stack and start changing pieces to break or react differently and see how many alerts you trigger or after waiting a few minutes see if it shows on the dashboards.
+
+## Metric Math
+Something that is very powerful in CloudWatch is that you can write mathematical expressions based off existing metrics to create a new metric. I have done this several times to produce this dashboard:
+
+```javascript
+// Gather the % of lambda invocations that error in past 5 mins
+let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
+    expression: 'e / i * 100',
+    label: '% of invocations that errored, last 5 mins', 
+    usingMetrics: {
+        i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
+        e: dynamoLambda.metric("Errors", {statistic: 'sum'}),
+    },
+    period: cdk.Duration.minutes(5)
+});
+```
+
+You can see that we took the invocations metric and gave it a name "i" and the errors metric "e" then applied the formula "e / i * 100" to produce the % of invocations that errored.
