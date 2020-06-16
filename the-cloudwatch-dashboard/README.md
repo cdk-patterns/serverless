@@ -10,7 +10,7 @@ Some useful References:
 | Author        | Link           |
 | ------------- | ------------- |
 | Julian Wood     | [Understanding application health – part 1](https://aws.amazon.com/blogs/compute/building-well-architected-serverless-applications-understanding-application-health-part-1/)  |
-| AWS GitHub | [Serverless eCommerce Platform](https://github.com/aws-samples/aws-serverless-ecommerce-platform) | 
+| AWS GitHub | [Serverless Ecommerce Platform](https://github.com/aws-samples/aws-serverless-ecommerce-platform) | 
 | AWS GitHub | [Real world Serverless Application](https://github.com/awslabs/realworld-serverless-application/wiki/Serverless-Operations) |
 | AWS Docs    | [CloudWatch NameSpaces](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)  |
 | AWS Docs    | [Metric Math](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html)  |
