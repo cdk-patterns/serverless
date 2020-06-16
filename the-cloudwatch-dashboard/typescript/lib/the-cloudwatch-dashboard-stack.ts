@@ -43,8 +43,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     let api = new apigw.HttpApi(this, 'HttpAPI', {
       defaultIntegration: new apigw.LambdaProxyIntegration({
         handler: dynamoLambda
-      }),
-      corsPreflight: {allowOrigins:['*']}
+      })
     });
 
     // ---------------------------------------------------------------------------------
