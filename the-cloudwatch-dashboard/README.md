@@ -116,4 +116,45 @@ the application likely have different profiles. In this instance, you can quickl
 
 ## What is Included In This Pattern?
 
+I took one of the other cdk patterns (the simple webservice) and implemented a real well-architected CloudWatch dashboard which would be useful if you wanted to use the simple webservice in production.
 
+I then added CloudWatch alarms which all post to an SNS topic.
+
+The current Graphs on the dashboard are:
+
+### API Gateway
+
+- Number of Requests
+- Latency
+- 4xx and 5xx Errors
+
+### Lambda
+
+- % of Lambda invocations that errored
+- Lambda p50, p90 and p99 Duration
+- % of Lambda invocations that are throttled
+
+### DynamoDB
+
+- Latency
+- Consumed Read/Write Units
+- DynamoDB Read/Write Throttle Events
+
+The Alarms configured are:
+
+### API Gateway
+
+- API Gateway 4XX Errors > 1%
+- API Gateway 5XX Errors > 0
+- API p99 latency alarm >= 1s
+
+### Lambda
+
+- Dynamo Lambda 2% Error
+- Dynamo Lambda p99 Long Duration (>1s)
+- Dynamo Lambda 2% Throttled
+
+### DynamoDB
+
+- DynamoDB Table Reads/Writes Throttled
+- DynamoDB Errors > 0
