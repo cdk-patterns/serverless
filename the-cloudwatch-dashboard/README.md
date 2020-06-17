@@ -56,8 +56,7 @@ behavior and add custom metrics where you see fit.
 
 Amazon CloudWatch provides automated cross service and per service dashboards to
 help you understand key metrics for the AWS services that you use. For custom
-metrics, use Amazon CloudWatch Embedded Metric Format to log a batch of metrics 
-Amazon Web Services Serverless Application Lens that will be processed asynchronously by CloudWatch without impacting the performance of your Serverless application.
+metrics, use Amazon CloudWatch Embedded Metric Format to log a batch of metrics that will be processed asynchronously by CloudWatch without impacting the performance of your Serverless application.
 
 The following guidelines can be used whether you are creating a dashboard or looking
 to formulate a plan for new and existing applications when it comes to metrics:
