@@ -187,17 +187,17 @@ If you want to use some of the out of the box metrics you need to know the names
 
 Something that is very powerful in CloudWatch is that you can write mathematical expressions based off existing metrics to create a new metric. I have done this several times to produce this dashboard:
 
-```javascript
-// Gather the % of lambda invocations that error in past 5 mins
-let dynamoLambdaErrorPercentage = new cloudwatch.MathExpression({
-    expression: 'e / i * 100',
-    label: '% of invocations that errored, last 5 mins', 
-    usingMetrics: {
-        i: dynamoLambda.metric("Invocations", {statistic: 'sum'}),
-        e: dynamoLambda.metric("Errors", {statistic: 'sum'}),
-    },
-    period: cdk.Duration.minutes(5)
-});
+```python
+# Gather the % of lambda invocations that error in past 5 mins
+lambda_error_perc = cloud_watch.MathExpression(expression="e / i * 100",
+                                                label="% of invocations that errored, last 5 mins",
+                                                using_metrics={
+                                                    "i": dynamo_lambda.metric(metric_name="Invocations",
+                                                                                statistic="sum"),
+                                                    "e": dynamo_lambda.metric(metric_name="Errors",
+                                                                                statistic="sum"),
+                                                },
+                                                period=core.Duration.minutes(5))
 ```
 
 You can see that we took the invocations metric and gave it a name "i" and the errors metric "e" then applied the formula "e / i * 100" to produce the % of invocations that errored.
