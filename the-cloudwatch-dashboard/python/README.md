@@ -189,7 +189,7 @@ Something that is very powerful in CloudWatch is that you can write mathematical
 
 ```python
 # Gather the % of lambda invocations that error in past 5 mins
-lambda_error_perc = cloud_watch.MathExpression(expression="e / i * 100",
+lambda_error_perc = cloud_watch.MathExpression( expression="e / i * 100",
                                                 label="% of invocations that errored, last 5 mins",
                                                 using_metrics={
                                                     "i": dynamo_lambda.metric(metric_name="Invocations",
