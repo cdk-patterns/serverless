@@ -9,6 +9,9 @@
         "the-big-fan": {
             "prodReady": false
         },
+        "the-cloudwatch-dashboard": {
+            "prodReady": false
+        },
         "the-destined-lambda": {
             "prodReady": false
         },
