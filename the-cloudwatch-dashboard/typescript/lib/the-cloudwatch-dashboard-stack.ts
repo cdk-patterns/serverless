@@ -136,7 +136,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     }).addAlarmAction(new SnsAction(errorTopic));
 
-    // 5xx are interal server errors so we want 0 of these
+    // 5xx are internal server errors so we want 0 of these
     new cloudwatch.Alarm(this, 'API Gateway 5XX Errors > 0', {
       metric: this.metricForApiGw(api.httpApiId, '5XXError', '5XX Errors', 'p99'),
       threshold: 0,
