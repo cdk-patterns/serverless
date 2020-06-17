@@ -20,6 +20,12 @@ setuptools.setup(
 
     install_requires=[
         "aws-cdk.core==1.41.0",
+        "aws-cdk.aws_apigatewayv2==1.41.0",
+        "aws-cdk.aws-lambda==1.41.0",
+        "aws-cdk.aws-dynamodb==1.41.0",
+        "aws-cdk.aws-sns==1.41.0",
+        "aws-cdk.aws-cloudwatch==1.41.0",
+        "aws-cdk.aws-cloudwatch-actions==1.41.0",
     ],
 
     python_requires=">=3.6",
