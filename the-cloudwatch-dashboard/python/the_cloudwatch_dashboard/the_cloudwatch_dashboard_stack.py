@@ -84,11 +84,9 @@ class TheCloudwatchDashboardStack(core.Stack):
                                                        label="% of invocations that errored, last 5 mins",
                                                        using_metrics={
                                                            "i": dynamo_lambda.metric(metric_name="Invocations",
-                                                                                     dimensions={
-                                                                                         "statistic": "sum"}),
+                                                                                     statistic="sum"),
                                                            "e": dynamo_lambda.metric(metric_name="Errors",
-                                                                                     dimensions={
-                                                                                         "statistic": "sum"}),
+                                                                                     statistic="sum"),
                                                        },
                                                        period=core.Duration.minutes(5))
 
@@ -97,11 +95,9 @@ class TheCloudwatchDashboardStack(core.Stack):
                                                            label="% of throttled requests, last 30 mins",
                                                            using_metrics={
                                                                "i": dynamo_lambda.metric(metric_name="Invocations",
-                                                                                         dimensions={
-                                                                                             "statistic": "sum"}),
+                                                                                         statistic="sum"),
                                                                "t": dynamo_lambda.metric(metric_name="Throttles",
-                                                                                         dimensions=
-                                                                                         {"statistic": "sum"}),
+                                                                                         statistic="sum"),
                                                            },
                                                            period=core.Duration.minutes(5))
 
@@ -122,9 +118,9 @@ class TheCloudwatchDashboardStack(core.Stack):
                                                          label="DynamoDB Throttles",
                                                          using_metrics={
                                                              "m1": table.metric(metric_name="ReadThrottleEvents",
-                                                                                dimensions={"statistic": "sum"}),
+                                                                                statistic="sum"),
                                                              "m2": table.metric(metric_name="WriteThrottleEvents",
-                                                                                dimensions={"statistic": "sum"}),
+                                                                                statistic="sum"),
                                                          },
                                                          period=core.Duration.minutes(5))
         ###
@@ -225,6 +221,75 @@ class TheCloudwatchDashboardStack(core.Stack):
                           datapoints_to_alarm=1,
                           treat_missing_data=cloud_watch.TreatMissingData.NOT_BREACHING) \
             .add_alarm_action(actions.SnsAction(error_topic))
+
+        dashboard = cloud_watch.Dashboard(self, id="CloudWatchDashBoard")
+        dashboard.add_widgets(cloud_watch.GraphWidget(title="Requests",
+                                                      left=[self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="Count",
+                                                                                   label="# Requests",
+                                                                                   stat="sum")]),
+                              cloud_watch.GraphWidget(title="API GW Latency",
+                                                      stacked=True,
+                                                      left=[self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="Latency",
+                                                                                   label="API Latency p50",
+                                                                                   stat="p50"),
+                                                            self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="Latency",
+                                                                                   label="API Latency p90",
+                                                                                   stat="p90"),
+                                                            self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="Latency",
+                                                                                   label="API Latency p99",
+                                                                                   stat="p99")
+                                                            ]),
+                              cloud_watch.GraphWidget(title="API GW Errors",
+                                                      stacked=True,
+                                                      left=[self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="4XXError",
+                                                                                   label="4XX Errors",
+                                                                                   stat="sum"),
+                                                            self.metric_for_api_gw(api_id=api.http_api_id,
+                                                                                   metric_name="5XXError",
+                                                                                   label="5XX Errors",
+                                                                                   stat="sum")
+                                                            ]),
+                              cloud_watch.GraphWidget(title="Dynamo Lambda Error %", left=[lambda_error_perc]),
+                              cloud_watch.GraphWidget(title="Dynamo Lambda Duration",
+                                                      stacked=True,
+                                                      left=[dynamo_lambda.metric_duration(statistic="p50"),
+                                                            dynamo_lambda.metric_duration(statistic="p90"),
+                                                            dynamo_lambda.metric_duration(statistic="p99")]),
+                              cloud_watch.GraphWidget(title="Dynamo Lambda Throttle %", left=[lambda_throttled_perc]),
+                              cloud_watch.GraphWidget(title="DynamoDB Latency",
+                                                      stacked=True,
+                                                      left=[table.metric_successful_request_latency(
+                                                              dimensions={"TableName": table.table_name,
+                                                                          "Operation": "GetItem"}),
+                                                            table.metric_successful_request_latency(
+                                                              dimensions={"TableName": table.table_name,
+                                                                          "Operation": "UpdateItem"}),
+                                                            table.metric_successful_request_latency(
+                                                              dimensions={"TableName": table.table_name,
+                                                                          "Operation": "PutItem"}),
+                                                            table.metric_successful_request_latency(
+                                                              dimensions={"TableName": table.table_name,
+                                                                          "Operation": "DeleteItem"}),
+                                                            table.metric_successful_request_latency(
+                                                              dimensions={"TableName": table.table_name,
+                                                                          "Operation": "Query"}),
+                                                            ]),
+                              cloud_watch.GraphWidget(title="DynamoDB Consumed Read/Write Units",
+                                                      stacked=False,
+                                                      left=[table.metric(metric_name="ConsumedReadCapacityUnits"),
+                                                            table.metric(metric_name="ConsumedWriteCapacityUnits")]),
+                              cloud_watch.GraphWidget(title="DynamoDB Throttles",
+                                                      stacked=True,
+                                                      left=[table.metric(metric_name="ReadThrottleEvents",
+                                                                         statistic="sum"),
+                                                            table.metric(metric_name="WriteThrottleEvents",
+                                                                         statistic="sum")]),
+                              )
 
     @jsii.implements(cloud_watch.IMetric)
     def metric_for_api_gw(self, api_id: str, metric_name: str, label: str, stat: str = 'avg'):
