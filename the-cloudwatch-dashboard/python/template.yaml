@@ -436,11 +436,11 @@ Resources:
       DashboardBody:
         Fn::Join:
           - ""
-          - - '{"widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"Requests","region":"'
+          - - '{"widgets":[{"type":"metric","width":8,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"Requests","region":"'
             - Ref: AWS::Region
             - '","metrics":[["AWS/ApiGateway","Count","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"# Requests","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"API GW Latency","region":"'
+            - '",{"label":"# Requests","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":0,"properties":{"view":"timeSeries","title":"API GW Latency","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/ApiGateway","Latency","ApiId","'
             - Ref: HttpAPI8D545486
@@ -448,19 +448,19 @@ Resources:
             - Ref: HttpAPI8D545486
             - '",{"label":"API Latency p90","period":900,"stat":"p90"}],["AWS/ApiGateway","Latency","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"API Latency p99","period":900,"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"API GW Errors","region":"'
+            - '",{"label":"API Latency p99","period":900,"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":0,"properties":{"view":"timeSeries","title":"API GW Errors","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/ApiGateway","4XXError","ApiId","'
             - Ref: HttpAPI8D545486
             - '",{"label":"4XX Errors","period":900,"stat":"Sum"}],["AWS/ApiGateway","5XXError","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"5XX Errors","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"Dynamo Lambda Error %","region":"'
+            - '",{"label":"5XX Errors","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":0,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Error %","region":"'
             - Ref: AWS::Region
             - '","metrics":[[{"label":"% of invocations that errored, last 5 mins","expression":"e / i * 100"}],["AWS/Lambda","Invocations","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"Sum","visible":false,"id":"i"}],["AWS/Lambda","Errors","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"Sum","visible":false,"id":"e"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":0,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Duration","region":"'
+            - '",{"stat":"Sum","visible":false,"id":"e"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Duration","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/Lambda","Duration","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
@@ -468,13 +468,13 @@ Resources:
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"p90"}],["AWS/Lambda","Duration","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":6,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Throttle %","region":"'
+            - '",{"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Throttle %","region":"'
             - Ref: AWS::Region
             - '","metrics":[[{"label":"% of throttled requests, last 30 mins","expression":"t / (i + t) * 100"}],["AWS/Lambda","Invocations","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"Sum","visible":false,"id":"i"}],["AWS/Lambda","Throttles","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"Sum","visible":false,"id":"t"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":12,"y":6,"properties":{"view":"timeSeries","title":"DynamoDB Latency","region":"'
+            - '",{"stat":"Sum","visible":false,"id":"t"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Latency","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/DynamoDB","SuccessfulRequestLatency","Operation","GetItem","TableName","'
             - Ref: HitsFF5AF8CD
@@ -486,13 +486,13 @@ Resources:
             - Ref: HitsFF5AF8CD
             - '"],["AWS/DynamoDB","SuccessfulRequestLatency","Operation","Query","TableName","'
             - Ref: HitsFF5AF8CD
-            - '"]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":18,"y":6,"properties":{"view":"timeSeries","title":"DynamoDB Consumed Read/Write Units","region":"'
+            - '"]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Consumed Read/Write Units","region":"'
             - Ref: AWS::Region
             - '","stacked":false,"metrics":[["AWS/DynamoDB","ConsumedReadCapacityUnits","TableName","'
             - Ref: HitsFF5AF8CD
             - '"],["AWS/DynamoDB","ConsumedWriteCapacityUnits","TableName","'
             - Ref: HitsFF5AF8CD
-            - '"]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Throttles","region":"'
+            - '"]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Throttles","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/DynamoDB","ReadThrottleEvents","TableName","'
             - Ref: HitsFF5AF8CD
