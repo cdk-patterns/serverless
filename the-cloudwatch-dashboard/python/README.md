@@ -193,9 +193,9 @@ lambda_error_perc = cloud_watch.MathExpression( expression="e / i * 100",
                                                 label="% of invocations that errored, last 5 mins",
                                                 using_metrics={
                                                     "i": dynamo_lambda.metric(metric_name="Invocations",
-                                                                                statistic="sum"),
+                                                                              statistic="sum"),
                                                     "e": dynamo_lambda.metric(metric_name="Errors",
-                                                                                statistic="sum"),
+                                                                              statistic="sum"),
                                                 },
                                                 period=core.Duration.minutes(5))
 ```
