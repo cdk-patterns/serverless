@@ -12,7 +12,7 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/Hits/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/Hits/Resource
   DynamoLambdaHandlerServiceRole4C867B01:
     Type: AWS::IAM::Role
     Properties:
@@ -30,7 +30,7 @@ Resources:
               - Ref: AWS::Partition
               - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoLambdaHandler/ServiceRole/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoLambdaHandler/ServiceRole/Resource
   DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090:
     Type: AWS::IAM::Policy
     Properties:
@@ -58,13 +58,13 @@ Resources:
       Roles:
         - Ref: DynamoLambdaHandlerServiceRole4C867B01
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoLambdaHandler/ServiceRole/DefaultPolicy/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoLambdaHandler/ServiceRole/DefaultPolicy/Resource
   DynamoLambdaHandlerFB6EB814:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eS3Bucket09A606B9
+          Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3Bucket1D74099F
         S3Key:
           Fn::Join:
             - ""
@@ -72,12 +72,12 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eS3VersionKey6225BE77
+                      - Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eS3VersionKey6225BE77
+                      - Ref: AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE
       Handler: lambda.handler
       Role:
         Fn::GetAtt:
@@ -92,10 +92,10 @@ Resources:
       - DynamoLambdaHandlerServiceRoleDefaultPolicy2B40B090
       - DynamoLambdaHandlerServiceRole4C867B01
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoLambdaHandler/Resource
-      aws:asset:path: asset.8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071e
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoLambdaHandler/Resource
+      aws:asset:path: asset.eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b
       aws:asset:property: Code
-  DynamoLambdaHandlerTheCloudwatchDashboardStackHttpAPIDefaultRoute851EEAB4Permission974E8934:
+  DynamoLambdaHandlerthecloudwatchdashboardHttpAPIDefaultRoute62280A48Permission9E280B0A:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -117,14 +117,14 @@ Resources:
             - Ref: HttpAPI8D545486
             - /*/*
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoLambdaHandler/TheCloudwatchDashboardStackHttpAPIDefaultRoute851EEAB4-Permission
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoLambdaHandler/thecloudwatchdashboardHttpAPIDefaultRoute62280A48-Permission
   HttpAPI8D545486:
     Type: AWS::ApiGatewayV2::Api
     Properties:
       Name: HttpAPI
       ProtocolType: HTTP
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/HttpAPI/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/HttpAPI/Resource
   HttpAPIDefaultRouteDefaultRouteIntegration9F0AC785:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -137,7 +137,7 @@ Resources:
           - Arn
       PayloadFormatVersion: "2.0"
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/HttpAPI/DefaultRoute/DefaultRoute-Integration/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/HttpAPI/DefaultRoute/DefaultRoute-Integration/Resource
   HttpAPIDefaultRouteF9949FE6:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -150,7 +150,7 @@ Resources:
           - - integrations/
             - Ref: HttpAPIDefaultRouteDefaultRouteIntegration9F0AC785
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/HttpAPI/DefaultRoute/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/HttpAPI/DefaultRoute/Resource
   HttpAPIDefaultStage1BC7D78F:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
@@ -159,18 +159,18 @@ Resources:
       StageName: $default
       AutoDeploy: true
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/HttpAPI/DefaultStage/Resource
-  errorTopicE59AB483:
+      aws:cdk:path: the-cloudwatch-dashboard/HttpAPI/DefaultStage/Resource
+  theBigFanTopicF96567DE:
     Type: AWS::SNS::Topic
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/errorTopic/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/theBigFanTopic/Resource
   APIGateway4XXErrors1647FE3DB:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Metrics:
         - Expression: m1/m2*100
@@ -207,14 +207,14 @@ Resources:
       Threshold: 1
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/API Gateway 4XX Errors > 1%/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/API Gateway 4XX Errors > 1%/Resource
   APIGateway5XXErrors0A91D7B4E:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Dimensions:
         - Name: ApiId
@@ -228,14 +228,14 @@ Resources:
       TreatMissingData: notBreaching
       Unit: Count
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/API Gateway 5XX Errors > 0/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/API Gateway 5XX Errors > 0/Resource
   APIp99latencyalarm1s67095ACE:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Dimensions:
         - Name: ApiId
@@ -249,14 +249,14 @@ Resources:
       TreatMissingData: notBreaching
       Unit: Count
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/API p99 latency alarm >= 1s/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/API p99 latency alarm >= 1s/Resource
   DynamoLambda2ErrorDE3BEB2F:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Metrics:
         - Expression: e / i * 100
@@ -289,14 +289,14 @@ Resources:
       Threshold: 2
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/Dynamo Lambda 2% Error/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/Dynamo Lambda 2% Error/Resource
   DynamoLambdap99LongDuration1s739ED568:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Dimensions:
         - Name: FunctionName
@@ -309,14 +309,14 @@ Resources:
       Threshold: 1000
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/Dynamo Lambda p99 Long Duration (>1s)/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/Dynamo Lambda p99 Long Duration (>1s)/Resource
   DynamoLambda2Throttled090CFA4C:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Metrics:
         - Expression: t / (i + t) * 100
@@ -349,14 +349,14 @@ Resources:
       Threshold: 2
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/Dynamo Lambda 2% Throttled/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/Dynamo Lambda 2% Throttled/Resource
   DynamoDBTableReadsWritesThrottled13F6F2AE:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Metrics:
         - Expression: m1 + m2
@@ -389,14 +389,14 @@ Resources:
       Threshold: 1
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoDB Table Reads--Writes Throttled/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoDB Table Reads--Writes Throttled/Resource
   DynamoDBErrors0FA6C66C9:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       EvaluationPeriods: 6
       AlarmActions:
-        - Ref: errorTopicE59AB483
+        - Ref: theBigFanTopicF96567DE
       DatapointsToAlarm: 1
       Metrics:
         - Expression: m1 + m2
@@ -429,18 +429,18 @@ Resources:
       Threshold: 0
       TreatMissingData: notBreaching
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/DynamoDB Errors > 0/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/DynamoDB Errors > 0/Resource
   CloudWatchDashBoard043C60B6:
     Type: AWS::CloudWatch::Dashboard
     Properties:
       DashboardBody:
         Fn::Join:
           - ""
-          - - '{"widgets":[{"type":"metric","width":8,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"Requests","region":"'
+          - - '{"widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"Requests","region":"'
             - Ref: AWS::Region
-            - '","stacked":false,"metrics":[["AWS/ApiGateway","Count","ApiId","'
+            - '","metrics":[["AWS/ApiGateway","Count","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"# Requests","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":0,"properties":{"view":"timeSeries","title":"API GW Latency","region":"'
+            - '",{"label":"# Requests","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"API GW Latency","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/ApiGateway","Latency","ApiId","'
             - Ref: HttpAPI8D545486
@@ -448,19 +448,19 @@ Resources:
             - Ref: HttpAPI8D545486
             - '",{"label":"API Latency p90","period":900,"stat":"p90"}],["AWS/ApiGateway","Latency","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"API Latency p99","period":900,"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":0,"properties":{"view":"timeSeries","title":"API GW Errors","region":"'
+            - '",{"label":"API Latency p99","period":900,"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"API GW Errors","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/ApiGateway","4XXError","ApiId","'
             - Ref: HttpAPI8D545486
             - '",{"label":"4XX Errors","period":900,"stat":"Sum"}],["AWS/ApiGateway","5XXError","ApiId","'
             - Ref: HttpAPI8D545486
-            - '",{"label":"5XX Errors","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":0,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Error %","region":"'
+            - '",{"label":"5XX Errors","period":900,"stat":"Sum"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"Dynamo Lambda Error %","region":"'
             - Ref: AWS::Region
-            - '","stacked":false,"metrics":[[{"label":"% of invocations that errored, last 5 mins","expression":"e / i * 100"}],["AWS/Lambda","Invocations","FunctionName","'
+            - '","metrics":[[{"label":"% of invocations that errored, last 5 mins","expression":"e / i * 100"}],["AWS/Lambda","Invocations","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"Sum","visible":false,"id":"i"}],["AWS/Lambda","Errors","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"Sum","visible":false,"id":"e"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Duration","region":"'
+            - '",{"stat":"Sum","visible":false,"id":"e"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":0,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Duration","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/Lambda","Duration","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
@@ -468,13 +468,13 @@ Resources:
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"p90"}],["AWS/Lambda","Duration","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Throttle %","region":"'
+            - '",{"stat":"p99"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":6,"y":6,"properties":{"view":"timeSeries","title":"Dynamo Lambda Throttle %","region":"'
             - Ref: AWS::Region
-            - '","stacked":false,"metrics":[[{"label":"% of throttled requests, last 30 mins","expression":"t / (i + t) * 100"}],["AWS/Lambda","Invocations","FunctionName","'
+            - '","metrics":[[{"label":"% of throttled requests, last 30 mins","expression":"t / (i + t) * 100"}],["AWS/Lambda","Invocations","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
             - '",{"stat":"Sum","visible":false,"id":"i"}],["AWS/Lambda","Throttles","FunctionName","'
             - Ref: DynamoLambdaHandlerFB6EB814
-            - '",{"stat":"Sum","visible":false,"id":"t"}]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Latency","region":"'
+            - '",{"stat":"Sum","visible":false,"id":"t"}]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":12,"y":6,"properties":{"view":"timeSeries","title":"DynamoDB Latency","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/DynamoDB","SuccessfulRequestLatency","Operation","GetItem","TableName","'
             - Ref: HitsFF5AF8CD
@@ -486,13 +486,13 @@ Resources:
             - Ref: HitsFF5AF8CD
             - '"],["AWS/DynamoDB","SuccessfulRequestLatency","Operation","Query","TableName","'
             - Ref: HitsFF5AF8CD
-            - '"]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":8,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Consumed Read/Write Units","region":"'
+            - '"]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":18,"y":6,"properties":{"view":"timeSeries","title":"DynamoDB Consumed Read/Write Units","region":"'
             - Ref: AWS::Region
             - '","stacked":false,"metrics":[["AWS/DynamoDB","ConsumedReadCapacityUnits","TableName","'
             - Ref: HitsFF5AF8CD
             - '"],["AWS/DynamoDB","ConsumedWriteCapacityUnits","TableName","'
             - Ref: HitsFF5AF8CD
-            - '"]],"yAxis":{}}},{"type":"metric","width":8,"height":6,"x":16,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Throttles","region":"'
+            - '"]],"yAxis":{}}},{"type":"metric","width":6,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"DynamoDB Throttles","region":"'
             - Ref: AWS::Region
             - '","stacked":true,"metrics":[["AWS/DynamoDB","ReadThrottleEvents","TableName","'
             - Ref: HitsFF5AF8CD
@@ -500,22 +500,22 @@ Resources:
             - Ref: HitsFF5AF8CD
             - '",{"stat":"Sum"}]],"yAxis":{}}}]}'
     Metadata:
-      aws:cdk:path: TheCloudwatchDashboardStack/CloudWatchDashBoard/Resource
+      aws:cdk:path: the-cloudwatch-dashboard/CloudWatchDashBoard/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.41.0,@aws-cdk/assets=1.41.0,@aws-cdk/aws-apigatewayv2=1.41.0,@aws-cdk/aws-applicationautoscaling=1.41.0,@aws-cdk/aws-autoscaling-common=1.41.0,@aws-cdk/aws-cloudwatch=1.41.0,@aws-cdk/aws-cloudwatch-actions=1.41.0,@aws-cdk/aws-dynamodb=1.41.0,@aws-cdk/aws-ec2=1.41.0,@aws-cdk/aws-events=1.41.0,@aws-cdk/aws-iam=1.41.0,@aws-cdk/aws-kms=1.41.0,@aws-cdk/aws-lambda=1.41.0,@aws-cdk/aws-logs=1.41.0,@aws-cdk/aws-s3=1.41.0,@aws-cdk/aws-s3-assets=1.41.0,@aws-cdk/aws-sns=1.41.0,@aws-cdk/aws-sqs=1.41.0,@aws-cdk/aws-ssm=1.41.0,@aws-cdk/cdk-assets-schema=1.41.0,@aws-cdk/cloud-assembly-schema=1.41.0,@aws-cdk/core=1.41.0,@aws-cdk/custom-resources=1.41.0,@aws-cdk/cx-api=1.41.0,@aws-cdk/region-info=1.41.0,jsii-runtime=node.js/v13.12.0
+      Modules: aws-cdk=1.41.0,@aws-cdk/assets=1.41.0,@aws-cdk/aws-apigatewayv2=1.41.0,@aws-cdk/aws-applicationautoscaling=1.41.0,@aws-cdk/aws-autoscaling=1.41.0,@aws-cdk/aws-autoscaling-common=1.41.0,@aws-cdk/aws-certificatemanager=1.41.0,@aws-cdk/aws-cloudformation=1.41.0,@aws-cdk/aws-cloudwatch=1.41.0,@aws-cdk/aws-cloudwatch-actions=1.41.0,@aws-cdk/aws-dynamodb=1.41.0,@aws-cdk/aws-ec2=1.41.0,@aws-cdk/aws-elasticloadbalancing=1.41.0,@aws-cdk/aws-elasticloadbalancingv2=1.41.0,@aws-cdk/aws-events=1.41.0,@aws-cdk/aws-iam=1.41.0,@aws-cdk/aws-kms=1.41.0,@aws-cdk/aws-lambda=1.41.0,@aws-cdk/aws-logs=1.41.0,@aws-cdk/aws-route53=1.41.0,@aws-cdk/aws-s3=1.41.0,@aws-cdk/aws-s3-assets=1.41.0,@aws-cdk/aws-sns=1.41.0,@aws-cdk/aws-sqs=1.41.0,@aws-cdk/aws-ssm=1.41.0,@aws-cdk/cdk-assets-schema=1.41.0,@aws-cdk/cloud-assembly-schema=1.41.0,@aws-cdk/core=1.41.0,@aws-cdk/custom-resources=1.41.0,@aws-cdk/cx-api=1.41.0,@aws-cdk/region-info=1.41.0,jsii-runtime=Python/3.7.2
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eS3Bucket09A606B9:
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3Bucket1D74099F:
     Type: String
-    Description: S3 bucket for asset "8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071e"
-  AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eS3VersionKey6225BE77:
+    Description: S3 bucket for asset "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bS3VersionKey69EF49BE:
     Type: String
-    Description: S3 key for asset version "8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071e"
-  AssetParameters8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071eArtifactHashC8DEC857:
+    Description: S3 key for asset version "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
+  AssetParameterseeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940bArtifactHashB16DE2BD:
     Type: String
-    Description: Artifact hash for asset "8ee04ad00f1ff2a9e9c668a543276928f498a1f64a5ab17ac86f9e5a9b1a071e"
+    Description: Artifact hash for asset "eeeeb6d62dae5f117629d60af86cb2ad7643afd457833c89a457f4ff0062940b"
 Outputs:
   HTTPAPIUrl:
     Value:
