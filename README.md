@@ -93,6 +93,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The CloudWatch Dashboard](/the-cloudwatch-dashboard/README.md)  
+  Build and deploy a well architected CloudWatch dashboard with alerts for the simple webservice pattern
+
+  ![Architecture](the-cloudwatch-dashboard/img/arch2.png)
+
+  <br /><hr /><br />
+
   #### [The Destined Lambda](/the-destined-lambda/README.md)
   This is a stock implementation of Lambda Destinations with Amazon EventBridge
   
@@ -327,6 +334,11 @@ npx cdk deploy
   * [S3 React Deploy ](/s3-react-website/README.md)
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/s3-angular-website/img/architecture.PNG)
+
+  #### [The CloudWatch Dashboard](/the-cloudwatch-dashboard/README.md)  
+  Build and deploy a well architected CloudWatch dashboard with alerts for the simple webservice pattern
+
+  ![Architecture](the-cloudwatch-dashboard/img/arch2.png)
 
   #### [The Destined Lambda](/the-destined-lambda/README.md)
   This is a stock implementation of Lambda Destinations with Amazon EventBridge
