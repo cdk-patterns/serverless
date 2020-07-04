@@ -3,6 +3,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as rds from '@aws-cdk/aws-rds';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
 const ssm = require('@aws-cdk/aws-ssm');
+import * as lambda from '@aws-cdk/aws-lambda';
 
 export class TheRdsProxyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -67,6 +68,20 @@ export class TheRdsProxyStack extends cdk.Stack {
     }) as rds.CfnDBProxyTargetGroup
 
     targetGroup.addPropertyOverride('TargetGroupName', 'default')
+
+    // Lambda to Interact with RDS Proxy
+    const rdsLambda = new lambda.Function(this, 'extractLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.asset('lambdas/rds'), 
+      handler: 'rdsLambda.handler',
+      vpc: vpc,
+      environment: {
+        PROXY_ENDPOINT: proxy.endpoint,
+        SECRETS_ARN: databaseCredentialsSecret.secretArn
+      }
+    });
+
+    databaseCredentialsSecret.grantRead(rdsLambda)
 
   }
 }
