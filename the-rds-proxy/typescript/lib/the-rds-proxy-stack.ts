@@ -2,7 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as rds from '@aws-cdk/aws-rds';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
-import * as lambda from '@aws-cdk/aws-lambda';
+const ssm = require('@aws-cdk/aws-ssm');
 
 export class TheRdsProxyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -11,41 +11,62 @@ export class TheRdsProxyStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'Vpc', {
       maxAzs: 2, // Default is all AZs in the region
     });
-
-    new ec2.SecurityGroup(this, 'securityGroup', {
+    
+    let group = new ec2.SecurityGroup(this, 'DB Connection', {
       vpc
     })
-    const secret = new secrets.Secret(this, 'secret');
+    group.addIngressRule(group, ec2.Port.tcp(3306), 'allow db connection');
 
-    // Create a MySQL DB
-    const rdsInstance = new rds.DatabaseInstance(this, 'Instance', {
-      engine: rds.DatabaseInstanceEngine.MYSQL,
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
-      masterUsername: 'syscdk',
-      vpc
-    });
+    const databaseUsername = 'syscdk';
 
-    // Create an RDS Proxy
-    const proxy = rdsInstance.addProxy('proxy', {
-        borrowTimeout: cdk.Duration.seconds(30),
-        maxConnectionsPercent: 50,
-        secret,
-        vpc,
-    });
-
-    // Lambda to Interact with RDS Proxy
-    const rdsLambda = new lambda.Function(this, 'extractLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas/rds'), 
-      handler: 'rdsLambda.handler',
-      vpc: vpc,
-      environment: {
-        PROXY_ENDPOINT: proxy.endpoint,
-        PROXY_SECRET: secret.secretValue.toString()
+    const databaseCredentialsSecret = new secrets.Secret(this, 'DBCredentialsSecret', {
+      secretName: 'rds-credentials',
+      generateSecretString: {
+        secretStringTemplate: JSON.stringify({
+          username: databaseUsername,
+        }),
+        excludePunctuation: true,
+        includeSpace: false,
+        generateStringKey: 'password'
       }
     });
 
-    // Allow our lambda function to connect to our proxy
-    proxy.connections.allowFrom(rdsLambda, ec2.Port.allTraffic())
+    new ssm.StringParameter(this, 'DBCredentialsArn', {
+      parameterName: 'rds-credentials-arn',
+      stringValue: databaseCredentialsSecret.secretArn,
+    });
+
+    //let parameterGroup = rds.ClusterParameterGroup.fromParameterGroupName(this, 'ParameterGroup', "default.aurora-mysql5.7")
+
+    const rdsInstance = new rds.DatabaseInstance(this, 'DBInstance', {
+      engine: rds.DatabaseInstanceEngine.MYSQL,
+      masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
+      masterUserPassword: databaseCredentialsSecret.secretValueFromJson('password'),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
+      vpc,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      deletionProtection: false
+    });
+    
+    rdsInstance.connections.addSecurityGroup(group)
+
+    // Create an RDS Proxy
+    const proxy = rdsInstance.addProxy('proxy', {
+        secret: databaseCredentialsSecret,
+        iamAuth: true,
+        debugLogging: true,
+        vpc,
+        securityGroups: [group]
+    });
+    
+    rdsInstance.connections.allowFrom(proxy, ec2.Port.allTraffic())
+    
+    // Workaround for bug where TargetGroupName is not set but required
+    let targetGroup = proxy.node.children.find((child:any) => {
+      return child instanceof rds.CfnDBProxyTargetGroup
+    }) as rds.CfnDBProxyTargetGroup
+
+    targetGroup.addPropertyOverride('TargetGroupName', 'default')
+
   }
 }
