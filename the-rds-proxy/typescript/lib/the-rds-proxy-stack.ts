@@ -5,7 +5,6 @@ import * as secrets from '@aws-cdk/aws-secretsmanager';
 const ssm = require('@aws-cdk/aws-ssm');
 import * as lambda from '@aws-cdk/aws-lambda';
 import apigw = require('@aws-cdk/aws-apigatewayv2');
-import iam = require('@aws-cdk/aws-iam');
 
 export class TheRdsProxyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
