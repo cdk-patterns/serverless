@@ -65,9 +65,9 @@ For the AWS official benefits see [this page](https://aws.amazon.com/rds/proxy/#
 The VPC bundled with this pattern is the default one setup by the CDK L2 construct. In a production system you would want to tailor this to your needs
 
 ### Security Groups
-I bundled 2 security groups lambdaToRDSProxyGroup and dbConnectionGroup.
+I bundled 2 security groups lambda_to_proxy_group and db_connection_group
 
-dbConnectionGroup allows TCP traffic on port 3306 from other peers within this group. It also allows TCP traffic on port 3306 for peers within the lambdaToRDSProxyGroup group.
+db_connection_group allows TCP traffic on port 3306 from other peers within this group. It also allows TCP traffic on port 3306 for peers within the lambda_to_proxy_group group.
 
 I added the second group because I saw no need for peers to be allowed to hit the Lambda Function with TCP traffic on 3306. This separated the capability.
 
