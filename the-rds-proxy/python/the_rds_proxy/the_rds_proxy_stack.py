@@ -64,7 +64,7 @@ class TheRdsProxyStack(core.Stack):
                                        security_groups=[db_connection_group])
 
         # Workaround for bug where TargetGroupName is not set but required
-        target_group = rds.CfnDBProxyTargetGroup(proxy.node.find_child('ProxyTargetGroup'))
+        target_group = proxy.node.find_child('ProxyTargetGroup')
         target_group.add_property_override('TargetGroupName', 'default')
 
         rds_lambda = _lambda.Function(self, 'rdsProxyHandler',
