@@ -15,14 +15,14 @@ export class TheRdsProxyStack extends cdk.Stack {
       maxAzs: 2, // Default is all AZs in the region
     });
     
-    let lambdaToDBGroup = new ec2.SecurityGroup(this, 'Lambda to DB Connection', {
+    let lambdaToRDSProxyGroup = new ec2.SecurityGroup(this, 'Lambda to RDS Proxy Connection', {
       vpc
     });
     let dbConnectionGroup = new ec2.SecurityGroup(this, 'Proxy to DB Connection', {
       vpc
     });
     dbConnectionGroup.addIngressRule(dbConnectionGroup, ec2.Port.tcp(3306), 'allow db connection');
-    dbConnectionGroup.addIngressRule(lambdaToDBGroup, ec2.Port.tcp(3306), 'allow lambda connection');
+    dbConnectionGroup.addIngressRule(lambdaToRDSProxyGroup, ec2.Port.tcp(3306), 'allow lambda connection');
 
     const databaseUsername = 'syscdk';
 
@@ -75,7 +75,7 @@ export class TheRdsProxyStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas/rds'), 
       handler: 'rdsLambda.handler',
       vpc: vpc,
-      securityGroups: [lambdaToDBGroup],
+      securityGroups: [lambdaToRDSProxyGroup],
       environment: {
         PROXY_ENDPOINT: proxy.endpoint,
         RDS_SECRET_NAME: 'rds-credentials'

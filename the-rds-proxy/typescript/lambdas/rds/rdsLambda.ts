@@ -28,7 +28,6 @@ exports.handler = async function(event:any) {
     }
   });
   
-  
   let queryResult = await new Promise( (resolve,reject) => {
     connection.query('CREATE DATABASE IF NOT EXISTS cdkpatterns', function (error:any, results:any, fields:any) {
       if (error) throw error;
@@ -60,7 +59,6 @@ exports.handler = async function(event:any) {
   }).catch((error)=>{
     return JSON.stringify(error);
   });
-  
   
   queryResult = await new Promise( (resolve,reject) => {
     connection.query(`INSERT INTO rds_proxy(url) VALUES ('${event.rawPath}')`, function (error:any, results:any, fields:any) {
