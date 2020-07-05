@@ -2,6 +2,8 @@
 
 This is a project that has been configured with a MySQL RDS DB, an RDS Proxy, a Lambda Function to run queries and an API Gateway HTTP API to trigger the lambda function.
 
+A VPC is included in this project that has the RDS Subnets configured and custom security groups for allowing communication between Lambda -> Proxy -> MySQL.
+
 Some Useful References:
 
 | Author        | Link           |
