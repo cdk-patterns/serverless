@@ -3,7 +3,8 @@ AWS.config.update({region:'us-east-1'});
 var client = new AWS.SecretsManager({
       region: 'us-east-1'
 });
-var mysql      = require('mysql');
+var mysql = require('mysql');
+const fs = require('fs');
 
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
@@ -23,7 +24,7 @@ exports.handler = async function(event:any) {
     user     :  username,
     password :  password,
     ssl  : {
-      rejectUnauthorized: false
+      ca : fs.readFileSync(__dirname + '/AmazonRootCA1.pem')
     }
   });
   
@@ -46,7 +47,7 @@ exports.handler = async function(event:any) {
     password :  password,
     database: 'cdkpatterns',
     ssl  : {
-      rejectUnauthorized: false
+      ca : fs.readFileSync(__dirname + '/AmazonRootCA1.pem')
     }
   });
   
