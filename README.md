@@ -152,6 +152,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The RDS Proxy](the-rds-proxy/README.md)
+  Use RDS Proxy to protect a MySQL RDS Instance from the massively scalable Lambda Function querying it
+  ![Architecture](the-rds-proxy/img/arch_overview.png)
+
+  <br /><hr /><br />
+
   #### [The Saga Step Function](the-saga-stepfunction/README.md)
   A mechanism for handling distributed transactions within your system.
   ![Architecture](the-saga-stepfunction/img/arch.png)
@@ -346,6 +352,12 @@ npx cdk deploy
   You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
 
   ![Architecture](the-destined-lambda/img/arch.png)
+
+  #### [The RDS Proxy](the-rds-proxy/README.md)
+  Use RDS Proxy to protect a MySQL RDS Instance from the massively scalable Lambda Function querying it
+  
+  ![Architecture](the-rds-proxy/img/arch_overview.png)
+
 
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
   Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
