@@ -78,8 +78,7 @@ export class TheRdsProxyStack extends cdk.Stack {
       securityGroups: [lambdaToDBGroup],
       environment: {
         PROXY_ENDPOINT: proxy.endpoint,
-        RDS_SECRET_NAME: 'rds-credentials',
-        NODE_OPTIONS: '--tls-min-v1.0'
+        RDS_SECRET_NAME: 'rds-credentials'
       }
     });
 
@@ -95,6 +94,5 @@ export class TheRdsProxyStack extends cdk.Stack {
    new cdk.CfnOutput(this, 'HTTP API Url', {
      value: api.url ?? 'Something went wrong with the deploy'
    });
-
   }
 }
