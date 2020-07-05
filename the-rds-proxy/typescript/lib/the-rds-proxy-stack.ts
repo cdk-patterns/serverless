@@ -10,13 +10,16 @@ export class TheRdsProxyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // RDS needs to be setup in a VPC
     const vpc = new ec2.Vpc(this, 'Vpc', {
       maxAzs: 2, // Default is all AZs in the region
     });
     
+    // We need this security group to add an ingress rule and allow our lambda to query the proxy
     let lambdaToRDSProxyGroup = new ec2.SecurityGroup(this, 'Lambda to RDS Proxy Connection', {
       vpc
     });
+    // We need this security group to allow our proxy to query our MySQL Instance
     let dbConnectionGroup = new ec2.SecurityGroup(this, 'Proxy to DB Connection', {
       vpc
     });
@@ -25,6 +28,7 @@ export class TheRdsProxyStack extends cdk.Stack {
 
     const databaseUsername = 'syscdk';
 
+    // Dynamically generate the username and password, then store in secrets manager
     const databaseCredentialsSecret = new secrets.Secret(this, 'DBCredentialsSecret', {
       secretName: 'rds-credentials',
       generateSecretString: {
@@ -42,6 +46,8 @@ export class TheRdsProxyStack extends cdk.Stack {
       stringValue: databaseCredentialsSecret.secretArn,
     });
 
+    // MySQL DB Instance (delete protection turned off because pattern is for learning.)
+    // re-enable delete protection for a real implemenatation
     const rdsInstance = new rds.DatabaseInstance(this, 'DBInstance', {
       engine: rds.DatabaseInstanceEngine.MYSQL,
       masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
