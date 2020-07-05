@@ -75,7 +75,7 @@ class TheRdsProxyStack(core.Stack):
                                       security_groups=[lambda_to_proxy_group],
                                       environment={
                                           "PROXY_ENDPOINT": proxy.endpoint,
-                                          "RDS_SECRET~_NAME": id+'-rds-credentials'
+                                          "RDS_SECRET_NAME": id+'-rds-credentials'
                                       })
 
         db_credentials_secret.grant_read(rds_lambda)
