@@ -77,7 +77,7 @@ This is just a small, burstable instance using MySQL 5.7.22. I have removed the 
 ### RDS Proxy
 This is what we are using to protect the MySQL DB which is a small instance from the massively scalable Lambda Function that will be querying it. The proxy makes sure we do not overload it and shares connections between queries.
 
-### Lambda Function
+### Lambda Function
 This reads our username and password for our proxy from Secrets Manager then uses the MySQL library to create a database and table if they do not exist then insert a record for the url you hit on the API Gateway. Finally it queries the database for all records stored and returns them.
 
 ### API Gateway HTTP API
