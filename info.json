@@ -33,6 +33,9 @@
         "the-lambda-trilogy": {
             "prodReady": false
         },
+        "the-rds-proxy": {
+            "prodReady": false
+        },
         "the-saga-stepfunction": {
             "prodReady": false
         },
