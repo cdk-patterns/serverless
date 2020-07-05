@@ -58,6 +58,31 @@ You get a MySQL Database setup inside a VPC with appropriate subnets and securit
 
 The big benefit here is that you are using fully managed infrastructure to protect the RDS DB, you have not needed to spin up your own queue and mechanism for how rapidly to pull from it.
 
+### VPC
+The VPC bundled with this pattern is the default one setup by the CDK L2 construct. In a production system you would want to tailor this to your needs
+
+### Security Groups
+I bundled 2 security groups lambdaToRDSProxyGroup and dbConnectionGroup.
+
+dbConnectionGroup allows TCP traffic on port 3306 from other peers within this group. It also allows TCP traffic on port 3306 for peers within the lambdaToRDSProxyGroup group.
+
+I added the second group because I saw no need for peers to be allowed to hit the Lambda Function with TCP traffic on 3306. This separated the capability.
+
+### Auto Generated Password and Username in Secrets Manager
+The username is a static value but we use secrets manager to generate the password to be used for our DB. We then give our Lambda Function permissions to read this secret so that it can connect to the DB. That means the only value that needs to be shared as an environment variable is the secret name,
+
+### MySQL RDS Instance
+This is just a small, burstable instance using MySQL 5.7.22. I have removed the deletion protection and told Cloudformation to delete it on stack deletion because this is a learning stack. In a production stack, never use these two properties.
+
+### RDS Proxy
+This is what we are using to protect the MySQL DB which is a small instance from the massively scalable Lambda Function that will be querying it. The proxy makes sure we do not overload it and shares connections between queries.
+
+### Lambda Function
+This reads our username and password for our proxy from Secrets Manager then uses the MySQL library to create a database and table if they do not exist then insert a record for the url you hit on the API Gateway. Finally it queries the database for all records stored and returns them.
+
+### API Gateway HTTP API
+Any url you hit on this gateway will integrate with the Lambda Function
+
 ## Testing The Pattern
 
 After you deploy this pattern you will have an API Gateway HTTP API where any url you hit gets routed to a Lambda function that inserts the URL path you hit into our MySQL table.
