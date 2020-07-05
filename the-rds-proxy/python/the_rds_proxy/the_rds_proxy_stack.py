@@ -28,7 +28,7 @@ class TheRdsProxyStack(core.Stack):
         database_username = 'syscdk';
 
         db_credentials_secret = secrets.Secret(self, 'DBCredentialsSecret',
-                                               secret_name='rds-credentials',
+                                               secret_name=id+'-rds-credentials',
                                                generate_secret_string=secrets.SecretStringGenerator(
                                                    secret_string_template="{\"username\":\"syscdk\"}",
                                                    exclude_punctuation=True,
@@ -57,7 +57,7 @@ class TheRdsProxyStack(core.Stack):
                                             security_groups=[db_connection_group])
 
         # Create an RDS proxy
-        proxy = rds_instance.add_proxy('proxy',
+        proxy = rds_instance.add_proxy(id+'-proxy',
                                        secret=db_credentials_secret,
                                        debug_logging=True,
                                        vpc=vpc,
@@ -75,7 +75,7 @@ class TheRdsProxyStack(core.Stack):
                                       security_groups=[lambda_to_proxy_group],
                                       environment={
                                           "PROXY_ENDPOINT": proxy.endpoint,
-                                          "RDS_SECRET~_NAME": 'rds-credentials'
+                                          "RDS_SECRET~_NAME": id+'-rds-credentials'
                                       })
 
         db_credentials_secret.grant_read(rds_lambda)
