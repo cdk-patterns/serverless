@@ -57,3 +57,9 @@ This pattern is a version of [the scalable webhook](https://github.com/cdk-patte
 You get a MySQL Database setup inside a VPC with appropriate subnets and security groups to connect with an RDS Proxy. That RDS Proxy is then communicated with via a Lambda Function / API Gateway HTTP API.
 
 The big benefit here is that you are using fully managed infrastructure to protect the RDS DB, you have not needed to spin up your own queue and mechanism for how rapidly to pull from it.
+
+## Testing The Pattern
+
+After you deploy this pattern you will have an API Gateway HTTP API where any url you hit gets routed to a Lambda function that inserts the URL path you hit into our MySQL table.
+
+Simply open the url printed out in the deployment logs for our HTTP API in a browser and you should see a table containing all the urls you have hit. Try hitting a couple of different urls and watch the table grow.
