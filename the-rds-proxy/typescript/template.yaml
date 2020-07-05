@@ -1,0 +1,704 @@
+Resources:
+  Vpc8378EB38:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/Resource
+  VpcPublicSubnet1Subnet5C2D37C4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/Subnet
+  VpcPublicSubnet1RouteTable6C95E38E:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/RouteTable
+  VpcPublicSubnet1RouteTableAssociation97140677:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/RouteTableAssociation
+  VpcPublicSubnet1DefaultRoute3DA9E72A:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/DefaultRoute
+  VpcPublicSubnet1EIPD7E02669:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/EIP
+  VpcPublicSubnet1NATGateway4D7517AA:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet1EIPD7E02669
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet1/NATGateway
+  VpcPublicSubnet2Subnet691E08A3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.64.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/Subnet
+  VpcPublicSubnet2RouteTable94F7E489:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/RouteTable
+  VpcPublicSubnet2RouteTableAssociationDD5762D8:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/RouteTableAssociation
+  VpcPublicSubnet2DefaultRoute97F91067:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/DefaultRoute
+  VpcPublicSubnet2EIP3C605A87:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/EIP
+  VpcPublicSubnet2NATGateway9182C01D:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet2EIP3C605A87
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PublicSubnet2/NATGateway
+  VpcPrivateSubnet1Subnet536B997A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.128.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PrivateSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet1/Subnet
+  VpcPrivateSubnet1RouteTableB2C5B500:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PrivateSubnet1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet1/RouteTable
+  VpcPrivateSubnet1RouteTableAssociation70C59FA6:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      SubnetId:
+        Ref: VpcPrivateSubnet1Subnet536B997A
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet1/RouteTableAssociation
+  VpcPrivateSubnet1DefaultRouteBE02A9ED:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet1NATGateway4D7517AA
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet1/DefaultRoute
+  VpcPrivateSubnet2Subnet3788AAA1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.192.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PrivateSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet2/Subnet
+  VpcPrivateSubnet2RouteTableA678073B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc/PrivateSubnet2
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet2/RouteTable
+  VpcPrivateSubnet2RouteTableAssociationA89CAD56:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      SubnetId:
+        Ref: VpcPrivateSubnet2Subnet3788AAA1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet2/RouteTableAssociation
+  VpcPrivateSubnet2DefaultRoute060D2087:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet2NATGateway9182C01D
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/PrivateSubnet2/DefaultRoute
+  VpcIGWD7BA715C:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TheRdsProxyStack/Vpc
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/IGW
+  VpcVPCGWBF912B6E:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      InternetGatewayId:
+        Ref: VpcIGWD7BA715C
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Vpc/VPCGW
+  LambdatoRDSProxyConnectionB1057E7D:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TheRdsProxyStack/Lambda to RDS Proxy Connection
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Lambda to RDS Proxy Connection/Resource
+  ProxytoDBConnectionC580BD64:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TheRdsProxyStack/Proxy to DB Connection
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Proxy to DB Connection/Resource
+  ProxytoDBConnectionfromTheRdsProxyStackProxytoDBConnection6E4D01C8330630300FA6:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: allow db connection
+      FromPort: 3306
+      GroupId:
+        Fn::GetAtt:
+          - ProxytoDBConnectionC580BD64
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - ProxytoDBConnectionC580BD64
+          - GroupId
+      ToPort: 3306
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Proxy to DB Connection/from TheRdsProxyStackProxytoDBConnection6E4D01C8:3306
+  ProxytoDBConnectionfromTheRdsProxyStackLambdatoRDSProxyConnection02900188330689AFC3E4:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: allow lambda connection
+      FromPort: 3306
+      GroupId:
+        Fn::GetAtt:
+          - ProxytoDBConnectionC580BD64
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - LambdatoRDSProxyConnectionB1057E7D
+          - GroupId
+      ToPort: 3306
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Proxy to DB Connection/from TheRdsProxyStackLambdatoRDSProxyConnection02900188:3306
+  DBCredentialsSecretAFB45EA2:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      GenerateSecretString:
+        ExcludePunctuation: true
+        GenerateStringKey: password
+        IncludeSpace: false
+        SecretStringTemplate: '{"username":"syscdk"}'
+      Name: TheRdsProxyStack-rds-credentials
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBCredentialsSecret/Resource
+  DBCredentialsArn15122902:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value:
+        Ref: DBCredentialsSecretAFB45EA2
+      Name: rds-credentials-arn
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBCredentialsArn/Resource
+  DBInstanceSubnetGroupF597B45B:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for DBInstance database
+      SubnetIds:
+        - Ref: VpcPrivateSubnet1Subnet536B997A
+        - Ref: VpcPrivateSubnet2Subnet3788AAA1
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/SubnetGroup
+  DBInstance46641A50:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t2.small
+      AllocatedStorage: "100"
+      CopyTagsToSnapshot: true
+      DBSubnetGroupName:
+        Ref: DBInstanceSubnetGroupF597B45B
+      DeletionProtection: false
+      Engine: mysql
+      MasterUsername:
+        Fn::Join:
+          - ""
+          - - "{{resolve:secretsmanager:"
+            - Ref: DBCredentialsSecretAFB45EA2
+            - :SecretString:username::}}
+      MasterUserPassword:
+        Fn::Join:
+          - ""
+          - - "{{resolve:secretsmanager:"
+            - Ref: DBCredentialsSecretAFB45EA2
+            - :SecretString:password::}}
+      StorageType: gp2
+      VPCSecurityGroups:
+        - Fn::GetAtt:
+            - ProxytoDBConnectionC580BD64
+            - GroupId
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/Resource
+  DBInstanceTheRdsProxyStackproxyIAMRole1B7DD1AC:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: rds.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/TheRdsProxyStack-proxy/IAMRole/Resource
+  DBInstanceTheRdsProxyStackproxyIAMRoleDefaultPolicyF4686A74:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+            Effect: Allow
+            Resource:
+              Ref: DBCredentialsSecretAFB45EA2
+        Version: "2012-10-17"
+      PolicyName: DBInstanceTheRdsProxyStackproxyIAMRoleDefaultPolicyF4686A74
+      Roles:
+        - Ref: DBInstanceTheRdsProxyStackproxyIAMRole1B7DD1AC
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/TheRdsProxyStack-proxy/IAMRole/DefaultPolicy/Resource
+  DBInstanceTheRdsProxyStackproxyB547C4DB:
+    Type: AWS::RDS::DBProxy
+    Properties:
+      Auth:
+        - AuthScheme: SECRETS
+          IAMAuth: DISABLED
+          SecretArn:
+            Ref: DBCredentialsSecretAFB45EA2
+      DBProxyName: TheRdsProxyStack-proxy
+      EngineFamily: MYSQL
+      RoleArn:
+        Fn::GetAtt:
+          - DBInstanceTheRdsProxyStackproxyIAMRole1B7DD1AC
+          - Arn
+      VpcSubnetIds:
+        - Ref: VpcPrivateSubnet1Subnet536B997A
+        - Ref: VpcPrivateSubnet2Subnet3788AAA1
+      DebugLogging: true
+      RequireTLS: true
+      VpcSecurityGroupIds:
+        - Fn::GetAtt:
+            - ProxytoDBConnectionC580BD64
+            - GroupId
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/TheRdsProxyStack-proxy/Resource
+  DBInstanceTheRdsProxyStackproxyProxyTargetGroup088E81EF:
+    Type: AWS::RDS::DBProxyTargetGroup
+    Properties:
+      DBProxyName:
+        Ref: DBInstanceTheRdsProxyStackproxyB547C4DB
+      ConnectionPoolConfigurationInfo: {}
+      DBInstanceIdentifiers:
+        - Ref: DBInstance46641A50
+      TargetGroupName: default
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/DBInstance/TheRdsProxyStack-proxy/ProxyTargetGroup
+  rdsProxyHandlerServiceRoleD70E0A19:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/rdsProxyHandler/ServiceRole/Resource
+  rdsProxyHandlerServiceRoleDefaultPolicyEFCE83C1:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+            Effect: Allow
+            Resource:
+              Ref: DBCredentialsSecretAFB45EA2
+        Version: "2012-10-17"
+      PolicyName: rdsProxyHandlerServiceRoleDefaultPolicyEFCE83C1
+      Roles:
+        - Ref: rdsProxyHandlerServiceRoleD70E0A19
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/rdsProxyHandler/ServiceRole/DefaultPolicy/Resource
+  rdsProxyHandlerDA266FA9:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3S3BucketA37653ED
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3S3VersionKey0028895D
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3S3VersionKey0028895D
+      Handler: rdsLambda.handler
+      Role:
+        Fn::GetAtt:
+          - rdsProxyHandlerServiceRoleD70E0A19
+          - Arn
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          PROXY_ENDPOINT:
+            Fn::GetAtt:
+              - DBInstanceTheRdsProxyStackproxyB547C4DB
+              - Endpoint
+          RDS_SECRET_NAME: TheRdsProxyStack-rds-credentials
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::GetAtt:
+              - LambdatoRDSProxyConnectionB1057E7D
+              - GroupId
+        SubnetIds:
+          - Ref: VpcPrivateSubnet1Subnet536B997A
+          - Ref: VpcPrivateSubnet2Subnet3788AAA1
+    DependsOn:
+      - rdsProxyHandlerServiceRoleDefaultPolicyEFCE83C1
+      - rdsProxyHandlerServiceRoleD70E0A19
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/rdsProxyHandler/Resource
+      aws:asset:path: asset.8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3
+      aws:asset:property: Code
+  rdsProxyHandlerTheRdsProxyStackEndpointDefaultRoute8ABE1209Permission3E645210:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - rdsProxyHandlerDA266FA9
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /*/*
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/rdsProxyHandler/TheRdsProxyStackEndpointDefaultRoute8ABE1209-Permission
+  EndpointEEF1FD8F:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: Endpoint
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Endpoint/Resource
+  EndpointDefaultRouteDefaultRouteIntegration4584A785:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - rdsProxyHandlerDA266FA9
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Endpoint/DefaultRoute/DefaultRoute-Integration/Resource
+  EndpointDefaultRouteB7B22F2B:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      RouteKey: $default
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: EndpointDefaultRouteDefaultRouteIntegration4584A785
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Endpoint/DefaultRoute/Resource
+  EndpointDefaultStage0AD21F27:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      StageName: $default
+      AutoDeploy: true
+    Metadata:
+      aws:cdk:path: TheRdsProxyStack/Endpoint/DefaultStage/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.49.1,@aws-cdk/assets=1.49.1,@aws-cdk/aws-apigatewayv2=1.49.1,@aws-cdk/aws-cloudwatch=1.49.1,@aws-cdk/aws-ec2=1.49.1,@aws-cdk/aws-events=1.49.1,@aws-cdk/aws-iam=1.49.1,@aws-cdk/aws-kms=1.49.1,@aws-cdk/aws-lambda=1.49.1,@aws-cdk/aws-logs=1.49.1,@aws-cdk/aws-rds=1.49.1,@aws-cdk/aws-s3=1.49.1,@aws-cdk/aws-s3-assets=1.49.1,@aws-cdk/aws-sam=1.49.1,@aws-cdk/aws-secretsmanager=1.49.1,@aws-cdk/aws-sqs=1.49.1,@aws-cdk/aws-ssm=1.49.1,@aws-cdk/cloud-assembly-schema=1.49.1,@aws-cdk/core=1.49.1,@aws-cdk/cx-api=1.49.1,@aws-cdk/region-info=1.49.1,jsii-runtime=node.js/v13.12.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3S3BucketA37653ED:
+    Type: String
+    Description: S3 bucket for asset "8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3"
+  AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3S3VersionKey0028895D:
+    Type: String
+    Description: S3 key for asset version "8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3"
+  AssetParameters8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3ArtifactHashF8941911:
+    Type: String
+    Description: Artifact hash for asset "8915bffafc19a6bb10076f0450ead8774c22bdea272ecdc3e4742298560198e3"
+Outputs:
+  HTTPAPIUrl:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: EndpointEEF1FD8F
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
