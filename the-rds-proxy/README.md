@@ -58,6 +58,8 @@ You get a MySQL Database setup inside a VPC with appropriate subnets and securit
 
 The big benefit here is that you are using fully managed infrastructure to protect the RDS DB, you have not needed to spin up your own queue and mechanism for how rapidly to pull from it.
 
+For the AWS official benefits see [this page](https://aws.amazon.com/rds/proxy/#Benefits)
+
 ### VPC
 The VPC bundled with this pattern is the default one setup by the CDK L2 construct. In a production system you would want to tailor this to your needs
 
