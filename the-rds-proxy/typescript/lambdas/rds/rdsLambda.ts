@@ -8,17 +8,20 @@ const fs = require('fs');
 
 exports.handler = async function(event:any) {
   console.log("request:", JSON.stringify(event, undefined, 2));
-
   console.log(`Getting secret for ${process.env.RDS_SECRET_NAME}`);
   
+  // All requests get routed to this function, when opened via browser it looks for a favicon.
   if(event.rawPath === '/favicon.ico'){
     return sendRes(404, 'no favicon here');
   }
 
+  // retrieve the username and password for MySQL from secrets manager
   const secret = await client.getSecretValue({SecretId: process.env.RDS_SECRET_NAME}).promise();
   let {username, password} = JSON.parse(secret.SecretString);
   process.env.PROXY_ENDPOINT;
   
+  // Important to note that the ssl cert is not the standard RDS cert.
+  // https://www.amazontrust.com/repository/AmazonRootCA1.pem
   var connection = mysql.createConnection({
     host     :  process.env.PROXY_ENDPOINT,
     user     :  username,
@@ -28,7 +31,8 @@ exports.handler = async function(event:any) {
     }
   });
   
-  let queryResult = await new Promise( (resolve,reject) => {
+  // This may be our first time running this function, setup a MySQL Database
+  await new Promise( (resolve,reject) => {
     connection.query('CREATE DATABASE IF NOT EXISTS cdkpatterns', function (error:any, results:any, fields:any) {
       if (error) throw error;
       // connected!
@@ -40,6 +44,7 @@ exports.handler = async function(event:any) {
   
   connection.destroy();
   
+  // re-establish a connection to our created cdkpatterns DB
   connection = mysql.createConnection({
     host     :  process.env.PROXY_ENDPOINT,
     user     :  username,
@@ -50,7 +55,8 @@ exports.handler = async function(event:any) {
     }
   });
   
-  queryResult = await new Promise( (resolve,reject) => {
+  // If this is our first execution, create our rds_proxy table inside cdkpatterns
+  await new Promise( (resolve,reject) => {
     connection.query('CREATE TABLE IF NOT EXISTS rds_proxy (id INT AUTO_INCREMENT PRIMARY KEY, url VARCHAR(20))', function (error:any, results:any, fields:any) {
       if (error) throw error;
       // connected!
@@ -60,7 +66,8 @@ exports.handler = async function(event:any) {
     return JSON.stringify(error);
   });
   
-  queryResult = await new Promise( (resolve,reject) => {
+  // Insert a new record with an auto generated ID and the url you hit on the API Gateway
+  await new Promise( (resolve,reject) => {
     connection.query(`INSERT INTO rds_proxy(url) VALUES ('${event.rawPath}')`, function (error:any, results:any, fields:any) {
       if (error) throw error;
       // connected!
@@ -70,7 +77,8 @@ exports.handler = async function(event:any) {
     return JSON.stringify(error);
   });
   
-  queryResult = await new Promise( (resolve,reject) => {
+  // Query for all records in the DB and build up an HTML Table of results
+  let queryResult = await new Promise( (resolve,reject) => {
     connection.query(`SELECT * FROM rds_proxy`, function (error:any, results:any, fields:any) {
       if (error) throw error;
       // connected!
