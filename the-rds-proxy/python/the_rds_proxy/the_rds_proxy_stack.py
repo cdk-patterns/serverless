@@ -25,8 +25,6 @@ class TheRdsProxyStack(core.Stack):
         db_connection_group.add_ingress_rule(db_connection_group,ec2.Port.tcp(3306), 'allow db connection')
         db_connection_group.add_ingress_rule(lambda_to_proxy_group, ec2.Port.tcp(3306), 'allow lambda connection')
 
-        database_username = 'syscdk';
-
         db_credentials_secret = secrets.Secret(self, 'DBCredentialsSecret',
                                                secret_name=id+'-rds-credentials',
                                                generate_secret_string=secrets.SecretStringGenerator(
