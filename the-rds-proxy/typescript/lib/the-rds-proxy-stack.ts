@@ -30,7 +30,7 @@ export class TheRdsProxyStack extends cdk.Stack {
 
     // Dynamically generate the username and password, then store in secrets manager
     const databaseCredentialsSecret = new secrets.Secret(this, 'DBCredentialsSecret', {
-      secretName: 'rds-credentials',
+      secretName: id+'-rds-credentials',
       generateSecretString: {
         secretStringTemplate: JSON.stringify({
           username: databaseUsername,
@@ -60,7 +60,7 @@ export class TheRdsProxyStack extends cdk.Stack {
     });
 
     // Create an RDS Proxy
-    const proxy = rdsInstance.addProxy('proxy', {
+    const proxy = rdsInstance.addProxy(id+'-proxy', {
         secret: databaseCredentialsSecret,
         debugLogging: true,
         vpc,
@@ -83,7 +83,7 @@ export class TheRdsProxyStack extends cdk.Stack {
       securityGroups: [lambdaToRDSProxyGroup],
       environment: {
         PROXY_ENDPOINT: proxy.endpoint,
-        RDS_SECRET_NAME: 'rds-credentials'
+        RDS_SECRET_NAME: id+'-rds-credentials'
       }
     });
 

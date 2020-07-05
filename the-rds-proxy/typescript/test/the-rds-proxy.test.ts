@@ -125,7 +125,7 @@ test('RDS Proxy created', () => {
   const stack = new TheRdsProxy.TheRdsProxyStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::RDS::DBProxy", {
-    DBProxyName: "proxy",
+    DBProxyName: "MyTestStack-proxy",
     EngineFamily: "MYSQL",
     DebugLogging: true,
     RequireTLS: true
@@ -144,7 +144,7 @@ test('Lambda Function created', () => {
     Environment: {
       Variables: {
         PROXY_ENDPOINT:{},
-        "RDS_SECRET_NAME": "rds-credentials"
+        "RDS_SECRET_NAME": "MyTestStack-rds-credentials"
       }
     },
     "VpcConfig": {}
