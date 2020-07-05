@@ -47,7 +47,7 @@ export class TheRdsProxyStack extends cdk.Stack {
     });
 
     // MySQL DB Instance (delete protection turned off because pattern is for learning.)
-    // re-enable delete protection for a real implemenatation
+    // re-enable delete protection for a real implementation
     const rdsInstance = new rds.DatabaseInstance(this, 'DBInstance', {
       engine: rds.DatabaseInstanceEngine.MYSQL,
       masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
