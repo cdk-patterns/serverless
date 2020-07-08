@@ -42,3 +42,5 @@ The Lambda Function will behave differently based on the RESTful verb you use:
 - GET - Retrieve messages
 - POST - Send a message (whatever you send in the body is the message)
 - DELETE - Deletes all stored messages
+
+The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy
