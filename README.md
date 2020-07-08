@@ -123,7 +123,7 @@ npx cdk deploy
 
   You can now attach an EFS File System to your Lambda Function for persistence between executions or across different Functions <br /><br />
 
-  ![Architecture](the-efs-lambda/img/arch.png)
+  ![Architecture](the-efs-lambda/img/arch2.png)
 
   <br /><hr /><br />
 
@@ -249,7 +249,7 @@ npx cdk deploy
 
   You can now attach an EFS File System to your Lambda Function for persistence between executions or across different Functions <br /><br />
 
-  ![Architecture](the-efs-lambda/img/arch.png)
+  ![Architecture](the-efs-lambda/img/arch2.png)
 
   <br /><hr /><br />
 
