@@ -118,6 +118,15 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The EFS Lambda](/the-efs-lambda/README.md)
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/aws/new-a-shared-file-system-for-your-lambda-functions/)<br />
+
+  You can now attach an EFS File System to your Lambda Function for persistence between executions or across different Functions <br /><br />
+
+  ![Architecture](the-efs-lambda/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The EventBridge ATM](/the-eventbridge-atm/README.md)
   This was taken from this [Blogpost](https://aws.amazon.com/blogs/compute/integrating-amazon-eventbridge-into-your-serverless-applications/)<br />
 
@@ -203,6 +212,7 @@ npx cdk deploy
   <br />
   
   * [Alex Casalboni](#alex-casalboni)
+  * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
   * [Hervé Nivon](#hervé-nivon)
@@ -224,6 +234,22 @@ npx cdk deploy
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
   ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
+
+  ### Danilo Poccia
+  <img src="img/dev_profiles/danilo_poccia.jpg" width="120" alt="Danilo Poccia profile pic" /><br />
+
+  Chief Evangelist (EMEA) @AWSCloud. Mostly Serverless, IoT, AI/ML. Few pics. Some music. My opinions. Complexity is a science. http://pronoun.is/he<br />
+
+  Twitter - [@danilop](https://twitter.com/danilop)<br />
+
+  #### [The EFS Lambda](/the-efs-lambda/README.md)
+  This was taken from this [Blogpost](https://aws.amazon.com/blogs/aws/new-a-shared-file-system-for-your-lambda-functions/)<br />
+
+  You can now attach an EFS File System to your Lambda Function for persistence between executions or across different Functions <br /><br />
+
+  ![Architecture](the-efs-lambda/img/arch.png)
 
   <br /><hr /><br />
 
