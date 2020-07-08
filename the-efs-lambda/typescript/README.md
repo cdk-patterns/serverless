@@ -28,7 +28,7 @@ A FileSystem is included in the above VPC with a removal policy of destroy. In a
 POSIX permissions are also setup for this File System
 
 ### Lambda Function
-A simple Python lambda function that interacts with the file system - storing, retrieving and deleting messages
+A simple Python lambda function that interacts with the file system - storing, retrieving and deleting messages. This Lambda Function is taken directly from Danilo's blog post, if someone wants to contribute a Node version that would be awesome. Otherwise I will refactor over time to Node.
 
 ### API Gateway HTTP API
 This is configured with the Lambda Function as the default handler for any url you hit.
