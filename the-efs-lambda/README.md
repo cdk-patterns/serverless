@@ -16,6 +16,11 @@ Some Useful References:
 | Yan Cui | [Unlocking New Serverless Use Caes With EFS and Lambda](https://lumigo.io/blog/unlocking-more-serverless-use-cases-with-efs-and-lambda/) |
 
 
+# Available Versions
+
+* [TypeScript](typescript)
+* [Python](python)
+
 ## What's Included In This Pattern?
 This pattern covers the first half of Danilo Poccia's awesome [blog post](https://aws.amazon.com/blogs/aws/new-a-shared-file-system-for-your-lambda-functions/). After deployment you will have an API Gateway HTTP API where any url you hit gets directed to a Lambda Function that is integrated with EFS.
 
