@@ -35,7 +35,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
     const efsLambda = new lambda.Function(this, 'efsLambdaFunction', {
       runtime: lambda.Runtime.PYTHON_3_8,
       code: lambda.Code.asset('lambdas'), 
-      handler: 'MessageWall.lambda_handler',
+      handler: 'message_wall.lambda_handler',
       vpc: vpc,
       filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, '/mnt/msg')
     });
