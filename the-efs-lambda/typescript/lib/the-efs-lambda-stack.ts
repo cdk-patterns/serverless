@@ -35,7 +35,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
       code: lambda.Code.asset('lambdas'), 
       handler: 'MessageWall.lambda_handler',
       vpc: vpc,
-      filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, 'mnt/msg')
+      filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, '/mnt/msg')
     });
 
     // defines an API Gateway Http API resource backed by our "rdsLambda" function.
