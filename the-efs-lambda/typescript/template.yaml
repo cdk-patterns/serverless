@@ -447,7 +447,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaS3BucketB0B31A7B
+          Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3Bucket0046C8B5
         S3Key:
           Fn::Join:
             - ""
@@ -455,13 +455,13 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaS3VersionKey33BD1F7D
+                      - Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaS3VersionKey33BD1F7D
-      Handler: MessageWall.lambda_handler
+                      - Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9
+      Handler: message_wall.lambda_handler
       Role:
         Fn::GetAtt:
           - efsLambdaFunctionServiceRole7C103DEA
@@ -495,7 +495,7 @@ Resources:
       - FileSystemEfsMountTarget24B8EBB43
     Metadata:
       aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/Resource
-      aws:asset:path: asset.4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eea
+      aws:asset:path: asset.282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6
       aws:asset:property: Code
   efsLambdaFunctionTheEfsLambdaStackEndpointDefaultRoute2D8DAF3FPermissionA3732A5D:
     Type: AWS::Lambda::Permission
@@ -571,15 +571,15 @@ Resources:
       Modules: aws-cdk=1.50.0,@aws-cdk/assets=1.50.0,@aws-cdk/aws-apigatewayv2=1.50.0,@aws-cdk/aws-cloudwatch=1.50.0,@aws-cdk/aws-ec2=1.50.0,@aws-cdk/aws-efs=1.50.0,@aws-cdk/aws-events=1.50.0,@aws-cdk/aws-iam=1.50.0,@aws-cdk/aws-kms=1.50.0,@aws-cdk/aws-lambda=1.50.0,@aws-cdk/aws-logs=1.50.0,@aws-cdk/aws-s3=1.50.0,@aws-cdk/aws-s3-assets=1.50.0,@aws-cdk/aws-sqs=1.50.0,@aws-cdk/aws-ssm=1.50.0,@aws-cdk/cloud-assembly-schema=1.50.0,@aws-cdk/core=1.50.0,@aws-cdk/cx-api=1.50.0,@aws-cdk/region-info=1.50.0,jsii-runtime=node.js/v13.12.0
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaS3BucketB0B31A7B:
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3Bucket0046C8B5:
     Type: String
-    Description: S3 bucket for asset "4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eea"
-  AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaS3VersionKey33BD1F7D:
+    Description: S3 bucket for asset "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9:
     Type: String
-    Description: S3 key for asset version "4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eea"
-  AssetParameters4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eeaArtifactHash03E2E3C0:
+    Description: S3 key for asset version "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6ArtifactHash4F5080E6:
     Type: String
-    Description: Artifact hash for asset "4f1e8c0721f27410ac9f59dd6780db2bf227ae46635c9781fca97474ead79eea"
+    Description: Artifact hash for asset "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
 Outputs:
   HTTPAPIUrl:
     Value:
