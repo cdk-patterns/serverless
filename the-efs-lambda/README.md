@@ -48,4 +48,6 @@ The Lambda Function will behave differently based on the RESTful verb you use:
 - POST - Send a message (whatever you send in the body is the message)
 - DELETE - Deletes all stored messages
 
-The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy
+The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy.
+
+Note - After deployment you may need to wait 60-90 seconds before the implementation works as expected. There are a lot of network configurations happening so you need to wait on propagation

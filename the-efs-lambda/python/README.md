@@ -45,6 +45,8 @@ The Lambda Function will behave differently based on the RESTful verb you use:
 
 The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy
 
+Note - After deployment you may need to wait 60-90 seconds before the implementation works as expected. There are a lot of network configurations happening so you need to wait on propagation
+
 ## Useful CDK Commands
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
