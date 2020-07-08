@@ -12,6 +12,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
       maxAzs: 2, // Default is all AZs in the region
     });
 
+    // Create a file system in EFS to store information
     const fs = new efs.FileSystem(this, 'FileSystem', {
       vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY
@@ -30,6 +31,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
       }
     });
 
+    // This lambda function is given access to our EFS File System
     const efsLambda = new lambda.Function(this, 'efsLambdaFunction', {
       runtime: lambda.Runtime.PYTHON_3_8,
       code: lambda.Code.asset('lambdas'), 
@@ -38,7 +40,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
       filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, '/mnt/msg')
     });
 
-    // defines an API Gateway Http API resource backed by our "rdsLambda" function.
+    // defines an API Gateway Http API resource backed by our "efsLambda" function.
     let api = new apigw.HttpApi(this, 'Endpoint', {
       defaultIntegration: new apigw.LambdaProxyIntegration({
         handler: efsLambda
