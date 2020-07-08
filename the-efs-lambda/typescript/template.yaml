@@ -1,0 +1,660 @@
+Resources:
+  Vpc8378EB38:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/Resource
+  VpcPublicSubnet1Subnet5C2D37C4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/Subnet
+  VpcPublicSubnet1RouteTable6C95E38E:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/RouteTable
+  VpcPublicSubnet1RouteTableAssociation97140677:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/RouteTableAssociation
+  VpcPublicSubnet1DefaultRoute3DA9E72A:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet1RouteTable6C95E38E
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/DefaultRoute
+  VpcPublicSubnet1EIPD7E02669:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/EIP
+  VpcPublicSubnet1NATGateway4D7517AA:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet1EIPD7E02669
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet1Subnet5C2D37C4
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet1/NATGateway
+  VpcPublicSubnet2Subnet691E08A3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.64.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/Subnet
+  VpcPublicSubnet2RouteTable94F7E489:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/RouteTable
+  VpcPublicSubnet2RouteTableAssociationDD5762D8:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/RouteTableAssociation
+  VpcPublicSubnet2DefaultRoute97F91067:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnet2RouteTable94F7E489
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/DefaultRoute
+  VpcPublicSubnet2EIP3C605A87:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/EIP
+  VpcPublicSubnet2NATGateway9182C01D:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnet2EIP3C605A87
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnet2Subnet691E08A3
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PublicSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PublicSubnet2/NATGateway
+  VpcPrivateSubnet1Subnet536B997A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.128.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PrivateSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet1/Subnet
+  VpcPrivateSubnet1RouteTableB2C5B500:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PrivateSubnet1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet1/RouteTable
+  VpcPrivateSubnet1RouteTableAssociation70C59FA6:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      SubnetId:
+        Ref: VpcPrivateSubnet1Subnet536B997A
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet1/RouteTableAssociation
+  VpcPrivateSubnet1DefaultRouteBE02A9ED:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet1RouteTableB2C5B500
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet1NATGateway4D7517AA
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet1/DefaultRoute
+  VpcPrivateSubnet2Subnet3788AAA1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.192.0/18
+      VpcId:
+        Ref: Vpc8378EB38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PrivateSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet2/Subnet
+  VpcPrivateSubnet2RouteTableA678073B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc/PrivateSubnet2
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet2/RouteTable
+  VpcPrivateSubnet2RouteTableAssociationA89CAD56:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      SubnetId:
+        Ref: VpcPrivateSubnet2Subnet3788AAA1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet2/RouteTableAssociation
+  VpcPrivateSubnet2DefaultRoute060D2087:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnet2RouteTableA678073B
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnet2NATGateway9182C01D
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/PrivateSubnet2/DefaultRoute
+  VpcIGWD7BA715C:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/Vpc
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/IGW
+  VpcVPCGWBF912B6E:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: Vpc8378EB38
+      InternetGatewayId:
+        Ref: VpcIGWD7BA715C
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Vpc/VPCGW
+  FileSystem8A8E25C0:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      FileSystemTags:
+        - Key: Name
+          Value: TheEfsLambdaStack/FileSystem
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/Resource
+  FileSystemEfsSecurityGroup212D3ACB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TheEfsLambdaStack/FileSystem/EfsSecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      Tags:
+        - Key: Name
+          Value: TheEfsLambdaStack/FileSystem
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/EfsSecurityGroup/Resource
+  FileSystemEfsSecurityGroupfromTheEfsLambdaStackefsLambdaFunctionSecurityGroup6DCF990120495D3261B9:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: from TheEfsLambdaStackefsLambdaFunctionSecurityGroup6DCF9901:2049
+      FromPort: 2049
+      GroupId:
+        Fn::GetAtt:
+          - FileSystemEfsSecurityGroup212D3ACB
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - efsLambdaFunctionSecurityGroup5DBE1069
+          - GroupId
+      ToPort: 2049
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/EfsSecurityGroup/from TheEfsLambdaStackefsLambdaFunctionSecurityGroup6DCF9901:2049
+  FileSystemEfsMountTarget1586453F0:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId:
+        Ref: FileSystem8A8E25C0
+      SecurityGroups:
+        - Fn::GetAtt:
+            - FileSystemEfsSecurityGroup212D3ACB
+            - GroupId
+      SubnetId:
+        Ref: VpcPrivateSubnet1Subnet536B997A
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/EfsMountTarget1
+  FileSystemEfsMountTarget24B8EBB43:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId:
+        Ref: FileSystem8A8E25C0
+      SecurityGroups:
+        - Fn::GetAtt:
+            - FileSystemEfsSecurityGroup212D3ACB
+            - GroupId
+      SubnetId:
+        Ref: VpcPrivateSubnet2Subnet3788AAA1
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/EfsMountTarget2
+  FileSystemAccessPointF8178182:
+    Type: AWS::EFS::AccessPoint
+    Properties:
+      FileSystemId:
+        Ref: FileSystem8A8E25C0
+      PosixUser:
+        Gid: "1001"
+        Uid: "1001"
+      RootDirectory:
+        CreationInfo:
+          OwnerGid: "1001"
+          OwnerUid: "1001"
+          Permissions: "750"
+        Path: /export/lambda
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/FileSystem/AccessPoint/Resource
+  efsLambdaFunctionServiceRole7C103DEA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+    DependsOn:
+      - FileSystemEfsMountTarget1586453F0
+      - FileSystemEfsMountTarget24B8EBB43
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/ServiceRole/Resource
+  efsLambdaFunctionServiceRoleDefaultPolicyAD830756:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: elasticfilesystem:ClientMount
+            Condition:
+              StringEquals:
+                elasticfilesystem:AccessPointArn:
+                  Fn::Join:
+                    - ""
+                    - - "arn:"
+                      - Ref: AWS::Partition
+                      - ":elasticfilesystem:"
+                      - Ref: AWS::Region
+                      - ":"
+                      - Ref: AWS::AccountId
+                      - :access-point/
+                      - Ref: FileSystemAccessPointF8178182
+            Effect: Allow
+            Resource: "*"
+          - Action: elasticfilesystem:ClientWrite
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":elasticfilesystem:"
+                  - Ref: AWS::Region
+                  - ":"
+                  - Ref: AWS::AccountId
+                  - :file-system/
+                  - Ref: FileSystem8A8E25C0
+        Version: "2012-10-17"
+      PolicyName: efsLambdaFunctionServiceRoleDefaultPolicyAD830756
+      Roles:
+        - Ref: efsLambdaFunctionServiceRole7C103DEA
+    DependsOn:
+      - FileSystemEfsMountTarget1586453F0
+      - FileSystemEfsMountTarget24B8EBB43
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/ServiceRole/DefaultPolicy/Resource
+  efsLambdaFunctionSecurityGroup5DBE1069:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Automatic security group for Lambda Function TheEfsLambdaStackefsLambdaFunctionF4C3ADBC
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: Vpc8378EB38
+    DependsOn:
+      - FileSystemEfsMountTarget1586453F0
+      - FileSystemEfsMountTarget24B8EBB43
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/SecurityGroup/Resource
+  efsLambdaFunctionACCEBA5E:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3Bucket0046C8B5
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9
+      Handler: message_wall.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - efsLambdaFunctionServiceRole7C103DEA
+          - Arn
+      Runtime: python3.8
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::GetAtt:
+              - efsLambdaFunctionSecurityGroup5DBE1069
+              - GroupId
+        SubnetIds:
+          - Ref: VpcPrivateSubnet1Subnet536B997A
+          - Ref: VpcPrivateSubnet2Subnet3788AAA1
+      FileSystemConfigs:
+        - LocalMountPath: /mnt/msg
+          Arn:
+            Fn::Join:
+              - ""
+              - - "arn:"
+                - Ref: AWS::Partition
+                - ":elasticfilesystem:"
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - :access-point/
+                - Ref: FileSystemAccessPointF8178182
+    DependsOn:
+      - efsLambdaFunctionServiceRoleDefaultPolicyAD830756
+      - efsLambdaFunctionServiceRole7C103DEA
+      - FileSystemEfsMountTarget1586453F0
+      - FileSystemEfsMountTarget24B8EBB43
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/Resource
+      aws:asset:path: asset.282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6
+      aws:asset:property: Code
+  efsLambdaFunctionTheEfsLambdaStackEndpointDefaultRoute2D8DAF3FPermissionA3732A5D:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - efsLambdaFunctionACCEBA5E
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /*/*
+    DependsOn:
+      - FileSystemEfsMountTarget1586453F0
+      - FileSystemEfsMountTarget24B8EBB43
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/efsLambdaFunction/TheEfsLambdaStackEndpointDefaultRoute2D8DAF3F-Permission
+  EndpointEEF1FD8F:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: Endpoint
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Endpoint/Resource
+  EndpointDefaultRouteDefaultRouteIntegration4584A785:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - efsLambdaFunctionACCEBA5E
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Endpoint/DefaultRoute/DefaultRoute-Integration/Resource
+  EndpointDefaultRouteB7B22F2B:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      RouteKey: $default
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: EndpointDefaultRouteDefaultRouteIntegration4584A785
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Endpoint/DefaultRoute/Resource
+  EndpointDefaultStage0AD21F27:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: EndpointEEF1FD8F
+      StageName: $default
+      AutoDeploy: true
+    Metadata:
+      aws:cdk:path: TheEfsLambdaStack/Endpoint/DefaultStage/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.50.0,@aws-cdk/assets=1.50.0,@aws-cdk/aws-apigatewayv2=1.50.0,@aws-cdk/aws-cloudwatch=1.50.0,@aws-cdk/aws-ec2=1.50.0,@aws-cdk/aws-efs=1.50.0,@aws-cdk/aws-events=1.50.0,@aws-cdk/aws-iam=1.50.0,@aws-cdk/aws-kms=1.50.0,@aws-cdk/aws-lambda=1.50.0,@aws-cdk/aws-logs=1.50.0,@aws-cdk/aws-s3=1.50.0,@aws-cdk/aws-s3-assets=1.50.0,@aws-cdk/aws-sqs=1.50.0,@aws-cdk/aws-ssm=1.50.0,@aws-cdk/cloud-assembly-schema=1.50.0,@aws-cdk/core=1.50.0,@aws-cdk/cx-api=1.50.0,@aws-cdk/region-info=1.50.0,jsii-runtime=node.js/v13.12.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3Bucket0046C8B5:
+    Type: String
+    Description: S3 bucket for asset "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6S3VersionKey571E36B9:
+    Type: String
+    Description: S3 key for asset version "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
+  AssetParameters282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6ArtifactHash4F5080E6:
+    Type: String
+    Description: Artifact hash for asset "282349d50ef6c5067763109075ad18de22b8b8481448b9d553626fb0e0f8f8b6"
+Outputs:
+  HTTPAPIUrl:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: EndpointEEF1FD8F
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

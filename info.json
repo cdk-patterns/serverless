@@ -18,6 +18,9 @@
         "the-dynamo-streamer": {
             "prodReady": false
         },
+        "the-efs-lambda": {
+            "prodReady": false
+        },
         "the-eventbridge-atm": {
             "prodReady": false
         },
