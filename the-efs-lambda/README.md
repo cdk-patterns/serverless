@@ -1,5 +1,7 @@
 # The EFS Lambda Pattern
 
+![efs lambda overview](img/overview.png)
+
 This is a pattern that attaches an EFS file system to your lambda function to give it expandable, persistent storage. Having this level of storage in a Lambda Function opens the door to many new possibilities. Multiple functions can even use the same file system.
 
 Some Useful References:
