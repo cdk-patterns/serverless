@@ -36,6 +36,3 @@ def translate(voice, text):
                    Text = f'<speak><amazon:domain name="news">{text}></amazon:domain></speak>')
 
     return response['AudioStream'].read()
-    #f = open('newscaster.mp3', 'wb')
-    #f.write(response['AudioStream'].read())
-    #f.close()
