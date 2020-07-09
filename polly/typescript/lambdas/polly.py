@@ -15,9 +15,6 @@ def handler(event, context):
     except KeyError:
         text = 'you need to include text in your message body'
         
-    print(voice)
-    print(text)
-        
     translation = translate(voice, text)
     
     return {
