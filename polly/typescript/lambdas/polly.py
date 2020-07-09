@@ -15,16 +15,16 @@ def handler(event, context):
     except KeyError:
         text = 'you need to include text in your message body'
         
-    translation = translate(voice, text)
+    speech = convert_text_to_speech(voice, text)
     
     return {
         'statusCode': 200,
         'headers': { 'Content-Type': 'audio/mpeg' },
-        'body': base64.b64encode(translation),
+        'body': base64.b64encode(speech),
         'isBase64Encoded': True
     }
 
-def translate(voice, text):
+def convert_text_to_speech(voice, text):
     if voice not in ['Joanna', 'Matthew', 'Lupe']:
         print('Only Joanna, Matthew and Lupe support the newscaster style')
         sys.exit(1)
