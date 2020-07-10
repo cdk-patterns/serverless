@@ -39,7 +39,7 @@ If you open that URL in chrome it will play an audio recording saying &quot;To h
 You can customise this message based on how you call the url:
 
 ### Changing the voice
-You can pick from 3 voices "Matthew" (the default), "Joanna" or "Lupe".
+You can pick from 3 voices "Matthew" (the default), "Joanna" or "Lupe". This is using the newsreader style of voice which AWS recently launched so it currently only supports these 3.
 
 To change voices just add a query param onto your url like:
 
