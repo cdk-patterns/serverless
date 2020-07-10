@@ -7,6 +7,7 @@ export class PollyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Lambda Function that takes in text and returns a polly voice synthesis
     const pollyLambda = new lambda.Function(this, 'PollyHandler', {
       runtime: lambda.Runtime.PYTHON_3_8,
       code: lambda.Code.asset('lambdas'), 
@@ -15,6 +16,7 @@ export class PollyStack extends cdk.Stack {
       }
     });
     
+    // https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
     const pollyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],
