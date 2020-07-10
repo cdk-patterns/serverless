@@ -1,14 +1,12 @@
-# Welcome to your CDK TypeScript project!
+# Polly Pattern
 
-This is a blank project for TypeScript development with CDK.
+This is a pattern that integrates the AWS Polly services into an AWS Lambda Function so that you can translate text into speech using a serverless stack
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Some Useful References:
 
-## Useful commands
+| Author        | Link           |
+| ------------- | ------------- |
+| AWS Polly | [AWS Polly Site](https://aws.amazon.com/polly/) |
+| AWS Blogs | [Giving your content a voice with the Newscaster speaking style from Amazon Polly](https://aws.amazon.com/blogs/machine-learning/giving-your-content-a-voice-with-the-newscaster-speaking-style-from-amazon-polly/)
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+
