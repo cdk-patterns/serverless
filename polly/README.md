@@ -61,6 +61,8 @@ To have Lupe speak spanish just add the tanslateTo query param
 https://{api-url}/?voice=Lupe&translateTo=es
 ```
 
+If your text you are translating is in a language other than english you can use the translateFrom parameter
+
 To understand what languages are possible please refer to the [documentation](https://docs.aws.amazon.com/translate/latest/dg/what-is.html)
 
 ### Changing the text
