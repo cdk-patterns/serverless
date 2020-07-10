@@ -19,8 +19,9 @@ export class PollyStack extends cdk.Stack {
       effect: iam.Effect.ALLOW,
       resources: ['*'],
       actions: [
-        'polly:SynthesizeSpeech'
-      ]
+        "translate:TranslateText",
+        "polly:SynthesizeSpeech"
+      ],
     });
     pollyLambda.addToRolePolicy(pollyStatement);
 
