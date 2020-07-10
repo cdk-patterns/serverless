@@ -11,9 +11,7 @@ export class PollyStack extends cdk.Stack {
     const pollyLambda = new lambda.Function(this, 'PollyHandler', {
       runtime: lambda.Runtime.PYTHON_3_8,
       code: lambda.Code.asset('lambdas'), 
-      handler: 'polly.handler',
-      environment: {
-      }
+      handler: 'polly.handler'
     });
     
     // https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
