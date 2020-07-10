@@ -20,11 +20,12 @@ class PollyStack(core.Stack):
         # https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
         polly_policy = iam.PolicyStatement(effect=iam.Effect.ALLOW,
                                            resources=['*'],
-                                           actions=['polly:SynthesizeSpeech'])
+                                           actions=['translate:TranslateText',
+                                                    'polly:SynthesizeSpeech'])
         polly_lambda.add_to_role_policy(polly_policy)
 
         # defines an API Gateway Http API resource backed by our "efs_lambda" function.
         api = api_gw.HttpApi(self, 'Polly',
-                             default_integration=api_gw.LambdaProxyIntegration(handler=polly_lambda));
+                             default_integration=api_gw.LambdaProxyIntegration(handler=polly_lambda))
 
-        core.CfnOutput(self, 'HTTP API Url', value=api.url);
+        core.CfnOutput(self, 'HTTP API Url', value=api.url)
