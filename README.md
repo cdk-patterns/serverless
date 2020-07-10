@@ -76,6 +76,13 @@ npx cdk deploy
     Grouped Alphabetically
   </summary>
 
+  #### [Polly](/polly/README.md)
+  Use Amazon Polly to translate text to speech from inside a Lambda Function
+
+  ![Architecture](polly/img/overview.png)
+
+  <br /><hr /><br />
+
   #### Single Page Application S3 Website Deploy
   These are built using https://www.npmjs.com/package/cdk-spa-deploy and allow you to deploy a website in as little as 5 lines of CDK code.
 
