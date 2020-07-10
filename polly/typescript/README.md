@@ -18,11 +18,6 @@ Some Useful References:
 | Timothy Mugayi | [Text-to-Speech: Build Apps That Talk With AWS Polly and Node.js](https://medium.com/better-programming/text-to-speech-build-apps-that-talk-with-aws-polly-and-node-js-a9cdab99af04 ) |
 | Philip Kiely | [Text-To-Speech With AWS (Part 1)](https://www.smashingmagazine.com/2019/08/text-to-speech-aws/) |
 
-# Available Versions
-
-* [TypeScript](typescript)
-* [Python](python)
-
 ## What is Included In This Pattern?
 
 After deployment you will have an API Gateway HTTP API configured where all traffic points to a Lambda Function that calls the Polly service.
