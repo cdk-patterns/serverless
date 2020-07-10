@@ -42,12 +42,12 @@ const sendVoiceRes = (status:number, body:string) => {
 };
 
 const sendRes = (status:number, body:string) => {
-    var response = {
-      statusCode: status,
-      headers: {
-        "Content-Type": "text/html"
-      },
-      body: body
-    };
-    return response;
+  var response = {
+    statusCode: status,
+    headers: {
+    "Content-Type": "text/html"
+    },
+    body: body
   };
+  return response;
+};
