@@ -9,7 +9,7 @@ test('Polly Lambda Created', () => {
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
     "Handler": "polly.handler",
-    "Runtime": "python3.8"
+    "Runtime": "nodejs12.x"
   }
   ));
 });
