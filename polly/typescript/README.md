@@ -2,7 +2,7 @@
 
 ![overview image](img/overview.png)
 
-This is a pattern that integrates the Amazon Polly service into an AWS Lambda Function so that you can synthesize text into speech using a serverless stack. It also imtegrates with Amazon Translate to allow you to choose the language for the spoken text.
+This is a pattern that integrates the Amazon Polly service into an AWS Lambda Function so that you can synthesize text into speech using a serverless stack. It also integrates with Amazon Translate to allow you to choose the language for the spoken text.
 
 Some Useful References:
 
