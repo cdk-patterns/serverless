@@ -5,6 +5,7 @@ exports.handler = async function(event:any) {
   // Default to Matthew voice and add some default text
   let text = event?.body ?? "To hear your own script, you need to include text in the message body of your restful request to the API Gateway";
   let voice = event?.queryStringParameters?.voice ?? "Matthew";
+  let translateFrom = event?.queryStringParameters?.translateFrom ?? "en";
   let translateTo = event?.queryStringParameters?.translateTo ?? "en";
 
   const validVoices = ['Joanna', 'Matthew', 'Lupe'];
@@ -14,18 +15,17 @@ exports.handler = async function(event:any) {
   }
 
   // If we passed in a translation language, use translate to do the translation
-  if(translateTo !== 'en'){
+  if(translateTo !== translateFrom){
     const translate = new Translate();
 
     var translateParams = {
       Text: text,
-      SourceLanguageCode: 'en',
+      SourceLanguageCode: translateFrom,
       TargetLanguageCode: translateTo
     };
 
     let rawTranslation = await translate.translateText(translateParams).promise();
     text = rawTranslation.TranslatedText;
-
   }
 
   // Use Polly to translate text into speech
