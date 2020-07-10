@@ -26,6 +26,7 @@ def handler(event, context):
     except KeyError:
         text = 'To hear your own script, you need to include text in the message body of your restful request to the API Gateway'
         
+    # Only perform a translation if the languages are different
     if translate_to != translate_from:
         text = translate_text(text, translate_from, translate_to)
 
