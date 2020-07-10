@@ -50,7 +50,7 @@ https://{api-url}/?voice=Matthew
 ### Changing the language spoken
 This Lambda Function is integrated with Amazon Translate so you can have Polly speak a variety of languages
 
-To have Lupe speak spanish just add the translateTo query param
+To have Lupe speak Spanish just add the translateTo query param
 
 ```
 https://{api-url}/?voice=Lupe&translateTo=es
