@@ -12,7 +12,6 @@ exports.handler = async function(event:any) {
     sendRes(400, 'Only Joanna, Matthew and Lupe support the newscaster style')
   }
 
-  // create AWS SDK clients
   const polly = new Polly();
 
   const params = {
