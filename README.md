@@ -212,12 +212,14 @@ npx cdk deploy
   <br />
   
   * [Alex Casalboni](#alex-casalboni)
+  * [Ariadna Sanchez](#ariadna-sanchez)
   * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
   * [Hervé Nivon](#hervé-nivon)
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
+  * [Joppe Pelzer](#joppe-pelzer)
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
@@ -234,6 +236,18 @@ npx cdk deploy
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
   ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
+
+  ### Ariadna Sanchez
+  <img src="img/dev_profiles/ariadna-sanchez.jpg" width="120" alt="Ariadna Sanchez profile pic" /><br />
+
+  Ariadna Sanchez is a Research Scientist investigating the application of DL/ML technologies in the area of text-to-speech. After completing a bachelor’s in Audiovisual Systems Engineering, she received her MSc in Speech and Language Processing from University of Edinburgh in 2018. She has previously worked as an intern in NLP and TTS. During her time at University, she focused on TTS and signal processing, especially in the dysarthria field. She has experience in Signal Processing, Deep Learning, NLP, Speech and Image Processing. In her free time, Ariadna likes playing the violin, reading books and playing games.<br />
+
+  #### [Polly](/polly/README.md)  
+  Use Amazon Polly to translate text to speech from inside a Lambda Function
+
+  ![Architecture](polly/img/overview.png)
 
   <br /><hr /><br />
 
@@ -348,6 +362,18 @@ npx cdk deploy
   #### [The EventBridge Circuit Breaker](/the-eventbridge-circuit-breaker/README.md)
   Integrate with unreliable external services? Build a circuit breaker and handle the risk <br />
   ![Architecture](the-eventbridge-circuit-breaker/img/arch2.PNG)
+
+  <br /><hr /><br />
+
+  ### Joppe Pelzer
+  <img src="img/dev_profiles/joppe-pelzer.jpg" width="120" alt="Joppe Pelzer profile pic" /><br />
+
+  Joppe Pelzer is a Language Engineer working on text-to-speech for English and building style voices. With bachelor’s degrees in linguistics and Scandinavian languages, she graduated from Edinburgh University with an MSc in Speech and Language Processing in 2018. During her masters she focused on the text-to-speech front end, building and expanding upon multilingual G2P models, and has gained experience with NLP, Speech recognition and Deep Learning. Outside of work, she likes to draw, play games, and spend time in nature.<br />
+
+  #### [Polly](/polly/README.md)  
+  Use Amazon Polly to translate text to speech from inside a Lambda Function
+
+  ![Architecture](polly/img/overview.png)
 
   <br /><hr /><br />
 
