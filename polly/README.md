@@ -43,7 +43,11 @@ You can pick from 3 voices "Matthew" (the default), "Joanna" or "Lupe".
 
 To change voices just add a query param onto your url like:
 
+```
 https://{api-url}/?voice=Lupe
+https://{api-url}/?voice=Joanna
+https://{api-url}/?voice=Matthew
+```
 
 ### Changing the text
 If you use a tool like Postman to send text in the body of a POST request to the url it will use Polly to synthesize your text
