@@ -25,7 +25,7 @@ Some Useful References:
 
 ## What is Included In This Pattern?
 
-After deployment you will have an API Gateway HTTP API configured where all traffic points to a Lambda Function that calls the Polly service.
+After deployment you will have an API Gateway HTTP API configured where all traffic points to a Lambda Function that calls the Polly/Translate service.
 
 ### API Gateway HTTP API
 This is setup with basic settings where all traffic is routed to our Lambda Function
