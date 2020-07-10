@@ -15,6 +15,7 @@ export class PollyStack extends cdk.Stack {
     });
     
     // https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
+    // https://docs.aws.amazon.com/translate/latest/dg/translate-api-permissions-ref.html
     const pollyStatement = new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       resources: ['*'],

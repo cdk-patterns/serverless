@@ -18,6 +18,7 @@ class PollyStack(core.Stack):
                                         handler='polly.handler')
 
         # https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
+        # https://docs.aws.amazon.com/translate/latest/dg/translate-api-permissions-ref.html
         polly_policy = iam.PolicyStatement(effect=iam.Effect.ALLOW,
                                            resources=['*'],
                                            actions=['translate:TranslateText',
