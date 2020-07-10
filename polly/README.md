@@ -31,7 +31,7 @@ After deployment you will have an API Gateway HTTP API configured where all traf
 This is setup with basic settings where all traffic is routed to our Lambda Function
 
 ### Lambda Function
-Takes in whatever voice you want and whatever text you want, sends it to the Polly service and returns an Audio stream
+Takes in whatever voice you want and whatever text you want, translates it to whatever language you want then sends it to the Polly service and returns an Audio stream
 
 ## Testing The Pattern
 
