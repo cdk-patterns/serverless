@@ -23,7 +23,10 @@ test('Polly IAM Policy Created', () => {
     "PolicyDocument": {
       "Statement": [
         {
-        "Action": "polly:SynthesizeSpeech",
+        "Action": [
+          "translate:TranslateText",
+          "polly:SynthesizeSpeech"
+        ],
         "Effect": "Allow",
         "Resource": "*"
       }]
