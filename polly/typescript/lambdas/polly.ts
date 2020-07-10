@@ -1,9 +1,9 @@
 const { Polly } = require('aws-sdk');
 
 exports.handler = async function(event:any) {
-  console.log("request:", JSON.stringify(event, undefined, 2));
 
-  let text = event?.body ?? "you need to include text in your message body";
+  // Default to Matthew voice and add some default text
+  let text = event?.body ?? "To hear your own script, you need to include text in the message body of your restful request to the API Gateway";
   let voice = event?.queryStringParameters?.voice ?? "Matthew";
 
   const validVoices = ['Joanna', 'Matthew', 'Lupe'];

@@ -13,7 +13,7 @@ def handler(event, context):
     try:
         text = event['body']
     except KeyError:
-        text = 'you need to include text in your message body'
+        text = 'To hear your own script, you need to include text in the message body of your restful request to the API Gateway'
         
     speech = convert_text_to_speech(voice, text)
     
