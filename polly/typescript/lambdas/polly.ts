@@ -24,14 +24,12 @@ exports.handler = async function(event:any) {
   };
 
   let synthesis = await polly.synthesizeSpeech(params).promise();
+  let audioStreamBuffer = Buffer.from(synthesis.AudioStream);
 
-  let audioStream = new Buffer(synthesis.AudioStream);
-  let base64data = audioStream.toString('base64');
-
-  return sendVoicdRes(200, base64data);
+  return sendVoiceRes(200, audioStreamBuffer.toString('base64'));
 };
 
-const sendVoicdRes = (status:number, body:string) => {
+const sendVoiceRes = (status:number, body:string) => {
   var response = {
     statusCode: status,
     headers: {
