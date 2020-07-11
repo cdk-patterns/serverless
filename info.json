@@ -1,5 +1,8 @@
 {
     "patterns": {
+        "polly": {
+            "prodReady": false
+        },
         "s3-angular-website": {
             "prodReady": false
         },
