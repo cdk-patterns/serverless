@@ -34,6 +34,8 @@ After deployment in the deploy logs you will see the url for the API Gateway.
 
 If you open that URL in chrome it will play an audio recording saying &quot;To hear your own script, you need to include text in the message body of your restful request to the API Gateway&quot;
 
+For examples of the voice clips produced checkout the mp3 files in the [recordings folder](recordings)
+
 You can customise this message based on how you call the url:
 
 ### Changing the voice
