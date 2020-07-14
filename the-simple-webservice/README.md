@@ -7,7 +7,7 @@ An advanced version of this pattern was talked about by [Heitor Lessa](https://t
 * [Youtube Recording](https://www.youtube.com/watch?v=9IYpGTS7Jy0)
 * [Static Slides](https://d1.awsstatic.com/events/reinvent/2019/REPEAT_3_Serverless_architectural_patterns_and_best_practices_ARC307-R3.pdf)
 
-Most of this code was borrowed from https://www.cdkworkshop.com
+Most of this code was borrowed from https://cdkworkshop.com/.
 
 This is the most basic of implementations and would have to be hardened before production use. e.g. cognito added to the API Gateway
 
