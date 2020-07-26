@@ -13,7 +13,7 @@ class TheHttpFlowStack(core.Stack):
         http_lambda = _lambda.Function(self, "httpLambdaHandler",
                                        runtime=_lambda.Runtime.NODEJS_12_X,
                                        handler="http.handler",
-                                       code=_lambda.Code.from_asset("lambdas"),
+                                       code=_lambda.Code.from_asset("lambda_fns"),
                                        tracing=_lambda.Tracing.ACTIVE
                                        )
 
