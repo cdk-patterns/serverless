@@ -25,7 +25,7 @@ class TheScalableWebhookStack(core.Stack):
         sqs_publish_lambda = _lambda.Function(self, "SQSPublishLambdaHandler",
                                               runtime=_lambda.Runtime.NODEJS_12_X,              # execution environment
                                               handler="lambda.handler",                         # file is "lambda", function is "handler"
-                                              code=_lambda.Code.from_asset("lambdas/publish"),  # Code loaded from the lambdas/publish dir
+                                              code=_lambda.Code.from_asset("lambda_fns/publish"),  # Code loaded from the lambdas/publish dir
                                               environment={
                                                   'queueURL': sqs_queue.queue_url
                                               }
@@ -36,7 +36,7 @@ class TheScalableWebhookStack(core.Stack):
         sqs_subscribe_lambda = _lambda.Function(self, "SQSSubscribeLambdaHandler",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,              # execution environment
                                                 handler="lambda.handler",                         # file is "lambda", function is "handler"
-                                                code=_lambda.Code.from_asset("lambdas/subscribe"),# Code loaded from the lambdas/subscribe dir
+                                                code=_lambda.Code.from_asset("lambda_fns/subscribe"),# Code loaded from the lambdas/subscribe dir
                                                 environment={
                                                   'queueURL': sqs_queue.queue_url,
                                                   'tableName': table.table_name
