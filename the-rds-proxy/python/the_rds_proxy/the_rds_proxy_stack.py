@@ -67,7 +67,7 @@ class TheRdsProxyStack(core.Stack):
 
         rds_lambda = _lambda.Function(self, 'rdsProxyHandler',
                                       runtime=_lambda.Runtime.NODEJS_12_X,
-                                      code=_lambda.Code.asset('lambda-fns/rds'),
+                                      code=_lambda.Code.asset('lambda_fns/rds'),
                                       handler='rdsLambda.handler',
                                       vpc=vpc,
                                       security_groups=[lambda_to_proxy_group],
