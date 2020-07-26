@@ -77,7 +77,7 @@ export class TheRdsProxyStack extends cdk.Stack {
     // Lambda to Interact with RDS Proxy
     const rdsLambda = new lambda.Function(this, 'rdsProxyHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas/rds'), 
+      code: lambda.Code.asset('lambda-fns/rds'), 
       handler: 'rdsLambda.handler',
       vpc: vpc,
       securityGroups: [lambdaToRDSProxyGroup],
