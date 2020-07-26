@@ -34,7 +34,7 @@ class TheDestinedLambdaStack(core.Stack):
         destined_lambda = _lambda.Function(self, "destinedLambda",
                                            runtime=_lambda.Runtime.NODEJS_12_X,
                                            handler="destinedLambda.handler",
-                                           code=_lambda.Code.from_asset("lambdas"),
+                                           code=_lambda.Code.from_asset("lambda_fns"),
                                            retry_attempts=0,
                                            on_success=destinations.EventBridgeDestination(event_bus=bus),
                                            on_failure=destinations.EventBridgeDestination(event_bus=bus)
@@ -48,7 +48,7 @@ class TheDestinedLambdaStack(core.Stack):
         success_lambda = _lambda.Function(self, "successLambda",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="success.handler",
-                                          code=_lambda.Code.from_asset("lambdas"),
+                                          code=_lambda.Code.from_asset("lambda_fns"),
                                           timeout=core.Duration.seconds(3)
                                           )
         ###
@@ -79,7 +79,7 @@ class TheDestinedLambdaStack(core.Stack):
         failure_lambda = _lambda.Function(self, "failureLambda",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="failure.handler",
-                                          code=_lambda.Code.from_asset("lambdas"),
+                                          code=_lambda.Code.from_asset("lambda_fns"),
                                           timeout=core.Duration.seconds(3)
                                           )
 

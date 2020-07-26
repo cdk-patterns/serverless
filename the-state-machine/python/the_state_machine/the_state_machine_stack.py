@@ -19,7 +19,7 @@ class TheStateMachineStack(core.Stack):
         pineapple_check_lambda = _lambda.Function(self, "pineappleCheckLambdaHandler",
                                                   runtime=_lambda.Runtime.NODEJS_12_X,
                                                   handler="orderPizza.handler",
-                                                  code=_lambda.Code.from_asset("lambdas"),
+                                                  code=_lambda.Code.from_asset("lambda_fns"),
                                                   )
 
         # Step functions are built up of steps, we need to define our first step
@@ -53,7 +53,7 @@ class TheStateMachineStack(core.Stack):
         state_machine_lambda = _lambda.Function(self, "stateMachineLambdaHandler",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,
                                                 handler="stateMachineLambda.handler",
-                                                code=_lambda.Code.from_asset("lambdas"),
+                                                code=_lambda.Code.from_asset("lambda_fns"),
                                                 environment={
                                                     'statemachine_arn': state_machine.state_machine_arn
                                                 }

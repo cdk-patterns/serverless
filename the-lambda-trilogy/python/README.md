@@ -156,7 +156,7 @@ I tried to make this as simple as possible.
 
 From a terminal
 ```shell
-cd lambdas/the_lambda_lith
+cd lambda_fns/the_lambda_lith
 pip install -r requirements.txt --target flask
 
 

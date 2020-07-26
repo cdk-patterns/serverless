@@ -26,7 +26,7 @@ class TheDynamoStreamerStack(core.Stack):
         subscriber_lambda = _lambda.Function(self, "DynamoLambdaHandler",
                                              runtime=_lambda.Runtime.PYTHON_3_8,
                                              handler="lambda.handler",
-                                             code=_lambda.Code.from_asset("lambdas/subscribe")
+                                             code=_lambda.Code.from_asset("lambda_fns/subscribe")
                                              )
 
         subscriber_lambda.add_event_source(_event.DynamoEventSource(table=table,

@@ -130,7 +130,7 @@ class TheSagaStepfunctionStack(core.Stack):
         saga_lambda = _lambda.Function(self, "sagaLambdaHandler",
                                        runtime=_lambda.Runtime.NODEJS_12_X,
                                        handler="sagaLambda.handler",
-                                       code=_lambda.Code.from_asset("lambdas"),
+                                       code=_lambda.Code.from_asset("lambda_fns"),
                                        environment={
                                            'statemachine_arn': saga.state_machine_arn
                                        }
@@ -146,7 +146,7 @@ class TheSagaStepfunctionStack(core.Stack):
         fn = _lambda.Function(scope, lambda_id,
                               runtime=_lambda.Runtime.NODEJS_12_X,
                               handler=handler,
-                              code=_lambda.Code.from_asset("lambdas"),
+                              code=_lambda.Code.from_asset("lambda_fns"),
                               environment={
                                   'TABLE_NAME': table.table_name
                               }

@@ -16,7 +16,7 @@ class TheSnsFlowStack(core.Stack):
         sns_lambda = _lambda.Function(self, "snsLambdaHandler",
                                       runtime=_lambda.Runtime.NODEJS_12_X,
                                       handler="sns_publish.handler",
-                                      code=_lambda.Code.from_asset("lambdas"),
+                                      code=_lambda.Code.from_asset("lambda_fns"),
                                       tracing=_lambda.Tracing.ACTIVE,
                                       environment={
                                           "TOPIC_ARN": topic.topic_arn
@@ -29,7 +29,7 @@ class TheSnsFlowStack(core.Stack):
         sns_subscriber_lambda = _lambda.Function(self, "snsSubscriptionLambdaHandler",
                                                  runtime=_lambda.Runtime.NODEJS_12_X,
                                                  handler="sns_subscribe.handler",
-                                                 code=_lambda.Code.from_asset("lambdas"),
+                                                 code=_lambda.Code.from_asset("lambda_fns"),
                                                  tracing=_lambda.Tracing.ACTIVE
                                                  )
         topic.add_subscription(subscriptions.LambdaSubscription(sns_subscriber_lambda))

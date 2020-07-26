@@ -80,7 +80,7 @@ class TheSimpleGraphqlServiceStack(core.Stack):
         loyalty_lambda = _lambda.Function(self, "LoyaltyLambdaHandler",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="loyalty.handler",
-                                          code=_lambda.Code.from_asset("lambda"),
+                                          code=_lambda.Code.from_asset("lambda_fns"),
                                           )
 
         # Add Loyalty Lambda as a Datasource for the Graphql API.
