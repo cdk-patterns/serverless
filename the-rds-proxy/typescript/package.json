@@ -5,7 +5,8 @@
     "the-rds-proxy": "bin/the-rds-proxy.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build-lambda": "cd lambda-fns/rds && npm i && npm run build && cd ../../",
+    "build": "npm run build-lambda && tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
