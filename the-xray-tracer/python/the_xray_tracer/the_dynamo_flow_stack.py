@@ -19,7 +19,7 @@ class TheDynamoFlowStack(core.Stack):
         dynamo_lambda = _lambda.Function(self, "DynamoLambdaHandler",
                                          runtime=_lambda.Runtime.NODEJS_12_X,
                                          handler="dynamo.handler",
-                                         code=_lambda.Code.from_asset("lambdas"),
+                                         code=_lambda.Code.from_asset("lambda_fns"),
                                          tracing=_lambda.Tracing.ACTIVE,
                                          environment={
                                              "HITS_TABLE_NAME": table.table_name
