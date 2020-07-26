@@ -17,19 +17,19 @@ class TheFatLambdaStack(core.Stack):
         add_lambda = _lambda.Function(self, "addLambdaHandler",
                                       runtime=_lambda.Runtime.PYTHON_3_8,
                                       handler="fatlambda.add",
-                                      code=_lambda.Code.from_asset("lambdas/the_fat_lambda")
+                                      code=_lambda.Code.from_asset("lambda_fns/the_fat_lambda")
                                       )
 
         subtract_lambda = _lambda.Function(self, "subtractLambdaHandler",
                                            runtime=_lambda.Runtime.PYTHON_3_8,
                                            handler="fatlambda.subtract",
-                                           code=_lambda.Code.from_asset("lambdas/the_fat_lambda")
+                                           code=_lambda.Code.from_asset("lambda_fns/the_fat_lambda")
                                            )
 
         multiply_lambda = _lambda.Function(self, "multiplyLambdaHandler",
                                            runtime=_lambda.Runtime.PYTHON_3_8,
                                            handler="fatlambda.multiply",
-                                           code=_lambda.Code.from_asset("lambdas/the_fat_lambda")
+                                           code=_lambda.Code.from_asset("lambda_fns/the_fat_lambda")
                                            )
 
         ###
