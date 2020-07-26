@@ -19,7 +19,7 @@ class TheEventbridgeAtmStack(core.Stack):
         atm_producer_lambda = _lambda.Function(self, "atmProducerLambda",
                                                runtime=_lambda.Runtime.NODEJS_12_X,
                                                handler="handler.lambdaHandler",
-                                               code=_lambda.Code.from_asset("lambdas/atmProducer")
+                                               code=_lambda.Code.from_asset("lambda_fns/atmProducer")
                                                )
 
         event_policy = iam.PolicyStatement(effect=iam.Effect.ALLOW, resources=['*'], actions=['events:PutEvents'])
@@ -32,7 +32,7 @@ class TheEventbridgeAtmStack(core.Stack):
         atm_consumer1_lambda = _lambda.Function(self, "atmConsumer1Lambda",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,
                                                 handler="handler.case1Handler",
-                                                code=_lambda.Code.from_asset("lambdas/atmConsumer")
+                                                code=_lambda.Code.from_asset("lambda_fns/atmConsumer")
                                                 )
 
         atm_consumer1_rule = events.Rule(self, 'atmConsumer1LambdaRule',
@@ -51,7 +51,7 @@ class TheEventbridgeAtmStack(core.Stack):
         atm_consumer2_lambda = _lambda.Function(self, "atmConsumer2Lambda",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,
                                                 handler="handler.case2Handler",
-                                                code=_lambda.Code.from_asset("lambdas/atmConsumer")
+                                                code=_lambda.Code.from_asset("lambda_fns/atmConsumer")
                                                 )
 
         atm_consumer2_rule = events.Rule(self, 'atmConsumer2LambdaRule',
@@ -69,7 +69,7 @@ class TheEventbridgeAtmStack(core.Stack):
         atm_consumer3_lambda = _lambda.Function(self, "atmConsumer3Lambda",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,
                                                 handler="handler.case3Handler",
-                                                code=_lambda.Code.from_asset("lambdas/atmConsumer")
+                                                code=_lambda.Code.from_asset("lambda_fns/atmConsumer")
                                                 )
 
         atm_consumer3_rule = events.Rule(self, 'atmConsumer3LambdaRule',
