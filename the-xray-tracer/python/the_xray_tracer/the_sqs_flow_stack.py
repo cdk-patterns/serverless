@@ -18,7 +18,7 @@ class TheSqsFlowStack(core.Stack):
         sqs_lambda = _lambda.Function(self, "sqsLambdaHandler",
                                       runtime=_lambda.Runtime.NODEJS_12_X,
                                       handler="sqs.handler",
-                                      code=_lambda.Code.from_asset("lambdas"),
+                                      code=_lambda.Code.from_asset("lambda_fns"),
                                       tracing=_lambda.Tracing.ACTIVE,
                                       environment={
                                           "SQS_URL": sqs_queue.queue_url
@@ -32,7 +32,7 @@ class TheSqsFlowStack(core.Stack):
         sqs_subscribe_lambda = _lambda.Function(self, "sqsSubscribeLambdaHandler",
                                                 runtime=_lambda.Runtime.NODEJS_12_X,
                                                 handler="sqs_subscribe.handler",
-                                                code=_lambda.Code.from_asset("lambdas"),
+                                                code=_lambda.Code.from_asset("lambda_fns"),
                                                 tracing=_lambda.Tracing.ACTIVE
                                                 )
         sqs_queue.grant_consume_messages(sqs_subscribe_lambda)

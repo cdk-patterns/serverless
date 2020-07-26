@@ -17,19 +17,19 @@ class TheSinglePurposeFunctionStack(core.Stack):
         add_lambda = _lambda.Function(self, "addLambdaHandler",
                                       runtime=_lambda.Runtime.PYTHON_3_8,
                                       handler="add.handler",
-                                      code=_lambda.Code.from_asset("lambdas/the_single_purpose_function")
+                                      code=_lambda.Code.from_asset("lambda_fns/the_single_purpose_function")
                                       )
 
         subtract_lambda = _lambda.Function(self, "subtractLambdaHandler",
                                            runtime=_lambda.Runtime.PYTHON_3_8,
                                            handler="subtract.handler",
-                                           code=_lambda.Code.from_asset("lambdas/the_single_purpose_function")
+                                           code=_lambda.Code.from_asset("lambda_fns/the_single_purpose_function")
                                            )
 
         multiply_lambda = _lambda.Function(self, "multiplyLambdaHandler",
                                            runtime=_lambda.Runtime.PYTHON_3_8,
                                            handler="multiply.handler",
-                                           code=_lambda.Code.from_asset("lambdas/the_single_purpose_function")
+                                           code=_lambda.Code.from_asset("lambda_fns/the_single_purpose_function")
                                            )
 
         ###

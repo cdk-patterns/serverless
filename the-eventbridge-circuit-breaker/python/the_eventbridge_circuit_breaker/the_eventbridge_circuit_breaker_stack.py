@@ -35,7 +35,7 @@ class TheEventbridgeCircuitBreakerStack(core.Stack):
         integration_lambda = _lambda.Function(self, "WebserviceIntegrationLambdaHandler",
                                               runtime=_lambda.Runtime.NODEJS_12_X,
                                               handler="lambda.handler",
-                                              code=_lambda.Code.from_asset("lambdas/webservice"),
+                                              code=_lambda.Code.from_asset("lambda_fns/webservice"),
                                               timeout=core.Duration.seconds(20),
                                               environment=dict(TABLE_NAME=table.table_name)
                                               )
@@ -51,7 +51,7 @@ class TheEventbridgeCircuitBreakerStack(core.Stack):
         error_lambda = _lambda.Function(self, "ErrorLambdaHandler",
                                         runtime=_lambda.Runtime.NODEJS_12_X,
                                         handler="lambda.handler",
-                                        code=_lambda.Code.from_asset("lambdas/error"),
+                                        code=_lambda.Code.from_asset("lambda_fns/error"),
                                         timeout=core.Duration.seconds(3),
                                         environment=dict(TABLE_NAME=table.table_name)
                                         )

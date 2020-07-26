@@ -27,7 +27,7 @@ class TheEfsLambdaStack(core.Stack):
 
         efs_lambda = _lambda.Function(self, 'rdsProxyHandler',
                                       runtime=_lambda.Runtime.PYTHON_3_8,
-                                      code=_lambda.Code.asset('lambdas'),
+                                      code=_lambda.Code.asset('lambda_fns'),
                                       handler='message_wall.lambda_handler',
                                       vpc=vpc,
                                       filesystem=_lambda.FileSystem.from_efs_access_point(access_point, '/mnt/msg'))
