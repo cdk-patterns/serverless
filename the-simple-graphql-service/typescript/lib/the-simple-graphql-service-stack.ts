@@ -90,7 +90,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     // defines an AWS Lambda resource
     const loyaltyLambda = new lambda.Function(this, 'LoyaltyLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda'),  // code loaded from the "lambda" directory
+      code: lambda.Code.asset('lambda-fns'),  // code loaded from the "lambda" directory
       handler: 'loyalty.handler',                // file is "loyalty", function is "handler"
     });
 
