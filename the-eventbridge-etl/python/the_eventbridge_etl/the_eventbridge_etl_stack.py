@@ -106,7 +106,7 @@ class TheEventbridgeEtlStack(core.Stack):
         extract_lambda = _lambda.Function(self, "extractLambdaHandler",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="s3SqsEventConsumer.handler",
-                                          code=_lambda.Code.from_asset("lambdas/extract"),
+                                          code=_lambda.Code.from_asset("lambda_fns/extract"),
                                           reserved_concurrent_executions=lambda_throttle_size,
                                           environment={
                                               "CLUSTER_NAME": cluster.cluster_name,
@@ -138,7 +138,7 @@ class TheEventbridgeEtlStack(core.Stack):
         transform_lambda = _lambda.Function(self, "TransformLambdaHandler",
                                             runtime=_lambda.Runtime.NODEJS_12_X,
                                             handler="transform.handler",
-                                            code=_lambda.Code.from_asset("lambdas/transform"),
+                                            code=_lambda.Code.from_asset("lambda_fns/transform"),
                                             reserved_concurrent_executions=lambda_throttle_size,
                                             timeout=core.Duration.seconds(3)
                                             )
@@ -162,7 +162,7 @@ class TheEventbridgeEtlStack(core.Stack):
         load_lambda = _lambda.Function(self, "LoadLambdaHandler",
                                        runtime=_lambda.Runtime.NODEJS_12_X,
                                        handler="load.handler",
-                                       code=_lambda.Code.from_asset("lambdas/load"),
+                                       code=_lambda.Code.from_asset("lambda_fns/load"),
                                        reserved_concurrent_executions=lambda_throttle_size,
                                        timeout=core.Duration.seconds(3),
                                        environment={
@@ -189,7 +189,7 @@ class TheEventbridgeEtlStack(core.Stack):
         observe_lambda = _lambda.Function(self, "ObserveLambdaHandler",
                                           runtime=_lambda.Runtime.NODEJS_12_X,
                                           handler="observe.handler",
-                                          code=_lambda.Code.from_asset("lambdas/observe"),
+                                          code=_lambda.Code.from_asset("lambda_fns/observe"),
                                           reserved_concurrent_executions=lambda_throttle_size,
                                           timeout=core.Duration.seconds(3)
                                           )
