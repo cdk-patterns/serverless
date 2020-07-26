@@ -57,7 +57,7 @@ class TheBigFanStack(core.Stack):
         sqs_created_status_subscriber = _lambda.Function(self, "SQSCreatedStatusSubscribeLambdaHandler",
                                                          runtime=_lambda.Runtime.NODEJS_12_X,
                                                          handler="createdStatus.handler",
-                                                         code=_lambda.Code.from_asset("lambdas/subscribe")
+                                                         code=_lambda.Code.from_asset("lambda_fns/subscribe")
                                                          )
         created_status_queue.grant_consume_messages(sqs_created_status_subscriber)
         sqs_created_status_subscriber.add_event_source(_event.SqsEventSource(created_status_queue))
@@ -66,7 +66,7 @@ class TheBigFanStack(core.Stack):
         sqs_other_status_subscriber = _lambda.Function(self, "SQSAnyOtherStatusSubscribeLambdaHandler",
                                                        runtime=_lambda.Runtime.NODEJS_12_X,
                                                        handler="anyOtherStatus.handler",
-                                                       code=_lambda.Code.from_asset("lambdas/subscribe")
+                                                       code=_lambda.Code.from_asset("lambda_fns/subscribe")
                                                        )
         other_status_queue.grant_consume_messages(sqs_other_status_subscriber)
         sqs_other_status_subscriber.add_event_source(_event.SqsEventSource(other_status_queue))
