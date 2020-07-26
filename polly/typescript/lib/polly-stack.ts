@@ -10,7 +10,7 @@ export class PollyStack extends cdk.Stack {
     // Lambda Function that takes in text and returns a polly voice synthesis
     const pollyLambda = new lambda.Function(this, 'PollyHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambdas'), 
+      code: lambda.Code.asset('lambda-fns'), 
       handler: 'polly.handler'
     });
     
