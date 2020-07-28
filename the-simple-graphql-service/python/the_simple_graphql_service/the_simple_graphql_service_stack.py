@@ -60,6 +60,17 @@ class TheSimpleGraphqlServiceStack(core.Stack):
         # Mutation Resolver for updating an existing Customer
         customer_ds.create_resolver(
             type_name='Mutation',
+            field_name='saveCustomer',
+            request_mapping_template=appsync.MappingTemplate.dynamo_db_put_item(
+                key=appsync.PrimaryKey.partition('id').is_('id'),
+                values=appsync.Values.projecting('customer')
+            ),
+            response_mapping_template=appsync.MappingTemplate.dynamo_db_result_item()
+        )
+
+        #  Mutation resolver for creating a new customer along with their first order 
+        customer_ds.create_resolver(
+            type_name='Mutation',
             field_name='saveCustomerWithFirstOrder',
             request_mapping_template=appsync.MappingTemplate.dynamo_db_put_item(
                 key=appsync.PrimaryKey.partition('order').auto().sort('customer').is_('customer.id'),
