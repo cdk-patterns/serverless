@@ -68,6 +68,16 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     // Mutation Resolver for updating an exisiting Customer
     customerDS.createResolver({
       typeName: 'Mutation',
+      fieldName: 'saveCustomer',
+      requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
+          PrimaryKey.partition('id').is('id'),
+          Values.projecting('customer')),
+      responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+    });
+
+    // Mutation resolver for creating a new customer along with their first order 
+    customerDS.createResolver({
+      typeName: 'Mutation',
       fieldName: 'saveCustomerWithFirstOrder',
       requestMappingTemplate: MappingTemplate.dynamoDbPutItem(
         PrimaryKey
