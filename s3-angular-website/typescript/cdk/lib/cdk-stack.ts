@@ -10,7 +10,7 @@ export class CdkStack extends cdk.Stack {
     new SPADeploy(this, 'websiteDeploy')
         .createBasicSite({
           indexDoc: 'index.html',
-          websiteFolder: '../website/dist/example'
+          websiteFolder: '../website/dist/website'
         })
   }
 }
