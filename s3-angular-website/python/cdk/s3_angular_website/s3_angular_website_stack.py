@@ -7,4 +7,4 @@ class S3AngularWebsiteStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         SPADeploy(self, 'S3AngularDeploy').create_basic_site(index_doc='index.html',
-                                                             website_folder='../website/dist/example')
+                                                             website_folder='../website/dist/website')
