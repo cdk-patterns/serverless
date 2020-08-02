@@ -8,7 +8,7 @@
         <artifactId>the-simple-webservice-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>the-simple-webservice-deploy</artifactId>
+    <artifactId>the-simple-webservice-cdk</artifactId>
 
     <properties>
         <maven.exec.plugin>1.6.0</maven.exec.plugin>
