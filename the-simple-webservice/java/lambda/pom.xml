@@ -14,11 +14,13 @@
 
     <properties>
         <maven.assembly.plugin>3.1.1</maven.assembly.plugin>
+        <reproducible.build.maven.plugin>0.12</reproducible.build.maven.plugin>
 
         <aws.log4j.version>2.13.3</aws.log4j.version>
         <aws.sdk.version>2.13.66</aws.sdk.version>
         <aws.lambda-events.version>3.1.1</aws.lambda-events.version>
         <symphonia.logging.version>1.0.3</symphonia.logging.version>
+        <symphonia.packaging.version>1.0.0</symphonia.packaging.version>
     </properties>
 
 
@@ -56,7 +58,7 @@
         <dependency>
             <groupId>io.symphonia</groupId>
             <artifactId>lambda-logging</artifactId>
-            <version>1.0.3</version>
+            <version>${symphonia.logging.version}</version>
         </dependency>
     </dependencies>
 
@@ -70,7 +72,7 @@
                     <dependency>
                         <groupId>io.symphonia</groupId>
                         <artifactId>lambda-packaging</artifactId>
-                        <version>1.0.0</version>
+                        <version>${symphonia.packaging.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -93,7 +95,7 @@
             <plugin>
                 <groupId>io.github.zlika</groupId>
                 <artifactId>reproducible-build-maven-plugin</artifactId>
-                <version>0.12</version>
+                <version>${reproducible.build.maven.plugin}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
