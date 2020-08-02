@@ -42,7 +42,8 @@ class TheRdsProxyStack(core.Stack):
         # re-enable delete protection for a real implementation
         rds_instance = rds.DatabaseInstance(self,
                                             'DBInstance',
-                                            engine=rds.DatabaseInstanceEngine.MYSQL,
+                                            engine=rds.DatabaseInstanceEngine.mysql(
+                                                version=rds.MysqlEngineVersion.VER_5_7_30),
                                             master_username=
                                             db_credentials_secret.secret_value_from_json('username').to_string(),
                                             master_user_password=
@@ -56,7 +57,7 @@ class TheRdsProxyStack(core.Stack):
 
         # Create an RDS proxy
         proxy = rds_instance.add_proxy(id+'-proxy',
-                                       secret=db_credentials_secret,
+                                       secrets=[db_credentials_secret],
                                        debug_logging=True,
                                        vpc=vpc,
                                        security_groups=[db_connection_group])
