@@ -23,21 +23,24 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
     private DynamoDbClient dynamoDbClient;
 
     public LambdaHandler() {
-        // Construct cold start optimized DynamoDB Client
-        this.dynamoDbClient = DynamoDbClient.builder()
+        this(DynamoDbClient.builder()
                 .httpClient(UrlConnectionHttpClient.builder().build())
                 .region(Region.of(System.getenv("REGION")))
                 .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .overrideConfiguration(ClientOverrideConfiguration.builder()
                         .build())
-                .build();
+                .build());
+    }
+
+    public LambdaHandler(DynamoDbClient dynamoDbClient) {
+        this.dynamoDbClient = dynamoDbClient;
     }
 
     @Override
     public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent event, Context context) {
         LOG.info("Request: {}", event);
 
-        updateHits(event);
+        updateHitsCount(event);
 
         return APIGatewayV2HTTPResponse.builder()
                 .withStatusCode(HttpStatusCode.OK)
@@ -46,7 +49,7 @@ public class LambdaHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIG
                 .build();
     }
 
-    private void updateHits(APIGatewayV2HTTPEvent event) {
+    private void updateHitsCount(APIGatewayV2HTTPEvent event) {
         this.dynamoDbClient.updateItem(UpdateItemRequest.builder()
                 .tableName(HITS_TABLE_NAME)
                 .key(Map.of("path", AttributeValue.builder().s(event.getRawPath()).build()))
