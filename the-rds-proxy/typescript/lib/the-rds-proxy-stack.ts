@@ -49,7 +49,9 @@ export class TheRdsProxyStack extends cdk.Stack {
     // MySQL DB Instance (delete protection turned off because pattern is for learning.)
     // re-enable delete protection for a real implementation
     const rdsInstance = new rds.DatabaseInstance(this, 'DBInstance', {
-      engine: rds.DatabaseInstanceEngine.MYSQL,
+      engine: rds.DatabaseInstanceEngine.mysql({
+        version: rds.MysqlEngineVersion.VER_5_7_30
+      }),
       masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
       masterUserPassword: databaseCredentialsSecret.secretValueFromJson('password'),
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
@@ -61,7 +63,7 @@ export class TheRdsProxyStack extends cdk.Stack {
 
     // Create an RDS Proxy
     const proxy = rdsInstance.addProxy(id+'-proxy', {
-        secret: databaseCredentialsSecret,
+        secrets: [databaseCredentialsSecret],
         debugLogging: true,
         vpc,
         securityGroups: [dbConnectionGroup]
