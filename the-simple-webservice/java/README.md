@@ -8,15 +8,28 @@ This is the most basic of implementations and would have to be hardened before p
 
 After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited. 
 
-The only requirement is to have a JDK 11 (Java Development Kit) and AWS CDK installed.
+####Requirements
+- Java JDK 11
+- NodeJS
+
+As a packaging and dependency management tool Maven is used for Lambda and CDK.
+Maven doesn't have to be installed since you can use the [Maven Wrapper](https://github.com/takari/maven-wrapper).
+The Maven Wrapper can be run by using the `./mvnw` (Unix based) or `./mvnw.bat` (Windows based). 
+
+**Example:** 
+```
+./mnvw clean package
+```
 You can compile & package from this folder, to deploy go to the **cdk** subfolder.
 
 ## Useful commands
 
 From the root folder:
- * `./mvnw package`   compiles and packages the source code
- * `./mvnw test`      perform the unit tests
+ * `./mvnw package`     compiles and packages the source code for both Lambda and CDK modules
+ * `./mvnw test`        perform the unit tests for both Lambda and CDK modules
  
 From the cdk subfolder folder: 
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * `./mvnw package`     compiles and packages the source code for the CDK module
+ * `./mvnw test`        perform the unit tests for the CDK module
+ * `cdk diff`           compare deployed stack with current state
+ * `cdk synth`          emits the synthesized CloudFormation template
