@@ -14,7 +14,7 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 
 As a packaging and dependency management tool Maven is used for Lambda and CDK.
 Maven doesn't have to be installed since you can use the [Maven Wrapper](https://github.com/takari/maven-wrapper).
-The Maven Wrapper can be run by using the `./mvnw` (Unix based) or `./mvnw.bat` (Windows based). 
+The Maven Wrapper can be run by using the `./mvnw` (Unix based) or `./mvnw.cmd` (Windows based). 
 
 **Example:** 
 ```
