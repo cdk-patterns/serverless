@@ -10,6 +10,7 @@ Some useful References:
 | Author        | Link           |
 | ------------- | ------------- |
 | AWS Docs | [CloudWatch Concepts](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html) |
+| Amazon Builders Library | [Building dashboards for operational visibility](https://aws.amazon.com/builders-library/building-dashboards-for-operational-visibility/) |
 | Julian Wood     | [Understanding application health – part 1](https://aws.amazon.com/blogs/compute/building-well-architected-serverless-applications-understanding-application-health-part-1/)  |
 | AWS GitHub | [Serverless Ecommerce Platform](https://github.com/aws-samples/aws-serverless-ecommerce-platform) | 
 | AWS GitHub | [Real world Serverless Application](https://github.com/awslabs/realworld-serverless-application/wiki/Serverless-Operations) |
