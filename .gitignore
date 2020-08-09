@@ -138,3 +138,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#personal file
+the-alexa-skill/dontCommit.ts
