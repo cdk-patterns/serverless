@@ -13,7 +13,9 @@ import {
 
 const LaunchRequestHandler: RequestHandler = {
     canHandle(handlerInput: HandlerInput): boolean {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+        handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+        handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NavigateHomeIntent';
     },
     handle(handlerInput: HandlerInput): Response {
         const speechText = 'Welcome to the CDK Patterns Skill, you can say hello!';
@@ -42,7 +44,9 @@ const HelloWorldIntentHandler: RequestHandler = {
 const HelpIntentHandler: RequestHandler = {
     canHandle(handlerInput: HandlerInput): boolean {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-            handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
+            handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent' ||
+            handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+            handlerInput.requestEnvelope.request.intent.name === 'AMAZON.FallbackIntent';
     },
     handle(handlerInput: HandlerInput): Response {
         const speechText = 'You can say hello to me!';
