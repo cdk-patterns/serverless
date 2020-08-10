@@ -12,13 +12,14 @@ This deploys two CDK stacks that produce an Alexa Skill backed by a Lambda Funct
 1. An AWS Account with CLI Access
 
 ## Before You Deploy
-You need to add your ClientID, ClientSecret and VendorID to the skill resource which can be found in `the-alexa-skill-stack.ts`
+You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the skill resource which can be found in `the-alexa-skill-stack.ts`
 ```
- authenticationConfiguration: {
+      vendorId: 'foo',
+      authenticationConfiguration: {
         clientId: 'foo',
         clientSecret: 'bar',
         refreshToken: 'foobar'
-      }
+      },
 ```
 
 ## Components

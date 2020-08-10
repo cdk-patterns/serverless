@@ -50,7 +50,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     // create the skill
     const skill = new alexaAsk.CfnSkill(this, 'the-alexa-skill', {
-      vendorId: 'MYSHXJTE1F2UB',
+      vendorId: 'foo',
       authenticationConfiguration: {
         clientId: 'foo',
         clientSecret: 'bar',
