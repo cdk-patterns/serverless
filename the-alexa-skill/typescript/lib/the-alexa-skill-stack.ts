@@ -2,7 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import * as alexaAsk from '@aws-cdk/alexa-ask';
-import { ServicePrincipal, Role, PolicyStatement, AccountPrincipal, CompositePrincipal } from '@aws-cdk/aws-iam';
+import { ServicePrincipal, Role, PolicyStatement, CompositePrincipal } from '@aws-cdk/aws-iam';
 
 
 export interface AssetProps extends cdk.StackProps {
@@ -76,6 +76,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     //Allow the Alexa service to invoke the fulfillment Lambda
     alexaLambda.addPermission('AlexaPermission', {
+      // TODO find out how to get this value
       //eventSourceToken: skill.skillId,
       principal: new ServicePrincipal('alexa-appkit.amazon.com'),
       action: 'lambda:InvokeFunction'
