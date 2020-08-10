@@ -27,6 +27,10 @@ Deploys a S3 bucket and uploads zipped Alexa manifest to the bucket. Must be dep
 ### Alexa Skill Stack
 Deploys an Alexa skill, Lambda Function, and Dynamo DB table. The Alexa skill is fulfilled by the Lambda function. The Lambda function writes basic user details to the Dynamo Table.
 
+## References
+* [Starter Alexa Skill Code](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/develop-your-first-skill.html)
+* [Implementing Persistent Storage In Your Fulfillment Lambda](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/manage-attributes.html)
+
 
 ## Available Versions
 
