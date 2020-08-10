@@ -80,8 +80,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     //Allow the Alexa service to invoke the fulfillment Lambda
     alexaLambda.addPermission('AlexaPermission', {
-      // TODO find out how to dynamically get this value
-      //eventSourceToken: skill.skillId,
+      eventSourceToken: skill.ref,
       principal: new ServicePrincipal('alexa-appkit.amazon.com'),
       action: 'lambda:InvokeFunction'
   });
