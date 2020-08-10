@@ -49,6 +49,10 @@ export class TheAlexaSkillStack extends cdk.Stack {
     usersTable.grantReadWriteData(alexaLambda);
 
     // create the skill
+    /*
+    TODO identify something unique that can trigger this to
+    look for new contents at the S3 Key
+    */
     const skill = new alexaAsk.CfnSkill(this, 'the-alexa-skill', {
       vendorId: 'foo',
       authenticationConfiguration: {
@@ -76,7 +80,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     //Allow the Alexa service to invoke the fulfillment Lambda
     alexaLambda.addPermission('AlexaPermission', {
-      // TODO find out how to get this value
+      // TODO find out how to dynamically get this value
       //eventSourceToken: skill.skillId,
       principal: new ServicePrincipal('alexa-appkit.amazon.com'),
       action: 'lambda:InvokeFunction'
