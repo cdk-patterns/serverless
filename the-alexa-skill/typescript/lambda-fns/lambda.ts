@@ -10,16 +10,19 @@ import {
     SessionEndedRequest,
     RequestEnvelope,
 } from 'ask-sdk-model';
-
+const ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
+const USERS_TABLE = process.env.USERS_TABLE || '';
 const LaunchRequestHandler: RequestHandler = {
     canHandle(handlerInput: HandlerInput): boolean {
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
         handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
         handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NavigateHomeIntent';
     },
-    handle(handlerInput: HandlerInput): Response {
+    async handle(handlerInput: HandlerInput): Promise<Response> {
         const speechText = 'Welcome to the CDK Patterns Skill, you can say hello!';
-
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'Launch Request or Navigate Home'});
+        await attributesManager.savePersistentAttributes();
         return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt(speechText)
@@ -32,7 +35,11 @@ const HelloWorldIntentHandler: RequestHandler = {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
             handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
     },
-    handle(handlerInput: HandlerInput): Response {
+    async handle(handlerInput: HandlerInput): Promise<Response> {
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'HelloWorldIntent'});
+        await attributesManager.savePersistentAttributes();
+
         const speechText = 'Hello World!';
 
         return handlerInput.responseBuilder
@@ -48,8 +55,11 @@ const HelpIntentHandler: RequestHandler = {
             handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
             handlerInput.requestEnvelope.request.intent.name === 'AMAZON.FallbackIntent';
     },
-    handle(handlerInput: HandlerInput): Response {
+    async handle(handlerInput: HandlerInput): Promise<Response> {
         const speechText = 'You can say hello to me!';
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'Help or Fallback Intent'});
+        await attributesManager.savePersistentAttributes();
 
         return handlerInput.responseBuilder
             .speak(speechText)
@@ -64,7 +74,10 @@ const CancelAndStopIntentHandler: RequestHandler = {
             (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
-    handle(handlerInput: HandlerInput): Response {
+    async handle(handlerInput: HandlerInput): Promise<Response> {
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'Cancel or Stop Intent'});
+        await attributesManager.savePersistentAttributes();
         const speechText = 'Goodbye!';
 
         return handlerInput.responseBuilder
@@ -99,27 +112,14 @@ const ErrorHandler: ErrorHandler = {
 };
 let skill: Skill;
 
-exports.handler = async (event: RequestEnvelope, context: any) => {
-    console.log(`REQUEST++++${JSON.stringify(event)}`);
-    if (!skill) {
-        skill = SkillBuilders.custom()
-            .addRequestHandlers(
-                LaunchRequestHandler,
-                HelloWorldIntentHandler,
-                HelpIntentHandler,
-                CancelAndStopIntentHandler,
-                SessionEndedRequestHandler,
-            )
-            .addErrorHandlers(ErrorHandler)
-            .create();
-    }
-
-    const response = await skill.invoke(event, context);
-    console.log(`RESPONSE++++${JSON.stringify(response)}`);
-
-    return response;
-};
+function getPersistenceAdapter(tableName: string) {
+    return new ddbAdapter.DynamoDbPersistenceAdapter({
+      tableName: tableName,
+      partitionKeyName: "userId"
+    });
+  }
 exports.handler = SkillBuilders.custom()
+    .withPersistenceAdapter(getPersistenceAdapter(USERS_TABLE))
     .addRequestHandlers(
         LaunchRequestHandler,
         HelloWorldIntentHandler,

@@ -41,12 +41,14 @@ export class TheAlexaSkillStack extends cdk.Stack {
       code: lambda.Code.asset('lambda-fns'),
       handler: 'lambda.handler',
       environment: {
-        USERS_TABLE_NAME: usersTable.tableName
+        USERS_TABLE: usersTable.tableName
       }
     });
 
     // grant the lambda role read/write permissions to our table
     usersTable.grantReadWriteData(alexaLambda);
+
+    // create the skill
     const skill = new alexaAsk.CfnSkill(this, 'the-alexa-skill', {
       vendorId: 'MYSHXJTE1F2UB',
       authenticationConfiguration: {
@@ -71,6 +73,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
         }
       }
     })
+
     //Allow the Alexa service to invoke the fulfillment Lambda
     alexaLambda.addPermission('AlexaPermission', {
       //eventSourceToken: skill.skillId,

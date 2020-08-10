@@ -29,6 +29,7 @@
     "@aws-cdk/aws-sqs": "1.57.0",
     "@aws-cdk/core": "1.57.0",
     "ask-sdk-core": "^2.9.0",
+    "ask-sdk-dynamodb-persistence-adapter": "^2.9.0",
     "ask-sdk-model": "^1.29.0"
   }
 }

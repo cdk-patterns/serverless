@@ -82,8 +82,7 @@ test('Lambda Backend for Alexa', () => {
         "Runtime": "nodejs12.x",
         "Environment": {
             "Variables": {
-                "USERS_TABLE_NAME": {
-                    "Ref": "Users0A0EEA89"
+                "USERS_TABLE": {
                 }
             }
         }

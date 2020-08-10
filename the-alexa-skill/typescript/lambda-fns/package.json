@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "ask-sdk-core": "^2.9.0",
+    "ask-sdk-dynamodb-persistence-adapter": "^2.9.0",
     "ask-sdk-model": "^1.29.0"
   }
 }
