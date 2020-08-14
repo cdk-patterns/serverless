@@ -19,4 +19,5 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 
  * [TypeScript](typescript/)
  * [Python](python/)
+ * [C#](csharp/)
 
