@@ -11,11 +11,11 @@ import * as cr from '@aws-cdk/custom-resources';
 
 
 //Paste Hosted zone ID from Route53 console 'Hosted zone details'
-export const hostedZoneId = 'Z06244892ZM9ZZ0GAETHC';
+export const hostedZoneId = 'XXXXXXXXXXXXXXXXXXXXX';
 
 // If zoneName = 'cdkexample.com' and subdomainName = 'iot', you can connect to the broker by 'iot.cdkexample.com'.
-export const zoneName = 'y-kiyofuji.com';
-export const subdomainName = 'mq2';
+export const zoneName = 'cdkexample.com';
+export const subdomainName = 'iot';
 
 //You may use MQTT protocol as well by changing this value to 8883.
 export const brokerPort = 61617;
