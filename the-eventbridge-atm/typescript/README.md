@@ -4,7 +4,7 @@ This is an example CDK stack to deploy the code from this blogpost by [James Bes
 
 In this example, a banking application for automated teller machine (ATM) produces events about transactions. It sends the events to EventBridge, which then uses rules defined by the application to route accordingly. There are three downstream services consuming a subset of these events.
 
-![Architecture](../img/amazon-eventbridge-custom-application-2.png)
+![Architecture](img/amazon-eventbridge-custom-application-2.png)
 
 ## When You Would Use This Pattern
 
