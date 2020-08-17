@@ -22,3 +22,4 @@ After deployment you will have an api gateway where hitting any endpoint trigger
 
  * [TypeScript](typescript/)
  * [Python](python/)
+ * [C#](csharp/)
