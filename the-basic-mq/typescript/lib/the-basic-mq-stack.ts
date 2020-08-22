@@ -8,6 +8,7 @@ import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as r53 from '@aws-cdk/aws-route53';
 import * as r53Targets from '@aws-cdk/aws-route53-targets';
 import * as cr from '@aws-cdk/custom-resources';
+import * as ssm from '@aws-cdk/aws-ssm';
 
 
 //Paste Hosted zone ID from Route53 console 'Hosted zone details'
@@ -73,24 +74,18 @@ export class TheBasicMQStack extends cdk.Stack {
       value: bastionToMQGroup.securityGroupId
     });
 
-
     const mqUsername = 'admin';
-    const mqCredentialsSecret = new secrets.Secret(this, 'mqSecret', {
-      secretName: 'mqSecret',
-      generateSecretString: {
-        secretStringTemplate: JSON.stringify({
-          username: mqUsername,
-        }),
-        excludePunctuation: true,
-        includeSpace: false,
-        generateStringKey: 'password'
-      }
+    const mqPassword = 'password1234';
+
+    new ssm.StringParameter(this, 'stringParameter', {
+      parameterName: 'MQBrokerUserPassword',
+      stringValue: `${mqUsername},${mqPassword}`,
     });
 
     const mqMasterUser: mq.CfnBroker.UserProperty = {
       'consoleAccess': true,
-      'username': mqCredentialsSecret.secretValueFromJson('username').toString(),
-      'password': mqCredentialsSecret.secretValueFromJson('password').toString(),
+      'username': mqUsername,
+      'password': mqPassword,
     }
 
     const mqInstance = new mq.CfnBroker(this, 'mqInstance', {
