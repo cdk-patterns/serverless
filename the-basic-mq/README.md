@@ -6,16 +6,18 @@ This is an example cdk stack to deploy [static custom domain endpoints with Amaz
 
 In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
 
-### Testing broker connectivity
+## Testing broker connectivity
 
-You can connect to the broker using [Amazon MQ workshop](https://github.com/aws-samples/amazon-mq-workshop) client application code from re:Invent 2018.
+Once you deploy the stack, you can connect to the broker.
+This time we will use [Amazon MQ workshop](https://github.com/aws-samples/amazon-mq-workshop) client application code from re:Invent 2018
+to simplify connectivity test.
 
-#### Step 1. Create an environment in AWS Cloud9
+### Step 1. Create an environment in AWS Cloud9
 
 Sign in to the AWS Cloud9 console and create an environment. You can leave settings as default.
 After AWS Cloud9 creates your environment, you should see a bash shell window for the environment.
 
-#### Step 2. Set up client application
+### Step 2. Set up client application
 
 In the bash shell, clone the repo "amazon-mq-workshop" by running the following command:
 
@@ -33,14 +35,12 @@ echo "url=\"$temp_url\"" >> ~/.bashrc; source ~/.bashrc
 ```
 
 By doing so you can tell the client application where to connect.
-
 Make sure you replace with `<failover url>` something like `"failover:(ssl://mq.example.com:61617)"` 
 (the NLB endpoint subdomain you defined in CDK stack).
 
 ### Step 3. Connect
 
 Run the producer and consumer clients in separate terminal windows.
-
 Run the following command to start the sender:
 
 ```
@@ -82,7 +82,7 @@ ec2-user:~/environment/amazon-mq-workshop (master) $ java -jar ./bin/amazon-mq-c
 That's it. You can also check [Lab 4: Testing a Broker Fail-over](https://github.com/aws-samples/amazon-mq-workshop/blob/master/labs/lab-4.md)
 to test this solution.
 
-### Logging into the broker’s ActiveMQ console from a browser
+## Logging into the broker’s ActiveMQ console from a browser
 
 Create a forwarding tunnel through an SSH connection to the bastion host.
 First, you need to add a rule allowing SSH connection from your computer, to the security group which the bastion host belongs to (bastionToMQGroup).
