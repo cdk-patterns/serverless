@@ -8,7 +8,79 @@ In this example we have private Amazon MQ brokers behind an internet-facing netw
 
 ### Testing broker connectivity
 
-Check "Testing broker connectivity" [here](https://aws.amazon.com/blogs/compute/creating-static-custom-domain-endpoints-with-amazon-mq/).
+You can connect to the broker using [Amazon MQ workshop](https://github.com/aws-samples/amazon-mq-workshop) client application code from re:Invent 2018.
+
+#### Step 1. Create an environment in AWS Cloud9
+
+Sign in to the AWS Cloud9 console and create an environment. You can leave settings as default.
+After AWS Cloud9 creates your environment, you should see a bash shell window for the environment.
+
+#### Step 2. Set up client application
+
+In the bash shell, clone the repo "amazon-mq-workshop" by running the following command:
+
+```
+git clone git@github.com:aws-samples/amazon-mq-workshop.git
+```
+
+Now the code is located on `~/environment/amazon-mq-workshop`. Next, type the following command one by one.
+
+```
+cd ~/environment/amazon-mq-workshop
+./setup.sh
+export temp_url="<failover url>"
+echo "url=\"$temp_url\"" >> ~/.bashrc; source ~/.bashrc
+```
+
+By doing so you can tell the client application where to connect.
+
+Make sure you replace with `<failover url>` something like `"failover:(ssl://mq.example.com:61617)"` 
+(the NLB endpoint subdomain you defined in CDK stack).
+
+### Step 3. Connect
+
+Run the producer and consumer clients in separate terminal windows.
+
+Run the following command to start the sender:
+
+```
+java -jar ./bin/amazon-mq-client.jar -url $url -mode sender -type queue -destination workshop.queueA -name Sender-1
+```
+
+Open the other terminal and run the following command to start the receiver:
+
+```
+java -jar ./bin/amazon-mq-client.jar -url $url -mode receiver -type queue -destination workshop.queueA
+```
+
+If the messages are sent and received successfully across the internet, a log output should be
+
+(sender)
+
+```
+ec2-user:~/environment/amazon-mq-workshop (master) $ java -jar ./bin/amazon-mq-client.jar -url $url -mode sender -type queue -destination workshop.queueA -name Sender-1
+[ActiveMQ Task-1] INFO org.apache.activemq.transport.failover.FailoverTransport - Successfully connected to ssl://mq.example.com:61617
+22.08.2020 01:17:53.958 - Sender: sent '[queue://workshop.queueA] [Sender-1] Message number 1'
+22.08.2020 01:17:54.975 - Sender: sent '[queue://workshop.queueA] [Sender-1] Message number 2'
+22.08.2020 01:17:55.990 - Sender: sent '[queue://workshop.queueA] [Sender-1] Message number 3'
+22.08.2020 01:17:57.8 - Sender: sent '[queue://workshop.queueA] [Sender-1] Message number 4'
+22.08.2020 01:17:58.27 - Sender: sent '[queue://workshop.queueA] [Sender-1] Message number 5'
+```
+
+(receiver)
+
+```
+ec2-user:~/environment/amazon-mq-workshop (master) $ java -jar ./bin/amazon-mq-client.jar -url $url -mode receiver -type queue -destination workshop.queueA
+[ActiveMQ Task-1] INFO org.apache.activemq.transport.failover.FailoverTransport - Successfully connected to ssl://mq.example.com:61617
+22.08.2020 01:17:59.717 - Receiver: received '[queue://workshop.queueA] [Sender-1] Message number 1'
+22.08.2020 01:17:59.718 - Receiver: received '[queue://workshop.queueA] [Sender-1] Message number 2'
+22.08.2020 01:17:59.720 - Receiver: received '[queue://workshop.queueA] [Sender-1] Message number 3'
+22.08.2020 01:17:59.721 - Receiver: received '[queue://workshop.queueA] [Sender-1] Message number 4'
+22.08.2020 01:17:59.721 - Receiver: received '[queue://workshop.queueA] [Sender-1] Message number 5'
+```
+
+That's it. You can also check [Lab 4: Testing a Broker Fail-over](https://github.com/aws-samples/amazon-mq-workshop/blob/master/labs/lab-4.md)
+to test this solution.
 
 ### Logging into the broker’s ActiveMQ console from a browser
 
