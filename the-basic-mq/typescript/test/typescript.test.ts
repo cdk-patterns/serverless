@@ -63,18 +63,13 @@ test('MQ Group Ingress Rule Created', () => {
   ));
 });
 
-test('Store username/password in Secrets Manager', () => {
+test('Store username/password in ssm parameter', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new TheBasicMQ.TheBasicMQStack(app, 'MyTestStack');
   // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::SecretsManager::Secret", {
-      "GenerateSecretString": {
-        ExcludePunctuation: true,
-        GenerateStringKey: "password",
-        IncludeSpace: false,
-        SecretStringTemplate: '{"username":"admin"}'
-      }
+  expectCDK(stack).to(haveResourceLike("AWS::SSM::Parameter", {
+    "Type": "String"
     }
   ));
 });
