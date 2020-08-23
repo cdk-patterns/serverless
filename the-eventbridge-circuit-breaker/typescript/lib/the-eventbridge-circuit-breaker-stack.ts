@@ -33,7 +33,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
     // defines an Integration Lambda to call our failing web service
     const webserviceIntegrationLambda = new lambda.Function(this, 'WebserviceIntegrationLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/webservice'),
+      code: lambda.Code.fromAsset('lambda-fns/webservice'),
       handler: 'lambda.handler',
       timeout: Duration.seconds(20),
       environment: {
@@ -57,7 +57,7 @@ export class TheEventbridgeCircuitBreakerStack extends cdk.Stack {
     // defines a lambda to insert errors into dynamo
     const errorLambda = new lambda.Function(this, 'ErrorLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/error'),
+      code: lambda.Code.fromAsset('lambda-fns/error'),
       handler: 'lambda.handler',
       timeout: Duration.seconds(3),
       environment: {
