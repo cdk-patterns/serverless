@@ -29,7 +29,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
     // Lambda to interact with DynamoDB
     const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns'),
+      code: lambda.Code.fromAsset('lambda-fns'),
       handler: 'lambda.handler',
       environment: {
         HITS_TABLE_NAME: table.tableName
