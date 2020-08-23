@@ -93,6 +93,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Basic MQ](/the-basic-mq/README.md)  
+  In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
+
+  ![Architecture](the-basic-mq/img/the-basic-mq-arch.png)
+
+  <br /><hr /><br />
+
   #### [The Big Fan](/the-big-fan/README.md)  
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
