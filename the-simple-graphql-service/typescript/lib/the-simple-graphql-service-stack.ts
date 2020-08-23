@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import { CfnApiKey, PrimaryKey, Values, GraphQLApi, MappingTemplate, FieldLogLevel } from '@aws-cdk/aws-appsync';
+import { CfnApiKey, MappingTemplate, PrimaryKey, Values, GraphQLApi, SchemaDefinition, FieldLogLevel } from '@aws-cdk/aws-appsync';
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { join } from 'path';
 
@@ -16,6 +16,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
       },
+      schemaDefinition: SchemaDefinition.FILE,
       schemaDefinitionFile: join('__dirname', '/../', 'schema/schema.graphql'),
     });
     
@@ -37,7 +38,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     /**
      * Add Customer DynamoDB as a Datasource for the Graphql API.
      */
-    const customerDS = api.addDynamoDbDataSource('Customer', 'The customer data source', customerTable);
+    const customerDS = api.addDynamoDbDataSource('Customer', customerTable);
 
     // Query Resolver to get all Customers
     customerDS.createResolver({
@@ -100,14 +101,14 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     // defines an AWS Lambda resource
     const loyaltyLambda = new lambda.Function(this, 'LoyaltyLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns'),  // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
       handler: 'loyalty.handler',                // file is "loyalty", function is "handler"
     });
 
     /**
      * Add Loyalty Lambda as a Datasource for the Graphql API.
      */
-    const loyaltyDS = api.addLambdaDataSource('Loyalty', 'The loyalty data source', loyaltyLambda);
+    const loyaltyDS = api.addLambdaDataSource('Loyalty', loyaltyLambda);
 
     // Query Resolver to get all Customers
     loyaltyDS.createResolver({

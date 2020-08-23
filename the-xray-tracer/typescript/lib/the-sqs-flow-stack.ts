@@ -25,7 +25,7 @@ export class TheSqsFlowStack extends cdk.Stack {
         // defines an AWS Lambda resource
         this.sqslambda = new lambda.Function(this, 'sqsLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'sqs.handler',
             environment: {
                 SQS_URL: queue.queueUrl
@@ -40,7 +40,7 @@ export class TheSqsFlowStack extends cdk.Stack {
         // defines an AWS Lambda resource to pull from our queue
         const sqsSubscribeLambda = new lambda.Function(this, 'sqsSubscribeLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'sqs_subscribe.handler', 
             tracing: lambda.Tracing.ACTIVE
         });

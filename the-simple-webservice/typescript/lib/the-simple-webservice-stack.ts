@@ -15,7 +15,7 @@ export class TheSimpleWebserviceStack extends cdk.Stack {
     // defines an AWS Lambda resource
     const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns'),  // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       environment: {
         HITS_TABLE_NAME: table.tableName

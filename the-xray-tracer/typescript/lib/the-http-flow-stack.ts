@@ -16,7 +16,7 @@ export class TheHttpFlowStack extends cdk.Stack {
         // defines an AWS Lambda resource
         this.httpLambda = new lambda.Function(this, 'httpLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'http.handler',
             tracing: lambda.Tracing.ACTIVE
         });
