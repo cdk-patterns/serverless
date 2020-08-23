@@ -19,19 +19,19 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_eventbridge_etl"),
 
     install_requires=[
-        "aws-cdk.core==1.31.0",
-        "aws-cdk.aws-lambda==1.31.0",
-        "aws-cdk.aws-lambda-event-sources==1.31.0",
-        "aws-cdk.aws-dynamodb==1.31.0",
-        "aws-cdk.aws-s3==1.31.0",
-        "aws-cdk.aws-sqs==1.31.0",
-        "aws-cdk.aws-s3-notifications==1.31.0",
-        "aws-cdk.aws-iam==1.31.0",
-        "aws-cdk.aws-ec2==1.31.0",
-        "aws-cdk.aws-ecs==1.31.0",
-        "aws-cdk.aws-logs==1.31.0",
-        "aws-cdk.aws-events==1.31.0",
-        "aws-cdk.aws-events-targets==1.31.0"
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws-lambda-event-sources==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
+        "aws-cdk.aws-s3==1.60.0",
+        "aws-cdk.aws-sqs==1.60.0",
+        "aws-cdk.aws-s3-notifications==1.60.0",
+        "aws-cdk.aws-iam==1.60.0",
+        "aws-cdk.aws-ec2==1.60.0",
+        "aws-cdk.aws-ecs==1.60.0",
+        "aws-cdk.aws-logs==1.60.0",
+        "aws-cdk.aws-events==1.60.0",
+        "aws-cdk.aws-events-targets==1.60.0"
     ],
 
     python_requires=">=3.6",
