@@ -12,19 +12,19 @@ export class TheFatLambdaStack extends cdk.Stack {
 
     const addLambda = new lambda.Function(this, 'addLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/fat-lambda'),
+      code: lambda.Code.fromAsset('lambda-fns/fat-lambda'),
       handler: 'fat-lambda.add',                
     });
 
     const subtractLambda = new lambda.Function(this, 'subtractLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/fat-lambda'),
+      code: lambda.Code.fromAsset('lambda-fns/fat-lambda'),
       handler: 'fat-lambda.subtract',                
     });
 
     const multiplyLambda = new lambda.Function(this, 'multiplyLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/fat-lambda'),
+      code: lambda.Code.fromAsset('lambda-fns/fat-lambda'),
       handler: 'fat-lambda.multiply',                
     });
 
