@@ -34,7 +34,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
      */
     const destinedLambda = new lambda.Function(this, 'destinedLambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns'),
+      code: lambda.Code.fromAsset('lambda-fns'),
       handler: 'destinedLambda.handler',
       retryAttempts: 0,
       onSuccess: new destinations.EventBridgeDestination(bus),
@@ -50,7 +50,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
      */
     const successLambda = new lambda.Function(this, 'SuccessLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns'),
+      code: lambda.Code.fromAsset('lambda-fns'),
       handler: 'success.handler',
       timeout: cdk.Duration.seconds(3)
     });
@@ -85,7 +85,7 @@ export class TheDestinedLambdaStack extends cdk.Stack {
      */
     const failureLambda = new lambda.Function(this, 'FailureLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns'),
+      code: lambda.Code.fromAsset('lambda-fns'),
       handler: 'failure.handler',
       timeout: cdk.Duration.seconds(3)
     });

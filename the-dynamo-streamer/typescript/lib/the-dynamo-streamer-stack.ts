@@ -23,7 +23,7 @@ export class TheDynamoStreamerStack extends cdk.Stack {
      */
     const dynamoStreamSubscriberLambda = new lambda.Function(this, 'dynamoStreamSubscriberLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns/subscribe'),  // code loaded from the "lambdas/subscribe" directory
+      code: lambda.Code.fromAsset('lambda-fns/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       environment: {
       },
