@@ -14,7 +14,7 @@ export class TheEventbridgeAtmStack extends cdk.Stack {
      */
     const atmProducerLambda = new lambda.Function(this, 'atmProducerLambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/atmProducer'),
+      code: lambda.Code.fromAsset('lambda-fns/atmProducer'),
       handler: 'handler.lambdaHandler'
     });
 
@@ -31,7 +31,7 @@ export class TheEventbridgeAtmStack extends cdk.Stack {
      */
     const atmConsumer1Lambda = new lambda.Function(this, 'atmConsumer1Lambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/atmConsumer'),
+      code: lambda.Code.fromAsset('lambda-fns/atmConsumer'),
       handler: 'handler.case1Handler'
     });
 
@@ -53,7 +53,7 @@ export class TheEventbridgeAtmStack extends cdk.Stack {
      */
     const atmConsumer2Lambda = new lambda.Function(this, 'atmConsumer2Lambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/atmConsumer'),
+      code: lambda.Code.fromAsset('lambda-fns/atmConsumer'),
       handler: 'handler.case2Handler'
     });
 
@@ -76,7 +76,7 @@ export class TheEventbridgeAtmStack extends cdk.Stack {
      */
     const atmConsumer3Lambda = new lambda.Function(this, 'atmConsumer3Lambda', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/atmConsumer'),
+      code: lambda.Code.fromAsset('lambda-fns/atmConsumer'),
       handler: 'handler.case3Handler'
     });
 
