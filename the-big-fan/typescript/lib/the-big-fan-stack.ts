@@ -64,7 +64,7 @@ export class TheBigFanStack extends cdk.Stack {
     // Created status queue lambda
     const sqsCreatedStatusSubscribeLambda = new lambda.Function(this, 'SQSCreatedStatusSubscribeLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/subscribe'),
+      code: lambda.Code.fromAsset('lambda-fns/subscribe'),
       handler: 'createdStatus.handler'
     });
     createdStatusQueue.grantConsumeMessages(sqsCreatedStatusSubscribeLambda);
@@ -73,7 +73,7 @@ export class TheBigFanStack extends cdk.Stack {
     // Any other status queue lambda
     const sqsAnyOtherStatusSubscribeLambda = new lambda.Function(this, 'SQSAnyOtherStatusSubscribeLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X, 
-      code: lambda.Code.asset('lambda-fns/subscribe'), 
+      code: lambda.Code.fromAsset('lambda-fns/subscribe'), 
       handler: 'anyOtherStatus.handler'
     });
     anyOtherStatusQueue.grantConsumeMessages(sqsAnyOtherStatusSubscribeLambda);
