@@ -12,19 +12,19 @@ export class TheSinglePurposeFunctionStack extends cdk.Stack {
 
     const addLambda = new lambda.Function(this, 'addLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/single-purpose-function'),
+      code: lambda.Code.fromAsset('lambda-fns/single-purpose-function'),
       handler: 'add.handler',                
     });
 
     const subtractLambda = new lambda.Function(this, 'subtractLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/single-purpose-function'),
+      code: lambda.Code.fromAsset('lambda-fns/single-purpose-function'),
       handler: 'subtract.handler',                
     });
 
     const multiplyLambda = new lambda.Function(this, 'multiplyLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/single-purpose-function'),
+      code: lambda.Code.fromAsset('lambda-fns/single-purpose-function'),
       handler: 'multiply.handler',                
     });
 
