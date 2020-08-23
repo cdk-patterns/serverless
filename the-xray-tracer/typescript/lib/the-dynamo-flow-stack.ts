@@ -21,7 +21,7 @@ export class TheDynamoFlowStack extends cdk.Stack {
         // defines an AWS Lambda resource
         this.dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'dynamo.handler',
             environment: {
                 HITS_TABLE_NAME: table.tableName
