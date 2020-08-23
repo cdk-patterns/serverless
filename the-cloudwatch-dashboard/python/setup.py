@@ -19,13 +19,13 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_cloudwatch_dashboard"),
 
     install_requires=[
-        "aws-cdk.core==1.41.0",
-        "aws-cdk.aws_apigatewayv2==1.41.0",
-        "aws-cdk.aws-lambda==1.41.0",
-        "aws-cdk.aws-dynamodb==1.41.0",
-        "aws-cdk.aws-sns==1.41.0",
-        "aws-cdk.aws-cloudwatch==1.41.0",
-        "aws-cdk.aws-cloudwatch-actions==1.41.0",
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws_apigatewayv2==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
+        "aws-cdk.aws-sns==1.60.0",
+        "aws-cdk.aws-cloudwatch==1.60.0",
+        "aws-cdk.aws-cloudwatch-actions==1.60.0",
     ],
 
     python_requires=">=3.6",
