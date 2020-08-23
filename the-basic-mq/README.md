@@ -22,7 +22,7 @@ After AWS Cloud9 creates your environment, you should see a bash shell window fo
 In the bash shell, clone the repo "amazon-mq-workshop" by running the following command:
 
 ```
-git clone git@github.com:aws-samples/amazon-mq-workshop.git
+git clone https://github.com/aws-samples/amazon-mq-workshop.git
 ```
 
 Now the code is located on `~/environment/amazon-mq-workshop`. Next, type the following command one by one.
