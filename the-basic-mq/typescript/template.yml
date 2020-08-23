@@ -1,0 +1,798 @@
+Resources:
+  certCertificateRequestorFunctionServiceRoleC5D90B1B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/cert/CertificateRequestorFunction/ServiceRole/Resource
+  certCertificateRequestorFunctionServiceRoleDefaultPolicy8C4097C8:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - acm:RequestCertificate
+              - acm:DescribeCertificate
+              - acm:DeleteCertificate
+            Effect: Allow
+            Resource: "*"
+          - Action: route53:GetChange
+            Effect: Allow
+            Resource: "*"
+          - Action: route53:changeResourceRecordSets
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - :route53:::hostedzone/Z3N9YWHV3ITV27
+        Version: "2012-10-17"
+      PolicyName: certCertificateRequestorFunctionServiceRoleDefaultPolicy8C4097C8
+      Roles:
+        - Ref: certCertificateRequestorFunctionServiceRoleC5D90B1B
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/cert/CertificateRequestorFunction/ServiceRole/DefaultPolicy/Resource
+  certCertificateRequestorFunction0F0C5916:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3BucketFCCD3A76
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6
+      Handler: index.certificateRequestHandler
+      Role:
+        Fn::GetAtt:
+          - certCertificateRequestorFunctionServiceRoleC5D90B1B
+          - Arn
+      Runtime: nodejs10.x
+      Timeout: 900
+    DependsOn:
+      - certCertificateRequestorFunctionServiceRoleDefaultPolicy8C4097C8
+      - certCertificateRequestorFunctionServiceRoleC5D90B1B
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/cert/CertificateRequestorFunction/Resource
+      aws:asset:path: asset.19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2
+      aws:asset:property: Code
+  certCertificateRequestorResourceBEEAD61F:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - certCertificateRequestorFunction0F0C5916
+          - Arn
+      DomainName: iot.cdkexample.co.uk
+      HostedZoneId: Z3N9YWHV3ITV27
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/cert/CertificateRequestorResource/Default
+  vpcA2121C38:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/Resource
+  vpcvpcpublicsubnetSubnet1Subnet51E5DA66:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId:
+        Ref: vpcA2121C38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: vpc-public-subnet
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/Subnet
+  vpcvpcpublicsubnetSubnet1RouteTableFD93F67B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: vpcA2121C38
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/RouteTable
+  vpcvpcpublicsubnetSubnet1RouteTableAssociationAD637874:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcpublicsubnetSubnet1RouteTableFD93F67B
+      SubnetId:
+        Ref: vpcvpcpublicsubnetSubnet1Subnet51E5DA66
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/RouteTableAssociation
+  vpcvpcpublicsubnetSubnet1DefaultRoute4741CA99:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcpublicsubnetSubnet1RouteTableFD93F67B
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: vpcIGWE57CBDCA
+    DependsOn:
+      - vpcVPCGW7984C166
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/DefaultRoute
+  vpcvpcpublicsubnetSubnet1EIPC62B10A6:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/EIP
+  vpcvpcpublicsubnetSubnet1NATGateway8CE8F91C:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - vpcvpcpublicsubnetSubnet1EIPC62B10A6
+          - AllocationId
+      SubnetId:
+        Ref: vpcvpcpublicsubnetSubnet1Subnet51E5DA66
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet1/NATGateway
+  vpcvpcpublicsubnetSubnet2SubnetEB25FA49:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId:
+        Ref: vpcA2121C38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: vpc-public-subnet
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/Subnet
+  vpcvpcpublicsubnetSubnet2RouteTable0334E14C:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: vpcA2121C38
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/RouteTable
+  vpcvpcpublicsubnetSubnet2RouteTableAssociation26039E6B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcpublicsubnetSubnet2RouteTable0334E14C
+      SubnetId:
+        Ref: vpcvpcpublicsubnetSubnet2SubnetEB25FA49
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/RouteTableAssociation
+  vpcvpcpublicsubnetSubnet2DefaultRoute3DE7AEFB:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcpublicsubnetSubnet2RouteTable0334E14C
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: vpcIGWE57CBDCA
+    DependsOn:
+      - vpcVPCGW7984C166
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/DefaultRoute
+  vpcvpcpublicsubnetSubnet2EIP77932EE4:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/EIP
+  vpcvpcpublicsubnetSubnet2NATGateway373FF87F:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - vpcvpcpublicsubnetSubnet2EIP77932EE4
+          - AllocationId
+      SubnetId:
+        Ref: vpcvpcpublicsubnetSubnet2SubnetEB25FA49
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-public-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-public-subnetSubnet2/NATGateway
+  vpcvpcprivatesubnetSubnet1Subnet05027595:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      VpcId:
+        Ref: vpcA2121C38
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: vpc-private-subnet
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-private-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet1/Subnet
+  vpcvpcprivatesubnetSubnet1RouteTable6D9BB854:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: vpcA2121C38
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-private-subnetSubnet1
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet1/RouteTable
+  vpcvpcprivatesubnetSubnet1RouteTableAssociationFB0C73CC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcprivatesubnetSubnet1RouteTable6D9BB854
+      SubnetId:
+        Ref: vpcvpcprivatesubnetSubnet1Subnet05027595
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet1/RouteTableAssociation
+  vpcvpcprivatesubnetSubnet1DefaultRouteEEA7A520:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcprivatesubnetSubnet1RouteTable6D9BB854
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: vpcvpcpublicsubnetSubnet1NATGateway8CE8F91C
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet1/DefaultRoute
+  vpcvpcprivatesubnetSubnet2SubnetD8F94C3A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.3.0/24
+      VpcId:
+        Ref: vpcA2121C38
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: vpc-private-subnet
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-private-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet2/Subnet
+  vpcvpcprivatesubnetSubnet2RouteTableA2F76AEB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: vpcA2121C38
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc/vpc-private-subnetSubnet2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet2/RouteTable
+  vpcvpcprivatesubnetSubnet2RouteTableAssociation28EF5887:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcprivatesubnetSubnet2RouteTableA2F76AEB
+      SubnetId:
+        Ref: vpcvpcprivatesubnetSubnet2SubnetD8F94C3A
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet2/RouteTableAssociation
+  vpcvpcprivatesubnetSubnet2DefaultRouteCBD8B565:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: vpcvpcprivatesubnetSubnet2RouteTableA2F76AEB
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: vpcvpcpublicsubnetSubnet2NATGateway373FF87F
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/vpc-private-subnetSubnet2/DefaultRoute
+  vpcIGWE57CBDCA:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TheBasicMQStack/vpc
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/IGW
+  vpcVPCGW7984C166:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: vpcA2121C38
+      InternetGatewayId:
+        Ref: vpcIGWE57CBDCA
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/vpc/VPCGW
+  mqGroupEF328CF6:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TheBasicMQStack/mqGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 10.0.0.0/16
+          Description: allow OpenWire communication within VPC
+          FromPort: 61617
+          IpProtocol: tcp
+          ToPort: 61617
+        - CidrIp: 10.0.0.0/16
+          Description: allow communication on ActiveMQ console port within VPC
+          FromPort: 8162
+          IpProtocol: tcp
+          ToPort: 8162
+      VpcId:
+        Ref: vpcA2121C38
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/mqGroup/Resource
+  mqGroupfromTheBasicMQStackmqGroupDB0B7ADBALLPORTS462CE301:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: allow communication from nlb and other brokers
+      FromPort: 0
+      GroupId:
+        Fn::GetAtt:
+          - mqGroupEF328CF6
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - mqGroupEF328CF6
+          - GroupId
+      ToPort: 65535
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/mqGroup/from TheBasicMQStackmqGroupDB0B7ADB:ALL PORTS
+  bastionToMQGroup19C26C56:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: TheBasicMQStack/bastionToMQGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: vpcA2121C38
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/bastionToMQGroup/Resource
+  stringParameterE1E9E6F4:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: admin,password1234
+      Name: MQBrokerUserPassword
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/stringParameter/Resource
+  mqInstance:
+    Type: AWS::AmazonMQ::Broker
+    Properties:
+      AutoMinorVersionUpgrade: false
+      BrokerName: myMQ
+      DeploymentMode: ACTIVE_STANDBY_MULTI_AZ
+      EngineType: ACTIVEMQ
+      EngineVersion: 5.15.12
+      HostInstanceType: mq.t3.micro
+      PubliclyAccessible: false
+      Users:
+        - ConsoleAccess: true
+          Password: password1234
+          Username: admin
+      SecurityGroups:
+        - Fn::GetAtt:
+            - mqGroupEF328CF6
+            - GroupId
+      SubnetIds:
+        - Ref: vpcvpcprivatesubnetSubnet1Subnet05027595
+        - Ref: vpcvpcprivatesubnetSubnet2SubnetD8F94C3A
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/mqInstance
+  nlbTargetE26CDCBD:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckPort: "8162"
+      HealthCheckProtocol: TCP
+      Port: 61617
+      Protocol: TLS
+      Targets:
+        - Id:
+            Fn::GetAtt:
+              - functionF19B1A04
+              - BrokerInstances.0.IpAddress
+        - Id:
+            Fn::GetAtt:
+              - functionF19B1A04
+              - BrokerInstances.1.IpAddress
+      TargetType: ip
+      VpcId:
+        Ref: vpcA2121C38
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/nlbTarget/Resource
+  functionF19B1A04:
+    Type: Custom::AWS
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - AWS679f53fac002430cb0da5b7982bd22872D164C4C
+          - Arn
+      Create:
+        physicalResourceId:
+          id: function
+        service: MQ
+        action: describeBroker
+        parameters:
+          BrokerId: myMQ
+    DependsOn:
+      - mqInstance
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/function/Resource/Default
+  AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/Resource
+  AWS679f53fac002430cb0da5b7982bd2287ServiceRoleDefaultPolicyD28E1A5E:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: mq:DescribeBroker
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: AWS679f53fac002430cb0da5b7982bd2287ServiceRoleDefaultPolicyD28E1A5E
+      Roles:
+        - Ref: AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/DefaultPolicy/Resource
+  AWS679f53fac002430cb0da5b7982bd22872D164C4C:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fS3BucketC0EBB250
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fS3VersionKey2A433453
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fS3VersionKey2A433453
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 120
+    DependsOn:
+      - AWS679f53fac002430cb0da5b7982bd2287ServiceRoleDefaultPolicyD28E1A5E
+      - AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/AWS679f53fac002430cb0da5b7982bd2287/Resource
+      aws:asset:path: asset.afe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942f
+      aws:asset:property: Code
+  mqNLB6A045A98:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      Subnets:
+        - Ref: vpcvpcpublicsubnetSubnet1Subnet51E5DA66
+        - Ref: vpcvpcpublicsubnetSubnet2SubnetEB25FA49
+      Type: network
+    DependsOn:
+      - vpcvpcpublicsubnetSubnet1DefaultRoute4741CA99
+      - vpcvpcpublicsubnetSubnet2DefaultRoute3DE7AEFB
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/mqNLB/Resource
+  mqNLBlistenerDD49F549:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn:
+            Ref: nlbTargetE26CDCBD
+          Type: forward
+      LoadBalancerArn:
+        Ref: mqNLB6A045A98
+      Port: 61617
+      Protocol: TLS
+      Certificates:
+        - CertificateArn:
+            Fn::GetAtt:
+              - certCertificateRequestorResourceBEEAD61F
+              - Arn
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/mqNLB/listener/Resource
+  aliasRecord25FB4A54:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: iot.cdkexample.co.uk.
+      Type: A
+      AliasTarget:
+        DNSName:
+          Fn::Join:
+            - ""
+            - - dualstack.
+              - Fn::GetAtt:
+                  - mqNLB6A045A98
+                  - DNSName
+        HostedZoneId:
+          Fn::GetAtt:
+            - mqNLB6A045A98
+            - CanonicalHostedZoneID
+      HostedZoneId: Z3N9YWHV3ITV27
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/aliasRecord/Resource
+  bastionInstanceRole5FE40889:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                Fn::Join:
+                  - ""
+                  - - ec2.
+                    - Ref: AWS::URLSuffix
+        Version: "2012-10-17"
+      Tags:
+        - Key: Name
+          Value: bastion
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/bastion/Resource/InstanceRole/Resource
+  bastionInstanceRoleDefaultPolicyAF88F25C:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ssmmessages:*
+              - ssm:UpdateInstanceInformation
+              - ec2messages:*
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: bastionInstanceRoleDefaultPolicyAF88F25C
+      Roles:
+        - Ref: bastionInstanceRole5FE40889
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/bastion/Resource/InstanceRole/DefaultPolicy/Resource
+  bastionInstanceProfileE50CD38E:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - Ref: bastionInstanceRole5FE40889
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/bastion/Resource/InstanceProfile
+  bastion2B0A2D9E:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      IamInstanceProfile:
+        Ref: bastionInstanceProfileE50CD38E
+      ImageId:
+        Ref: SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter
+      InstanceType: t3.nano
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - bastionToMQGroup19C26C56
+            - GroupId
+      SubnetId:
+        Ref: vpcvpcpublicsubnetSubnet1Subnet51E5DA66
+      Tags:
+        - Key: Name
+          Value: bastion
+      UserData:
+        Fn::Base64: >-
+          #!/bin/bash
+
+          yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
+          sudo echo 'GatewayPorts yes' >> /etc/ssh/sshd_config
+
+          sudo service sshd restart
+    DependsOn:
+      - bastionInstanceRoleDefaultPolicyAF88F25C
+      - bastionInstanceRole5FE40889
+    Metadata:
+      aws:cdk:path: TheBasicMQStack/bastion/Resource/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.57.0,@aws-cdk/assets=1.57.0,@aws-cdk/aws-amazonmq=1.57.0,@aws-cdk/aws-certificatemanager=1.57.0,@aws-cdk/aws-cloudwatch=1.57.0,@aws-cdk/aws-codeguruprofiler=1.57.0,@aws-cdk/aws-ec2=1.57.0,@aws-cdk/aws-elasticloadbalancingv2=1.57.0,@aws-cdk/aws-elasticloadbalancingv2-targets=1.57.0,@aws-cdk/aws-events=1.57.0,@aws-cdk/aws-iam=1.57.0,@aws-cdk/aws-kms=1.57.0,@aws-cdk/aws-lambda=1.57.0,@aws-cdk/aws-logs=1.57.0,@aws-cdk/aws-route53=1.57.0,@aws-cdk/aws-route53-targets=1.57.0,@aws-cdk/aws-s3=1.57.0,@aws-cdk/aws-s3-assets=1.57.0,@aws-cdk/aws-sqs=1.57.0,@aws-cdk/aws-ssm=1.57.0,@aws-cdk/cloud-assembly-schema=1.57.0,@aws-cdk/core=1.57.0,@aws-cdk/custom-resources=1.57.0,@aws-cdk/cx-api=1.57.0,@aws-cdk/region-info=1.57.0,jsii-runtime=node.js/v10.22.0
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3BucketFCCD3A76:
+    Type: String
+    Description: S3 bucket for asset "19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2"
+  AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2S3VersionKey07AF06B6:
+    Type: String
+    Description: S3 key for asset version "19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2"
+  AssetParameters19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2ArtifactHash652C125C:
+    Type: String
+    Description: Artifact hash for asset "19e461d2ff1a5b90438fed6ceee4c197d7efee8712a6f76d85b501ab20bfb1a2"
+  AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fS3BucketC0EBB250:
+    Type: String
+    Description: S3 bucket for asset "afe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942f"
+  AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fS3VersionKey2A433453:
+    Type: String
+    Description: S3 key for asset version "afe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942f"
+  AssetParametersafe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942fArtifactHashC0FC33BC:
+    Type: String
+    Description: Artifact hash for asset "afe12ee13b10f5531c1f6afc434951e2965d2ce674cd6131e0e18ce24003942f"
+  SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+Outputs:
+  bastionToMQGroupSGID:
+    Value:
+      Fn::GetAtt:
+        - bastionToMQGroup19C26C56
+        - GroupId
+  bastionBastionHostIdB3A60495:
+    Description: Instance ID of the bastion host. Use this to connect via SSM Session Manager
+    Value:
+      Ref: bastion2B0A2D9E
+  bastionInstanceID:
+    Value:
+      Ref: bastion2B0A2D9E
+  bastionPublicDNS:
+    Value:
+      Fn::GetAtt:
+        - bastion2B0A2D9E
+        - PublicDnsName
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
