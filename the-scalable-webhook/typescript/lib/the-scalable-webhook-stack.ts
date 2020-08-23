@@ -33,7 +33,7 @@ export class TheScalableWebhookStack extends cdk.Stack {
     // defines an AWS Lambda resource to publish to our queue
     const sqsPublishLambda = new lambda.Function(this, 'SQSPublishLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns/publish'),  // code loaded from the "lambdas/publish" directory
+      code: lambda.Code.fromAsset('lambda-fns/publish'),  // code loaded from the "lambdas/publish" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       environment: {
         queueURL: queue.queueUrl
@@ -45,7 +45,7 @@ export class TheScalableWebhookStack extends cdk.Stack {
     // defines an AWS Lambda resource to pull from our queue
     const sqsSubscribeLambda = new lambda.Function(this, 'SQSSubscribeLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns/subscribe'),  // code loaded from the "lambdas/subscribe" directory
+      code: lambda.Code.fromAsset('lambda-fns/subscribe'),  // code loaded from the "lambdas/subscribe" directory
       handler: 'lambda.handler',                // file is "lambda", function is "handler"
       reservedConcurrentExecutions: 2, // throttle lambda to 2 concurrent invocations
       environment: {
