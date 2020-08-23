@@ -19,12 +19,12 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_saga_stepfunction"),
 
     install_requires=[
-        "aws-cdk.core==1.36.0",
-        "aws-cdk.aws_apigateway==1.36.0",
-        "aws-cdk.aws-lambda==1.36.0",
-        "aws-cdk.aws-dynamodb==1.36.0",
-        "aws-cdk.aws-stepfunctions==1.36.0",
-        "aws-cdk.aws-stepfunctions-tasks==1.36.0",
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws_apigateway==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
+        "aws-cdk.aws-stepfunctions==1.60.0",
+        "aws-cdk.aws-stepfunctions-tasks==1.60.0",
     ],
 
     python_requires=">=3.6",
