@@ -60,7 +60,7 @@ export class TheStateMachineStack extends cdk.Stack {
     // defines an AWS Lambda resource to connect to our API Gateway
     const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns'),  // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
       handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
       deadLetterQueue:dlq,
       environment: {
