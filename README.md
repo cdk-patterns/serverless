@@ -93,6 +93,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Basic MQ](/the-basic-mq/README.md)  
+  In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
+
+  ![Architecture](the-basic-mq/img/the-basic-mq-arch.png)
+
+  <br /><hr /><br />
+
   #### [The Big Fan](/the-big-fan/README.md)  
   You can integrate API Gateway directly with SNS and then add some resiliency by integrating your event consumers via sqs and message filtering.
 
@@ -220,6 +227,7 @@ npx cdk deploy
   
   * [Alex Casalboni](#alex-casalboni)
   * [Ariadna Sanchez](#ariadna-sanchez)
+  * [Christian Mueller](#christian-mueller)
   * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
   * [Heitor Lessa](#heitor-lessa)
@@ -230,6 +238,7 @@ npx cdk deploy
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
+  * [Wallace Printz](#wallace-printz)
   * [Yan Cui](#yan-cui)
 
   ### Alex Casalboni
@@ -255,6 +264,19 @@ npx cdk deploy
   Use Amazon Polly to translate text to speech from inside a Lambda Function. You can also take advantage of Amazon Translate to change the language of the spoken text
 
   ![Architecture](polly/img/overview.png)
+
+  <br /><hr /><br />
+
+  ### Christian Mueller
+  <img src="img/dev_profiles/christian_mueller.jpeg" width="120" alt="Christian Mueller profile pic" /><br />
+
+  Solutions Architect @ AWS & Apache Member @ ASF<br />
+
+  Github - [@muellerc](https://github.com/muellerc) <br />
+
+  #### [The Basic MQ](/the-basic-mq/README.md)  
+  In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
+  ![Architecture](the-basic-mq/img/the-basic-mq-arch.png)
 
   <br /><hr /><br />
 
@@ -448,6 +470,18 @@ npx cdk deploy
   #### [The EventBridge ETL](/the-eventbridge-etl/README.md)
   Build a fully serverless CSV to DynamoDB pipeline <br />
   ![Architecture](the-eventbridge-etl/img/arch.png)
+
+  ### Wallace Printz
+  <img src="img/dev_profiles/wallace_printz.jpeg" width="120" alt="Wallace Printz profile pic" /><br />
+
+  Wallace Printz is a Senior Solutions Architect based in Austin, Texas. He helps customers across Texas transform their businesses in the cloud. He has a background in Semiconductors, R&D, and Machine Learning.<br />
+
+  Twitter - [@WallacePrintz](https://twitter.com/WallacePrintz) <br />
+  Github - [@WPrintz](https://github.com/WPrintz) <br />
+
+  #### [The Basic MQ](/the-basic-mq/README.md)  
+  In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
+  ![Architecture](the-basic-mq/img/the-basic-mq-arch.png)
 
   ### Yan Cui
   <img src="img/dev_profiles/yan_cui.png" width="120" alt="Yan Cui profile pic" /><br />
