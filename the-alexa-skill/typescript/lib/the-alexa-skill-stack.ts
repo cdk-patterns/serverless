@@ -8,6 +8,7 @@ import { ServicePrincipal, Role, PolicyStatement, CompositePrincipal } from '@aw
 export interface AssetProps extends cdk.StackProps {
   readonly assetBucketARN: string;
   readonly assetBucketName: string;
+  readonly assetObjectKey: string;
 }
 
 export class TheAlexaSkillStack extends cdk.Stack {
@@ -25,8 +26,8 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     // Allow the skill resource to access the zipped skill package
     role.addToPolicy(new PolicyStatement({
-      actions: ['S3:*'],
-      resources: [props.assetBucketARN, props.assetBucketARN+'/*']
+      actions: ['S3:GetObject'],
+      resources: [props.assetBucketARN+'/'+props.assetObjectKey]
     }));
 
     // DynamoDB Table
@@ -58,7 +59,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
       },
       skillPackage:{
         s3Bucket: props.assetBucketName,
-        s3Key: 'skill.zip',
+        s3Key: props.assetObjectKey,
         s3BucketRole: role.roleArn,
         overrides : {
           manifest: {
@@ -78,9 +79,16 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
 
 
-    //Allow the Alexa service to invoke the fulfillment Lambda
+  /*
+    Allow the Alexa service to invoke the fulfillment Lambda.
+    In order for the Skill to be created, the fulfillment Lambda
+    must have a permission allowing Alexa to invoke it, this causes
+    a circular dependency and requires the first deploy to allow all
+    Alexa skills to invoke the lambda, subsequent deploys will work
+    when specifying the eventSourceToken
+  */
     alexaLambda.addPermission('AlexaPermission', {
-      eventSourceToken: skill.ref,
+      //eventSourceToken: skill.ref,
       principal: new ServicePrincipal('alexa-appkit.amazon.com'),
       action: 'lambda:InvokeFunction'
   });

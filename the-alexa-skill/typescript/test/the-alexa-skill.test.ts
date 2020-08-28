@@ -12,7 +12,9 @@ test('IAM Role to Access S3 Assets', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
+
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Role", {
@@ -37,7 +39,8 @@ test('IAM Policy to Access S3 Assets', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
@@ -59,7 +62,8 @@ test('DynamoDB Created', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::DynamoDB::Table", {
@@ -75,7 +79,8 @@ test('Lambda Backend for Alexa', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
@@ -94,7 +99,8 @@ test('DynamoDB Read/Write IAM Policy Created', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
@@ -122,13 +128,14 @@ test('Alexa Skill Created', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("Alexa::ASK::Skill", {
         "SkillPackage": {
             "S3Bucket": "foo",
-            "S3Key": "skill.zip"
+            "S3Key": "foobar.zip",
         }
     }));
 });
@@ -138,7 +145,8 @@ test('Lambda Permission for Alexa', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar'
+        assetBucketARN: 'bar',
+        assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::Lambda::Permission", {

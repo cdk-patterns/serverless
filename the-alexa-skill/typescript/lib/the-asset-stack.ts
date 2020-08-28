@@ -1,26 +1,22 @@
 import * as cdk from '@aws-cdk/core';
+import assets = require('@aws-cdk/aws-s3-assets');
+const path = require('path');
 import s3 = require('@aws-cdk/aws-s3');
-const alexaAssets = '../skill'
-import * as S3Deployment from '@aws-cdk/aws-s3-deployment'
+const alexaAssets = '../../skill'
 export class TheAssetStack extends cdk.Stack {
     public bucketARN: string;
     public bucketName: string;
+    public objectKey: string;
 
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    //Assets Bucket
-    const bucket = new s3.Bucket(this, 'alexaAssets',{
-    });
-
-    //Upload files to S3
-    // TODO figure out how to zip these
-    const fileUpload = new S3Deployment.BucketDeployment(this, 'Deployment', {
-      sources: [S3Deployment.Source.asset(alexaAssets)],
-      destinationBucket: bucket
+    const asset = new assets.Asset(this, 'SampleAsset', {
+      path: path.join(__dirname, alexaAssets),
     })
 
-    this.bucketARN = bucket.bucketArn;
-    this.bucketName = bucket.bucketName;
+    this.bucketARN = `arn:aws:s3:::${asset.s3BucketName}`;
+    this.bucketName = asset.s3BucketName;
+    this.objectKey = asset.s3ObjectKey;
   }
 }

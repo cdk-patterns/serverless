@@ -8,7 +8,8 @@ const assetStack = new TheAssetStack(app, 'TheAssetStack');
 
 const alexaStack = new TheAlexaSkillStack(app, 'TheAlexaSkillStack', {
     assetBucketARN: assetStack.bucketARN,
-    assetBucketName: assetStack.bucketName
+    assetBucketName: assetStack.bucketName,
+    assetObjectKey: assetStack.objectKey
 });
 
 alexaStack.addDependency(assetStack, 'Assets must be uploaded');
