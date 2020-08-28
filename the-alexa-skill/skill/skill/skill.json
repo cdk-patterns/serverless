@@ -14,10 +14,13 @@
                     "keywords": []
                 }
             },
-            "isAvailableWorldwide": false,
+            "isAvailableWorldwide": true,
             "testingInstructions": "Sample Testing Instructions.",
-            "category": "KNOWLEDGE_AND_TRIVIA",
-            "distributionCountries": []
+            "category": "KNOWLEDGE_AND_TRIVIA"
+        },
+        "apis": {
+            "custom": {
+            }
         },
         "manifestVersion": "1.0"
     }
