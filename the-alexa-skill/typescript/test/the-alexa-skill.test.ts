@@ -39,19 +39,16 @@ test('IAM Policy to Access S3 Assets', () => {
     // WHEN
     const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
         assetBucketName: 'foo',
-        assetBucketARN: 'bar',
+        assetBucketARN: 'arn:aws:s3:::foo',
         assetObjectKey: 'foobar.zip'
     });
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
         "PolicyDocument": {
             "Statement": [{
-                "Action": "S3:*",
+                "Action": "S3:GetObject",
                 "Effect": "Allow",
-                "Resource": [
-                    "bar",
-                    "bar/*"
-                ]
+                "Resource": 'arn:aws:s3:::foo/foobar.zip'
             }]
         }
     }));
@@ -153,20 +150,4 @@ test('Lambda Permission for Alexa', () => {
         "Action": "lambda:InvokeFunction",
         "Principal": "alexa-appkit.amazon.com"
     }));
-});
-
-///The Asset Stack
-test('S3 Created', () => {
-    const app = new cdk.App();
-    // WHEN
-    const stack = new TheAssetStack.TheAssetStack(app, 'MyTestStack');
-    // THEN
-    expectCDK(stack).to(haveResourceLike("AWS::S3::Bucket"));
-});
-test('S3 Deployment Created', () => {
-    const app = new cdk.App();
-    // WHEN
-    const stack = new TheAssetStack.TheAssetStack(app, 'MyTestStack');
-    // THEN
-    expectCDK(stack).to(haveResourceLike("Custom::CDKBucketDeployment"));
 });
