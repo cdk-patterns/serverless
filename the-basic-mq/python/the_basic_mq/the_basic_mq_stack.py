@@ -36,6 +36,10 @@ class TheBasicMQStack(core.Stack):
                                                           hosted_zone_id=hosted_zone_id,
                                                           zone_name=zone_name)
 
+        # You may use acm.DnsValidatedCertificate to automate certificate provision.
+        # However, be careful of ACM yearly certificate limit.
+        # You will bump into the error after you destroy/deploy the stack over and over again.
+        # See https://github.com/aws/aws-cdk/issues/5889 for the details.
         cert = acm.Certificate.from_certificate_arn(self, 'cert', certificate_arn=cert_arn)
 
         # MQ needs to be setup in a VPC
