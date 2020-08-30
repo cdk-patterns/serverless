@@ -11,9 +11,14 @@ from aws_cdk import (
     custom_resources as cr,
 )
 
-hosted_zone_id = 'Z06244892ZM9ZZ0GAETHC'
-zone_name = 'y-kiyofuji.com'
+# Paste Hosted zone ID from Route53 console 'Hosted zone details'
+hosted_zone_id = '1234'
+
+# If zone_name = 'cdkexample.com' and subdomain_name = 'iot', you can connect to the broker by 'iot.cdkexample.com'.
+zone_name = 'cdkexample.com'
 subdomain_name = 'iot'
+
+# Request and issue a certificate for the subdomain (iot.cdkexample.com in this example) beforehand, and paste ARN.
 cert_arn = 'arn:aws:acm:us-east-1:228575038959:certificate/e1f36358-f619-4b73-ab08-f8a700cb0f69'
 cidr = '10.0.0.0/16'
 
