@@ -49,7 +49,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
     // grant the lambda role read/write permissions to our table
     usersTable.grantReadWriteData(alexaLambda);
 
-    // create the skill /* TODO identify something unique that can trigger this to look for new contents at the S3 Key */
+    // create the skill
     const skill = new alexaAsk.CfnSkill(this, 'the-alexa-skill', {
       vendorId: 'foo',
       authenticationConfiguration: {
