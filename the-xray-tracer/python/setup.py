@@ -19,15 +19,15 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_xray_tracer"),
 
     install_requires=[
-        "aws-cdk.core==1.36.1",
-        "aws-cdk.aws-iam==1.36.1",
-        "aws-cdk.aws-lambda==1.36.1",
-        "aws-cdk.aws_apigateway==1.36.1",
-        "aws-cdk.aws-sns==1.36.1",
-        "aws-cdk.aws-sns-subscriptions==1.36.1",
-        "aws-cdk.aws-dynamodb==1.36.1",
-        "aws-cdk.aws-sqs==1.36.1",
-        "aws-cdk.aws-lambda-event-sources==1.36.1"
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws-iam==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws_apigateway==1.60.0",
+        "aws-cdk.aws-sns==1.60.0",
+        "aws-cdk.aws-sns-subscriptions==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
+        "aws-cdk.aws-sqs==1.60.0",
+        "aws-cdk.aws-lambda-event-sources==1.60.0"
     ],
 
     python_requires=">=3.6",

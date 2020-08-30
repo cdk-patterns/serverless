@@ -16,7 +16,7 @@ export class TheStateMachineStack extends cdk.Stack {
     //The first thing we need to do is see if they are asking for pineapple on a pizza
     let pineappleCheckLambda = new lambda.Function(this, 'pineappleCheckLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,    // execution environment
-      code: lambda.Code.asset('lambda-fns'),     // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),     // code loaded from the "lambda" directory
       handler: 'orderPizza.handler'           // file is "orderPizza", function is "handler"
     });
 
@@ -60,7 +60,7 @@ export class TheStateMachineStack extends cdk.Stack {
     // defines an AWS Lambda resource to connect to our API Gateway
     const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.asset('lambda-fns'),  // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
       handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
       deadLetterQueue:dlq,
       environment: {

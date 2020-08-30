@@ -114,7 +114,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     // defines an AWS Lambda resource to trigger our fargate ecs task
     const extractLambda = new lambda.Function(this, 'extractLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/extract'), 
+      code: lambda.Code.fromAsset('lambda-fns/extract'), 
       handler: 's3SqsEventConsumer.handler',
       reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE,
       environment: {
@@ -157,7 +157,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     // defines a lambda to transform the data that was extracted from s3
     const transformLambda = new lambda.Function(this, 'TransformLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/transform'),
+      code: lambda.Code.fromAsset('lambda-fns/transform'),
       handler: 'transform.handler',
       reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE, 
       timeout: cdk.Duration.seconds(3)
@@ -184,7 +184,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     // load the transformed data in dynamodb
     const loadLambda = new lambda.Function(this, 'LoadLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/load'),
+      code: lambda.Code.fromAsset('lambda-fns/load'),
       handler: 'load.handler',
       timeout: cdk.Duration.seconds(3),
       reservedConcurrentExecutions: LAMBDA_THROTTLE_SIZE,
@@ -215,7 +215,7 @@ export class TheEventbridgeEtlStack extends cdk.Stack {
     // Watch for all cdkpatterns.the-eventbridge-etl events and log them centrally
     const observeLambda = new lambda.Function(this, 'ObserveLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/observe'),
+      code: lambda.Code.fromAsset('lambda-fns/observe'),
       handler: 'observe.handler',
       timeout: cdk.Duration.seconds(3)
     });

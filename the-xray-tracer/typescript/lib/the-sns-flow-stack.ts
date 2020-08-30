@@ -20,7 +20,7 @@ export class TheSnsFlowStack extends cdk.Stack {
         // defines an AWS Lambda resource
         this.snsLambda = new lambda.Function(this, 'snsLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'sns_publish.handler',
             environment: {
                 TOPIC_ARN: topic.topicArn
@@ -34,7 +34,7 @@ export class TheSnsFlowStack extends cdk.Stack {
         // Have a Lambda subscribe to our topic
         let snsSubscribeLambda = new lambda.Function(this, 'snsSubscriptionLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: lambda.Code.asset('lambda-fns'),
+            code: lambda.Code.fromAsset('lambda-fns'),
             handler: 'sns_subscribe.handler',
             tracing: lambda.Tracing.ACTIVE
         });

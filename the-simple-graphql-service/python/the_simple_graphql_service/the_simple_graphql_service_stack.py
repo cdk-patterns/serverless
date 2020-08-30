@@ -14,6 +14,7 @@ class TheSimpleGraphqlServiceStack(core.Stack):
         api = appsync.GraphQLApi(self, 'Api',
                                  name="demoapi",
                                  log_config=appsync.LogConfig(field_log_level=appsync.FieldLogLevel.ALL),
+                                 schema_definition=appsync.SchemaDefinition.FILE,
                                  schema_definition_file="schema/schema.graphql"
                                  )
 
@@ -28,7 +29,7 @@ class TheSimpleGraphqlServiceStack(core.Stack):
                                          )
 
         # Add Customer DynamoDB as a Datasource for the Graphql API.
-        customer_ds = api.add_dynamo_db_data_source('Customer', 'The customer data source', customer_table)
+        customer_ds = api.add_dynamo_db_data_source('Customer', customer_table)
 
         # Query Resolver to get all Customers
         customer_ds.create_resolver(
@@ -95,7 +96,7 @@ class TheSimpleGraphqlServiceStack(core.Stack):
                                           )
 
         # Add Loyalty Lambda as a Datasource for the Graphql API.
-        loyalty_ds = api.add_lambda_data_source('Loyalty', 'The loyalty data source', loyalty_lambda)
+        loyalty_ds = api.add_lambda_data_source('Loyalty', loyalty_lambda)
 
         # Query Resolver to get all Customers
         loyalty_ds.create_resolver(

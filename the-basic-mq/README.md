@@ -6,6 +6,29 @@ This is an example cdk stack to deploy [static custom domain endpoints with Amaz
 
 In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
 
+## Pre Requirements
+
+This pattern requires you to have a Route53 Hosted Zone already in your account so that you can assign a public URL to your NLB.
+
+After you setup a hosted zone, you can get the id from the console and replace the value for 'hostedZoneId' in the cdk stack. Then you need to replace 'zoneName' and 'subdomainName' with the url you desire in that hosted zone.
+
+so if your hosted zone id is 1234 and you want your public url to be mq.cdkpatterns.com you would do:
+
+```typescript
+//Paste Hosted zone ID from Route53 console 'Hosted zone details'
+export const hostedZoneId = '1234';
+
+// If zoneName = 'cdkexample.com' and subdomainName = 'iot', you can connect to the broker by 'iot.cdkexample.com'.
+export const zoneName = 'cdkpatterns.com';
+export const subdomainName = 'mq';
+```
+
+After you have replaced these values from a console you can do:
+
+```bash
+npm run build && npm run deploy
+```
+
 ## Testing broker connectivity
 
 Once you deploy the stack, you can connect to the broker.
@@ -22,7 +45,7 @@ After AWS Cloud9 creates your environment, you should see a bash shell window fo
 In the bash shell, clone the repo "amazon-mq-workshop" by running the following command:
 
 ```
-git clone git@github.com:aws-samples/amazon-mq-workshop.git
+git clone https://github.com/aws-samples/amazon-mq-workshop.git
 ```
 
 Now the code is located on `~/environment/amazon-mq-workshop`. Next, type the following command one by one.
