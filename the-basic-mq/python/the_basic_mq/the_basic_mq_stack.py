@@ -38,9 +38,10 @@ class TheBasicMQStack(core.Stack):
 
         cert = acm.Certificate.from_certificate_arn(self, 'cert', certificate_arn=cert_arn)
 
+        # MQ needs to be setup in a VPC
         vpc = ec2.Vpc(self, 'vpc',
                       cidr=cidr,
-                      max_azs=2,
+                      max_azs=2, # Default is all AZs in the region
                       subnet_configuration=[
                           ec2.SubnetConfiguration(name='vpc-public-subnet',
                                                   cidr_mask=24,
@@ -100,6 +101,7 @@ class TheBasicMQStack(core.Stack):
                                                                                port=str(mq_console_port),
                                                                                protocol=elb.Protocol.TCP))
 
+        # For now there is no way to retrieve private ip addresses of MQ broker instances from aws-amazonmq module.
         mq_described = cr.AwsCustomResource(self, 'function',
                                             policy=cr.AwsCustomResourcePolicy.from_sdk_calls(
                                                 resources=cr.AwsCustomResourcePolicy.ANY_RESOURCE),
@@ -111,6 +113,7 @@ class TheBasicMQStack(core.Stack):
 
         mq_described.node.add_dependency(mq_instance)
 
+        # Adding private ip addresses of broker instances to target group one by one
         for az in range(len(vpc.availability_zones)):
             ip = mq_described.get_response_field('BrokerInstances.{az}.IpAddress'.format(az=az))
             nlb_target_group.add_target(elb_targets.IpTarget(ip_address=ip))
@@ -136,6 +139,7 @@ class TheBasicMQStack(core.Stack):
                                        subnet_selection=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
                                        security_group=bastion_to_mq_group)
 
+        # Allow port forwarding
         bastion.instance.add_user_data(
             "sudo echo 'GatewayPorts yes' >> /etc/ssh/sshd_config",
             "sudo service sshd restart",
