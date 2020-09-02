@@ -10,23 +10,28 @@ In this example we have private Amazon MQ brokers behind an internet-facing netw
 
 This pattern requires you to have a Route53 Hosted Zone already in your account so that you can assign a public URL to your NLB.
 
-After you setup a hosted zone, you can get the id from the console and replace the value for 'hostedZoneId' in the cdk stack. Then you need to replace 'zoneName' and 'subdomainName' with the url you desire in that hosted zone.
+After you setup a hosted zone, you can get the id from the console and replace the value for 'hosted_zone_id' in the cdk stack. Then you need to replace 'zone_name' and 'subdomain_name' with the url you desire in that hosted zone.
+
+Also, you have to have a certificate for the subdomain before you deploy the stack (to avoid exceeding [ACM yearly certificate limit](https://github.com/aws/aws-cdk/issues/5889)).
 
 so if your hosted zone id is 1234 and you want your public url to be mq.cdkpatterns.com you would do:
 
-```typescript
-//Paste Hosted zone ID from Route53 console 'Hosted zone details'
-export const hostedZoneId = '1234';
+```python
+# Paste Hosted zone ID from Route53 console 'Hosted zone details'
+hosted_zone_id = '1234'
 
-// If zoneName = 'cdkexample.com' and subdomainName = 'iot', you can connect to the broker by 'iot.cdkexample.com'.
-export const zoneName = 'cdkpatterns.com';
-export const subdomainName = 'mq';
+# If zone_name = 'cdkexample.com' and subdomain_name = 'iot', you can connect to the broker by 'iot.cdkexample.com'.
+zone_name = 'cdkpatterns.com'
+subdomain_name = 'mq'
+
+# Request and issue a certificate for the subdomain (iot.cdkexample.com in this example) beforehand, and paste ARN.
+cert_arn = 'arn:aws:acm:us-east-1:2XXXXXX9:certificate/exxxx8-xxxx-xxxx-xxxx-fxxxxxxxx9'
 ```
 
 After you have replaced these values from a console you can do:
 
 ```bash
-npm run build && npm run deploy
+cdk deploy
 ```
 
 ## Testing broker connectivity
@@ -141,7 +146,58 @@ In the Configure Proxy Access to the Internet section, select Manual proxy confi
 then set the SOCKS Host to localhost and Port to 8162, leaving other fields empty.
 (See "Creating a forwarding tunnel" [here](https://aws.amazon.com/blogs/compute/creating-static-custom-domain-endpoints-with-amazon-mq/).)
 
-## Available Versions
+## Useful Commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
+
+This project is set up like a standard Python project.  The initialization
+process also creates a virtualenv within this project, stored under the .env
+directory.  To create the virtualenv it assumes that there is a `python3`
+(or `python` for Windows) executable in your path with access to the `venv`
+package. If for any reason the automatic creation of the virtualenv fails,
+you can create the virtualenv manually.
+
+To manually create a virtualenv on MacOS and Linux:
+
+```
+$ python3 -m venv .env
+```
+
+After the init process completes and the virtualenv is created, you can use the following
+step to activate your virtualenv.
+
+```
+$ source .env/bin/activate
+```
+
+If you are a Windows platform, you would activate the virtualenv like this:
+
+```
+% .env\Scripts\activate.bat
+```
+
+Once the virtualenv is activated, you can install the required dependencies.
+
+```
+$ pip install -r requirements.txt
+```
+
+At this point you can now synthesize the CloudFormation template for this code.
+
+```
+$ cdk synth
+```
+
+To add additional dependencies, for example other CDK libraries, just add
+them to your `setup.py` file and rerun the `pip install -r requirements.txt`
+command.
+
+## commands
+
+ * `cdk ls`          list all stacks in the app
+ * `cdk synth`       emits the synthesized CloudFormation template
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk docs`        open CDK documentation
+
+Enjoy!
