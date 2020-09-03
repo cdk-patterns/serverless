@@ -4,18 +4,12 @@ import {
 } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import TheAlexaSkill = require('../lib/the-alexa-skill-stack');
-import TheAssetStack = require('../lib/the-asset-stack');
 
 //The Alexa Skill
 test('IAM Role to Access S3 Assets', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Role", {
         "AssumeRolePolicyDocument": {
@@ -37,18 +31,13 @@ test('IAM Role to Access S3 Assets', () => {
 test('IAM Policy to Access S3 Assets', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'arn:aws:s3:::foo',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
         "PolicyDocument": {
             "Statement": [{
                 "Action": "S3:GetObject",
-                "Effect": "Allow",
-                "Resource": 'arn:aws:s3:::foo/foobar.zip'
+                "Effect": "Allow"
             }]
         }
     }));
@@ -57,11 +46,7 @@ test('IAM Policy to Access S3 Assets', () => {
 test('DynamoDB Created', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::DynamoDB::Table", {
         "KeySchema": [{
@@ -74,11 +59,7 @@ test('DynamoDB Created', () => {
 test('Lambda Backend for Alexa', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
         "Runtime": "nodejs12.x",
@@ -94,11 +75,7 @@ test('Lambda Backend for Alexa', () => {
 test('DynamoDB Read/Write IAM Policy Created', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
         "PolicyDocument": {
@@ -123,16 +100,21 @@ test('DynamoDB Read/Write IAM Policy Created', () => {
 test('Alexa Skill Created', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("Alexa::ASK::Skill", {
         "SkillPackage": {
-            "S3Bucket": "foo",
-            "S3Key": "foobar.zip",
+            "Overrides": {
+                "Manifest": {
+                    "apis": {
+                        "custom": {
+                            "endpoint": {
+                                "uri": {}
+                            }
+                        }
+                    }
+                }
+            }
         }
     }));
 });
@@ -140,11 +122,7 @@ test('Alexa Skill Created', () => {
 test('Lambda Permission for Alexa', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack', {
-        assetBucketName: 'foo',
-        assetBucketARN: 'bar',
-        assetObjectKey: 'foobar.zip'
-    });
+    const stack = new TheAlexaSkill.TheAlexaSkillStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(haveResourceLike("AWS::Lambda::Permission", {
         "Action": "lambda:InvokeFunction",

@@ -1,19 +1,19 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
+import assets = require('@aws-cdk/aws-s3-assets');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import * as alexaAsk from '@aws-cdk/alexa-ask';
 import { ServicePrincipal, Role, PolicyStatement, CompositePrincipal } from '@aws-cdk/aws-iam';
-
-
-export interface AssetProps extends cdk.StackProps {
-  readonly assetBucketARN: string;
-  readonly assetBucketName: string;
-  readonly assetObjectKey: string;
-}
+const path = require('path');
+const alexaAssets = '../../skill'
 
 export class TheAlexaSkillStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props: AssetProps) {
+  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const asset = new assets.Asset(this, 'SkillAsset', {
+      path: path.join(__dirname, alexaAssets),
+    })
 
     //role to access bucket
     const role = new Role(this, 'Role', {
@@ -27,7 +27,7 @@ export class TheAlexaSkillStack extends cdk.Stack {
     // Allow the skill resource to access the zipped skill package
     role.addToPolicy(new PolicyStatement({
       actions: ['S3:GetObject'],
-      resources: [props.assetBucketARN+'/'+props.assetObjectKey]
+      resources: [`arn:aws:s3:::${asset.s3BucketName}/${asset.s3ObjectKey}`]
     }));
 
     // DynamoDB Table
@@ -58,8 +58,8 @@ export class TheAlexaSkillStack extends cdk.Stack {
         refreshToken: 'foobar'
       },
       skillPackage:{
-        s3Bucket: props.assetBucketName,
-        s3Key: props.assetObjectKey,
+        s3Bucket: asset.s3BucketName,
+        s3Key: asset.s3ObjectKey,
         s3BucketRole: role.roleArn,
         overrides : {
           manifest: {

@@ -23,10 +23,9 @@
   "dependencies": {
     "@aws-cdk/alexa-ask": "1.57.0",
     "@aws-cdk/aws-dynamodb": "1.57.0",
-    "@aws-cdk/aws-s3-deployment": "1.57.0",
-    "@aws-cdk/aws-sns": "1.57.0",
-    "@aws-cdk/aws-sns-subscriptions": "1.57.0",
-    "@aws-cdk/aws-sqs": "1.57.0",
+    "@aws-cdk/aws-iam": "1.57.0",
+    "@aws-cdk/aws-lambda": "1.57.0",
+    "@aws-cdk/aws-s3-assets": "1.57.0",
     "@aws-cdk/core": "1.57.0",
     "ask-sdk-core": "2.9.0",
     "ask-sdk-dynamodb-persistence-adapter": "2.9.0",
