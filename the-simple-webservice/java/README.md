@@ -24,12 +24,7 @@ You can compile & package from this folder, to deploy go to the **cdk** subfolde
 
 ## Useful commands
 
-From the root folder:
  * `./mvnw package`     compiles and packages the source code for both Lambda and CDK modules
  * `./mvnw test`        perform the unit tests for both Lambda and CDK modules
- 
-From the cdk subfolder folder: 
- * `./mvnw package`     compiles and packages the source code for the CDK module
- * `./mvnw test`        perform the unit tests for the CDK module
  * `cdk diff`           compare deployed stack with current state
  * `cdk synth`          emits the synthesized CloudFormation template
