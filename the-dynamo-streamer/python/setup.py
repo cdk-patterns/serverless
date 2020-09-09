@@ -19,12 +19,12 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_dynamo_streamer"),
 
     install_requires=[
-        "aws-cdk.core==1.31.0",
-        "aws-cdk.aws-dynamodb==1.31.0",
-        "aws-cdk.aws_apigateway==1.31.0",
-        "aws-cdk.aws-lambda==1.31.0",
-        "aws-cdk.aws-lambda-event-sources==1.31.0",
-        "aws-cdk.aws-iam==1.31.0"
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
+        "aws-cdk.aws_apigateway==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws-lambda-event-sources==1.60.0",
+        "aws-cdk.aws-iam==1.60.0"
     ],
 
     python_requires=">=3.6",

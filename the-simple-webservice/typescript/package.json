@@ -12,21 +12,21 @@
     "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.37.0",
+    "@aws-cdk/assert": "1.60.0",
     "@types/jest": "^24.0.22",
     "@types/node": "10.17.5",
-    "aws-cdk": "1.37.0",
+    "aws-cdk": "1.60.0",
     "jest": "^25.5.4",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.1.0",
     "typescript": "~3.7.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "1.37.0",
-    "@aws-cdk/aws-apigatewayv2": "1.37.0",
-    "@aws-cdk/aws-dynamodb": "1.37.0",
-    "@aws-cdk/aws-lambda": "1.37.0",
-    "@aws-cdk/core": "1.37.0",
+    "@aws-cdk/aws-apigateway": "1.60.0",
+    "@aws-cdk/aws-apigatewayv2": "1.60.0",
+    "@aws-cdk/aws-dynamodb": "1.60.0",
+    "@aws-cdk/aws-lambda": "1.60.0",
+    "@aws-cdk/core": "1.60.0",
     "source-map-support": "^0.5.16"
   }
 }

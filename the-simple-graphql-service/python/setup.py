@@ -19,11 +19,11 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_simple_graphql_service"),
 
     install_requires=[
-        "aws-cdk.core==1.31.0",
-        "aws-cdk.aws_appsync==1.31.0",
-        "aws-cdk.aws-lambda==1.31.0",
-        "aws-cdk.aws-cognito==1.31.0",
-        "aws-cdk.aws-dynamodb==1.31.0",
+        "aws-cdk.core==1.60.0",
+        "aws-cdk.aws_appsync==1.60.0",
+        "aws-cdk.aws-lambda==1.60.0",
+        "aws-cdk.aws-cognito==1.60.0",
+        "aws-cdk.aws-dynamodb==1.60.0",
         "path==13.1.0"
     ],
 

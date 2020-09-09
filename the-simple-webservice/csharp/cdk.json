@@ -1,0 +1,7 @@
+{
+  "app": "dotnet run -p src/TheSimpleWebservice/TheSimpleWebservice.csproj",
+  "context": {
+    "@aws-cdk/core:enableStackNameDuplicates": "true",
+    "aws-cdk:enableDiffNoFail": "true"
+  }
+}

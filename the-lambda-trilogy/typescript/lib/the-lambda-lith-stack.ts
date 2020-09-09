@@ -12,7 +12,7 @@ export class TheLambdalithStack extends cdk.Stack {
 
     const lambdalith = new lambda.Function(this, 'lambdalithHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns/the-lambda-lith'),
+      code: lambda.Code.fromAsset('lambda-fns/the-lambda-lith'),
       handler: 'lambdalith.main',                
     });
 

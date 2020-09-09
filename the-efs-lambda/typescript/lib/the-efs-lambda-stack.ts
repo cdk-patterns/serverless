@@ -34,7 +34,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
     // This lambda function is given access to our EFS File System
     const efsLambda = new lambda.Function(this, 'efsLambdaFunction', {
       runtime: lambda.Runtime.PYTHON_3_8,
-      code: lambda.Code.asset('lambda-fns'), 
+      code: lambda.Code.fromAsset('lambda-fns'), 
       handler: 'message_wall.lambda_handler',
       vpc: vpc,
       filesystem: lambda.FileSystem.fromEfsAccessPoint(accessPoint, '/mnt/msg')
