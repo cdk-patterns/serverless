@@ -1,6 +1,9 @@
 package com.cdkpatterns;
 
-import software.amazon.awscdk.core.*;
+import software.amazon.awscdk.core.CfnOutput;
+import software.amazon.awscdk.core.Construct;
+import software.amazon.awscdk.core.Stack;
+import software.amazon.awscdk.core.StackProps;
 import software.amazon.awscdk.services.apigatewayv2.HttpApi;
 import software.amazon.awscdk.services.apigatewayv2.LambdaProxyIntegration;
 import software.amazon.awscdk.services.dynamodb.Attribute;
@@ -34,32 +37,24 @@ public class TheSimpleWebserviceStack extends Stack {
     }
 
     private HttpApi createHttpApi(Function dynamoLambda) {
-        HttpApi httpApi = HttpApi.Builder.create(this, "Endpoint")
+        return HttpApi.Builder.create(this, "Endpoint")
                 .defaultIntegration(
                         LambdaProxyIntegration.Builder.create()
                                 .handler(dynamoLambda)
                                 .build())
                 .build();
-        return httpApi;
     }
 
     private Function createLambda(String tableName) {
-        Function lambdaFunction =
-                Function.Builder.create(this, "DynamoLambdaHandler")
-                        .code(Code.fromAsset(this.getLambdaCodePath()))
-                        .handler("com.cdkpatterns.LambdaHandler::handleRequest")
-                        .runtime(Runtime.JAVA_11)
-                        .memorySize(1538)
-                        .environment(Map.of(
-                                "HITS_TABLE_NAME", tableName,
-                                "REGION", this.getRegion()))
-                        .build();
-        return lambdaFunction;
-    }
-
-    private String getLambdaCodePath() {
-        String userDir = System.getProperty("user.dir");
-        return userDir + "/../lambda/target/lambda.zip";
+        return Function.Builder.create(this, "DynamoLambdaHandler")
+                .code(Code.fromAsset("./lambda/target/lambda.zip"))
+                .handler("com.cdkpatterns.LambdaHandler::handleRequest")
+                .runtime(Runtime.JAVA_11)
+                .memorySize(1538)
+                .environment(Map.of(
+                        "HITS_TABLE_NAME", tableName,
+                        "REGION", this.getRegion()))
+                .build();
     }
 
     private Table createDynamoDBTable() {

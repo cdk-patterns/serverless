@@ -9,6 +9,7 @@
         <groupId>com.cdkpatterns</groupId>
         <artifactId>the-simple-webservice-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>the-simple-webservice-lambda</artifactId>
 

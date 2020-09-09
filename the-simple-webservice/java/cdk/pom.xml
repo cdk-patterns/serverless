@@ -7,12 +7,13 @@
         <groupId>com.cdkpatterns</groupId>
         <artifactId>the-simple-webservice-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>the-simple-webservice-cdk</artifactId>
 
     <properties>
         <maven.exec.plugin>1.6.0</maven.exec.plugin>
-        <cdk.version>1.56.0</cdk.version>
+        <maven.resources.plugin>3.2.0</maven.resources.plugin>
     </properties>
 
     <build>
@@ -25,8 +26,28 @@
                     <mainClass>com.cdkpatterns.TheSimpleWebserviceApp</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven.resources.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>copy-folder</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/cdk.out</outputDirectory>
+                            <resources />
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 
     <dependencies>
         <!-- AWS Cloud Development Kit -->

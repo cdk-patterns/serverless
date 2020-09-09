@@ -10,7 +10,7 @@ After deployment you should have a proxy api gateway where any url hits a lambda
 
 ####Requirements
 - Java JDK 11
-- NodeJS
+- node.js
 
 As a packaging and dependency management tool Maven is used for Lambda and CDK.
 Maven doesn't have to be installed since you can use the [Maven Wrapper](https://github.com/takari/maven-wrapper).
