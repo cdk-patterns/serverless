@@ -133,6 +133,10 @@ Then you can scroll down to the very last event and expand it to get the URL for
 
 ![output](img/output.png)
 
+## Power Tuner UI
+
+If you want to deploy a UI to powertune your Lambda Functions rather than using the AWS Console checkout [this project](https://github.com/mattymoomoo/aws-power-tuner-ui)
+
 ## Available CDK Versions
 
  * [TypeScript](typescript/)
