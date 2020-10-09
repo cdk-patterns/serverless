@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
-import { CfnApiKey, MappingTemplate, PrimaryKey, Values, GraphQLApi, SchemaDefinition, FieldLogLevel } from '@aws-cdk/aws-appsync';
+import { CfnApiKey, MappingTemplate, PrimaryKey, Values, GraphqlApi, Schema, FieldLogLevel } from '@aws-cdk/aws-appsync';
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { join } from 'path';
 
@@ -11,13 +11,12 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     /**
      * Create a new AppSync GraphQL API
      */
-    const api = new GraphQLApi(this, 'Api', {
+    const api = new GraphqlApi(this, 'Api', {
       name: `demoapi`,
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
       },
-      schemaDefinition: SchemaDefinition.FILE,
-      schemaDefinitionFile: join('__dirname', '/../', 'schema/schema.graphql'),
+      schema: new Schema({ filePath: join('__dirname', '/../', 'schema/schema.graphql') }),
     });
     
     const apiKey = new CfnApiKey(this, 'the-simple-graphql-service-api-key', {
@@ -120,7 +119,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     
     // GraphQL API Endpoint
     new cdk.CfnOutput(this, 'Endpoint', {
-      value: api.graphQlUrl
+      value: api.graphqlUrl
     });
 
     // API Key
