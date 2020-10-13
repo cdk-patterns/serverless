@@ -1,6 +1,6 @@
 # The Alexa Skill
 
-This deploys a CDK stack that produces an Alexa Skill backed by a Lambda Function.
+This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
 
 | Author        | Link           |
 | ------------- | ------------- |
