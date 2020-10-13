@@ -1,0 +1,64 @@
+# The Alexa Skill
+
+This deploys two CDK stacks that produce an Alexa Skill backed by a Lambda Function.
+
+## Architecture
+
+![arch](img/arch.png)
+
+## Prerequisites:
+1. An Amazon Developer account from: https://developer.amazon.com/
+1. A developer account security profile: https://developer.amazon.com/loginwithamazon/console/site/lwa/create-security-profile.html
+  Feel free to use whatever values you want for the Security Profile Name and Description. The Privacy Notice URL must be a valid URL format but does not need to be a valid URL. Once you create your security profile, navigate to the `Web Settings` tab and add the following as `Allowed Return URLs`:
+   - `http://127.0.0.1:9090/cb`
+   - `https://s3.amazonaws.com/ask-cli/response_parser.html`
+   ![Security Profile](img/lwa-security-profile.png)
+1. From the developer account, make sure to copy your `Client Id` and `Client Secret` from the security profile
+1. An AWS Account with CLI Access
+1. ASK CLI configured on your local machine: https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html (make sure to note the steps for first time install where you need to run the configure command)
+1. Once you have the ASK CLI and a developer account security profile, you must generate a refresh token to be used in the configuration of your skill, steps below
+1. Visit this link to get your vendorId: https://developer.amazon.com/settings/console/mycid?
+
+### Generate a Refresh Token from Postman
+1. Use Postman to fetch a new `OAuth 2.0` token
+1. Set the following key/values in the request
+
+| Field            | Value                                                                                                                                 |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| Grant Type       | Authorization Code                                                                                                                    |
+| Callback URL     | http://127.0.0.1:9090/cb                                                                                                              |
+| Auth URL         | https://www.amazon.com/ap/oa                                                                                                          |
+| Access Token URL | https://api.amazon.com/auth/o2/token                                                                                                  |
+| Client ID        | {YOUR_CLIENT_ID}                                                                                                                      |
+| Client Secret    | {YOUR_CLIENT_SECRET}                                                                                                                  |
+| Scope            | alexa::ask:skills:readwrite alexa::ask:models:readwrite alexa::ask:skills:test alexa::ask:catalogs:read alexa::ask:catalogs:readwrite |
+|                  |                                                                                                                                       |
+![Postman Auth](img/postman-oauth-settings.png)
+
+1. A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
+
+## Before You Deploy
+You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the skill resource which can be found in `the-alexa-skill/typescript/lib/the-alexa-skill-stack.ts`
+```
+      vendorId: 'foo',
+      authenticationConfiguration: {
+        clientId: 'foo',
+        clientSecret: 'bar',
+        refreshToken: 'foobar'
+      },
+```
+
+## Components
+### Asset Stack
+Uploads zipped Alexa manifest to the CDK Asset bucket. Must be deployed before Alexa Skill Stack
+### Alexa Skill Stack
+Deploys an Alexa skill, Lambda Function, and Dynamo DB table. The Alexa skill is fulfilled by the Lambda function. The Lambda function writes basic user details to the Dynamo Table.
+
+## References
+* [Starter Alexa Skill Code](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/develop-your-first-skill.html)
+* [Implementing Persistent Storage In Your Fulfillment Lambda](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/manage-attributes.html)
+
+
+## Available Versions
+
+ * [TypeScript](typescript/)
