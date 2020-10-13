@@ -2,6 +2,8 @@
 
 This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
 
+NB: This is slightly more complicated than the normal patterns because Alexa is an Amazon product as opposed to an AWS one so you need to setup an Amazon Developer Account with permissions to deploy the skill
+
 | Author        | Link           |
 | ------------- | ------------- |
 | AWS | [Build An Engaging Alexa Skill](https://developer.amazon.com/en-US/alexa/alexa-skills-kit/get-deeper/tutorials-code-samples/build-an-engaging-alexa-skill) |
