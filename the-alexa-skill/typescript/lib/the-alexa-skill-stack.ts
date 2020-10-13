@@ -5,7 +5,7 @@ import dynamodb = require('@aws-cdk/aws-dynamodb');
 import * as alexaAsk from '@aws-cdk/alexa-ask';
 import { ServicePrincipal, Role, PolicyStatement, CompositePrincipal } from '@aws-cdk/aws-iam';
 const path = require('path');
-const alexaAssets = '../../skill'
+const alexaAssets = '../skill'
 
 export class TheAlexaSkillStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
