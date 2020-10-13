@@ -1,6 +1,13 @@
 # The Alexa Skill
 
-This deploys two CDK stacks that produce an Alexa Skill backed by a Lambda Function.
+This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
+
+| Author        | Link           |
+| ------------- | ------------- |
+| AWS | [Build An Engaging Alexa Skill](https://developer.amazon.com/en-US/alexa/alexa-skills-kit/get-deeper/tutorials-code-samples/build-an-engaging-alexa-skill) |
+| AWS | [ASK CLI Docs](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-intro.html#create-new-skill) |
+| AWS | [Starter Alexa Skill Code](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/develop-your-first-skill.html) |
+| AWS | [Implementing Persistent Storage In Your Fulfillment Lambda](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/manage-attributes.html) |
 
 ## Architecture
 
@@ -49,16 +56,5 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 ```
 
 ## Components
-### Asset Stack
-Uploads zipped Alexa manifest to the CDK Asset bucket. Must be deployed before Alexa Skill Stack
 ### Alexa Skill Stack
 Deploys an Alexa skill, Lambda Function, and Dynamo DB table. The Alexa skill is fulfilled by the Lambda function. The Lambda function writes basic user details to the Dynamo Table.
-
-## References
-* [Starter Alexa Skill Code](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/develop-your-first-skill.html)
-* [Implementing Persistent Storage In Your Fulfillment Lambda](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/manage-attributes.html)
-
-
-## Available Versions
-
- * [TypeScript](typescript/)
