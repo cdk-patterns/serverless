@@ -56,12 +56,8 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 ```
 
 ## Components
-### Asset Stack
-Uploads zipped Alexa manifest to the CDK Asset bucket. Must be deployed before Alexa Skill Stack
 ### Alexa Skill Stack
 Deploys an Alexa skill, Lambda Function, and Dynamo DB table. The Alexa skill is fulfilled by the Lambda function. The Lambda function writes basic user details to the Dynamo Table.
-
-
 
 ## Available Versions
 
