@@ -57,9 +57,9 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
       },
 ```
 
-## Components
-### Alexa Skill Stack
-Deploys an Alexa skill, Lambda Function, and Dynamo DB table. The Alexa skill is fulfilled by the Lambda function. The Lambda function writes basic user details to the Dynamo Table.
+## How Do I Test This After Deployment?
+
+TBD
 
 ## Useful commands
 
