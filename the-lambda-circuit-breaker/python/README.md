@@ -13,12 +13,6 @@ Some Useful References:
 | Mark Michon | [Blog Post](https://blog.bearer.sh/build-a-circuit-breaker-in-node-js/) |
 | Gunnar Grosch | [GitHub](https://github.com/gunnargrosch/circuitbreaker-lambda) |
 
-# Available Versions
-
-* [TypeScript](typescript)
-* [Python](python)
-
-
 ![AWS Well Architected](img/well_architected.png)
 
 The [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) Framework helps you understand the pros and cons of
