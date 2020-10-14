@@ -17,7 +17,6 @@
     "@types/node": "10.17.27",
     "aws-cdk": "1.67.0",
     "jest": "^26.4.2",
-    "parcel": "2.0.0-beta.1",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.1.0",
     "typescript": "~3.9.7"
@@ -26,7 +25,6 @@
     "@aws-cdk/aws-apigatewayv2": "1.67.0",
     "@aws-cdk/aws-dynamodb": "1.67.0",
     "@aws-cdk/aws-lambda": "1.67.0",
-    "@aws-cdk/aws-lambda-nodejs": "^1.67.0",
     "@aws-cdk/core": "1.67.0",
     "source-map-support": "^0.5.16"
   }
