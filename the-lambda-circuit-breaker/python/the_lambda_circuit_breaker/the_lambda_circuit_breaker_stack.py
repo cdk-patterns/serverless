@@ -12,7 +12,7 @@ class TheLambdaCircuitBreakerStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        # DynamoDB Table to hold Circuitbreaker State
+        # DynamoDB Table to hold Circuit breaker State
         table = dynamo_db.Table(self, "CircuitBreakerTable",
                                 partition_key=dynamo_db.Attribute(name="id", type=dynamo_db.AttributeType.STRING),
                                 removal_policy=core.RemovalPolicy.DESTROY
@@ -34,6 +34,6 @@ class TheLambdaCircuitBreakerStack(core.Stack):
 
         # defines an API Gateway Http API resource backed by our "dynamoLambda" function.
         api = api_gw.HttpApi(self, 'CircuitBreakerGateway',
-                             default_integration=api_gw.LambdaProxyIntegration(handler=unreliable_lambda));
+                             default_integration=api_gw.LambdaProxyIntegration(handler=unreliable_lambda))
 
         core.CfnOutput(self, 'HTTP API Url', value=api.url);
