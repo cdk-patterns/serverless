@@ -4,6 +4,8 @@
 
 This is a pattern that I found via [Gunnar Grosch](https://twitter.com/GunnarGrosch) and his open source circuit breaker on  [GitHub](https://github.com/gunnargrosch/circuitbreaker-lambda). This is a different implementation to solve the same problem as the eventbridge circuit breaker pattern.
 
+**Note** This circuit breaker is only available for Node Lambda Functions today so the CDK is Python but the Function will have to stay Node until the library releases a Python implementation or I find a similar Python library
+
 Some Useful References:
 
 | Author        | Link           |
