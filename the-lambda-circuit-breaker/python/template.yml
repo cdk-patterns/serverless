@@ -66,7 +66,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4S3Bucket912D33D2
+          Ref: AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43S3BucketF9D2DE3B
         S3Key:
           Fn::Join:
             - ""
@@ -74,13 +74,13 @@ Resources:
                   - 0
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4S3VersionKeyAFCDF589
+                      - Ref: AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43S3VersionKey915B853C
               - Fn::Select:
                   - 1
                   - Fn::Split:
                       - "||"
-                      - Ref: AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4S3VersionKeyAFCDF589
-      Handler: index.handler
+                      - Ref: AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43S3VersionKey915B853C
+      Handler: unreliable.handler
       Role:
         Fn::GetAtt:
           - UnreliableLambdaHandlerServiceRole955A5CFD
@@ -90,13 +90,12 @@ Resources:
         Variables:
           CIRCUITBREAKER_TABLE:
             Ref: CircuitBreakerTable02DAD2B8
-          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
     DependsOn:
       - UnreliableLambdaHandlerServiceRoleDefaultPolicyC00E31E2
       - UnreliableLambdaHandlerServiceRole955A5CFD
     Metadata:
       aws:cdk:path: the-lambda-circuit-breaker/UnreliableLambdaHandler/Resource
-      aws:asset:path: asset.a08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4
+      aws:asset:path: asset.a0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43
       aws:asset:property: Code
   CircuitBreakerGateway122B123C:
     Type: AWS::ApiGatewayV2::Api
@@ -166,20 +165,20 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.67.0,@aws-cdk/assets=1.67.0,@aws-cdk/aws-apigatewayv2=1.67.0,@aws-cdk/aws-applicationautoscaling=1.67.0,@aws-cdk/aws-autoscaling-common=1.67.0,@aws-cdk/aws-certificatemanager=1.67.0,@aws-cdk/aws-cloudformation=1.67.0,@aws-cdk/aws-cloudwatch=1.67.0,@aws-cdk/aws-codeguruprofiler=1.67.0,@aws-cdk/aws-dynamodb=1.67.0,@aws-cdk/aws-ec2=1.67.0,@aws-cdk/aws-efs=1.67.0,@aws-cdk/aws-events=1.67.0,@aws-cdk/aws-iam=1.67.0,@aws-cdk/aws-kms=1.67.0,@aws-cdk/aws-lambda=1.67.0,@aws-cdk/aws-lambda-nodejs=1.67.0,@aws-cdk/aws-logs=1.67.0,@aws-cdk/aws-route53=1.67.0,@aws-cdk/aws-s3=1.67.0,@aws-cdk/aws-s3-assets=1.67.0,@aws-cdk/aws-sns=1.67.0,@aws-cdk/aws-sqs=1.67.0,@aws-cdk/aws-ssm=1.67.0,@aws-cdk/cloud-assembly-schema=1.67.0,@aws-cdk/core=1.67.0,@aws-cdk/custom-resources=1.67.0,@aws-cdk/cx-api=1.67.0,@aws-cdk/region-info=1.67.0,jsii-runtime=Python/3.7.2
+      Modules: aws-cdk=1.67.0,@aws-cdk/assets=1.67.0,@aws-cdk/aws-apigatewayv2=1.67.0,@aws-cdk/aws-applicationautoscaling=1.67.0,@aws-cdk/aws-autoscaling-common=1.67.0,@aws-cdk/aws-certificatemanager=1.67.0,@aws-cdk/aws-cloudformation=1.67.0,@aws-cdk/aws-cloudwatch=1.67.0,@aws-cdk/aws-codeguruprofiler=1.67.0,@aws-cdk/aws-dynamodb=1.67.0,@aws-cdk/aws-ec2=1.67.0,@aws-cdk/aws-efs=1.67.0,@aws-cdk/aws-events=1.67.0,@aws-cdk/aws-iam=1.67.0,@aws-cdk/aws-kms=1.67.0,@aws-cdk/aws-lambda=1.67.0,@aws-cdk/aws-logs=1.67.0,@aws-cdk/aws-route53=1.67.0,@aws-cdk/aws-s3=1.67.0,@aws-cdk/aws-s3-assets=1.67.0,@aws-cdk/aws-sns=1.67.0,@aws-cdk/aws-sqs=1.67.0,@aws-cdk/aws-ssm=1.67.0,@aws-cdk/cloud-assembly-schema=1.67.0,@aws-cdk/core=1.67.0,@aws-cdk/custom-resources=1.67.0,@aws-cdk/cx-api=1.67.0,@aws-cdk/region-info=1.67.0,jsii-runtime=Python/3.7.2
     Metadata:
       aws:cdk:path: the-lambda-circuit-breaker/CDKMetadata/Default
     Condition: CDKMetadataAvailable
 Parameters:
-  AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4S3Bucket912D33D2:
+  AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43S3BucketF9D2DE3B:
     Type: String
-    Description: S3 bucket for asset "a08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4"
-  AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4S3VersionKeyAFCDF589:
+    Description: S3 bucket for asset "a0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43"
+  AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43S3VersionKey915B853C:
     Type: String
-    Description: S3 key for asset version "a08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4"
-  AssetParametersa08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4ArtifactHashA1C25122:
+    Description: S3 key for asset version "a0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43"
+  AssetParametersa0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43ArtifactHash33C9198F:
     Type: String
-    Description: Artifact hash for asset "a08836bf56066b93ddbce61b199345efd37d577ffdf6c0bba70f585cb72648f4"
+    Description: Artifact hash for asset "a0e924742efa3739f209812573ed2ce217e6459050520a3b6bd1d274342baa43"
 Outputs:
   HTTPAPIUrl:
     Value:

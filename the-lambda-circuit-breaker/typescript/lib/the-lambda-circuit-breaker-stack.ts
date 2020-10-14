@@ -1,8 +1,8 @@
 import * as cdk from '@aws-cdk/core';
-import lambda = require('@aws-cdk/aws-lambda-nodejs');
+import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
-const path = require('path');
+const { execSync } = require('child_process');
 
 export class TheLambdaCircuitBreakerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -13,11 +13,15 @@ export class TheLambdaCircuitBreakerStack extends cdk.Stack {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
+    
+    // Install Dependencies and Compile Lambda Function
+    execSync('cd lambda-fns && npm i && npm run build');
 
     // Create a Lambda Function with unreliable code
-    const unreliableLambda = new lambda.NodejsFunction(this, 'UnreliableLambdaHandler', {
-      entry: path.join(__dirname, '../lambda-fns/unreliable.ts'),
-      handler: 'handler',
+    const unreliableLambda = new lambda.Function(this, 'UnreliableLambdaHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset('lambda-fns'),
+      handler: 'unreliable.handler', 
       environment: {
         CIRCUITBREAKER_TABLE: table.tableName
       }

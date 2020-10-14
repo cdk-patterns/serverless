@@ -18,6 +18,7 @@ Some Useful References:
 * [TypeScript](typescript)
 * [Python](python)
 
+
 ![AWS Well Architected](img/well_architected.png)
 
 The [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/) Framework helps you understand the pros and cons of

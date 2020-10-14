@@ -4,8 +4,6 @@
 
 This is a pattern that I found via [Gunnar Grosch](https://twitter.com/GunnarGrosch) and his open source circuit breaker on  [GitHub](https://github.com/gunnargrosch/circuitbreaker-lambda). This is a different implementation to solve the same problem as the eventbridge circuit breaker pattern.
 
-**Prerequisites:** This uses the lambda.NodejsFunction capability which requires you to have Docker installed and running. It handles installing the dependencies and packaging up the lambda function.
-
 Some Useful References:
 
 | Author        | Link           |

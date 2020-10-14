@@ -4,8 +4,6 @@
 
 This is a pattern that I found via [Gunnar Grosch](https://twitter.com/GunnarGrosch) and his open source circuit breaker on  [GitHub](https://github.com/gunnargrosch/circuitbreaker-lambda). This is a different implementation to solve the same problem as the eventbridge circuit breaker pattern.
 
-**Prerequisites:** This uses the lambda.NodejsFunction capability which requires you to have Docker installed and running. It handles installing the dependencies and packaging up the lambda function.
-
 Some Useful References:
 
 | Author        | Link           |
@@ -14,6 +12,12 @@ Some Useful References:
 | Jeremy Daly | [Blog Post](https://www.jeremydaly.com/serverless-microservice-patterns-for-aws/#circuitbreaker) |
 | Mark Michon | [Blog Post](https://blog.bearer.sh/build-a-circuit-breaker-in-node-js/) |
 | Gunnar Grosch | [GitHub](https://github.com/gunnargrosch/circuitbreaker-lambda) |
+
+# Available Versions
+
+* [TypeScript](typescript)
+* [Python](python)
+
 
 ![AWS Well Architected](img/well_architected.png)
 
@@ -40,8 +44,6 @@ Best Practices:
 1 / Manage transaction, partial, and intermittent failures: Transaction failures might occur when components are under high load. Partial failures can occur during batch processing, while intermittent failures might occur due to network or other transient issues.
 
 ## What's Included In This Pattern?
-
-**Note** The circuit breaker lambda library is currently node only so the Lambda function is in TypeScript. If the library expands I can refactor the pattern.
 
 This is an implementation of the simple webservice pattern only instead of our Lambda Function using DynamoDB to store and retrieve data for the user it is being used to tell our Lambda Function if the webservice it wants to call is reliable right now or if it should use a fallback function.
 
@@ -119,16 +121,8 @@ You will see messages like:
 
 Open means that no requests are going through to the unreliable function, half means that some requests are let through to test the stability of the unreliable function and closed means operating as normal.
 
-## Useful Commands
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the .env
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+## CDK Commands
 
 To manually create a virtualenv on MacOS and Linux:
 
