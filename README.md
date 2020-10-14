@@ -162,6 +162,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Lambda Circuit Breaker](/the-lambda-circuit-breaker/README.md)
+  Deploy Gunnar Grosch's circuitbreaker-lambda inside a reference architecture
+
+  ![Architecture](the-lambda-circuit-breaker/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Lambda Power Tuner](/the-lambda-power-tuner/README.md)
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
@@ -230,6 +237,7 @@ npx cdk deploy
   * [Christian Mueller](#christian-mueller)
   * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
+  * [Gunnar Grosch](#gunnar-grosch)
   * [Heitor Lessa](#heitor-lessa)
   * [Hervé Nivon](#hervé-nivon)
   * [James Beswick](#james-beswick)
@@ -310,6 +318,22 @@ npx cdk deploy
   You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  ### Gunnar Grosch
+  <img src="img/dev_profiles/gunnar_grosch.jpg" width="120" alt="Gunnar Grosch profile pic" /><br />
+
+  Senior Developer Advocate @awscloud<br />
+
+  Twitter - [@GunnarGrosch](https://twitter.com/GunnarGrosch)<br />
+  Blog - [grosch.se](https://grosch.se/)<br />
+
+  #### [The Lambda Circuit Breaker](/the-lambda-circuit-breaker/README.md)
+  Deploy Gunnar Grosch's circuitbreaker-lambda inside a reference architecture
+
+  ![Architecture](the-lambda-circuit-breaker/img/arch.png)
+
 
   <br /><hr /><br />
 

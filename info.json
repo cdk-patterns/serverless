@@ -9,6 +9,9 @@
         "s3-react-website": {
             "prodReady": false
         },
+        "the-basic-mq": {
+            "prodReady": false
+        },
         "the-big-fan": {
             "prodReady": false
         },
@@ -31,6 +34,9 @@
             "prodReady": false
         },
         "the-eventbridge-etl": {
+            "prodReady": false
+        },
+        "the-lambda-circuit-breaker": {
             "prodReady": false
         },
         "the-lambda-power-tuner": {
