@@ -1,0 +1,33 @@
+{
+  "name": "unreliable",
+  "version": "1.0.0",
+  "description": "this is an unreliable lambda with a circuit breaker",
+  "main": "unreliable.js",
+  "repository": "https://github.com/cdk-patterns/serverless",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nideveloper",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "10.17.5",
+    "typescript": "~3.7.2"
+  },
+  "dependencies": {
+    "circuitbreaker-lambda": "0.0.1"
+  },
+  "targets": {
+    "cdk-lambda": {
+      "context": "node",
+      "includeNodeModules": {
+        "aws-sdk": false
+      },
+      "sourceMap": false,
+      "minify": false,
+      "engines": {
+        "node": ">= 12"
+      }
+    }
+  }
+}

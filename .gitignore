@@ -9,6 +9,7 @@ node_modules
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+.parcel-cache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
