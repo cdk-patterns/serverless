@@ -1,0 +1,27 @@
+{
+    "manifest": {
+        "publishingInformation": {
+            "locales": {
+                "en-US": {
+                    "name": "CDK Patterns Sample",
+                    "summary": "A simple skill deployed using CDK through CDK Patterns",
+                    "description": "Leverage CDK to deploy your first Alexa Skill",
+                    "examplePhrases": [
+                        "Alexa open CDK Patterns Sample",
+                        "hello",
+                        "help"
+                    ],
+                    "keywords": []
+                }
+            },
+            "isAvailableWorldwide": true,
+            "testingInstructions": "Sample Testing Instructions.",
+            "category": "KNOWLEDGE_AND_TRIVIA"
+        },
+        "apis": {
+            "custom": {
+            }
+        },
+        "manifestVersion": "1.0"
+    }
+}
