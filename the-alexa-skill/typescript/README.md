@@ -66,11 +66,14 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 5. Amazon will ask if you'd to use your microphone or not. This is entirely optional as you may test Alexa using either voice commands or  the text box provided.
 6. Change the "skill testing is enabled in:" option from "Off" to "Development" if needed.
 7. Either type or say "CDK Patterns" (Case sensitive if typing) and wait for a response.
-8. If the response from Alexa was "Welcome to the CDK Patterns Skill, you can say hello!"
-9. Now we just need to confirm that it is interacting with DynamoDB correctly.
-10. Go to the AWS Console and navigate to DynamoDB. Open your tables and find the one corresponding to TheAlexaSkillStack.
-11. Confirm that one item is in the table (It should have 2 attributes and a UserID). If it does then congratulations! Everything works! 
+8. The response should be "Hey, it\'s Pancakes the CDK Otter here, what would you like to know?"
+9. For further testing, either type or say "What patterns do you have?"
+10. The response should be "I have many patterns for you to see! For example, there is" followed by three pattern names randomly picked from CDK Patterns.
+11. Now we just need to confirm that it is interacting with DynamoDB correctly.
+12. Go to the AWS Console and navigate to DynamoDB. Open your tables and find the one corresponding to TheAlexaSkillStack.
+13. Confirm that one item is in the table (It should have 2 attributes and a UserID). If it does then congratulations! Everything works! 
 
 ## Available Versions
 
  * [TypeScript](typescript/)
+ * [Python](python/)
