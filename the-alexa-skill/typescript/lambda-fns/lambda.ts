@@ -10,8 +10,14 @@ import {
     SessionEndedRequest,
     RequestEnvelope,
 } from 'ask-sdk-model';
+const patterns: string[] = ['The Destined Lambda', 'The Dynamo Streamer', 'The Big Fan', 'The Cloudwatch Dashboard', 'The S3 Angular Website', 'The Alexa Skill'];
 const ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
 const USERS_TABLE = process.env.USERS_TABLE || '';
+function getPattern(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 const LaunchRequestHandler: RequestHandler = {
     canHandle(handlerInput: HandlerInput): boolean {
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
@@ -19,28 +25,29 @@ const LaunchRequestHandler: RequestHandler = {
         handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NavigateHomeIntent';
     },
     async handle(handlerInput: HandlerInput): Promise<Response> {
-        const speechText = 'Welcome to the CDK Patterns Skill, you can say hello!';
+        const speechText = 'Hey, it\'s Pancakes the CDK Otter here, what would you like to know?';
+        const repromptText = 'You can ask what CDK Patterns I have, if you like!';
         const { attributesManager } = handlerInput;
         attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'Launch Request or Navigate Home'});
         await attributesManager.savePersistentAttributes();
         return handlerInput.responseBuilder
             .speak(speechText)
-            .reprompt(speechText)
+            .reprompt(repromptText)
             .withSimpleCard('Hello World', speechText)
             .getResponse();
     },
 };
-const HelloWorldIntentHandler: RequestHandler = {
+const PatternListIntentHandler: RequestHandler = {
     canHandle(handlerInput: HandlerInput): boolean {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-            handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
+            handlerInput.requestEnvelope.request.intent.name === 'PatternListIntent';
     },
     async handle(handlerInput: HandlerInput): Promise<Response> {
         const { attributesManager } = handlerInput;
-        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'HelloWorldIntent'});
+        attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'PatternListIntent'});
         await attributesManager.savePersistentAttributes();
 
-        const speechText = 'Hello World!';
+        const speechText = 'I have many patterns for you to see! For example, there is ' + patterns[getPattern(0, 1)] + ', ' + patterns[getPattern(2, 3)] + ' or ' + patterns[getPattern(4, 5)];
 
         return handlerInput.responseBuilder
             .speak(speechText)
@@ -122,7 +129,7 @@ exports.handler = SkillBuilders.custom()
     .withPersistenceAdapter(getPersistenceAdapter(USERS_TABLE))
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
+        PatternListIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,

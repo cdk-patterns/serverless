@@ -42,8 +42,10 @@ class TheAlexaSkillStack(core.Stack):
         # DynamoDB Table
         users_table = dynamo_db.Table(self, 'Users',
                                       partition_key=dynamo_db.Attribute(name='userId', type=dynamo_db.AttributeType.STRING),
-                                      billing_mode=dynamo_db.BillingMode.PAY_PER_REQUEST
+                                      billing_mode=dynamo_db.BillingMode.PAY_PER_REQUEST,
+                                      removal_policy=core.RemovalPolicy.DESTROY
                                       )
+
         # install node dependencies for lambdas
         lambda_folder = os.path.dirname(os.path.realpath(__file__)) + "/../lambda_fns"
         subprocess.check_call("npm i".split(), cwd=lambda_folder)

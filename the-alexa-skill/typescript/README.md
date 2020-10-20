@@ -1,6 +1,6 @@
 # The Alexa Skill
 
-This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table. 
+This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
 
 NB: This is slightly more complicated than the normal patterns because Alexa is an Amazon product as opposed to an AWS one so you need to setup an Amazon Developer Account with permissions to deploy the skill
 
@@ -59,13 +59,18 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 
 ## How Do I Test This After Deployment?
 
-TBD
+1. Navigate to the Alexa Developer Console, or follow this link - https://developer.amazon.com/alexa/console/ask
+2. If you see a skill named "CDK Patterns Sample" in your Alexa Skills list then it has successfully been uploaded! Now we just need to test the skill itself.
+3. Select the CDK Patterns Sample skill by clicking on the name.
+4. On the next page, select "Test" at the top of the screen. 
+5. Amazon will ask if you'd to use your microphone or not. This is entirely optional as you may test Alexa using either voice commands or  the text box provided.
+6. Change the "skill testing is enabled in:" option from "Off" to "Development" if needed.
+7. Either type or say "CDK Patterns" (Case sensitive if typing) and wait for a response.
+8. If the response from Alexa was "Welcome to the CDK Patterns Skill, you can say hello!"
+9. Now we just need to confirm that it is interacting with DynamoDB correctly.
+10. Go to the AWS Console and navigate to DynamoDB. Open your tables and find the one corresponding to TheAlexaSkillStack.
+11. Confirm that one item is in the table (It should have 2 attributes and a UserID). If it does then congratulations! Everything works! 
 
-## Useful commands
+## Available Versions
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `npm run deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * [TypeScript](typescript/)
