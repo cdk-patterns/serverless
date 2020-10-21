@@ -2,6 +2,8 @@
 
 This is a CDK Pattern to deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
 
+![arch](img/arch.png)
+
 NB: This is slightly more complicated than the normal patterns because Alexa is an Amazon product as opposed to an AWS one so you need to setup an Amazon Developer Account with permissions to deploy the skill
 
 Some References:
@@ -12,10 +14,6 @@ Some References:
 | AWS | [ASK CLI Docs](https://developer.amazon.com/en-US/docs/alexa/smapi/ask-cli-intro.html#create-new-skill) |
 | AWS | [Starter Alexa Skill Code](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/develop-your-first-skill.html) |
 | AWS | [Implementing Persistent Storage In Your Fulfillment Lambda](https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-nodejs/manage-attributes.html) |
-
-## Architecture
-
-![arch](img/arch.png)
 
 ## Prerequisites:
 1. An Amazon Developer account from: https://developer.amazon.com/
