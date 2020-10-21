@@ -284,7 +284,7 @@ npx cdk deploy
   <br /><hr /><br />
 
   ### Chris Plankey
-  <img src="img/dev_profiles/chris_plankey.jpeg" width="120" alt="Chris Plankey profile pic" /><br />
+  <img src="img/dev_profiles/chris_plankey.jpg" width="120" alt="Chris Plankey profile pic" /><br />
 
   Many hats. Few servers. AWS Portsmouth User Group Co-Organizer and AWS Community Builder.<br />
 
