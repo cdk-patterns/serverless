@@ -18,21 +18,24 @@ Some References:
 ## Prerequisites
 Unfortunately these steps cannot be skipped or shortened as you need to configure an Amazon developer account and acquire an OAuth 2.0 Refresh token that allows you to deploy your skill using CloudFormation.
 
-1. An Amazon Developer account from: https://developer.amazon.com/
-1. A developer account security profile: https://developer.amazon.com/loginwithamazon/console/site/lwa/create-security-profile.html
-  Feel free to use whatever values you want for the Security Profile Name and Description. The Privacy Notice URL must be a valid URL format but does not need to be a valid URL. Once you create your security profile, navigate to the `Web Settings` tab and add the following as `Allowed Return URLs`:
+### 1. Create an [Amazon Developer account](https://developer.amazon.com/)
+Alexa is an Amazon product even though it can be deployed through AWS you still need to have a separate [Amazon Developer account](https://developer.amazon.com/)
+### 2. Create a [Developer Account Security Profile](https://developer.amazon.com/loginwithamazon/console/site/lwa/create-security-profile.html).
+
+  Open the [Developer Account Security Profile](https://developer.amazon.com/loginwithamazon/console/site/lwa/create-security-profile.html) page and feel free to use whatever values you want for the Security Profile Name and Description. The Privacy Notice URL must be a valid URL format but does not need to be a valid URL. Once you create your security profile, navigate to the `Web Settings` tab and add the following as `Allowed Return URLs`:
    - `http://127.0.0.1:9090/cb`
    - `https://s3.amazonaws.com/ask-cli/response_parser.html`
    ![Security Profile](img/lwa-security-profile.png)
-1. From the developer account, make sure to copy your `Client Id` and `Client Secret` from the security profile
-1. An AWS Account with CLI Access
-1. ASK CLI configured on your local machine: https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html (make sure to note the steps for first time install where you need to run the configure command)
-1. Once you have the ASK CLI and a developer account security profile, you must generate a refresh token to be used in the configuration of your skill, steps below
-1. Visit this link to get your vendorId: https://developer.amazon.com/settings/console/mycid?
+### 3. Copy Your `Client Id` and `Client Secret` from the security profile
+Keep these values safe as we will use them in a second.
+### 4. Make Sure You Have An AWS Account with CLI Access
+You will need this to deploy the CDK stack anyway but for the next step we need to associate Alexa with our AWS Account so this is crucial
+### 5. Setup ASK CLI on your local machine
+Alexa needs to associate your Amazon Developer Account with your AWS Account. The easiest way to do this is to run `ask configure` after you have installed the [Alexa Skills Kit CLI](https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html)
+### 6. Generate a Refresh Token
+We are going to use Postman to fetch a new `OAuth 2.0` token
 
-### Generate a Refresh Token from Postman
-1. Use Postman to fetch a new `OAuth 2.0` token
-1. Set the following key/values in the request
+Set the following key/values in the request:
 
 | Field            | Value                                                                                                                                 |
 |------------------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -46,7 +49,11 @@ Unfortunately these steps cannot be skipped or shortened as you need to configur
 |                  |                                                                                                                                       |
 ![Postman Auth](img/postman-oauth-settings.png)
 
-1. A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
+A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
+
+### 7. Copy Your Vendor ID
+Visit the [Customer Details Page](https://developer.amazon.com/settings/console/mycid) for your Amazon Developer Account and make a note of your "vendor ID"
+
 
 ## Before You Deploy
 You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the skill resource which can be found in `the-alexa-skill/typescript/lib/the-alexa-skill-stack.ts`
