@@ -9,6 +9,9 @@
         "s3-react-website": {
             "prodReady": false
         },
+        "the-alexa-skill": {
+            "prodReady": false
+        },
         "the-basic-mq": {
             "prodReady": false
         },
