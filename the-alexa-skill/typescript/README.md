@@ -52,7 +52,7 @@ Set the following key/values in the request:
 A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
 
 ### 7. Copy Your Vendor ID
-Visit the [https://developer.amazon.com/settings/console/mycid](My CID) page and make a note of the second ID on the page "vendor ID"
+Visit the [Customer Details Page](https://developer.amazon.com/settings/console/mycid) for your Amazon Developer Account and make a note of your "vendor ID"
 
 
 ## Before You Deploy
