@@ -1,0 +1,332 @@
+audited 20 packages in 1.07s
+found 0 vulnerabilities
+
+
+> alexa@1.0.0 build /Users/n1531137/Documents/GitRepos/serverless/the-alexa-skill/python/lambda_fns
+> tsc
+
+Version 3.7.5
+Syntax:   tsc [options] [file...]
+
+Examples: tsc hello.ts
+          tsc --outFile file.js file.ts
+          tsc @args.txt
+          tsc --build tsconfig.json
+
+Options:
+ -h, --help                                         Print this message.
+ -w, --watch                                        Watch input files.
+ --pretty                                           Stylize errors and messages using color and context (experimental).
+ --all                                              Show all compiler options.
+ -v, --version                                      Print the compiler's version.
+ --init                                             Initializes a TypeScript project and creates a tsconfig.json file.
+ -p FILE OR DIRECTORY, --project FILE OR DIRECTORY  Compile the project given the path to its configuration file, or to a folder with a 'tsconfig.json'.
+ -b, --build                                        Build one or more projects and their dependencies, if out of date
+ -t VERSION, --target VERSION                       Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'.
+ -m KIND, --module KIND                             Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'.
+ --lib                                              Specify library files to be included in the compilation.
+                                                      'es5' 'es6' 'es2015' 'es7' 'es2016' 'es2017' 'es2018' 'es2019' 'es2020' 'esnext' 'dom' 'dom.iterable' 'webworker' 'webworker.importscripts' 'scripthost' 'es2015.core' 'es2015.collection' 'es2015.generator' 'es2015.iterable' 'es2015.promise' 'es2015.proxy' 'es2015.reflect' 'es2015.symbol' 'es2015.symbol.wellknown' 'es2016.array.include' 'es2017.object' 'es2017.sharedmemory' 'es2017.string' 'es2017.intl' 'es2017.typedarrays' 'es2018.asyncgenerator' 'es2018.asynciterable' 'es2018.intl' 'es2018.promise' 'es2018.regexp' 'es2019.array' 'es2019.object' 'es2019.string' 'es2019.symbol' 'es2020.string' 'es2020.symbol.wellknown' 'esnext.array' 'esnext.symbol' 'esnext.asynciterable' 'esnext.intl' 'esnext.bigint' 
+ --allowJs                                          Allow javascript files to be compiled.
+ --jsx KIND                                         Specify JSX code generation: 'preserve', 'react-native', or 'react'.
+ -d, --declaration                                  Generates corresponding '.d.ts' file.
+ --declarationMap                                   Generates a sourcemap for each corresponding '.d.ts' file.
+ --sourceMap                                        Generates corresponding '.map' file.
+ --outFile FILE                                     Concatenate and emit output to single file.
+ --outDir DIRECTORY                                 Redirect output structure to the directory.
+ --removeComments                                   Do not emit comments to output.
+ --noEmit                                           Do not emit outputs.
+ --strict                                           Enable all strict type-checking options.
+ --noImplicitAny                                    Raise error on expressions and declarations with an implied 'any' type.
+ --strictNullChecks                                 Enable strict null checks.
+ --strictFunctionTypes                              Enable strict checking of function types.
+ --strictBindCallApply                              Enable strict 'bind', 'call', and 'apply' methods on functions.
+ --strictPropertyInitialization                     Enable strict checking of property initialization in classes.
+ --noImplicitThis                                   Raise error on 'this' expressions with an implied 'any' type.
+ --alwaysStrict                                     Parse in strict mode and emit "use strict" for each source file.
+ --noUnusedLocals                                   Report errors on unused locals.
+ --noUnusedParameters                               Report errors on unused parameters.
+ --noImplicitReturns                                Report error when not all code paths in function return a value.
+ --noFallthroughCasesInSwitch                       Report errors for fallthrough cases in switch statement.
+ --types                                            Type declaration files to be included in compilation.
+ --esModuleInterop                                  Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'.
+ @<file>                                            Insert command line options and files from a file.
+Parameters:
+  AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3BucketCA61D416:
+    Type: String
+    Description: S3 bucket for asset "17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560"
+  AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3VersionKey52343CE5:
+    Type: String
+    Description: S3 key for asset version "17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560"
+  AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560ArtifactHashF33907CF:
+    Type: String
+    Description: Artifact hash for asset "17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560"
+  AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfS3BucketB49D32AD:
+    Type: String
+    Description: S3 bucket for asset "d905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7df"
+  AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfS3VersionKey5D53C02B:
+    Type: String
+    Description: S3 key for asset version "d905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7df"
+  AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfArtifactHashFDF399F8:
+    Type: String
+    Description: Artifact hash for asset "d905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7df"
+Resources:
+  Role1ABCC5F0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - alexa-appkit.amazon.com
+                - cloudformation.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: the-alexa-skill/Role/Resource
+  RoleDefaultPolicy5FFB7DAB:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: S3:GetObject
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - arn:aws:s3:::%
+                  - Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3BucketCA61D416
+                  - /
+                  - Fn::Select:
+                      - 0
+                      - Fn::Split:
+                          - "||"
+                          - Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3VersionKey52343CE5
+                  - Fn::Select:
+                      - 1
+                      - Fn::Split:
+                          - "||"
+                          - Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3VersionKey52343CE5
+        Version: "2012-10-17"
+      PolicyName: RoleDefaultPolicy5FFB7DAB
+      Roles:
+        - Ref: Role1ABCC5F0
+    Metadata:
+      aws:cdk:path: the-alexa-skill/Role/DefaultPolicy/Resource
+  Users0A0EEA89:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: the-alexa-skill/Users/Resource
+  AlexaLambdaHandlerServiceRoleA4811424:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: the-alexa-skill/AlexaLambdaHandler/ServiceRole/Resource
+  AlexaLambdaHandlerServiceRoleDefaultPolicy8BC5130A:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - Users0A0EEA89
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: AlexaLambdaHandlerServiceRoleDefaultPolicy8BC5130A
+      Roles:
+        - Ref: AlexaLambdaHandlerServiceRoleA4811424
+    Metadata:
+      aws:cdk:path: the-alexa-skill/AlexaLambdaHandler/ServiceRole/DefaultPolicy/Resource
+  AlexaLambdaHandler6FAFE38D:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfS3BucketB49D32AD
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfS3VersionKey5D53C02B
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersd905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7dfS3VersionKey5D53C02B
+      Handler: message_wall.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - AlexaLambdaHandlerServiceRoleA4811424
+          - Arn
+      Runtime: python3.8
+      Environment:
+        Variables:
+          USERS_TABLE:
+            Ref: Users0A0EEA89
+    DependsOn:
+      - AlexaLambdaHandlerServiceRoleDefaultPolicy8BC5130A
+      - AlexaLambdaHandlerServiceRoleA4811424
+    Metadata:
+      aws:cdk:path: the-alexa-skill/AlexaLambdaHandler/Resource
+      aws:asset:path: asset.d905e01cfffbc70fd4e1333e40f2bc5f5f0c1588864f483d5fb993498aa2d7df
+      aws:asset:property: Code
+  AlexaLambdaHandlerAlexaPermissionA372D625:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - AlexaLambdaHandler6FAFE38D
+          - Arn
+      Principal: alexa-appkit.amazon.com
+    Metadata:
+      aws:cdk:path: the-alexa-skill/AlexaLambdaHandler/AlexaPermission
+  thealexaskill:
+    Type: Alexa::ASK::Skill
+    Properties:
+      AuthenticationConfiguration:
+        ClientId: amzn1.application-oa2-client.4bdff2c9133341feba2db249d7739d18
+        ClientSecret: 64ed758c10dac51f5d9c25912206dd19d2d379826a269695de2439fd2a4a7aed
+        RefreshToken: Atzr|IwEBIJceCFdn8sCj6hhKnLW_avbXUba49DyzyuNXVvMa_o38QqdJ84osI__mZGhZg-0JLqd88jtkzhdrYHdvMg5En4qEpw4knMIFllH1GO9NJUJtSiGYDPOxyDnp1CV16AV1t7YojuHtFj4X6V0XE_tSBswTFzRpP0fjx_E0t97QaKllo4LFParxjsibO7cLRGY6fbe8CqZlMnOOpTRfCqL5JIzEArziVdC27leW02QRJkkUErYCJNAsKv-2tutYB1UXb2nT7IIwOfmNXSVmX1gUiFNgKrfXaXSFAXaZlQZ2zJN2v58uhD-3Aqqh5uyBAGJ1t4-ONovYbqnblrXRQvqZr6DvgSQb-8fgK0GFjHSpSfhGuHgFipJShpUouHg8ps0BRQYcyf8ESNcKEaVjCu9FSQ697MfTp4zo7s4Fxt2IGgN06PceR1GE6JrFlVGL-xkW-z_LCKGYWc1OPHmF2MwEQvUDAjT72huk-46Zh-GtzC-SezTrHYnfN4DkS-Ut5X8yZ_Iv1WdczVjqSP80b_T7KMV1tCP2EVwTBOk_86YzRsIyWXiLdpd-I_e-TWN0UuJms11q-Wn7LQ2Q58TkmsmQM4lCqcdNiY-QptOtfNt2q79SskXwTUii6wbP-LExWTl4iwEERIDEvzpyjlmxBNn98u_XlsBF-UdMjAHPmikCA0Mw1Q
+      SkillPackage:
+        Overrides:
+          Manifest:
+            apis:
+              custom:
+                endpoint:
+                  uri:
+                    Fn::GetAtt:
+                      - AlexaLambdaHandler6FAFE38D
+                      - Arn
+        S3Bucket:
+          Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3BucketCA61D416
+        S3BucketRole:
+          Fn::GetAtt:
+            - Role1ABCC5F0
+            - Arn
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3VersionKey52343CE5
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters17b588b0e3cf09068a05b4304cc136e8bb99c723652832e5051c406bc762f560S3VersionKey52343CE5
+      VendorId: M9WVOMA66B48U
+    Metadata:
+      aws:cdk:path: the-alexa-skill/the-alexa-skill
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.64.0,@aws-cdk/alexa-ask=1.50.0,@aws-cdk/assets=1.50.0,@aws-cdk/aws-applicationautoscaling=1.50.0,@aws-cdk/aws-autoscaling-common=1.50.0,@aws-cdk/aws-cloudformation=1.50.0,@aws-cdk/aws-cloudwatch=1.50.0,@aws-cdk/aws-dynamodb=1.50.0,@aws-cdk/aws-ec2=1.50.0,@aws-cdk/aws-efs=1.50.0,@aws-cdk/aws-events=1.50.0,@aws-cdk/aws-iam=1.50.0,@aws-cdk/aws-kms=1.50.0,@aws-cdk/aws-lambda=1.50.0,@aws-cdk/aws-logs=1.50.0,@aws-cdk/aws-s3=1.50.0,@aws-cdk/aws-s3-assets=1.50.0,@aws-cdk/aws-sns=1.50.0,@aws-cdk/aws-sqs=1.50.0,@aws-cdk/aws-ssm=1.50.0,@aws-cdk/cloud-assembly-schema=1.50.0,@aws-cdk/core=1.50.0,@aws-cdk/custom-resources=1.50.0,@aws-cdk/cx-api=1.50.0,@aws-cdk/region-info=1.50.0,jsii-runtime=Python/3.8.5
+    Condition: CDKMetadataAvailable
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

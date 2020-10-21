@@ -4,6 +4,7 @@ import assets = require('@aws-cdk/aws-s3-assets');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import * as alexaAsk from '@aws-cdk/alexa-ask';
 import { ServicePrincipal, Role, PolicyStatement, CompositePrincipal } from '@aws-cdk/aws-iam';
+import { execSync } from 'child_process';
 const path = require('path');
 const alexaAssets = '../skill'
 
@@ -33,8 +34,12 @@ export class TheAlexaSkillStack extends cdk.Stack {
     // DynamoDB Table
      const usersTable = new dynamodb.Table(this, 'Users', {
       partitionKey: { name: 'userId', type: dynamodb.AttributeType.STRING },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
+
+    // Install Dependencies and Compile Lambda Function
+    execSync('cd lambda-fns && npm i && npm run build');
 
     // Lambda function for Alexa fulfillment
     const alexaLambda = new lambda.Function(this, 'AlexaLambdaHandler', {
@@ -51,11 +56,11 @@ export class TheAlexaSkillStack extends cdk.Stack {
 
     // create the skill
     const skill = new alexaAsk.CfnSkill(this, 'the-alexa-skill', {
-      vendorId: 'foo',
+      vendorId: '',
       authenticationConfiguration: {
-        clientId: 'foo',
-        clientSecret: 'bar',
-        refreshToken: 'foobar'
+        clientId: '',
+        clientSecret: '',
+        refreshToken: ''
       },
       skillPackage:{
         s3Bucket: asset.s3BucketName,
