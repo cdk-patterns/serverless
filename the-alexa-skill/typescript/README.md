@@ -82,7 +82,11 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 12. Go to the AWS Console and navigate to DynamoDB. Open your tables and find the one corresponding to TheAlexaSkillStack.
 13. Confirm that one item is in the table (It should have 2 attributes and a UserID). If it does then congratulations! Everything works! 
 
-## Available Versions
+## Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `npm run deploy`  deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
