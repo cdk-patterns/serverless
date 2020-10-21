@@ -65,11 +65,11 @@ class TheAlexaSkillStack(core.Stack):
 
         # create the skill
         skill = alexa_ask.CfnSkill(self, 'the-alexa-skill',
-                                   vendor_id='M9WVOMA66B48U',
+                                   vendor_id='',
                                    authentication_configuration={
-                                       'clientId': 'amzn1.application-oa2-client.4bdff2c9133341feba2db249d7739d18',
-                                       'clientSecret': '64ed758c10dac51f5d9c25912206dd19d2d379826a269695de2439fd2a4a7aed',
-                                       'refreshToken': 'Atzr|IwEBIKOy8NnS1oKi8xifubUEE5twX8l8TfHaTsOITib0mbj09fpZ9Ro_TXPip8tS00EgKaDZYBbb-cSiuhI6nvY3u4txTlwfsaE7g2z6gPrXUxPdhohEPJSouwP-hQtMjz2V4878Y-syfiIb1vNYnu-0oDcN2ZO0ONOHAs1MHBb6cZ7qA9k-ymIbxKEV-HAfT_h09YCaUzuJPzn0V1D5PVST6qlZOK12b-GCE022C9fXDKjjslDEKnH-8zcOXf2y_fc-GhXBC0oAmzvlIC1ie0LuG6Vq0bjzu2mb4iK906KBJ0hoovoOKbXNInbSKeGEFcXklq0AkDeMEP6puOO2A6b62i0jaDivrAHyYAviaLxEoARNoWrXOpWPP3uN-nCySwSHNotNn4LngG3r4uc6FC32Ewfv810PiWEih7B0IyuJGI6C-vt55whvceEZ3aG-Gn1YCPzczxraqYhDd7NQS5zsMm7dBIENcI95bMghIBFo-cXYLMDmKd-FvmwlxPaGVrPNNBkxgEqQWohBIofmZM9ErvhQLbvbsXHh9mkw-Cyin3_EqvALnLP9906_ISc3HZSgE-CDpCdJQpwsBbrq5LIEmPxzRXxUwKhIvA7Cq5briKguiOooGLNMfjDW7bMGw9WqVTMOnMwVPviWEiXSuTvCW2FOmvubpwrHW6ZlIqwWKwWJXQ'
+                                       'clientId': '',
+                                       'clientSecret': '',
+                                       'refreshToken': ''
                                    },
                                    skill_package={
                                        's3Bucket': asset.s3_bucket_name,
