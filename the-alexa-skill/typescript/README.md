@@ -30,8 +30,8 @@ Alexa is an Amazon product even though it can be deployed through AWS you still 
 Keep these values safe as we will use them in a second.
 ### 4. Make Sure You Have An AWS Account with CLI Access
 You will need this to deploy the CDK stack anyway but for the next step we need to associate Alexa with our AWS Account so this is crucial
-### 5. Setup ASK CLI on your local machine: 
-Alexa needs to associate your Amazon Developer Account with your AWS Account. The easiest way to do this is to run `ask configure` after you have installed the [Alexa Skills Kit CLI](https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html) (make sure to note the steps for first time install where you need to run the configure command)
+### 5. Setup ASK CLI on your local machine
+Alexa needs to associate your Amazon Developer Account with your AWS Account. The easiest way to do this is to run `ask configure` after you have installed the [Alexa Skills Kit CLI](https://developer.amazon.com/en-US/docs/alexa/smapi/quick-start-alexa-skills-kit-command-line-interface.html)
 ### 6. Generate a Refresh Token
 We are going to use Postman to fetch a new `OAuth 2.0` token
 
@@ -51,7 +51,8 @@ Set the following key/values in the request:
 
 A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
 
-### 7. Visit this link to get your vendorId: https://developer.amazon.com/settings/console/mycid?
+### 7. Copy Your Vendor ID
+Visit the [https://developer.amazon.com/settings/console/mycid](My CID) page and make a note of the second ID on the page "vendor ID"
 
 
 ## Before You Deploy
