@@ -10,7 +10,7 @@ import {
     SessionEndedRequest,
     RequestEnvelope,
 } from 'ask-sdk-model';
-const patterns: string[] = ['The Destined Lambda', 'The Dynamo Streamer', 'The Big Fan', 'The Cloudwatch Dashboard', 'The S3 Angular Website', 'This pattern that you\'re testing right now: The Alexa Skill'];
+const patterns: string[] = ['The Destined Lambda', 'The S3 React Website', 'The State Machine', 'The Dynamo Streamer', 'The Lambda Trilogy', 'The Big Fan', 'The Eventbridge Circuit Breaker', 'The Scalable Webhook', 'The Cloudwatch Dashboard', 'The Saga Stepfunction', 'The S3 Angular Website', 'this pattern that you\'re testing right now: The Alexa Skill'];
 const ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
 const USERS_TABLE = process.env.USERS_TABLE || '';
 function getPattern(min: number, max: number) {
@@ -47,7 +47,7 @@ const PatternListIntentHandler: RequestHandler = {
         attributesManager.setPersistentAttributes( {lastAccessedDate: Date.now(), lastAccessedIntent: 'PatternListIntent'});
         await attributesManager.savePersistentAttributes();
 
-        const speechText = 'I have many patterns for you to see! For example, there is ' + patterns[getPattern(0, 1)] + ', ' + patterns[getPattern(2, 3)] + ' or ' + patterns[getPattern(4, 5)] + '!';
+        const speechText = 'I have many patterns for you to see! For example, there is ' + patterns[getPattern(0, 3)] + ', ' + patterns[getPattern(4, 7)] + ' or ' + patterns[getPattern(8, 11)] + '!';
 
         return handlerInput.responseBuilder
             .speak(speechText)
