@@ -93,6 +93,13 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Alexa Skill](/the-alexa-skill/README.md)  
+  Deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
+
+  ![Architecture](the-alexa-skill/img/arch.png)
+
+  <br /><hr /><br />
+
   #### [The Basic MQ](/the-basic-mq/README.md)  
   In this example we have private Amazon MQ brokers behind an internet-facing network load balancer endpoint using a subdomain.
 
@@ -234,6 +241,7 @@ npx cdk deploy
   
   * [Alex Casalboni](#alex-casalboni)
   * [Ariadna Sanchez](#ariadna-sanchez)
+  * [Chris Plankey](#chris-plankey)
   * [Christian Mueller](#christian-mueller)
   * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
@@ -272,6 +280,21 @@ npx cdk deploy
   Use Amazon Polly to translate text to speech from inside a Lambda Function. You can also take advantage of Amazon Translate to change the language of the spoken text
 
   ![Architecture](polly/img/overview.png)
+
+  <br /><hr /><br />
+
+  ### Chris Plankey
+  <img src="img/dev_profiles/chris_plankey.png" width="120" alt="Chris Plankey profile pic" /><br />
+
+  Many hats. Few servers. AWS Portsmouth User Group Co-Organizer and AWS Community Builder.<br />
+
+  Github - [@cplankey](https://github.com/cplankey) <br />
+  Twitter - [@serverlesschris](https://twitter.com/serverlesschris) <br />
+
+  #### [The Alexa Skill](/the-alexa-skill/README.md)  
+  Deploy an Alexa Skill backed by a Lambda Function and a DynamoDB Table.
+
+  ![Architecture](the-alexa-skill/img/arch.png)
 
   <br /><hr /><br />
 
