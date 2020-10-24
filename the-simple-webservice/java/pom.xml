@@ -19,9 +19,9 @@
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.surefire.version>3.0.0-M5</maven.surefire.version>
 
-        <cdk.version>1.62.0</cdk.version>
+        <cdk.version>1.69.0</cdk.version>
 
-        <junit.version>5.6.2</junit.version>
+        <junit.version>5.7.0</junit.version>
         <assertj.version>3.16.1</assertj.version>
         <mockito.version>3.4.6</mockito.version>
     </properties>
@@ -38,6 +38,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
             </plugin>
@@ -49,6 +50,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
