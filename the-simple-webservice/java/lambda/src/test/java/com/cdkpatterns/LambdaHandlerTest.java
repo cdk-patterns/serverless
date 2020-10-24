@@ -2,6 +2,7 @@ package com.cdkpatterns;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -9,6 +10,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LambdaHandlerTest {
+    @DisplayName("Test APIGateway handler")
     @Test
     public void testHandleRequest() {
         DynamoDbClient dynamoDbClientMock = Mockito.mock(DynamoDbClient.class);
