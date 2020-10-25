@@ -1,0 +1,8 @@
+{
+  "app": "./mvnw compile exec:java -pl cdk",
+  "context": {
+    "@aws-cdk/core:enableStackNameDuplicates": "true",
+    "aws-cdk:enableDiffNoFail": "true",
+    "@aws-cdk/core:stackRelativeExports": "true"
+  }
+}
