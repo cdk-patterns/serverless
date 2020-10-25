@@ -8,7 +8,7 @@ This is the most basic of implementations and would have to be hardened before p
 
 After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited. 
 
-####Requirements
+#### Requirements
 - Java JDK 11
 - node.js
 
@@ -18,7 +18,7 @@ The Maven Wrapper can be run by using the `./mvnw` (Unix based) or `./mvnw.cmd` 
 
 **Example:** 
 ```
-./mnvw clean package
+./mvnw clean package
 ```
 You can compile & package from this folder, to deploy go to the **cdk** subfolder.
 
