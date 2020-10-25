@@ -1,0 +1,20 @@
+# The LAMBDA-OF-LEAST-PRIVILEGE
+
+This is a pattern that aims to satisfy an application or standard needing to implement an service that implements Authentication and Authorisation checking based on an external IDP (such as Auth0). We will attempt to remain as well architected as possible.
+
+Most of this code was borrowed from https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/cdk.ts (Thank You)
+
+## TODO The rest
+
+![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
+
+After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited. 
+
+## Useful commands
+
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `npm run deploy`  deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
