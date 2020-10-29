@@ -23,7 +23,8 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
         });
 
-        // Define a lambda with the basic execution role.
+        // Define a lambda with the !!basic execution role.
+        // The lambda handler will inherit the role based on the User that is logged in.
         const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
             code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
@@ -33,15 +34,19 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             }
         });
 
-        // grant the lambda role read/write permissions to our table
-        //table.grantReadWriteData(dynamoLambda);
-
         // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
         let api = new apigw.HttpApi(this, 'Endpoint', {
             defaultIntegration: new apigw.LambdaProxyIntegration({
                 handler: dynamoLambda
             })
         });
+
+        // ==================================================================================
+        // Create our User Roles
+        //
+        // TODO are there any other managed policies that we should add to these?
+        //
+        // ==================================================================================
 
         // Create a Read Only Role to be mapped to our external user
         this.readOnlyRole = new Role(this, id + 'ReadOnlyRole', {
@@ -56,7 +61,6 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
-                    'dynamodb:GetItem',
                     'logs:CreateLogStream',
                     'logs:PutLogEvents'
                 ]
@@ -67,6 +71,21 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         this.creatorRole = new Role(this, id + 'CreatorRole', {
             assumedBy: new ServicePrincipal('lambda.amazonaws.com')
         })
+
+        // Add permissions for updating the DynamoDB
+        this.creatorRole.addToPolicy(
+            new PolicyStatement({
+                effect: Effect.ALLOW,
+                resources: [table.tableArn], //lock down the policy to this table only
+                actions: [
+                    'dynamodb:Scan',
+                    'dynamodb:Query',
+                    'dynamodb:UpdateItem',
+                    'logs:CreateLogStream',
+                    'logs:PutLogEvents'
+                ]
+            })
+        );
 
 
         // Outputs

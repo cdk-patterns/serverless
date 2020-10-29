@@ -11,6 +11,11 @@ import { LeastPrivilegeWebserviceStack } from '../lib/least-privilege-webservice
 const app = new cdk.App();
 
 // ================================================================================
+// TODO Mike We should probably have a basic UI/UX To demonstrate the setup.
+//
+// ================================================================================
+
+// ================================================================================
 // Create a WebService implemented using ApiGateway and Lambda
 // 
 // Web API with a lambda writing into a gateway
