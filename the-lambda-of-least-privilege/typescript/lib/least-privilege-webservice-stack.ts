@@ -3,7 +3,7 @@ import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
 import {
-    ManagedPolicy,
+    //ManagedPolicy,
     Role,
     ServicePrincipal,
     PolicyStatement,
@@ -23,7 +23,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
         });
 
-        // Define a lambda with the !!basic execution role.
+        // Define a lambda with the !!basic execution role!!.
         // The lambda handler will inherit the role based on the User that is logged in.
         const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
@@ -35,6 +35,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         });
 
         // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
+        // TODO we could probably be more restrictive here in terms of permissions.
         let api = new apigw.HttpApi(this, 'Endpoint', {
             defaultIntegration: new apigw.LambdaProxyIntegration({
                 handler: dynamoLambda
