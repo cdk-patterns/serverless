@@ -15,6 +15,9 @@ const app = new cdk.App();
 //
 // ================================================================================
 
+// TODO maybe leverage Auth0 sample UI with CDKSPA pattern to produce a FE for calling 
+// the service
+
 // ================================================================================
 // Create a WebService implemented using ApiGateway and Lambda
 // 

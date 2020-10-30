@@ -295,6 +295,11 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
       value: userPoolClient.ref
     });
 
+    new cdk.CfnOutput(this, "IdentityPoolId", {
+      description: "Identity Pool ID",
+      value: identityPool.ref
+    });
+
     new cdk.CfnOutput(this, "RegionOutput", {
       description: "Region",
       value: this.region

@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
-import apigw = require('@aws-cdk/aws-apigatewayv2');
+import apigw = require('@aws-cdk/aws-apigateway');
 import {
     //ManagedPolicy,
     Role,
@@ -9,6 +9,7 @@ import {
     PolicyStatement,
     Effect
 } from '@aws-cdk/aws-iam';
+import { CfnApiGatewayManagedOverrides } from '@aws-cdk/aws-apigatewayv2';
 
 export class LeastPrivilegeWebserviceStack extends cdk.Stack {
 
@@ -23,24 +24,50 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
         });
 
-        // Define a lambda with the !!basic execution role!!.
-        // The lambda handler will inherit the role based on the User that is logged in.
-        const dynamoLambda = new lambda.Function(this, 'DynamoLambdaHandler', {
+        //================================================================================================
+        // Build out the Lambda Functions
+        //
+        // We are going to shout for a IAM based authoriser implementation on our routes.
+        //================================================================================================
+        const updateHitsLambda = new lambda.Function(this, 'getDynamoHitsHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
             code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
-            handler: 'lambda.handler',                // file is "lambda", function is "handler"
+            handler: 'updateHits.handler',                // file is "lambda", function is "handler"
             environment: {
                 HITS_TABLE_NAME: table.tableName
             }
         });
 
-        // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
-        // TODO we could probably be more restrictive here in terms of permissions.
-        let api = new apigw.HttpApi(this, 'Endpoint', {
-            defaultIntegration: new apigw.LambdaProxyIntegration({
-                handler: dynamoLambda
-            })
+        // Get HITs Function
+        const getHitsLambda = new lambda.Function(this, 'updateDynamoHitsHandler', {
+            runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
+            code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
+            handler: 'getHits.handler',                // file is "lambda", function is "handler"
+            environment: {
+                HITS_TABLE_NAME: table.tableName
+            }
         });
+
+        //================================================================================================
+        // Build out the API Gateways
+        //
+        // We are going to shout for a IAM based authoriser implementation on our routes.
+        //================================================================================================
+
+        const restGateway = new apigw.RestApi(this, 'hitsapi');
+
+        const hitsResource = restGateway.root.addResource('hits');
+
+        // Lets create a GET method for the readOnly operation
+        const getHitsMethod = hitsResource.addMethod('GET', new apigw.LambdaIntegration(getHitsLambda), {
+            authorizationType: apigw.AuthorizationType.IAM
+        });
+
+        // Lets create a PUT method for the update/create operation
+        const putHitsMethod = hitsResource.addMethod('PUT', new apigw.LambdaIntegration(updateHitsLambda), {
+            authorizationType: apigw.AuthorizationType.IAM
+        });
+
 
         // ==================================================================================
         // Create our User Roles
@@ -49,16 +76,16 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         //
         // ==================================================================================
 
-        // Create a Read Only Role to be mapped to our external user
+        // IAM Role - Configured for a User to Read from a table from a specified endpoint.
         this.readOnlyRole = new Role(this, id + 'ReadOnlyRole', {
             assumedBy: new ServicePrincipal('lambda.amazonaws.com')
         })
 
-        // Add permissions for scanning and reading the DynamoDB
+        // DynamoDB perms restricted to read operations
         this.readOnlyRole.addToPolicy(
             new PolicyStatement({
                 effect: Effect.ALLOW,
-                resources: [table.tableArn], //lock down the policy to this table only
+                resources: [table.tableArn],
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
@@ -67,17 +94,25 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
                 ]
             })
         );
+        // Add permissions for calling the GET Operation
+        this.readOnlyRole.addToPolicy(
+            new PolicyStatement({
+                actions: [ 'execute-api:Invoke' ],
+                effect: Effect.ALLOW,
+                resources: [ getHitsMethod.methodArn ]
+            })
+        )
 
-        // Create a Write Role
+        // IAM Role - Configured for a User to Update the Database Table from a specified endpoint.
         this.creatorRole = new Role(this, id + 'CreatorRole', {
             assumedBy: new ServicePrincipal('lambda.amazonaws.com')
         })
 
-        // Add permissions for updating the DynamoDB
+        // DynamoDB Perms - extended for UpdateItem
         this.creatorRole.addToPolicy(
             new PolicyStatement({
                 effect: Effect.ALLOW,
-                resources: [table.tableArn], //lock down the policy to this table only
+                resources: [table.tableArn],
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
@@ -88,11 +123,18 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             })
         );
 
+         // Add permissions for calling the gateway
+         this.readOnlyRole.addToPolicy(
+            new PolicyStatement({
+                actions: [ 'execute-api:Invoke' ],
+                effect: Effect.ALLOW,
+                resources: [ putHitsMethod.methodArn ]
+            })
+        )
 
         // Outputs
-
         new cdk.CfnOutput(this, 'HTTP API Url', {
-            value: api.url ?? 'Something went wrong with the deploy'
+            value: restGateway.url ?? 'Something went wrong with the deploy'
         });
     }
 }

@@ -4,8 +4,13 @@ This is a pattern that aims to satisfy an application or standard needing to imp
 
 Most of this code was inspired from working examples here 
 https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/cdk.ts
+
 https://serverless-stack.com/chapters/configure-cognito-identity-pool-in-cdk.html 
+
 https://stackoverflow.com/questions/55784746/how-to-create-cognito-identitypool-with-cognito-userpool-as-one-of-the-authentic
+
+https://dev.to/martzcodes/token-authorizers-with-apigatewayv2-tricks-apigwv1-doesn-t-want-you-to-know-41jn
+
 (Thank You)
 
 ## TODO The rest
