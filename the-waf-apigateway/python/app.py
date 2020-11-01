@@ -2,9 +2,9 @@
 
 from aws_cdk import core
 
-from helloworld.top import Top
-from helloworld.apigateway import Apigateway          
-from helloworld.waf import Waf
+from thewafapigateway.top import Top
+from thewafapigateway.apigateway import Apigateway          
+from thewafapigateway.waf import Waf
 
 app = core.App()
 

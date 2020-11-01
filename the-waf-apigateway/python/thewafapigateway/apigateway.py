@@ -32,7 +32,7 @@ class Apigateway(cfn.NestedStack):
         )
 
         hello_world =  py_lambda.PythonFunction(self, "HelloWorld",
-            entry= 'helloworld',                           
+            entry= 'thewafapigateway/lambda_fns',                           
             index = 'helloworld.py',                          
             handler = 'lambda_handler',                 
             description = 'Helloworld',
