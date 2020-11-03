@@ -29,6 +29,7 @@ test('DynamoDB READ IAM Policy Created', () => {
         "Action": [
           "dynamodb:Scan",
           "dynamodb:Query",
+          "dynamodb:Get",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
@@ -51,6 +52,7 @@ test('DynamoDB UPDATE IAM Policy Created', () => {
         "Action": [
           "dynamodb:Scan",
           "dynamodb:Query",
+          "dynamodb:Get",
           "dynamodb:UpdateItem",
           "logs:CreateLogStream",
           "logs:PutLogEvents"

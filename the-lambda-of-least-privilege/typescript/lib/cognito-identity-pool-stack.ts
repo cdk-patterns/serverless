@@ -11,6 +11,7 @@ interface CognitoIdentityPoolProps extends cdk.StackProps {
   providerClientSecret: string;
   providerIssuer: string;
   providerName: string;
+  providerType: string;
   providerGroupsAttrName: string;
   callbackUrls: string;
   logoutUrls: string;
@@ -50,7 +51,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     // any properties that are not part of the high level construct can be added using this method
     const userPoolCfn = userPool.node.defaultChild as CfnUserPool;
-    userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" }
+    userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" } //TODO Mike why is this in here?
     userPoolCfn.schema = [{
       name: props.providerGroupsAttrName,
       attributeDataType: "String",
@@ -70,41 +71,23 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     // See also:
     // - https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html
-    /**
-     * ADIL CFT
-     * const updateParams = {
-        ProviderDetails: {
-          attributes_request_method: 'GET',
-          authorize_scopes: 'openid profile',
-          client_id: IDPClientId,
-          client_secret: IDPClientSecret,
-          oidc_issuer: IDPIssuer,
-        },
-        ProviderName: 'lmidp',
-        UserPoolId,
-        AttributeMapping: {
-          'custom:groups': 'groups',
-          username: 'sub',
-          name: 'displayName',
-        },
-      };
-     */
+  
     // mapping from IdP fields to Cognito attributes
-    const supportedIdentityProviders = ["COGNITO"]; //TODO Remove Cognito as an option
-    let cognitoIdp: CfnUserPoolIdentityProvider | undefined = undefined;
+    const supportedIdentityProviders = [];
+    let cognitoManagedIdp: CfnUserPoolIdentityProvider | undefined = undefined;
 
     if (props.providerName) {
-
-      cognitoIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
+      //TODO extend to configure for SAML based configurations
+      cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
         providerName: props.providerName,
         providerDetails: {
-          attributes_request_method: 'GET',
-          authorize_scopes: 'openid profile',
+          attributes_request_method: 'GET', // TODO Understand this better and move it to configuration
+          authorize_scopes: 'openid profile', // TODO Understand this better and move it to configuration
           client_id: props.providerClientId,
           client_secret: props.providerClientSecret,
           oidc_issuer: props.providerIssuer,
         },
-        providerType: "SAML",
+        providerType: props.providerType,
         // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
         attributeMapping: {
           "email": "email",
@@ -133,20 +116,6 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // - https://aws.amazon.com/cognito/
     // - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html
 
-    /**
-     * ADIL CFT TODO REMOVE
-     * 
-     *  ClientName: UserPoolClientName,
-        UserPoolId,
-        CallbackURLs,
-        LogoutURLs: [LogoutURL],
-        AllowedOAuthFlows: ['code'],
-        AllowedOAuthScopes: ['openid', 'profile', 'aws.cognito.signin.user.admin'],
-        SupportedIdentityProviders: ['lmidp'],
-        AllowedOAuthFlowsUserPoolClient: true,
-        RefreshTokenValidity: 1,
-        WriteAttributes: ['picture'], // All fields are writable by deafult. We need to set one field to writebale in order to disable all others.
-     */
     const userPoolClient = new cognito.CfnUserPoolClient(this, id + 'UserPoolClient', {
       supportedIdentityProviders: supportedIdentityProviders,
       allowedOAuthFlowsUserPoolClient: true,
@@ -160,12 +129,17 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
       userPoolId: userPool.userPoolId
     })
 
+    // we want to make sure we do things in the right order
+    if (cognitoManagedIdp) {
+      userPoolClient.node.addDependency(cognitoManagedIdp);
+    }
+
     // ========================================================================
     // Resource: Amazon Cognito Identity Pool
     // ========================================================================
-
+    //
     // Purpose: Create an pool that stores our 3p identities
-
+    //
     // See also:
     // - https://aws.amazon.com/cognito/
     // - https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-cognito.CfnIdentityPool.html
@@ -216,40 +190,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
       resources: ["*"],
     }));
 
-    const defaultPolicy = new cognito.CfnIdentityPoolRoleAttachment(this, 'DefaultValid', {
-      identityPoolId: identityPool.ref,
-      roles: {
-        'unauthenticated': unauthenticatedRole.roleArn,
-        'authenticated': authenticatedRole.roleArn
-      }
-    });
 
-    /**
-     * ADIL CFT
-     *   # Identity Pool role mapping
-      IdentityPoolRoleAttachmentMapping:
-        Type: Custom::CognitoRoleMapping
-        Properties:
-          ServiceToken:
-            Fn::ImportValue: !Sub adil-custom-resources-${AppEnv}-CognitoRoleMappingLambda
-          AttributeName: RoleMappings
-          Entries:
-            - Key: !Sub ${UserPool.ProviderName}:${CustomUserPoolClient.UserPoolClientId}
-              Value:
-                Type: Rules
-                AmbiguousRoleResolution: AuthenticatedRole
-                RulesConfiguration:
-                  Rules:
-                    - Claim: custom:groups
-                      MatchType: Contains
-                      RoleARN: !GetAtt ADILCreateInspectionBRRole.Arn
-                      Value: ADIL_Inspection_Create_BR
-                    - Claim: custom:groups
-                      MatchType: Contains
-                      RoleARN: !GetAtt ADILReviewInspectionBRRole.Arn
-                      Value: ADIL_Inspection_Review_BR
-    * 
-    */
     // ========================================================================
     // Resource: Amazon Cognito Role Mapping
     // ========================================================================
@@ -260,19 +201,17 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // - https://aws.amazon.com/cognito/
     // - vhttps://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html
 
-    // Create a role-mapping
+    // Create a role-mapping attachment
 
-    // TODO Is this mapping performed in the correct place??
-
-    const roleAttachment = new CfnIdentityPoolRoleAttachment(this, "CustomRoleAttachmentFunction", {
+   const roleAttachment = new CfnIdentityPoolRoleAttachment(this, "CustomRoleAttachmentFunction", {
       identityPoolId: identityPool.ref,
       roles: {
         'unauthenticated': unauthenticatedRole.roleArn,
-        'authenticated': unauthenticatedRole.roleArn
+        'authenticated': authenticatedRole.roleArn
       },
       roleMappings: {
         [props.providerName]: {
-          identityProvider: props.providerName,
+          identityProvider: 'cognito-idp.' + this.region + '.amazonaws.com/' + userPool.userPoolId + ':' + userPoolClient.ref,  //cognito-idp.${Stack.of(this).region}.amazonaws.com/${pool.userPoolId}:${client.userPoolClientId}
           ambiguousRoleResolution: 'Deny',
           type: 'Rules',
           rulesConfiguration: {

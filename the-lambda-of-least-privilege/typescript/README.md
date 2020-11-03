@@ -11,6 +11,8 @@ https://stackoverflow.com/questions/55784746/how-to-create-cognito-identitypool-
 
 https://dev.to/martzcodes/token-authorizers-with-apigatewayv2-tricks-apigwv1-doesn-t-want-you-to-know-41jn
 
+https://auth0.com/docs/integrations/aws-api-gateway-custom-authorizers#create-an-auth0-api
+
 (Thank You)
 
 ## TODO The rest

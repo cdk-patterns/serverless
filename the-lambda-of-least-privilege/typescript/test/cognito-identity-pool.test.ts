@@ -1,7 +1,7 @@
 import { expect as expectCDK, matchTemplate, haveResourceLike, MatchStyle } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import CognitoIdentityPoolStack = require('../lib/cognito-identity-pool-stack');
-import { RoleMapper } from '../cfg/role-mapper';
+import { RoleMapper } from '../util/role-mapper';
 
 
 function initTestStack(stackName: string, props?: {}) {
@@ -10,6 +10,7 @@ function initTestStack(stackName: string, props?: {}) {
 
     let roleMapper = new RoleMapper();
 
+    // Mock those settings, sure why not.
     roleMapper.addMapping({
         claim: 'custom:groups',
         matchType: 'Contains',
@@ -29,6 +30,7 @@ function initTestStack(stackName: string, props?: {}) {
         providerClientSecret: 'client-id-secret',
         providerIssuer: 'provider-endpoint',
         providerName: 'provider-name',
+        providerType: 'OIDC',
         providerGroupsAttrName: 'groups',
         callbackUrls: 'callback-urls-placeholder',
         logoutUrls: 'logout-urls-placeholder',
@@ -102,7 +104,6 @@ test('Verify that UserPoolClient has been Created', () => {
           ],
           "RefreshTokenValidity": 1,
           "SupportedIdentityProviders": [
-            "COGNITO",
             "provider-name"
           ],
           "WriteAttributes": [
@@ -133,7 +134,25 @@ test('Verify that IdentityPoolRoleAttachment has been Created with RoleMappings'
           "RoleMappings": {
             "provider-name": {
               "AmbiguousRoleResolution": "Deny",
-              "IdentityProvider": "provider-name",
+              "IdentityProvider": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "cognito-idp.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".amazonaws.com/",
+                    {
+                      "Ref": "MyTestIdPRAStackUserPoolED618D1F"
+                    },
+                    ":",
+                    {
+                      "Ref": "MyTestIdPRAStackUserPoolClient"
+                    }
+                  ]
+                ]
+              },
               "RulesConfiguration": {
                 "Rules": [
                   {

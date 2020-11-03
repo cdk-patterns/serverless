@@ -89,6 +89,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
+                    'dynamodb:Get',
                     'logs:CreateLogStream',
                     'logs:PutLogEvents'
                 ]
@@ -116,6 +117,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
+                    'dynamodb:Get',
                     'dynamodb:UpdateItem',
                     'logs:CreateLogStream',
                     'logs:PutLogEvents'
