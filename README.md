@@ -286,7 +286,7 @@ npx cdk deploy
   ### Chris Plankey
   <img src="img/dev_profiles/chris_plankey.png" width="120" alt="Chris Plankey profile pic" /><br />
 
-  Many hats. Few servers. AWS Portsmouth User Group Co-Organizer and AWS Community Builder.<br />
+  CTO of MaverickApp.io, AWS Portsmouth User Group Co-Organizer and AWS Community Builder.<br />
 
   Github - [@cplankey](https://github.com/cplankey) <br />
   Twitter - [@serverlesschris](https://twitter.com/serverlesschris) <br />

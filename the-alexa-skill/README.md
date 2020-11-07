@@ -35,6 +35,8 @@ Alexa needs to associate your Amazon Developer Account with your AWS Account. Th
 ### 6. Generate a Refresh Token
 We are going to use Postman to fetch a new `OAuth 2.0` token
 
+Follow this guide : [Setup Postman `OAuth 2.0` request](https://learning.postman.com/docs/sending-requests/authorization/#oauth-20)
+
 Set the following key/values in the request:
 
 | Field            | Value                                                                                                                                 |
@@ -49,7 +51,7 @@ Set the following key/values in the request:
 |                  |                                                                                                                                       |
 ![Postman Auth](img/postman-oauth-settings.png)
 
-A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
+A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps.  Make sure you select the `refresh_token` and not the `Access Token` from the postman response (scroll down in the response!).
 
 ### 7. Copy Your Vendor ID
 Visit the [Customer Details Page](https://developer.amazon.com/settings/console/mycid) for your Amazon Developer Account and make a note of your "vendor ID"
