@@ -74,5 +74,6 @@ const cognitoIdPool = new CognitoIdentityPoolStack(app, 'swa-lp-cog', {
     providerGroupsAttrName: StackConfiguration.provider.claimsAttrRef,
     callbackUrls: StackConfiguration.provider.callbackUrls,
     logoutUrls: StackConfiguration.provider.logoutUrls,
-    roleMappingRules: auth0RoleMapper.getRules()
+    roleMappingRules: auth0RoleMapper.getRules(),
+    cognitoDomainName: StackConfiguration.cognitoDomainName
 });

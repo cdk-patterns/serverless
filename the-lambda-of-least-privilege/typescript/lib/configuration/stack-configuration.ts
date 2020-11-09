@@ -11,6 +11,7 @@ export const StackConfiguration = {
     token_url: '{ OIDC Token endpoint }', //TODO
     attributes_url: '{ Attributes endpoint }',
     jwks_uri: '{ JSON Webtoken Key Service endpoint }',
-    claimsAttrRef: '{ custom grouping of user claims reference, i.e. groups }',
-  }
+    claimsAttrRef: '{ custom grouping of user claims reference, i.e. groups }', 
+  },
+  cognitoDomainName: '{ The name of your Cognito Domain}'
 };

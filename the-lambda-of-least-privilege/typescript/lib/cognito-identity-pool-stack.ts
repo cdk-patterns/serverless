@@ -16,7 +16,11 @@ interface CognitoIdentityPoolProps extends cdk.StackProps {
   callbackUrls: string;
   logoutUrls: string;
   roleMappingRules: RoleMapping[];
+  cognitoDomainName: string
 }
+
+// TODO Michael O'Reilly - Set a domain for the cognito user pool
+// TODO Michael O'Reilly - Update the Auth0 callback url with the cognito callback endpoint instructions.
 
 export class CognitoIdentityPoolStack extends cdk.Stack {
   /**
@@ -133,6 +137,20 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     if (cognitoManagedIdp) {
       userPoolClient.node.addDependency(cognitoManagedIdp);
     }
+
+    // ========================================================================
+    // Resource: Cognito Auth Domain
+    // ========================================================================
+
+    // Purpose: creates / updates the custom subdomain for cognito's hosted UI
+
+    // See also:
+    // https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html
+
+    const cfnUserPoolDomain = new cognito.CfnUserPoolDomain(this, "CognitoDomain", {
+      domain: props.cognitoDomainName,
+      userPoolId: userPool.userPoolId
+    });
 
     // ========================================================================
     // Resource: Amazon Cognito Identity Pool

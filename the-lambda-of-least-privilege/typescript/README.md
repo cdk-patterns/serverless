@@ -13,6 +13,15 @@ https://dev.to/martzcodes/token-authorizers-with-apigatewayv2-tricks-apigwv1-doe
 
 https://auth0.com/docs/integrations/aws-api-gateway-custom-authorizers#create-an-auth0-api
 
+
+## Setup Instructions
+
+Lets spin up a quick new UX
+https://docs.amplify.aws/start/getting-started/setup/q/integration/vue
+https://gerard-sans.medium.com/create-a-rest-api-integrated-with-amazon-dynamodb-using-aws-amplify-and-vue-5be746e43c22 
+
+Excuse me for selecting VUE, I hear good things.
+
 (Thank You)
 
 ## TODO The rest
