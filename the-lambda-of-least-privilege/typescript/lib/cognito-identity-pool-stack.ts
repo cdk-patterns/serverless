@@ -257,6 +257,11 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
       value: identityPool.ref
     });
 
+    new cdk.CfnOutput(this, "CognitoDomainOutput", {
+      description: "Cognito Domain",
+      value: cfnUserPoolDomain.domain
+    });
+
     new cdk.CfnOutput(this, "RegionOutput", {
       description: "Region",
       value: this.region
