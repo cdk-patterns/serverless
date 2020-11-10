@@ -1,8 +1,8 @@
 from aws_cdk import (
     aws_cloudformation as cfn,
-    aws_logs as cwlogs,
+    aws_logs as cw_logs,
     aws_lambda as _lambda,
-    aws_apigateway as apigw,
+    aws_apigateway as api_gw,
     core
 )
 
@@ -12,23 +12,23 @@ class Apigateway(cfn.NestedStack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        api_log_group = cwlogs.LogGroup(self, "HelloWorldAPILogs")
+        api_log_group = cw_logs.LogGroup(self, "HelloWorldAPILogs")
 
         # Create the api gateway for this lambda set
-        self.target_api = apigw.RestApi(self, 'HelloWorldAPI',
-                                        rest_api_name='HelloWorld',
-                                        endpoint_types=[apigw.EndpointType.REGIONAL],
-                                        deploy_options=apigw.StageOptions(
-                                            access_log_destination=apigw.LogGroupLogDestination(api_log_group),
-                                            access_log_format=apigw.AccessLogFormat.clf(),
-                                            method_options={
-                                                # This special path applies to all resource paths and all HTTP methods
-                                                "/*/*": apigw.MethodDeploymentOptions(
-                                                    throttling_rate_limit=100,
-                                                    throttling_burst_limit=200
-                                                )
-                                            })
-                                        )
+        self.target_api = api_gw.RestApi(self, 'HelloWorldAPI',
+                                         rest_api_name='HelloWorld',
+                                         endpoint_types=[api_gw.EndpointType.REGIONAL],
+                                         deploy_options=api_gw.StageOptions(
+                                             access_log_destination=api_gw.LogGroupLogDestination(api_log_group),
+                                             access_log_format=api_gw.AccessLogFormat.clf(),
+                                             method_options={
+                                                 # This special path applies to all resource paths and all HTTP methods
+                                                 "/*/*": api_gw.MethodDeploymentOptions(
+                                                     throttling_rate_limit=100,
+                                                     throttling_burst_limit=200
+                                                 )
+                                             })
+                                         )
 
         hello_world = _lambda.Function(self, "HelloWorld",
                                        runtime=_lambda.Runtime.PYTHON_3_8,
@@ -38,19 +38,19 @@ class Apigateway(cfn.NestedStack):
                                        )
 
         entity = self.target_api.root.add_resource('helloworld')
-        this_lambda_integration = apigw.LambdaIntegration(hello_world, proxy=False, integration_responses=[
-            apigw.IntegrationResponse(status_code='200',
-                                      response_parameters={
-                                          'method.response.header.Access-Control-Allow-Origin': "'*'"
-                                      })
+        this_lambda_integration = api_gw.LambdaIntegration(hello_world, proxy=False, integration_responses=[
+            api_gw.IntegrationResponse(status_code='200',
+                                       response_parameters={
+                                           'method.response.header.Access-Control-Allow-Origin': "'*'"
+                                       })
         ]
-                                                          )
+                                                           )
         entity.add_method('GET', this_lambda_integration,
                           method_responses=[
-                              apigw.MethodResponse(status_code='200',
-                                                   response_parameters={
-                                                       'method.response.header.Access-Control-Allow-Origin': True
-                                                   })
+                              api_gw.MethodResponse(status_code='200',
+                                                    response_parameters={
+                                                        'method.response.header.Access-Control-Allow-Origin': True
+                                                    })
                           ]
                           )
 
