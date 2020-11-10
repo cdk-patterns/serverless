@@ -6,7 +6,7 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="rp_doorman",
+    name="the_waf_apigateway",
     version="0.0.1",
 
     description="An empty CDK Python app",
@@ -15,11 +15,16 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "rp_doorman"},
-    packages=setuptools.find_packages(where="rp_doorman"),
+    package_dir={"": "the_waf_apigateway"},
+    packages=setuptools.find_packages(where="the_waf_apigateway"),
 
     install_requires=[
         "aws-cdk.core==1.63.0",
+        "aws-cdk.aws_apigateway==1.63.0",
+        "aws-cdk.aws_iam==1.63.0",
+        "aws-cdk.aws_lambda_python==1.63.0",
+        "aws-cdk.aws_cloudformation==1.63.0",
+        "aws-cdk.aws_wafv2==1.63.0",
     ],
 
     python_requires=">=3.6",
