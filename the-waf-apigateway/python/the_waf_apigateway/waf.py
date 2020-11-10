@@ -112,5 +112,3 @@ class Waf(cfn.NestedStack):
                                  web_acl_arn=WebACL.attr_arn,
                                  resource_arn=target_arn
                                  )
-
-        print('waf stack deploying')
