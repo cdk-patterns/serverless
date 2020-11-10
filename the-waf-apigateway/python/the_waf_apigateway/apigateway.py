@@ -40,24 +40,20 @@ class Apigateway(cfn.NestedStack):
                                                )
 
         entity = self.target_api.root.add_resource('helloworld')
-        this_lambda_integration = apigw.LambdaIntegration(hello_world, proxy=False, integration_responses=
-        [
-            {
-                'statusCode': '200',
-                'responseParameters': {
-                    'method.response.header.Access-Control-Allow-Origin': "'*'",
-                }
-            }
+        this_lambda_integration = apigw.LambdaIntegration(hello_world, proxy=False, integration_responses=[
+            apigw.IntegrationResponse(status_code='200',
+                                      response_parameters={
+                                          'method.response.header.Access-Control-Allow-Origin': "'*'"
+                                      })
         ]
                                                           )
-        method = entity.add_method('GET', this_lambda_integration,
-                                   method_responses=[{
-                                       'statusCode': '200',
-                                       'responseParameters': {
-                                           'method.response.header.Access-Control-Allow-Origin': True,
-                                       }
-                                   }
-                                   ]
-                                   )
+        entity.add_method('GET', this_lambda_integration,
+                          method_responses=[
+                              apigw.MethodResponse(status_code='200',
+                                                   response_parameters={
+                                                       'method.response.header.Access-Control-Allow-Origin': True
+                                                   })
+                          ]
+                          )
 
         self.resource_arn = f"arn:aws:apigateway:ap-southeast-2::/restapis/{self.target_api.rest_api_id}/stages/{self.target_api.deployment_stage.stage_name}"
