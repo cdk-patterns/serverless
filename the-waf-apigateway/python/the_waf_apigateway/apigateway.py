@@ -18,17 +18,16 @@ class Apigateway(cfn.NestedStack):
         self.target_api = apigw.RestApi(self, 'HelloWorldAPI',
                                         rest_api_name='HelloWorld',
                                         endpoint_types=[apigw.EndpointType.REGIONAL],
-                                        deploy_options={
-                                            "access_log_destination": apigw.LogGroupLogDestination(api_log_group),
-                                            "access_log_format": apigw.AccessLogFormat.clf(),
-                                            "method_options": {
-                                                "/*/*": {
-                                                    # This special path applies to all resource paths and all HTTP methods
-                                                    "throttling_rate_limit": 100,
-                                                    "throttling_burst_limit": 200
-                                                }
-                                            }
-                                        }
+                                        deploy_options=apigw.StageOptions(
+                                            access_log_destination=apigw.LogGroupLogDestination(api_log_group),
+                                            access_log_format=apigw.AccessLogFormat.clf(),
+                                            method_options={
+                                                # This special path applies to all resource paths and all HTTP methods
+                                                "/*/*": apigw.MethodDeploymentOptions(
+                                                    throttling_rate_limit=100,
+                                                    throttling_burst_limit=200
+                                                )
+                                            })
                                         )
 
         hello_world = py_lambda.PythonFunction(self, "HelloWorld",
