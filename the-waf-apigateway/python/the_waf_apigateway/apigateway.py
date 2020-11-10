@@ -1,7 +1,7 @@
 from aws_cdk import (
     aws_cloudformation as cfn,
     aws_logs as cwlogs,
-    aws_lambda_python as py_lambda,
+    aws_lambda as _lambda,
     aws_apigateway as apigw,
     core
 )
@@ -30,13 +30,12 @@ class Apigateway(cfn.NestedStack):
                                             })
                                         )
 
-        hello_world = py_lambda.PythonFunction(self, "HelloWorld",
-                                               entry='lambda_fns',
-                                               index='helloworld.py',
-                                               handler='lambda_handler',
-                                               description='Helloworld',
-                                               timeout=core.Duration.seconds(60)
-                                               )
+        hello_world = _lambda.Function(self, "HelloWorld",
+                                       runtime=_lambda.Runtime.PYTHON_3_8,
+                                       handler='helloworld.lambda_handler',
+                                       code=_lambda.Code.from_asset("lambda_fns"),
+                                       timeout=core.Duration.seconds(60)
+                                       )
 
         entity = self.target_api.root.add_resource('helloworld')
         this_lambda_integration = apigw.LambdaIntegration(hello_world, proxy=False, integration_responses=[

@@ -22,7 +22,7 @@ setuptools.setup(
         "aws-cdk.core==1.63.0",
         "aws-cdk.aws_apigateway==1.63.0",
         "aws-cdk.aws_iam==1.63.0",
-        "aws-cdk.aws_lambda_python==1.63.0",
+        "aws-cdk.aws_lambda==1.63.0",
         "aws-cdk.aws_cloudformation==1.63.0",
         "aws-cdk.aws_wafv2==1.63.0",
     ],
