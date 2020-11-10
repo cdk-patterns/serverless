@@ -54,4 +54,4 @@ class Apigateway(cfn.NestedStack):
                           ]
                           )
 
-        self.resource_arn = f"arn:aws:apigateway:ap-southeast-2::/restapis/{self.target_api.rest_api_id}/stages/{self.target_api.deployment_stage.stage_name}"
+        self.resource_arn = f"arn:aws:apigateway:{core.Stack.of(self).region}::/restapis/{self.target_api.rest_api_id}/stages/{self.target_api.deployment_stage.stage_name}"
