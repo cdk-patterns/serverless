@@ -73,11 +73,11 @@ class Waf(cfn.NestedStack):
         )
         waf_rules.append(aws_ip_rep_list)
 
-        # 4 GeoBlock to NZ only
+        # 4 GeoBlock NZ from accessing gateway
         geoblock_rule = waf.CfnWebACL.RuleProperty(
             name='geoblocking_rule',
             priority=4,
-            action=waf.CfnWebACL.RuleActionProperty(allow={}),
+            action=waf.CfnWebACL.RuleActionProperty(block={}),
             statement=waf.CfnWebACL.StatementOneProperty(
                 geo_match_statement=waf.CfnWebACL.GeoMatchStatementProperty(
                     country_codes=['NZ'],
