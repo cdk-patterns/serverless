@@ -4,8 +4,10 @@
 
 This is a cdk stack to deploy a simple API gateway, and attach a WAF ( web applicaiton Firewall ) from Andrew Frazer (<https://github.com/mrpackethead>).
 
-The apigateway stack creates a trival REST apigateway, with a single method which returns 'hello world!' to a GET request. 
-THe Waf stack creates a WAF WebACL and attaches it to the the apigateway. It demonstrates a geo-matching rule, and the use of some AWS managed rulesets. This waf stack could be used for any resource that you can attach a WAF rule to ( Such as a load balancer / Cloudfront distribution etc) simply by passing the resources ARN to the stack. 
+This implementation uses Nested stacks where you have a Top stack with an API Gateway Stack and a Waf Stack underneath.
+
+The API Gateway Stack creates a trival REST apigateway, with a single method which returns 'hello world!' to a GET request. 
+The Waf stack creates a WAF WebACL and attaches it to the the apigateway. It demonstrates a geo-matching rule, and the use of some AWS managed rulesets. This waf stack could be used for any resource that you can attach a WAF rule to ( Such as a load balancer / Cloudfront distribution etc) simply by passing the resources ARN to the stack. 
 
 Some Useful References:
 
