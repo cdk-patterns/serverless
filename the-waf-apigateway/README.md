@@ -13,5 +13,6 @@ THe Waf stack creates a WAF WebACL and attaches it to the the apigateway.    It 
 
 ## Available Versions
 
+ * [TypeScript](typescript/)
  * [Python](python/)
 
