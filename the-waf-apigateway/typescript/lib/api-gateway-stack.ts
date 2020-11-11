@@ -22,7 +22,7 @@ export class ApigatewayStack extends cdk.Stack {
      * API Gateway Creation
      * sets up a /prod/helloworld endpoint
      */
-    let gateway = new apigw.RestApi(this, 'DynamoStreamerAPI', {
+    let gateway = new apigw.RestApi(this, 'WafGatewayAPI', {
         endpointTypes: [apigw.EndpointType.REGIONAL],
         deployOptions: {
           metricsEnabled: true,
