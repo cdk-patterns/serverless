@@ -225,6 +225,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The WAF API Gateway](/the-waf-apigateway/README.md)
+  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Applicaiton Firewall) <br />
+  ![Architecture](the-waf-apigateway/img/the-waf-apigateway.png)
+
+  <br /><hr /><br />
+
   #### [The X-Ray Tracer](the-xray-tracer/README.md)
   Learn about using AWS X-Ray for tracing events through your system. This pattern has X-Ray enabled on API Gateway, Lambda, DynamoDB, External HTTP calls, SNS and SQS
   

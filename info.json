@@ -66,6 +66,9 @@
         "the-state-machine": {
             "prodReady": false
         },
+        "the-waf-apigateway": {
+            "prodReady": false
+        },
         "the-xray-tracer": {
             "prodReady": false
         }
