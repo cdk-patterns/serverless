@@ -46,3 +46,38 @@ Use authentication and authorization mechanisms to prevent unauthorized access, 
 Best Practices:
 
 1/ Use appropriate endpoint type and mechanisms to secure access to your API
+
+## What's Included In This Pattern?
+
+After deployment you will have a WebACL setup in front of a regional API Gateway with 4 different rule groups:
+
+- AWSManagedRulesCommonRuleSet
+- AWSManagedRulesAnonymousIpList
+- AWSManagedRulesAmazonIpReputationList
+- GeoBlock NZ from accessing the content
+
+Note all AWS Managed rule groups can be found [here](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html)
+
+### AWSManagedRulesCommonRuleSet
+
+Core rule set (CRS)
+
+VendorName: AWS, Name: AWSManagedRulesCommonRuleSet, WCU: 700
+
+The Core rule set (CRS) rule group contains rules that are generally applicable to web applications. This provides protection against exploitation of a wide range of vulnerabilities, including high risk and commonly occurring vulnerabilities described in OWASP publications. Consider using this rule group for any AWS WAF use case.
+
+### AWSManagedRulesAnonymousIpList
+
+Anonymous IP list
+
+VendorName: AWS, Name: AWSManagedRulesAnonymousIpList, WCU: 50
+
+The Anonymous IP list rule group contains rules to block requests from services that allow the obfuscation of viewer identity. These include requests from VPNs, proxies, Tor nodes, and hosting providers (including AWS). This rule group is useful if you want to filter out viewers that might be trying to hide their identity from your application. Blocking the IP addresses of these services can help mitigate bots and evasion of geographic restrictions.
+
+### AWSManagedRulesAmazonIpReputationList
+
+Amazon IP reputation list
+
+VendorName: AWS, Name: AWSManagedRulesAmazonIpReputationList, WCU: 25
+
+The Amazon IP reputation list rule group contains rules that are based on Amazon internal threat intelligence. This is useful if you would like to block IP addresses typically associated with bots or other threats. Blocking these IP addresses can help mitigate bots and reduce the risk of a malicious actor discovering a vulnerable application.
