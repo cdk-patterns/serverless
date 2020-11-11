@@ -246,6 +246,7 @@ npx cdk deploy
   <br />
   
   * [Alex Casalboni](#alex-casalboni)
+  * [Andrew Frazer](#andrew-frazer)
   * [Ariadna Sanchez](#ariadna-sanchez)
   * [Chris Plankey](#chris-plankey)
   * [Christian Mueller](#christian-mueller)
@@ -274,6 +275,17 @@ npx cdk deploy
   Use the Lambda Power Tuner state machine to work out the optimum configuration settings for your Lambda Function
 
   ![Architecture](the-lambda-power-tuner/img/arch.png)
+
+  <br /><hr /><br />
+
+  ### Andrew Frazer
+  <img src="img/dev_profiles/andrew_frazer.jpeg" width="120" alt="Andrew Frazer profile pic" /><br />
+
+  Github - [@mrpackethead](https://github.com/mrpackethead)<br />
+
+  #### [The WAF API Gateway](/the-waf-apigateway/README.md)
+  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Applicaiton Firewall) <br />
+  ![Architecture](the-waf-apigateway/img/the-waf-apigateway.png)
 
   <br /><hr /><br />
 
