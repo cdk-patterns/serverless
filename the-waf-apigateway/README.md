@@ -83,3 +83,13 @@ Amazon IP reputation list
 VendorName: AWS, Name: AWSManagedRulesAmazonIpReputationList, WCU: 25
 
 The Amazon IP reputation list rule group contains rules that are based on Amazon internal threat intelligence. This is useful if you would like to block IP addresses typically associated with bots or other threats. Blocking these IP addresses can help mitigate bots and reduce the risk of a malicious actor discovering a vulnerable application.
+
+## When You Would Use This Pattern
+
+Anytime you have something exposed to the internet like an API Gateway.
+
+## How To Test This Pattern
+
+After deployment you should see the API Gateway URL in the deployment logs or in the output of the nested stack. Take that url and add /prod/helloworld onto the end and open it in a browser - if you see "Hello World!" it worked.
+
+After deployment try changing some of the rules like the geo block one to better understand how it works
