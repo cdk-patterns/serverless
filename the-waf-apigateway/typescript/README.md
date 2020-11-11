@@ -84,7 +84,7 @@ Anytime you have something exposed to the internet like an API Gateway.
 
 ## How To Test This Pattern
 
-After deployment you should see the API Gateway URL in the deployment logs or in the output of the nested stack. Take that url and add /prod/helloworld onto the end and open it in a browser - if you see "Hello World!" it worked.
+After deployment you should see the API Gateway URL in the deployment logs or in the cloudformation output in the console. Take that url and add /prod/helloworld onto the end and open it in a browser - if you see "Hello World!" it worked.
 
 After deployment try changing some of the rules like the geo block one to better understand how it works
 
