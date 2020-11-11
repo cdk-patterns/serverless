@@ -66,6 +66,8 @@ VendorName: AWS, Name: AWSManagedRulesCommonRuleSet, WCU: 700
 
 The Core rule set (CRS) rule group contains rules that are generally applicable to web applications. This provides protection against exploitation of a wide range of vulnerabilities, including high risk and commonly occurring vulnerabilities described in OWASP publications. Consider using this rule group for any AWS WAF use case.
 
+**Note** that SizeRestrictions_BODY has been excluded in this implementation
+
 ### AWSManagedRulesAnonymousIpList
 
 Anonymous IP list
