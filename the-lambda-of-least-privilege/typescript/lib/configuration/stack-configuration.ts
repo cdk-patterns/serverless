@@ -1,17 +1,24 @@
 export const StackConfiguration = {
   provider: {
-    name: '{ provider name like auth0, ping, azure}',
-    type: '{ provider type i.e. SAML or OIDC}',
-    clientId: '{ Client Secret - for your approved application }',
-    clientSecret: '{ Client Secret - for your approved application}', // Please never commit this value into a cfg management system.. we will adopt a secrets impl for this in future.
-    issuerEnpoint: '{ Provider Issuer URL - Retrieve from the OIDC Configuration endpoint}',
-    callbackUrls: '{http://localhost:3000/callback - call back urls for your endpoint }',
-    logoutUrls: '{http://localhost:3000 - The logout URL for your client application }',
-    authorize_url: '{ OIDC Authorise endpoint }', // TODO
-    token_url: '{ OIDC Token endpoint }', //TODO
-    attributes_url: '{ Attributes endpoint }',
-    jwks_uri: '{ JSON Webtoken Key Service endpoint }',
-    claimsAttrRef: '{ custom grouping of user claims reference, i.e. groups }', 
+    name: 'auth0',
+    configuration: {
+      oidc: {
+        type: 'OIDC',
+        clientId: 's2OaAj303YeD8KUGSUfmCpVnQWwjBQyR',
+        clientSecret: 'LWTIrj6-WQe9SWNRvRBCknmnuttXSUc0x-f6SbuRWisCgu45WCqXXBuyrwyWnhQz', // Please never commit this value into a cfg management system.. we will adopt a secrets impl for this in future.
+        issuerEnpoint: 'https://dev-a4bk90gw.us.auth0.com',
+        callbackUrls: 'http://localhost:8080/callback',
+        logoutUrls: 'http://localhost:8080/logout',
+        claimsAttrRef: 'roles'//auth0 },       
+      },
+      saml: {
+        type: 'SAML',
+        metadataURL: 'https://dev-a4bk90gw.us.auth0.com/samlp/metadata/s2OaAj303YeD8KUGSUfmCpVnQWwjBQyR',
+        claimsAttrRef: 'roles', 
+        callbackUrls: 'http://localhost:8080/callback',
+        logoutUrls: 'http://localhost:8080/logout',  
+      },
+    },
   },
-  cognitoDomainName: '{ The name of your Cognito Domain}'
-};
+  cognitoDomainName: 'swa-hits'
+}

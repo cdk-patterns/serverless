@@ -42,7 +42,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         const getHitsLambda = new lambda.Function(this, 'updateDynamoHitsHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
             code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
-            handler: 'getHits.handler',                // file is "lambda", function is "handler"
+            handler: 'updateHits.handler',                // file is "lambda", function is "handler"
             environment: {
                 HITS_TABLE_NAME: table.tableName
             }
@@ -57,6 +57,12 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         const restGateway = new apigw.RestApi(this, 'hitsapi');
 
         const hitsResource = restGateway.root.addResource('hits');
+        // We need to enable cors on this resource to enable us completing the exercise with our client application
+        // You should remove or configure this securely for your end production app.
+        hitsResource.addCorsPreflight({
+            allowOrigins: ['*'],
+            allowMethods: [ 'OPTIONS', 'GET', 'PUT' ]
+          });
 
         // Lets create a GET method for the readOnly operation
         const getHitsMethod = hitsResource.addMethod('GET', new apigw.LambdaIntegration(getHitsLambda), {
@@ -98,9 +104,9 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         // Add permissions for calling the GET Operation
         this.readOnlyRole.addToPolicy(
             new PolicyStatement({
-                actions: [ 'execute-api:Invoke' ],
+                actions: ['execute-api:Invoke'],
                 effect: Effect.ALLOW,
-                resources: [ getHitsMethod.methodArn ]
+                resources: [getHitsMethod.methodArn]
             })
         )
 
@@ -125,12 +131,12 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             })
         );
 
-         // Add permissions for calling the gateway
-         this.readOnlyRole.addToPolicy(
+        // Add permissions for calling the gateway
+        this.readOnlyRole.addToPolicy(
             new PolicyStatement({
-                actions: [ 'execute-api:Invoke' ],
+                actions: ['execute-api:Invoke'],
                 effect: Effect.ALLOW,
-                resources: [ putHitsMethod.methodArn ]
+                resources: [putHitsMethod.methodArn]
             })
         )
 

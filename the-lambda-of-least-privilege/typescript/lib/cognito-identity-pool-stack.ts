@@ -7,14 +7,17 @@ import { PolicyStatement, Effect } from "@aws-cdk/aws-iam";
 import { RoleMapping } from "../lib/interfaces/RoleMapping"; // This should be replaced by an actual CDK library class probably.
 
 interface CognitoIdentityPoolProps extends cdk.StackProps {
-  providerClientId: string;
-  providerClientSecret: string;
-  providerIssuer: string;
+  configuration: {
+    providerGroupsAttrName: string;
+    providerClientId?: string;
+    providerClientSecret?: string;
+    providerIssuer?: string;
+    providerType: string;
+    metadataURL?: string;
+    callbackUrls: string;
+    logoutUrls: string;
+  };
   providerName: string;
-  providerType: string;
-  providerGroupsAttrName: string;
-  callbackUrls: string;
-  logoutUrls: string;
   roleMappingRules: RoleMapping[];
   cognitoDomainName: string
 }
@@ -41,7 +44,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // ============================================================================
     // Environment variables and constants
     // ============================================================================
-    const groupsAttributeClaimName = "custom:" + props.providerGroupsAttrName;
+    const cogAttrMappingNameRef = "custom:" + props.configuration.providerGroupsAttrName;
 
     // ========================================================================
     // Resource: Amazon Cognito User Pool
@@ -57,7 +60,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     const userPoolCfn = userPool.node.defaultChild as CfnUserPool;
     userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" } //TODO Mike why is this in here?
     userPoolCfn.schema = [{
-      name: props.providerGroupsAttrName,
+      name: props.configuration.providerGroupsAttrName,
       attributeDataType: "String",
       mutable: true,
       required: false,
@@ -75,37 +78,51 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     // See also:
     // - https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html
-  
+
     // mapping from IdP fields to Cognito attributes
+
     const supportedIdentityProviders = [];
     let cognitoManagedIdp: CfnUserPoolIdentityProvider | undefined = undefined;
 
     if (props.providerName) {
-      //TODO extend to configure for SAML based configurations
-      cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
-        providerName: props.providerName,
-        providerDetails: {
-          attributes_request_method: 'GET', // TODO Understand this better and move it to configuration
-          authorize_scopes: 'openid profile', // TODO Understand this better and move it to configuration
-          client_id: props.providerClientId,
-          client_secret: props.providerClientSecret,
-          oidc_issuer: props.providerIssuer,
-        },
-        providerType: props.providerType,
-        // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
-        attributeMapping: {
-          "email": "email",
-          "family_name": "lastName",
-          "given_name": "firstName",
-          "name": "firstName", // alias to given_name
-          [groupsAttributeClaimName]: "groups" //syntax for a dynamic key
-        },
-        userPoolId: userPool.userPoolId
-      });
+      //SAML CFG ==============================================================================
+      if (props.configuration.providerType === "SAML") {
+        //TODO extend to configure for SAML based configurations
+        cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
+          providerName: props.providerName,
+          providerType: props.configuration.providerType,
+          providerDetails: {
+            MetadataURL: props.configuration.metadataURL
+          },
+          // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
+          attributeMapping: {
+            [props.configuration.providerGroupsAttrName]: props.configuration.providerGroupsAttrName //syntax for a dynamic key
+          },
+          userPoolId: userPool.userPoolId
+        });
+      } else {
+        //OIDC CFG ==============================================================================
+        cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
+          providerName: props.providerName,
+          providerType: props.configuration.providerType,
+          providerDetails: {
+            attributes_request_method: 'GET', // TODO Understand this better and move it to configuration
+            authorize_scopes: 'openid profile',
+            client_id: props.configuration.providerClientId,
+            client_secret: props.configuration.providerClientSecret,
+            oidc_issuer: props.configuration.providerIssuer,
+          },
+          // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
+          attributeMapping: {
+            [cogAttrMappingNameRef]: props.configuration.providerGroupsAttrName //syntax for a dynamic key
+          },
+          userPoolId: userPool.userPoolId
+        });
+
+      }
 
       supportedIdentityProviders.push(props.providerName);
     }
-
 
     // ========================================================================
     // Resource: Amazon Cognito User Pool Client
@@ -124,11 +141,11 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
       supportedIdentityProviders: supportedIdentityProviders,
       allowedOAuthFlowsUserPoolClient: true,
       allowedOAuthFlows: ["code"],
-      allowedOAuthScopes: ["email", "openid", "profile", "aws.cognito.signin.user.admin"],
+      allowedOAuthScopes: ["openid", "profile", "aws.cognito.signin.user.admin"],
       refreshTokenValidity: 1,
       writeAttributes: ['picture'],
-      callbackUrLs: [props.callbackUrls],
-      logoutUrLs: [props.logoutUrls],
+      callbackUrLs: [props.configuration.callbackUrls],
+      logoutUrLs: [props.configuration.logoutUrls],
       clientName: id + 'UserPoolClient',
       userPoolId: userPool.userPoolId
     })
@@ -221,7 +238,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     // Create a role-mapping attachment
 
-   const roleAttachment = new CfnIdentityPoolRoleAttachment(this, "CustomRoleAttachmentFunction", {
+    const roleAttachment = new CfnIdentityPoolRoleAttachment(this, "CustomRoleAttachmentFunction", {
       identityPoolId: identityPool.ref,
       roles: {
         'unauthenticated': unauthenticatedRole.roleArn,
