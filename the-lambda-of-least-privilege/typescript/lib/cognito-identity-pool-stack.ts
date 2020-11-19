@@ -2,9 +2,6 @@ import * as cdk from '@aws-cdk/core';
 import cognito = require("@aws-cdk/aws-cognito");
 import iam = require("@aws-cdk/aws-iam");
 import { CfnUserPool, CfnUserPoolIdentityProvider, CfnIdentityPoolRoleAttachment, UserPool } from "@aws-cdk/aws-cognito";
-import { PolicyStatement, Effect } from "@aws-cdk/aws-iam";
-
-import { RoleMapping } from "../lib/interfaces/RoleMapping"; // This should be replaced by an actual CDK library class probably.
 
 interface CognitoIdentityPoolProps extends cdk.StackProps {
   configuration: {
@@ -18,25 +15,13 @@ interface CognitoIdentityPoolProps extends cdk.StackProps {
     logoutUrls: string;
   };
   providerName: string;
-  roleMappingRules: RoleMapping[];
   cognitoDomainName: string
 }
 
-// TODO Michael O'Reilly - Set a domain for the cognito user pool
-// TODO Michael O'Reilly - Update the Auth0 callback url with the cognito callback endpoint instructions.
-
 export class CognitoIdentityPoolStack extends cdk.Stack {
-  /**
-   *  We need to set the objects that need externally referenced as class member variables
-   * 
-   *  public readonly ecsCluster: ecs.Cluster;
-   *  public readonly ecsService: ecsPatterns.NetworkLoadBalancedFargateService;
-   * 
-   * @param scope 
-   * 
-   * @param id 
-   * @param props 
-   */
+  public userPool: cognito.UserPool;
+  public userPoolClient: cognito.CfnUserPoolClient;
+  public identityPool: cognito.CfnIdentityPool;
 
   constructor(scope: cdk.Construct, id: string, props: CognitoIdentityPoolProps) {
     super(scope, id, props);
@@ -54,13 +39,13 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // - https://aws.amazon.com/cognito/
     // - https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-cognito.CfnIdentityPool.html
 
-    const userPool: UserPool = new cognito.UserPool(this, id + "UserPool", {});
+    this.userPool = new cognito.UserPool(this, id + "UserPool", {});
 
     // any properties that are not part of the high level construct can be added using this method
-    const userPoolCfn = userPool.node.defaultChild as CfnUserPool;
+    const userPoolCfn = this.userPool.node.defaultChild as CfnUserPool;
     userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" } //TODO Mike why is this in here?
     userPoolCfn.schema = [{
-      name: props.configuration.providerGroupsAttrName,
+      name: "groups",
       attributeDataType: "String",
       mutable: true,
       required: false,
@@ -96,9 +81,9 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
           },
           // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
           attributeMapping: {
-            [props.configuration.providerGroupsAttrName]: props.configuration.providerGroupsAttrName //syntax for a dynamic key
+            "custom:groups": props.configuration.providerGroupsAttrName //syntax for a dynamic key
           },
-          userPoolId: userPool.userPoolId
+          userPoolId: this.userPool.userPoolId
         });
       } else {
         //OIDC CFG ==============================================================================
@@ -114,13 +99,11 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
           },
           // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
           attributeMapping: {
-            [cogAttrMappingNameRef]: props.configuration.providerGroupsAttrName //syntax for a dynamic key
+            "custom:groups": props.configuration.providerGroupsAttrName //syntax for a dynamic key
           },
-          userPoolId: userPool.userPoolId
+          userPoolId: this.userPool.userPoolId
         });
-
       }
-
       supportedIdentityProviders.push(props.providerName);
     }
 
@@ -137,22 +120,22 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // - https://aws.amazon.com/cognito/
     // - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html
 
-    const userPoolClient = new cognito.CfnUserPoolClient(this, id + 'UserPoolClient', {
+    this.userPoolClient = new cognito.CfnUserPoolClient(this, id + 'UserPoolClient', {
       supportedIdentityProviders: supportedIdentityProviders,
       allowedOAuthFlowsUserPoolClient: true,
       allowedOAuthFlows: ["code"],
       allowedOAuthScopes: ["openid", "profile", "aws.cognito.signin.user.admin"],
       refreshTokenValidity: 1,
-      writeAttributes: ['picture'],
+      writeAttributes: ['picture','custom:groups'],
       callbackUrLs: [props.configuration.callbackUrls],
       logoutUrLs: [props.configuration.logoutUrls],
       clientName: id + 'UserPoolClient',
-      userPoolId: userPool.userPoolId
+      userPoolId: this.userPool.userPoolId
     })
 
     // we want to make sure we do things in the right order
     if (cognitoManagedIdp) {
-      userPoolClient.node.addDependency(cognitoManagedIdp);
+      this.userPoolClient.node.addDependency(cognitoManagedIdp);
     }
 
     // ========================================================================
@@ -166,7 +149,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     const cfnUserPoolDomain = new cognito.CfnUserPoolDomain(this, "CognitoDomain", {
       domain: props.cognitoDomainName,
-      userPoolId: userPool.userPoolId
+      userPoolId: this.userPool.userPoolId
     });
 
     // ========================================================================
@@ -179,99 +162,28 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // - https://aws.amazon.com/cognito/
     // - https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-cognito.CfnIdentityPool.html
 
-    const identityPool = new cognito.CfnIdentityPool(this, id + 'IdentityPool', {
+    this.identityPool = new cognito.CfnIdentityPool(this, id + 'IdentityPool', {
       allowUnauthenticatedIdentities: false,
       cognitoIdentityProviders: [{
-        clientId: userPoolClient.ref,
-        providerName: userPool.userPoolProviderName,
+        clientId: this.userPoolClient.ref,
+        providerName: this.userPool.userPoolProviderName,
       }]
     });
-
-    // ============================================================================================
-    // Each Identity Pool needs a default IAM role to assign to authenticated users / unauthenticated users
-    //
-    // Lets get rid of the unautheticated role post testing TODO MOR
-    // ============================================================================================
-
-    const unauthenticatedRole = new iam.Role(this, 'CognitoDefaultUnauthenticatedRole', {
-      assumedBy: new iam.FederatedPrincipal('cognito-identity.amazonaws.com', {
-        "StringEquals": { "cognito-identity.amazonaws.com:aud": identityPool.ref },
-        "ForAnyValue:StringLike": { "cognito-identity.amazonaws.com:amr": "unauthenticated" },
-      }, "sts:AssumeRoleWithWebIdentity"),
-    });
-    unauthenticatedRole.addToPolicy(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: [
-        "mobileanalytics:PutEvents",
-        "cognito-sync:*"
-      ],
-      resources: ["*"],
-    }));
-
-    const authenticatedRole = new iam.Role(this, 'CognitoDefaultAuthenticatedRole', {
-      assumedBy: new iam.FederatedPrincipal('cognito-identity.amazonaws.com', {
-        "StringEquals": { "cognito-identity.amazonaws.com:aud": identityPool.ref },
-        "ForAnyValue:StringLike": { "cognito-identity.amazonaws.com:amr": "authenticated" },
-      }, "sts:AssumeRoleWithWebIdentity"),
-    });
-
-    authenticatedRole.addToPolicy(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: [
-        "mobileanalytics:PutEvents",
-        "cognito-sync:*",
-        "cognito-identity:*"
-      ],
-      resources: ["*"],
-    }));
-
-
-    // ========================================================================
-    // Resource: Amazon Cognito Role Mapping
-    // ========================================================================
-
-    // Purpose: Map an external user claim to IAM Role ARN
-
-    // See also:
-    // - https://aws.amazon.com/cognito/
-    // - vhttps://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html
-
-    // Create a role-mapping attachment
-
-    const roleAttachment = new CfnIdentityPoolRoleAttachment(this, "CustomRoleAttachmentFunction", {
-      identityPoolId: identityPool.ref,
-      roles: {
-        'unauthenticated': unauthenticatedRole.roleArn,
-        'authenticated': authenticatedRole.roleArn
-      },
-      roleMappings: {
-        [props.providerName]: {
-          identityProvider: 'cognito-idp.' + this.region + '.amazonaws.com/' + userPool.userPoolId + ':' + userPoolClient.ref,  //cognito-idp.${Stack.of(this).region}.amazonaws.com/${pool.userPoolId}:${client.userPoolClientId}
-          ambiguousRoleResolution: 'Deny',
-          type: 'Rules',
-          rulesConfiguration: {
-            rules: props.roleMappingRules
-          }
-        }
-      }
-
-    })
-
+    
     //Outputs
-
     new cdk.CfnOutput(this, "UserPoolIdOutput", {
       description: "UserPool ID",
-      value: userPool.userPoolId
+      value: this.userPool.userPoolId
     });
 
     new cdk.CfnOutput(this, "AppClientIdOutput", {
       description: "App Client ID",
-      value: userPoolClient.ref
+      value: this.userPoolClient.ref
     });
 
     new cdk.CfnOutput(this, "IdentityPoolId", {
       description: "Identity Pool ID",
-      value: identityPool.ref
+      value: this.identityPool.ref
     });
 
     new cdk.CfnOutput(this, "CognitoDomainOutput", {

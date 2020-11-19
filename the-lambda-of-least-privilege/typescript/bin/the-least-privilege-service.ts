@@ -7,6 +7,7 @@ import { RoleMapper } from "../util/role-mapper";
 
 import { CognitoIdentityPoolStack } from '../lib/cognito-identity-pool-stack';
 import { LeastPrivilegeWebserviceStack } from '../lib/least-privilege-webservice-stack';
+import { CognitoRbacRoleMappingStack } from '../lib/cognito-rbac-rolemappings-stack';
 
 import { StackConfiguration } from '../lib/configuration/stack-configuration';
 
@@ -47,25 +48,35 @@ const webServiceStack = new LeastPrivilegeWebserviceStack(app, 'swa-lp-ws')
 //
 // =================================================================================
 
-// Lets get a little prep work done before we create out Identity Pool
-// Create a mapping of roles from your provider JWT user claims to the IAM roles you created in your web service stack.
-let auth0RoleMapper = new RoleMapper();
-
-auth0RoleMapper.addMapping({
-    claim: "custom:" + StackConfiguration.provider.configuration.saml.claimsAttrRef,
-    matchType: 'Contains', // TODO We should try and find an enum for this element
-    roleArn: webServiceStack.creatorRole.roleArn,
-    value: "admin" // user claim reference that should be on JWT
+const cognitoIdPoolSaml = new CognitoIdentityPoolStack(app, 'swa-lp-cog', {
+    configuration: {
+        providerType: StackConfiguration.provider.configuration.saml.type,
+        metadataURL: StackConfiguration.provider.configuration.saml.metadataURL,
+        providerGroupsAttrName: StackConfiguration.provider.configuration.saml.claimsAttrRef,
+        callbackUrls: StackConfiguration.provider.configuration.saml.callbackUrls,
+        logoutUrls: StackConfiguration.provider.configuration.saml.logoutUrls
+    },
+    providerName: StackConfiguration.provider.name,
+    //roleMappingRules: auth0RoleMapper.getRules(),
+    cognitoDomainName: StackConfiguration.cognitoDomainName
 });
 
-auth0RoleMapper.addMapping({
-    claim: "custom:" + StackConfiguration.provider.configuration.saml.claimsAttrRef,
-    matchType: 'Contains',
-    roleArn: webServiceStack.readOnlyRole.roleArn,
-    value: "user" // user claim reference that should be on JWT.
-});
+// ================================================================================
+// Map our Roles
+// 
+// This is the process where by we map SAML/OIDC Claims to the IAM roles that we have 
+// defined.
+// =================================================================================
+
+const cognitoRbacRoleMappings = new CognitoRbacRoleMappingStack(app, 'swa-lp-roleMappings', {
+    cognitoIdentityPoolStack: cognitoIdPoolSaml,
+    webServiceStack: webServiceStack,
+    mappingAttr: StackConfiguration.provider.configuration.saml.claimsAttrRef,
+    providerName: StackConfiguration.provider.name
+})
 
 /*
+// OIDC Cnofiguration
 const cognitoIdPoolOidc = new CognitoIdentityPoolStack(app, 'swa-lp-cog', {
     configuration: {
         providerClientId: StackConfiguration.provider.configuration.oidc.clientId,
@@ -81,16 +92,3 @@ const cognitoIdPoolOidc = new CognitoIdentityPoolStack(app, 'swa-lp-cog', {
     cognitoDomainName: StackConfiguration.cognitoDomainName
 });
 */
-
-const cognitoIdPoolSaml = new CognitoIdentityPoolStack(app, 'swa-lp-cog', {
-    configuration: {
-        providerType: StackConfiguration.provider.configuration.saml.type,
-        metadataURL: StackConfiguration.provider.configuration.saml.metadataURL,
-        providerGroupsAttrName: StackConfiguration.provider.configuration.saml.claimsAttrRef,
-        callbackUrls: StackConfiguration.provider.configuration.saml.callbackUrls,
-        logoutUrls: StackConfiguration.provider.configuration.saml.logoutUrls
-    },
-    providerName: StackConfiguration.provider.name,
-    roleMappingRules: auth0RoleMapper.getRules(),
-    cognitoDomainName: StackConfiguration.cognitoDomainName
-});

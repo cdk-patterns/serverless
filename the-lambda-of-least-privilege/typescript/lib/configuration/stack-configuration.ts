@@ -14,7 +14,7 @@ export const StackConfiguration = {
       saml: {
         type: 'SAML',
         metadataURL: 'https://dev-a4bk90gw.us.auth0.com/samlp/metadata/s2OaAj303YeD8KUGSUfmCpVnQWwjBQyR',
-        claimsAttrRef: 'roles', 
+        claimsAttrRef: 'http://schemas.auth0.com/roles', 
         callbackUrls: 'http://localhost:8080/callback',
         logoutUrls: 'http://localhost:8080/logout',  
       },
