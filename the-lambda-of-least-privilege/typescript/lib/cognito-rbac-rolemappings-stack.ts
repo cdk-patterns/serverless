@@ -1,11 +1,8 @@
 import * as cdk from '@aws-cdk/core';
-import cognito = require("@aws-cdk/aws-cognito");
 import iam = require("@aws-cdk/aws-iam");
-import { CfnUserPool, CfnUserPoolIdentityProvider, CfnIdentityPoolRoleAttachment, UserPool } from "@aws-cdk/aws-cognito";
+import { CfnIdentityPoolRoleAttachment } from "@aws-cdk/aws-cognito";
 import {
-  //ManagedPolicy,
   Role,
-  ServicePrincipal,
   PolicyStatement,
   Effect
 } from '@aws-cdk/aws-iam';

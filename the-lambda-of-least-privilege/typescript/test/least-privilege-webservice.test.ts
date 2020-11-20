@@ -17,52 +17,6 @@ test('DynamoDB Created', () => {
   ));
 });
 
-test('DynamoDB READ IAM Policy Created', () => {
-  const app = new cdk.App();
-  // WHEN
-  const stack = new LeastPrivilegeWebserviceStack.LeastPrivilegeWebserviceStack(app, 'MyTestStack');
-  // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
-    "PolicyDocument": {
-      "Statement": [
-        {
-        "Action": [
-          "dynamodb:Scan",
-          "dynamodb:Query",
-          "dynamodb:Get",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
-        "Effect": "Allow"  
-      }]
-    }
-  }
-  ));
-});
-
-test('DynamoDB UPDATE IAM Policy Created', () => {
-  const app = new cdk.App();
-  // WHEN
-  const stack = new LeastPrivilegeWebserviceStack.LeastPrivilegeWebserviceStack(app, 'MyTestStack');
-  // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::IAM::Policy", {
-    "PolicyDocument": {
-      "Statement": [
-        {
-        "Action": [
-          "dynamodb:Scan",
-          "dynamodb:Query",
-          "dynamodb:Get",
-          "dynamodb:UpdateItem",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
-        "Effect": "Allow"  
-      }]
-    }
-  }
-  ));
-});
 
 test('Update DynamoDB Lambda Created', () => {
   const app = new cdk.App();
@@ -82,7 +36,7 @@ test('Get DynamoDB Lambda Created', () => {
   const stack = new LeastPrivilegeWebserviceStack.LeastPrivilegeWebserviceStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "getHits.handler",
+    "Handler": "updateHits.handler",
     "Runtime": "nodejs12.x"
   }
   ));

@@ -1,35 +1,31 @@
 import * as cdk from '@aws-cdk/core';
 import cognito = require("@aws-cdk/aws-cognito");
-import iam = require("@aws-cdk/aws-iam");
 import { CfnUserPool, CfnUserPoolIdentityProvider, CfnIdentityPoolRoleAttachment, UserPool } from "@aws-cdk/aws-cognito";
 
+import { iSAMLProviderConfig } from "./interfaces/ISAMLProviderConfig";
+import { iOIDCProviderConfig } from "./interfaces/iOIDCProviderConfig";
+import { iAttrSchema } from "./interfaces/iAttrSchema";
+import { iUserPoolConfig } from "./interfaces/iUserPoolConfig";
+
 interface CognitoIdentityPoolProps extends cdk.StackProps {
-  configuration: {
-    providerGroupsAttrName: string;
-    providerClientId?: string;
-    providerClientSecret?: string;
-    providerIssuer?: string;
-    providerType: string;
-    metadataURL?: string;
-    callbackUrls: string;
-    logoutUrls: string;
-  };
-  providerName: string;
-  cognitoDomainName: string
+  userPoolClientConfig: iUserPoolConfig;
+  userPoolAttrSchema: Array<iAttrSchema>;
+  identityProviders: {
+    providerName: string;
+    oidcProvider?: iOIDCProviderConfig;
+    samlProvider?: iSAMLProviderConfig;
+  }
+  cognitoDomain: string;
 }
 
 export class CognitoIdentityPoolStack extends cdk.Stack {
+  
   public userPool: cognito.UserPool;
   public userPoolClient: cognito.CfnUserPoolClient;
   public identityPool: cognito.CfnIdentityPool;
 
   constructor(scope: cdk.Construct, id: string, props: CognitoIdentityPoolProps) {
     super(scope, id, props);
-
-    // ============================================================================
-    // Environment variables and constants
-    // ============================================================================
-    const cogAttrMappingNameRef = "custom:" + props.configuration.providerGroupsAttrName;
 
     // ========================================================================
     // Resource: Amazon Cognito User Pool
@@ -43,69 +39,33 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     // any properties that are not part of the high level construct can be added using this method
     const userPoolCfn = this.userPool.node.defaultChild as CfnUserPool;
-    userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" } //TODO Mike why is this in here?
-    userPoolCfn.schema = [{
-      name: "groups",
-      attributeDataType: "String",
-      mutable: true,
-      required: false,
-      stringAttributeConstraints: {
-        maxLength: "2048",
-        minLength: "1"
-      }
-    }];
+    userPoolCfn.userPoolAddOns = { advancedSecurityMode: "ENFORCED" }
+    userPoolCfn.schema = props.userPoolAttrSchema;
 
     // ========================================================================
     // Resource: Identity Provider Settings
     // ========================================================================
-
     // Purpose: define the external Identity Provider details, field mappings etc.
-
     // See also:
     // - https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html
-
-    // mapping from IdP fields to Cognito attributes
 
     const supportedIdentityProviders = [];
     let cognitoManagedIdp: CfnUserPoolIdentityProvider | undefined = undefined;
 
-    if (props.providerName) {
-      //SAML CFG ==============================================================================
-      if (props.configuration.providerType === "SAML") {
-        //TODO extend to configure for SAML based configurations
-        cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
-          providerName: props.providerName,
-          providerType: props.configuration.providerType,
-          providerDetails: {
-            MetadataURL: props.configuration.metadataURL
-          },
-          // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
-          attributeMapping: {
-            "custom:groups": props.configuration.providerGroupsAttrName //syntax for a dynamic key
-          },
-          userPoolId: this.userPool.userPoolId
-        });
-      } else {
-        //OIDC CFG ==============================================================================
-        cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
-          providerName: props.providerName,
-          providerType: props.configuration.providerType,
-          providerDetails: {
-            attributes_request_method: 'GET', // TODO Understand this better and move it to configuration
-            authorize_scopes: 'openid profile',
-            client_id: props.configuration.providerClientId,
-            client_secret: props.configuration.providerClientSecret,
-            oidc_issuer: props.configuration.providerIssuer,
-          },
-          // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
-          attributeMapping: {
-            "custom:groups": props.configuration.providerGroupsAttrName //syntax for a dynamic key
-          },
-          userPoolId: this.userPool.userPoolId
-        });
-      }
-      supportedIdentityProviders.push(props.providerName);
-    }
+    if (props.identityProviders.samlProvider) {
+      cognitoManagedIdp = new cognito.CfnUserPoolIdentityProvider(this, "CognitoIdP", {
+        providerName: props.identityProviders.providerName,
+        providerType: props.identityProviders.samlProvider.type,
+        providerDetails: {
+          MetadataURL: props.identityProviders.samlProvider.details.MetaDataURL
+        },
+        // Structure: { "<cognito attribute name>": "<IdP SAML attribute name>" }
+        attributeMapping: props.identityProviders.samlProvider.attributeMapping,
+        userPoolId: this.userPool.userPoolId
+      });
+    } // TODO Extend this for OIDC
+    supportedIdentityProviders.push(props.identityProviders.providerName);
+
 
     // ========================================================================
     // Resource: Amazon Cognito User Pool Client
@@ -122,13 +82,13 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
 
     this.userPoolClient = new cognito.CfnUserPoolClient(this, id + 'UserPoolClient', {
       supportedIdentityProviders: supportedIdentityProviders,
-      allowedOAuthFlowsUserPoolClient: true,
-      allowedOAuthFlows: ["code"],
-      allowedOAuthScopes: ["openid", "profile", "aws.cognito.signin.user.admin"],
-      refreshTokenValidity: 1,
-      writeAttributes: ['picture','custom:groups'],
-      callbackUrLs: [props.configuration.callbackUrls],
-      logoutUrLs: [props.configuration.logoutUrls],
+      allowedOAuthFlowsUserPoolClient: props.userPoolClientConfig.allowedOAuthFlowsUserPoolClient,
+      allowedOAuthFlows: props.userPoolClientConfig.allowedOAuthFlows,
+      allowedOAuthScopes: props.userPoolClientConfig.allowedOAuthScopes,
+      refreshTokenValidity: props.userPoolClientConfig.refreshTokenValidity,
+      writeAttributes: props.userPoolClientConfig.writeAttributes,
+      callbackUrLs: props.userPoolClientConfig.callbackUrLs,
+      logoutUrLs: props.userPoolClientConfig.logoutUrLs,
       clientName: id + 'UserPoolClient',
       userPoolId: this.userPool.userPoolId
     })
@@ -148,7 +108,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
     // https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html
 
     const cfnUserPoolDomain = new cognito.CfnUserPoolDomain(this, "CognitoDomain", {
-      domain: props.cognitoDomainName,
+      domain: props.cognitoDomain,
       userPoolId: this.userPool.userPoolId
     });
 
@@ -169,7 +129,7 @@ export class CognitoIdentityPoolStack extends cdk.Stack {
         providerName: this.userPool.userPoolProviderName,
       }]
     });
-    
+
     //Outputs
     new cdk.CfnOutput(this, "UserPoolIdOutput", {
       description: "UserPool ID",
