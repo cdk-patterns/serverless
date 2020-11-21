@@ -31,7 +31,6 @@ jobs:
           readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
           for i in "${arr[@]}"
             do
-               echo $i;
                cd $i/typescript;
                npm i;
                npm run build;
