@@ -2,7 +2,7 @@
 This repo is designed to be a collection of aws serverless architecture patterns built with cdk. That means it should
 eventually hold a cdk version of all patterns presented by AWS heros. If you want to contribute that is amazing and I will work through the process with you.
 
-There are two different types of contribution today:
+There are three different types of contribution today:
 1. A brand new pattern
 2. Add a new language implementation for an existing pattern
 3. Converting Lambda Fns to CDK Language
