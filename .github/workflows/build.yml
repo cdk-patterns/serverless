@@ -29,7 +29,15 @@ jobs:
       - name: Parse info.json
         run: |
           readarray -t arr < <(jq '.[] | keys' info.json);
-          printf '%s\n' "${arr[1]}";
+          for i in "${arr[@]}"
+            do
+               : 
+               cd $i+'/typescript';
+               npm i;
+               npm run build;
+               npm run test;
+               cd ../../;
+            done
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
