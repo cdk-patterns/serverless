@@ -28,7 +28,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Parse info.json
         run: |
-          readarray -t arr < <(jq '.[] | keys' info.json);
+          readarray -t arr < <(jq '.[] | keys | .[]' info.json);
           for i in "${arr[@]}"
             do
                echo $i;
