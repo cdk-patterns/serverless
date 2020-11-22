@@ -110,7 +110,7 @@ class TheCloudwatchDashboardStack(core.Stack):
                                                             label="DynamoDB Errors",
                                                             using_metrics={
                                                                 "m1": table.metric_user_errors(),
-                                                                "m2": table.metric_system_errors(),
+                                                                "m2": table.metric_system_errors_for_operations(),
                                                             },
                                                             period=core.Duration.minutes(5))
 
