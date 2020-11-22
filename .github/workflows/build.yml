@@ -25,8 +25,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Parse info.json and run TS tests
+      # Validate TypeScript Patterns
+      - name: Build/Test TypeScript Patterns
         run: |
           readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
           for i in "${arr[@]}"
@@ -35,5 +35,20 @@ jobs:
                npm i;
                npm run build;
                npm run test;
+               cd ../../;
+            done
+            
+      # Validate Python Patterns
+      - name: Build/Synth Python Patterns
+        run: |
+          readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
+          for i in "${arr[@]}"
+            do
+               cd $i/python;
+               python3 -m venv .env
+               source .env/bin/activate
+               pip3 install -r requirements.txt
+               npx cdk synth
+               deactivate
                cd ../../;
             done
