@@ -7,6 +7,9 @@ do
      source .env/bin/activate;
      pip3 install -r requirements.txt;
      readarray -t stacks < <(npx -q cdk ls);
+     if [[ "${#stacks[@]}" == 0 ]]; then
+       exit 1
+     fi
      for stack in "${stacks[@]}"
        do
           echo "npx cdk synth $stack";
