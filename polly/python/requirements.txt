@@ -1,1 +1,5 @@
 -e .
+aws-cdk.core==1.60.0
+aws-cdk.aws-lambda==1.60.0
+aws-cdk.aws-apigatewayv2==1.60.0
+aws-cdk.aws-iam==1.60.0

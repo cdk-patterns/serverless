@@ -1,1 +1,7 @@
 -e .
+aws-cdk.core==1.72.0
+aws-cdk.aws_apigateway==1.72.0
+aws-cdk.aws_iam==1.72.0
+aws-cdk.aws_lambda==1.72.0
+aws-cdk.aws_cloudformation==1.72.0
+aws-cdk.aws_wafv2==1.72.0

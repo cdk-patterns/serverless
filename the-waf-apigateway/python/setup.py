@@ -19,12 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_waf_apigateway"),
 
     install_requires=[
-        "aws-cdk.core==1.72.0",
-        "aws-cdk.aws_apigateway==1.72.0",
-        "aws-cdk.aws_iam==1.72.0",
-        "aws-cdk.aws_lambda==1.72.0",
-        "aws-cdk.aws_cloudformation==1.72.0",
-        "aws-cdk.aws_wafv2==1.72.0",
     ],
 
     python_requires=">=3.6",

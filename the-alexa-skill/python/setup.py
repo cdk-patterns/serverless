@@ -19,12 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_alexa_skill"),
 
     install_requires=[
-        "aws-cdk.core==1.50.0",
-        "aws-cdk.aws-lambda==1.50.0",
-        "aws-cdk.aws-dynamodb==1.50.0",
-        "aws-cdk.alexa-ask==1.50.0",
-        "aws-cdk.aws-s3-assets==1.50.0",
-        "aws-cdk.aws-iam==1.50.0",
     ],
 
     python_requires=">=3.6",
