@@ -4,7 +4,7 @@
   "description": "this is an unreliable lambda with a circuit breaker",
   "main": "unreliable.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc unreliable.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nideveloper",
