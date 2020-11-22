@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigatewayv2 as api_gw,
+    aws_apigatewayv2_integrations as integrations,
     aws_ec2 as ec2,
     aws_rds as rds,
     aws_secretsmanager as secrets,
@@ -44,10 +45,7 @@ class TheRdsProxyStack(core.Stack):
                                             'DBInstance',
                                             engine=rds.DatabaseInstanceEngine.mysql(
                                                 version=rds.MysqlEngineVersion.VER_5_7_30),
-                                            master_username=
-                                            db_credentials_secret.secret_value_from_json('username').to_string(),
-                                            master_user_password=
-                                            db_credentials_secret.secret_value_from_json('password'),
+                                            credentials=rds.Credentials.from_secret(db_credentials_secret),
                                             instance_type=
                                             ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
                                             vpc=vpc,
@@ -81,6 +79,6 @@ class TheRdsProxyStack(core.Stack):
 
         # defines an API Gateway Http API resource backed by our "dynamoLambda" function.
         api = api_gw.HttpApi(self, 'Endpoint',
-                             default_integration=api_gw.LambdaProxyIntegration(handler=rds_lambda));
+                             default_integration=integrations.LambdaProxyIntegration(handler=rds_lambda));
 
         core.CfnOutput(self, 'HTTP API Url', value=api.url);

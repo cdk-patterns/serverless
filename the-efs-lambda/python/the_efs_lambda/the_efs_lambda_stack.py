@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigatewayv2 as api_gw,
+    aws_apigatewayv2_integrations as integrations,
     aws_ec2 as ec2,
     aws_efs as efs,
     core
@@ -34,6 +35,6 @@ class TheEfsLambdaStack(core.Stack):
 
         # defines an API Gateway Http API resource backed by our "efs_lambda" function.
         api = api_gw.HttpApi(self, 'EFS Lambda',
-                             default_integration=api_gw.LambdaProxyIntegration(handler=efs_lambda));
+                             default_integration=integrations.LambdaProxyIntegration(handler=efs_lambda));
 
         core.CfnOutput(self, 'HTTP API Url', value=api.url);
