@@ -6,7 +6,7 @@ do
      python3 -m venv .env;
      source .env/bin/activate;
      pip3 install -r requirements.txt;
-     readarray -t stacks < <(cdk ls);
+     readarray -t stacks < <(npx cdk ls);
      for stack in "${stacks[@]}"
        do
           echo "npx cdk synth $stack";
