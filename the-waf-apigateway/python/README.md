@@ -2,7 +2,7 @@
 
 ![architecture](img/the-waf-apigateway.png)
 
-This is a cdk stack to deploy a simple API gateway, and attach a WAF ( web applicaiton Firewall ) from Andrew Frazer (<https://github.com/mrpackethead>).
+This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Application Firewall) from Andrew Frazer (<https://github.com/mrpackethead>).
 
 This implementation uses Nested stacks where you have a Top stack with an API Gateway Stack and a Waf Stack underneath.
 
