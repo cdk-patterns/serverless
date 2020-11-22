@@ -19,16 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_basic_mq"),
 
     install_requires=[
-        "aws-cdk.core==1.51.0",
-        "aws-cdk.aws-route53==1.51.0",
-        "aws-cdk.aws-route53-targets==1.51.0",
-        "aws-cdk.aws-certificatemanager==1.51.0",
-        "aws-cdk.aws-ec2==1.51.0",
-        "aws-cdk.aws-ssm==1.51.0",
-        "aws-cdk.aws-amazonmq==1.51.0",
-        "aws-cdk.aws-elasticloadbalancingv2==1.51.0",
-        "aws-cdk.aws-elasticloadbalancingv2-targets==1.51.0",
-        "aws-cdk.custom-resources==1.51.0"
     ],
 
     python_requires=">=3.6",

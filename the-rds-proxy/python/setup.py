@@ -19,13 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_rds_proxy"),
 
     install_requires=[
-        "aws-cdk.core==1.56.0",
-        "aws-cdk.aws-ec2==1.56.0",
-        "aws-cdk.aws-rds==1.56.0",
-        "aws-cdk.aws-secretsmanager==1.56.0",
-        "aws-cdk.aws-ssm==1.56.0",
-        "aws-cdk.aws-lambda==1.56.0",
-        "aws-cdk.aws-apigatewayv2==1.56.0",
     ],
 
     python_requires=">=3.6",
