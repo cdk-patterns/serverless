@@ -24,6 +24,23 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      # Validate Python Patterns
+      - name: Build/Synth Python Patterns
+        run: |
+          readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
+          for i in "${arr[@]}"
+            do
+               cd $i/python;
+               if test -f "requirements.txt"; then
+                 python3 -m venv .env
+                 source .env/bin/activate
+                 pip3 install -r requirements.txt
+                 npx cdk synth
+                 deactivate
+               fi
+               cd ../../;
+            done
 
       # Validate TypeScript Patterns
       - name: Build/Test TypeScript Patterns
@@ -38,17 +55,4 @@ jobs:
                cd ../../;
             done
             
-      # Validate Python Patterns
-      - name: Build/Synth Python Patterns
-        run: |
-          readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
-          for i in "${arr[@]}"
-            do
-               cd $i/python;
-               python3 -m venv .env
-               source .env/bin/activate
-               pip3 install -r requirements.txt
-               npx cdk synth
-               deactivate
-               cd ../../;
-            done
+      
