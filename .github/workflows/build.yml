@@ -28,15 +28,19 @@ jobs:
       # Validate Python Patterns
       - name: Build/Synth Python Patterns
         run: |
-          readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
-          for i in "${arr[@]}"
+          readarray -t patterns < <(jq -r '.[] | keys | .[]' info.json);
+          for pattern in "${patterns[@]}"
             do
-               cd $i/python;
+               cd $pattern/python;
                if test -f "requirements.txt"; then
                  python3 -m venv .env
                  source .env/bin/activate
                  pip3 install -r requirements.txt
-                 npx cdk synth
+                 readarray -t stacks < <(cdk ls) 
+                 for stack in "${stacks[@]}"
+                   do
+                     npx cdk synth $stack
+                   done    
                  deactivate
                fi
                cd ../../;
