@@ -39,7 +39,8 @@ jobs:
                  readarray -t stacks < <(cdk ls) 
                  for stack in "${stacks[@]}"
                    do
-                     npx cdk synth $stack
+                      echo "npx cdk synth $stack"
+                      npx cdk synth $stack
                    done    
                  deactivate
                fi
