@@ -21,8 +21,8 @@ class TheLambdaCircuitBreakerStack(core.Stack):
 
         # install node dependencies for lambdas
         lambda_folder = os.path.dirname(os.path.realpath(__file__)) + "/../lambda_fns"
-        subprocess.check_call("npm i".split(), cwd=lambda_folder)
-        subprocess.check_call("npm run build".split(), cwd=lambda_folder)
+        subprocess.check_call("npm i".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
+        subprocess.check_call("npm run build".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
 
         # defines an AWS Lambda resource with unreliable code
         unreliable_lambda = _lambda.Function(self, "UnreliableLambdaHandler",

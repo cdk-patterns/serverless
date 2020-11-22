@@ -2,6 +2,7 @@
   "name": "alexa",
   "version": "1.0.0",
   "description": "lambda for Alexa backend",
+  "repository": "https://github.com/cdk-patterns/serverless.git",
   "main": "lambda.ts",
   "scripts": {
     "build": "tsc lambda.ts",
