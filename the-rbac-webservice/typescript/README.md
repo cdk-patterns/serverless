@@ -18,7 +18,9 @@ When planning your access control strategy, it's best practice to assign users t
 
 ## Pattern Setup 
 
-_Apologies, this is a fairly complex pattern that probably requires an actual workshop. If there is enough interest I will produce that sort of asset. (A promise from Michael.)_  The below instructions are really aimed at giving you a feel for how things hang together. It needs some work to be a little more extensible and tailorable. However it should give you a feel for how Cognito Identity Pools can support the requirement for RBAC using External IDPs.
+_Apologies, this is a fairly complex pattern that probably requires an actual workshop. If there is enough interest I will produce that sort of asset. (A promise from Michael.)_  
+
+The below instructions are really aimed at giving you a feel for how things hang together. It needs some work to be a little more extensible and tailorable. However it should give you a feel for how Cognito Identity Pools can support the requirement for RBAC using External IDPs.
 
 ### Step 1 - Get your IDP Integration Configuration OR set one up
 Get the details for your IDP. 
@@ -27,13 +29,15 @@ Get the details for your IDP.
     - SAML Metadata URL
     - Your IDP Name
 
-* If you havent got an IDP and you want to follow along then something like Auth0 might work for you getting up and running [Auth0 Quick Start](https://auth0.com/docs/quickstart/webapp)
+* If you havent got an IDP and you want to follow along then something like Auth0 might work for you getting up and running 
+    - [Auth0 Quick Start](https://auth0.com/docs/quickstart/webapp)
+    - Make sure that your account has valid Users with proper roles defined. This should be very straight forward using the Auth0 Admin UI. 
 
-    * Make sure that your account has valid Users with proper roles defined. This should be very straight forward using the Auth0 Admin UI. 
+* Open the `cdk/lib/configuration/stack-configuration.ts` set the values for the 
+    - `EXTERNAL_IDENTITY_PROVIDER_NAME` and 
+    - `SAML_METADATA_URL` configuration items.
 
-* Open the `cdk/lib/configuration/stack-configuration.ts` and set the values for the `EXTERNAL_IDENTITY_PROVIDER_NAME` and `SAML_METADATA_URL` configuration items.
-
-* See [Cognito User Pools with SAML IDP](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html)
+* More information can be found on how this works here. [Cognito User Pools with SAML IDP](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html)
 
 * _This pattern can be easily extended to support OIDC exposed IDPs._
 
@@ -44,16 +48,17 @@ As users from your External IDP are federated VIA Cognito they will be stored in
 
 * Open the `cdk/lib/configuration/stack-configuration.ts` and scroll down to the 'USER POOL ATTRIBUTE DEFINITION CONFIGURATION'
 * You can see an example of this Attribute Mapping for an Auth0 SAML based 'roles' claim.
-* This is where you would configure the attributes to mapped from your IDP. (TODO Mike This should be extended as an ARRAY of Attributes)
+* This is where you would configure the attributes to mapped from your IDP. 
+    - (TODO Mike This should be extended as an Array of Attributes)
 
 
 ### Step 3 - Configure a User Pool App Client for our Sample Front End Application
 
-This pattern comes with a sample UI Client for purposes of demonstration (_I used VUE to annoy the React folks_).  This Vue UI Client application will need a Cognito App Client to integrate with and will simulate a User Login and API Gateway call. 
+This pattern comes with a sample UI Client for the purposes of demonstrating the auth flow of the pattern (_I used VUE to annoy the React folks :)_).  This Vue UI Client application will need a **'Cognito App Client'** to integrate with and will simulate a User Login and API Gateway call. 
 More Information on the purpose of this App Client can be found [here](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html). It is worth reading in terms of understanding your Client Applications ideal OIDC Flow.
 
-* Give your Cognito a unique domain name setting the `COGNITO_DOMAIN` Configuration item.
-* Set the standard Call Back and LOGOUTURLs information for your UI-Application setting the `CLIENT_CALLBACKURLS` and `CLIENT_LOGOUTURLS`.
+* Give Cognito a unique domain name setting the `COGNITO_DOMAIN` Configuration item. (i.e. if Auth0 use 'Auth0')
+* Set the standard Call Back and Log-out URLs information for your UI-Application setting the `CLIENT_CALLBACKURLS` and `CLIENT_LOGOUTURLS`.
 * Have a think about the scopes your client needs in terms of its OIDC Flow. Configure the remaining settings as required.
 
 ### Step 4 - Kick the tyres on the Web Services that are part of this Stack.
@@ -62,28 +67,29 @@ More Information on the purpose of this App Client can be found [here](https://d
 
 In this example we are deploying two APIs, a GET and a PUT operation. Each operation is exposed via API-Gateway, with Lambda compute and both interacting with DynamoDB for some persistance.
 
-**Important** This stack also defines and creates to IAM Roles. 
-1. The Admin role has access to all this is required for both the GET and PUT Api operations.  
-2. The Read role has only access to the GET operation.  
+**Important** This stack also defines and creates Two IAM Roles. 
+1. The 'Admin role' has access to all this is required for both the GET and PUT Api operations.  
+2. The 'Read role' has only access to the GET operation.  
 
 You will also notice that both roles have a Policy that dictates that Cognito can only assume this role for authenticated users.
 
 **So how does Cognito assign these roles to Authenticated Users**? Great question...
 
-* Navigate to 'cdl/lib/cognito-rbac-rolemappings.ts'
+* Navigate to `cdk/lib/cognito-rbac-rolemappings.ts`
 * Scroll down to the RoleMapper Resource code around line 84
 * Here you can see the following 
     * Using the attribute that we mapped from the external IDP in step 2 `roles` (defined here as `props.cognitoAttr`) we can create rules that dictate the IAM role that is used.
     * In this example we have two rules. One for mapping the admin user and the other for a user.
 
-This role mapping is used to create a custom `IdentityPoolRoleAttachment` of type `Rules` for the external IDP you have configured above. This will be used to setup the Cognito Identity Pool with the rules it needs to map users with external claims to the IAM roles that you have defined.
+This role mapping is used to create a custom `IdentityPoolRoleAttachment` of type `Rules` for the external IDP you have configured above. 
+This will be used to setup the Cognito Identity Pool with the rules it needs to map users with external claims to the IAM roles that you have defined.
 
 ---
 ***Consider***
 ---
-* In a real world example you may have many roles / overlapping roles and this is likely the area that you are going to spend a lot of time getting correct. 
+In a real world example you may have many roles / overlapping roles and this is likely the area that you are going to spend a lot of time getting correct. 
 
-However sticking true to the principles of RBAC ensure that each role is consistent with the Rules of Least Privilege.
+However sticking true to the principles of RBAC ensure that each role is consistent with the **Rules of Least Privilege**.
 - A role contains the minimum amount of permissions necessary.
 - A user is assigned to a role that allows him or her to perform only what’s required for that role.
 - No single role is given more permission than the same role for another user.
