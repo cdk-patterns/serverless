@@ -3,6 +3,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as efs from '@aws-cdk/aws-efs';
 import apigw = require('@aws-cdk/aws-apigatewayv2');
+import integrations = require('@aws-cdk/aws-apigatewayv2-integrations');
 
 export class TheEfsLambdaStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -42,7 +43,7 @@ export class TheEfsLambdaStack extends cdk.Stack {
 
     // defines an API Gateway Http API resource backed by our "efsLambda" function.
     let api = new apigw.HttpApi(this, 'Endpoint', {
-      defaultIntegration: new apigw.LambdaProxyIntegration({
+      defaultIntegration: new integrations.LambdaProxyIntegration({
         handler: efsLambda
       })
     });

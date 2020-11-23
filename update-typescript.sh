@@ -5,8 +5,6 @@ do
    cd $i/typescript;
    rm -rf node_modules
    npx npm-check-updates -u
-   npm i;
-   npm run build;
-   npm run test;
+   echo "$i updated"
    cd ../../;
 done
