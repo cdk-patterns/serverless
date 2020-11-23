@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
+import integrations = require('@aws-cdk/aws-apigatewayv2-integrations');
 import iam = require('@aws-cdk/aws-iam');
 
 export class PollyStack extends cdk.Stack {
@@ -28,7 +29,7 @@ export class PollyStack extends cdk.Stack {
 
     // defines an API Gateway Http API resource backed by our "pollyLambda" function.
     let api = new apigw.HttpApi(this, 'Endpoint', {
-      defaultIntegration: new apigw.LambdaProxyIntegration({
+      defaultIntegration: new integrations.LambdaProxyIntegration({
         handler: pollyLambda
       })
     });

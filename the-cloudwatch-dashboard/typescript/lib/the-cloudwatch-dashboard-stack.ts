@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
+import integrations = require('@aws-cdk/aws-apigatewayv2-integrations');
 import cloudwatch = require('@aws-cdk/aws-cloudwatch');
 import { GraphWidget, IMetric, Metric } from "@aws-cdk/aws-cloudwatch";
 import { SnsAction } from '@aws-cdk/aws-cloudwatch-actions';
@@ -41,7 +42,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
 
     // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
     let api = new apigw.HttpApi(this, 'HttpAPI', {
-      defaultIntegration: new apigw.LambdaProxyIntegration({
+      defaultIntegration: new integrations.LambdaProxyIntegration({
         handler: dynamoLambda
       })
     });

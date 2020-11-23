@@ -5,6 +5,7 @@ import * as secrets from '@aws-cdk/aws-secretsmanager';
 const ssm = require('@aws-cdk/aws-ssm');
 import * as lambda from '@aws-cdk/aws-lambda';
 import apigw = require('@aws-cdk/aws-apigatewayv2');
+import integrations = require('@aws-cdk/aws-apigatewayv2-integrations');
 
 export class TheRdsProxyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -52,8 +53,7 @@ export class TheRdsProxyStack extends cdk.Stack {
       engine: rds.DatabaseInstanceEngine.mysql({
         version: rds.MysqlEngineVersion.VER_5_7_30
       }),
-      masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
-      masterUserPassword: databaseCredentialsSecret.secretValueFromJson('password'),
+      credentials: rds.Credentials.fromSecret(databaseCredentialsSecret),
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
       vpc,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -93,7 +93,7 @@ export class TheRdsProxyStack extends cdk.Stack {
 
     // defines an API Gateway Http API resource backed by our "rdsLambda" function.
     let api = new apigw.HttpApi(this, 'Endpoint', {
-      defaultIntegration: new apigw.LambdaProxyIntegration({
+      defaultIntegration: new integrations.LambdaProxyIntegration({
         handler: rdsLambda
       })
     });
