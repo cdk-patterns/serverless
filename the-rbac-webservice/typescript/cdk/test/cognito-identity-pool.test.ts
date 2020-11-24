@@ -4,7 +4,6 @@ import CognitoIdentityPoolStack = require('../lib/cognito-identity-pool-stack');
 import { StackConfiguration } from '../lib/configuration/stack-configuration';
 import '@aws-cdk/assert/jest';
 
-
 function initTestStack(stackName: string, props?: {}) {
 
   let app = new cdk.App();
@@ -56,18 +55,15 @@ test('Verify that UserPoolIdentityProvider Resource has been Created', () => {
     "UserPoolId": {
       "Ref": "MyTestUPIDPStackUserPoolE5D3352F"
     },
-  }
-  );
-});
-
-/**
- * "AttributeMapping": {
+    "AttributeMapping": {
       "custom:roles": "http://schemas.auth0.com/roles"
     },
     "ProviderDetails": {
       "MetadataURL": "http://saml-metadataurl.com/example/url"
     }
- */
+  }
+  );
+});
 
 test('Verify that UserPoolClient has been Created', () => {
   // WHEN

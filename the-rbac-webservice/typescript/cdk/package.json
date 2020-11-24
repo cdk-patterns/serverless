@@ -26,10 +26,11 @@
   "dependencies": {
     "@aws-cdk/aws-apigateway": "1.71.0",
     "@aws-cdk/aws-apigatewayv2": "1.71.0",
+    "@aws-cdk/aws-cognito": "1.71.0",
     "@aws-cdk/aws-dynamodb": "1.71.0",
     "@aws-cdk/aws-lambda": "1.71.0",
-    "@aws-cdk/aws-cognito": "1.71.0",
     "@aws-cdk/core": "1.71.0",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "uuidv4": "^6.2.5"
   }
 }

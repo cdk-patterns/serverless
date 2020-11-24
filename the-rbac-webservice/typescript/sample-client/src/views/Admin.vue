@@ -1,18 +1,17 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HitCounter/>
-    <button onclick="alert('yay');">Increment the Count</button>
+    <Blog/>
   </div>
 </template>
 
 <script>
-import HitCounter from '../components/HitCounter.vue'
+import Blog from '../components/Blog.vue'
 
 export default {
   name: 'App',
   components: {
-    'HitCounter': HitCounter
+    'Blog': Blog
   }
 }
 </script>

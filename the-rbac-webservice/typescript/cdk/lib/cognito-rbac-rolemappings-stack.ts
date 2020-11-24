@@ -103,7 +103,7 @@ export class CognitoRbacRoleMappingStack extends cdk.Stack {
     });
 
     // ========================================================================
-    // Resource: Amazon Cognito Role Mapping
+    // Resource: Amazon Cognito Identity Pool Role Attachment
     // ========================================================================
     // Purpose: Map an external user claim to IAM Role ARN
     // See also:

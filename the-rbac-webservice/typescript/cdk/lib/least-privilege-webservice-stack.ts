@@ -16,10 +16,10 @@ interface webServiceStackProps extends cdk.StackProps {
 export class LeastPrivilegeWebserviceStack extends cdk.Stack {
 
     // table ref
-    public readonly hitsTable: dynamodb.Table;
+    public readonly blogTable: dynamodb.Table;
     // api's
-    public readonly getHitsMethod: apigw.Method;
-    public readonly putHitsMethod: apigw.Method;
+    public readonly getBlogsMethod: apigw.Method;
+    public readonly putBlogsMethod: apigw.Method;
     // roles
     public readonly userRole: iam.Role;
     public readonly adminRole: iam.Role;
@@ -30,57 +30,64 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         // ========================================================================================================
         // Resource: AWS DynamoDB Table
         // ========================================================================================================
-        this.hitsTable = new dynamodb.Table(this, 'Hits', {
-            partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+        this.blogTable = new dynamodb.Table(this, 'Blogs', {
+            partitionKey: { name: 'title', type: dynamodb.AttributeType.STRING },
+            tableName: 'blogs',
+            // The default removal policy is RETAIN, which means that cdk destroy will not attempt to delete
+            // the new table, and it will remain in your account until manually deleted. By setting the policy to 
+            // DESTROY, cdk destroy will delete the table (even if it has data in it)
+            removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code
         });
 
         // ========================================================================================================
         //  Resource: AWS Lambda
         // ========================================================================================================
-        const updateHitsLambda = new lambda.Function(this, 'getDynamoHitsHandler', {
+        const createBlogLda = new lambda.Function(this, 'createBlogsHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
             code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
-            handler: 'updateHits.handler',                // file is "lambda", function is "handler"
+            handler: 'createBlog.handler',                // file is "lambda", function is "handler"
             environment: {
-                HITS_TABLE_NAME: this.hitsTable.tableName
+                BLOGS_TABLE_NAME: this.blogTable.tableName,
+                PRIMARY_KEY: 'itemId'
             }
         });
 
-        this.hitsTable.grantReadWriteData(updateHitsLambda);
+        this.blogTable.grantReadWriteData(createBlogLda); // Give this lambda read/write privileges
 
         // Get HITs Function
-        const getHitsLambda = new lambda.Function(this, 'updateDynamoHitsHandler', {
+        const getBlogslda = new lambda.Function(this, 'getBlogsHandler', {
             runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
             code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
-            handler: 'updateHits.handler',                // file is "lambda", function is "handler"
+            handler: 'readBlogs.handler',                // file is "lambda", function is "handler"
             environment: {
-                HITS_TABLE_NAME: this.hitsTable.tableName
+                BLOGS_TABLE_NAME: this.blogTable.tableName,
+                PRIMARY_KEY: 'itemId'
             }
         });
 
-        this.hitsTable.grantReadData(getHitsLambda);
+        this.blogTable.grantReadData(getBlogslda); // Give this lambda readonly privileges
 
         // ========================================================================================================
         //  Resource: AWS API Gateway - RestAPI
         // ========================================================================================================
 
-        const restGateway = new apigw.RestApi(this, 'hitsapi');
+        const restGateway = new apigw.RestApi(this, 'blogsapi');
 
-        const hitsResource = restGateway.root.addResource('hits');
+        const blogsResource = restGateway.root.addResource('blogs');
         // We need to enable cors on this resource to enable us completing the exercise with our client application
         // ** You should remove or re-configure this securely for your end production app.
-        hitsResource.addCorsPreflight({
+        blogsResource.addCorsPreflight({
             allowOrigins: ['*'],
             allowMethods: ['OPTIONS', 'GET', 'PUT']
         });
 
         // Lets create a GET method for the readOnly operation
-        this.getHitsMethod = hitsResource.addMethod('GET', new apigw.LambdaIntegration(getHitsLambda), {
+        this.getBlogsMethod = blogsResource.addMethod('GET', new apigw.LambdaIntegration(getBlogslda), {
             authorizationType: apigw.AuthorizationType.IAM
         });
 
         // Lets create a PUT method for the update/create operation
-        this.putHitsMethod = hitsResource.addMethod('PUT', new apigw.LambdaIntegration(updateHitsLambda), {
+        this.putBlogsMethod = blogsResource.addMethod('PUT', new apigw.LambdaIntegration(createBlogLda), {
             authorizationType: apigw.AuthorizationType.IAM
         });
 
@@ -104,7 +111,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         this.userRole.addToPolicy(
             new PolicyStatement({
                 effect: Effect.ALLOW,
-                resources: [this.hitsTable.tableArn],
+                resources: [this.blogTable.tableArn],
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
@@ -121,7 +128,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             new PolicyStatement({
                 actions: ['execute-api:Invoke'],
                 effect: Effect.ALLOW,
-                resources: [this.getHitsMethod.methodArn]
+                resources: [this.getBlogsMethod.methodArn]
             })
         )
         this.userRole.addToPolicy(
@@ -155,7 +162,7 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
         this.adminRole.addToPolicy(
             new PolicyStatement({
                 effect: Effect.ALLOW,
-                resources: [this.hitsTable.tableArn],
+                resources: [this.blogTable.tableArn],
                 actions: [
                     'dynamodb:Scan',
                     'dynamodb:Query',
@@ -170,8 +177,8 @@ export class LeastPrivilegeWebserviceStack extends cdk.Stack {
             new PolicyStatement({
                 actions: ['execute-api:Invoke'],
                 effect: Effect.ALLOW,
-                resources: [this.putHitsMethod.methodArn,
-                this.getHitsMethod.methodArn]
+                resources: [this.putBlogsMethod.methodArn,
+                this.getBlogsMethod.methodArn]
             })
         );
         this.adminRole.addToPolicy(
