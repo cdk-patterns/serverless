@@ -15,7 +15,7 @@ export default {
             // oauth
 
             oauth: {
-                domain: 'swa-hits.auth.us-east-1.amazoncognito.com', // {your-cognito-domain.auth.us-east-1.amazoncognito.com}
+                domain: '', // {your-cognito-domain.auth.us-east-1.amazoncognito.com}
                 scope: ['profile', 'openid', 'aws.cognito.signin.user.admin'],
                 redirectSignIn: `${window.location.origin}/callback`,
                 redirectSignOut:
