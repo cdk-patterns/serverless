@@ -1,7 +1,7 @@
 import { eRequestMethod } from "../enums/eRequestMethod";
-import { iStackConfiguration} from "./config-interfaces";
+import { iStackConfiguration } from "./config-interfaces";
 
-    const EXTERNAL_IDENTITY_PROVIDER_NAME = "";// i.e. Auth0
+const EXTERNAL_IDENTITY_PROVIDER_NAME = "Auth0";
 
 /**
  * ============================================================================================
@@ -11,15 +11,15 @@ import { iStackConfiguration} from "./config-interfaces";
  * 
  * ============================================================================================
  */
-    const OIDC_AUTHORIZE_SCOPE: string = 'openid profile';
+const OIDC_AUTHORIZE_SCOPE: string = 'openid profile';
 
-    const OIDC_CLIENT_ID: string = '';
+const OIDC_CLIENT_ID: string = '';
 
-    const OIDC_CLIENT_SECRET: string = ''; // DONOT COMMIT THIS POPULATED INTO SOURCE CONTROL
+const OIDC_CLIENT_SECRET: string = ''; // DONOT COMMIT THIS POPULATED INTO SOURCE CONTROL
 
-    const OIDC_ISSUER:string = '';
+const OIDC_ISSUER: string = '';
 
-    const OIDC_ATTRIBUTES_REQUEST_METHOD: eRequestMethod = eRequestMethod.GET;
+const OIDC_ATTRIBUTES_REQUEST_METHOD: eRequestMethod = eRequestMethod.GET;
 
 /**
  * ============================================================================================
@@ -29,36 +29,44 @@ import { iStackConfiguration} from "./config-interfaces";
  *  
  * ============================================================================================
  */
-    const SAML_METADATA_URL: string = 'http://saml-metadataurl.com/example/url';
+const SAML_METADATA_URL: string = 'http://saml-metadataurl.com/example/url';
 
 /**
  * ============================================================================================
- * ATTRIBUTE DEFINITION FOR USER POOL
+ *   USER POOL ATTRIBUTE CONFIGURATION
  * 
  *  You will probably want to see some attributes stored within the External IDP in your Cognito UserPool
  * 
  *  https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html
  * 
+ *  TODO The should put configured as MAP for a future extension of the pattern.
  * ============================================================================================
  */
-    const IDP_CLAIM_ATTRIBUTE: string = "roles";
 
-    const IDP_CLAIM_ATTRIBUTE_NS: string = "http://schemas.auth0.com/roles"; //SAML NS
+// These are the attributes that you want to map from your external IDP
+const ROLES_ATTR_DETAILS = {
+  schema: {
+    name: "roles", // Once this attribute is added to the userpool it will be pre:fixed 'custom:' 
+    attributeDataType: "String",
+    mutable: true,
+    required: false,
+    stringAttributeConstraints: {
+      maxLength: "2048",
+      minLength: "1"
+    }
+  },
+  saml_ns_ref: "http://schemas.auth0.com/roles",
+  oidc_ns_ref: "",
+  userPoolAttrRef: "custom:roles"
+}
+// This is where we take the Third Party Attribute and map ito the UserPooL Attribute we just created.
+const IDENTITY_PROVIDER_ATTR_MAP = {
+  [ROLES_ATTR_DETAILS.userPoolAttrRef]: ROLES_ATTR_DETAILS.saml_ns_ref
+}
 
-    const COGNITO_CLAIM_ATTRIBUTE: string = "custom:" + IDP_CLAIM_ATTRIBUTE;
-
-    const ATTRIBUTE_DATA_TYPE: string = "String";
-
-    const ATTRIBUTE_MUTABILITY: boolean =  true;
-
-    const ATTRIBUTE_REQUIRED: boolean = false;
-
-    const ATTRIBUTE_MAX_LENGTH: string = "2048";
-    
-    const ATTRIBUTE_MIN_LENGTH: string = "1";
 /**
  * ============================================================================================
- *  YOUR APPLICATION WILL AUTHENTICATE AGAINST A COGNITO IDENTITY POOL Using OIDC
+ *  COGNITO APP CLIENT CONFIGURATION
  * 
  *  OIDC Configuration for the Cognito APP Client
  *  
@@ -67,29 +75,30 @@ import { iStackConfiguration} from "./config-interfaces";
  * ============================================================================================
  */
 
-    const COGNITO_DOMAIN: string = "";//i.e. SWA Hits
+const COGNITO_DOMAIN: string = "swa-hits";
 
-    const CLIENT_CALLBACKURLS: Array<string> = ['http://localhost:8080/callback'];
+const CLIENT_CALLBACKURLS: Array<string> = ['http://localhost:8080/callback'];
 
-    const CLIENT_LOGOUTURLS: Array<string> = ['http://localhost:8080/logout'];
+const CLIENT_LOGOUTURLS: Array<string> = ['http://localhost:8080/logout'];
 
-    const CLIENT_ALLOWED_OAUTH_FLOW_USERPOOL_CLIENT: boolean = true;
+const CLIENT_ALLOWED_OAUTH_FLOW_USERPOOL_CLIENT: boolean = true;
 
-    const CLIENT_ALLOWED_OAUTH_FLOWS: Array<string> = ['code'];
+const CLIENT_ALLOWED_OAUTH_FLOWS: Array<string> = ['code'];
 
-    const CLIENT_ALLOWED_OAUTH_SCOPES: Array<string> = ["openid", "profile", "aws.cognito.signin.user.admin"];
+const CLIENT_ALLOWED_OAUTH_SCOPES: Array<string> = ["openid", "profile", "aws.cognito.signin.user.admin"];
 
-    const CLIENT_REFRESH_TOKEN_VALIDITY: number = 1;
+const CLIENT_REFRESH_TOKEN_VALIDITY: number = 1;
 
 /**
  * ============================================================================================
  * 
  * Setup the configuration for your Configuration for your Cognito Identity Pool
  * 
+ *  TODO Shouldnt have to change the below config. Change the variables above.
  * ============================================================================================
  */
 export const StackConfiguration: iStackConfiguration = {
- 
+
   cognitoDomain: COGNITO_DOMAIN,
 
   userPoolConfig: {
@@ -97,23 +106,14 @@ export const StackConfiguration: iStackConfiguration = {
     allowedOAuthFlows: CLIENT_ALLOWED_OAUTH_FLOWS,
     allowedOAuthScopes: CLIENT_ALLOWED_OAUTH_SCOPES,
     refreshTokenValidity: CLIENT_REFRESH_TOKEN_VALIDITY,
-    writeAttributes: [COGNITO_CLAIM_ATTRIBUTE],
+    writeAttributes: [ROLES_ATTR_DETAILS.userPoolAttrRef],
     callbackUrLs: CLIENT_CALLBACKURLS,
     logoutUrLs: CLIENT_LOGOUTURLS,
   },
 
-  userPoolAttrSchema: [{
-    name: IDP_CLAIM_ATTRIBUTE,
-    attributeDataType: ATTRIBUTE_DATA_TYPE,
-    mutable: ATTRIBUTE_MUTABILITY,
-    required: ATTRIBUTE_REQUIRED,
-    stringAttributeConstraints: {
-      maxLength: ATTRIBUTE_MAX_LENGTH,
-      minLength: ATTRIBUTE_MIN_LENGTH
-    }
-  }],
+  userPoolAttrSchema: [ROLES_ATTR_DETAILS.schema], // extend this with any other mappings
 
-  cognitoDestAttr: COGNITO_CLAIM_ATTRIBUTE, // Setting up the UserPoolAttr will prefix the attribute with custom:
+  cognitoDestAttr: ROLES_ATTR_DETAILS.userPoolAttrRef, // Setting up the UserPoolAttr will prefix the attribute with custom:
 
   identityProviders: {
     providerName: EXTERNAL_IDENTITY_PROVIDER_NAME,
@@ -126,18 +126,14 @@ export const StackConfiguration: iStackConfiguration = {
         client_secret: OIDC_CLIENT_SECRET,
         oidc_issuer: OIDC_ISSUER,
       },
-      attributeMapping: {
-        [COGNITO_CLAIM_ATTRIBUTE]: IDP_CLAIM_ATTRIBUTE_NS
-      },
+      attributeMapping: IDENTITY_PROVIDER_ATTR_MAP,
     },
     samlProvider: {
       type: 'SAML',
       details: {
         MetaDataURL: SAML_METADATA_URL
       },
-      attributeMapping: {
-        [COGNITO_CLAIM_ATTRIBUTE]: IDP_CLAIM_ATTRIBUTE_NS
-      }
+      attributeMapping: IDENTITY_PROVIDER_ATTR_MAP,
     }
   }
 }
