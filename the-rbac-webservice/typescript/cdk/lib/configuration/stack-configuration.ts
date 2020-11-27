@@ -44,7 +44,7 @@ const SAML_METADATA_URL: string = 'http://saml-metadataurl.com/example/url';
  */
 
 // These are the attributes that you want to map from your external IDP
-const ROLES_ATTR_DETAILS = {
+const CUSTOM_ROLES_ATTR_DETAILS = {
   schema: {
     name: "roles", // Once this attribute is added to the userpool it will be pre:fixed 'custom:' 
     attributeDataType: "String",
@@ -59,9 +59,13 @@ const ROLES_ATTR_DETAILS = {
   oidc_ns_ref: "",
   userPoolAttrRef: "custom:roles"
 }
+
+const EMAIL_SAML_REF = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+const EMAIL_MAP_TARGET_ATTR = "Email"
 // This is where we take the Third Party Attribute and map ito the UserPooL Attribute we just created.
 const IDENTITY_PROVIDER_ATTR_MAP = {
-  [ROLES_ATTR_DETAILS.userPoolAttrRef]: ROLES_ATTR_DETAILS.saml_ns_ref
+  [CUSTOM_ROLES_ATTR_DETAILS.userPoolAttrRef]: CUSTOM_ROLES_ATTR_DETAILS.saml_ns_ref,
+  [EMAIL_MAP_TARGET_ATTR]: EMAIL_SAML_REF
 }
 
 /**
@@ -106,14 +110,14 @@ export const StackConfiguration: iStackConfiguration = {
     allowedOAuthFlows: CLIENT_ALLOWED_OAUTH_FLOWS,
     allowedOAuthScopes: CLIENT_ALLOWED_OAUTH_SCOPES,
     refreshTokenValidity: CLIENT_REFRESH_TOKEN_VALIDITY,
-    writeAttributes: [ROLES_ATTR_DETAILS.userPoolAttrRef],
+    writeAttributes: [CUSTOM_ROLES_ATTR_DETAILS.userPoolAttrRef, EMAIL_MAP_TARGET_ATTR], //We are updating these with values from the external IDP
     callbackUrLs: CLIENT_CALLBACKURLS,
     logoutUrLs: CLIENT_LOGOUTURLS,
   },
 
-  userPoolAttrSchema: [ROLES_ATTR_DETAILS.schema], // extend this with any other mappings
+  userPoolAttrSchema: [CUSTOM_ROLES_ATTR_DETAILS.schema], // extend this with any other mappings
 
-  cognitoDestAttr: ROLES_ATTR_DETAILS.userPoolAttrRef, // Setting up the UserPoolAttr will prefix the attribute with custom:
+  cognitoDestAttr: CUSTOM_ROLES_ATTR_DETAILS.userPoolAttrRef, // Setting up the UserPoolAttr will prefix the attribute with custom:
 
   identityProviders: {
     providerName: EXTERNAL_IDENTITY_PROVIDER_NAME,

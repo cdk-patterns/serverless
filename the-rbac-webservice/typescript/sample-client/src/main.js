@@ -20,7 +20,8 @@ Vue.config.productionTip = false
 const routes = {
   '/': App,
   '/callback': Admin, // How can I lock down this route to an authenticated session?
-  '/logout': Logout
+  '/logout': Logout,
+  '/error': NotFound
 }
 
 new Vue({
