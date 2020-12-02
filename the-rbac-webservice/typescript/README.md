@@ -16,43 +16,39 @@ When using RBAC, you analyze the system needs of your users and group them into 
 
 When planning your access control strategy, it's best practice to assign users the fewest number of permissions that allow them to get their work done. Adopting a **security principle of Least Privilege access.**
 
-## Pattern Setup 
+## Accelerated Setup Instructions
 
-_Apologies, this is a fairly complex pattern that probably requires an actual workshop. If there is enough interest I will produce that sort of asset. (A promise from Michael.)_  
+The accelerated setup is federating users coming from an Auth0 SAML based Identity Provider.  
+If just getting started with this I would reccomend reading this [blog post](https://auth0.com/blog/how-saml-authentication-works/) it will give you an idea into how this is setup.
 
-The below instructions are really aimed at giving you a feel for how things hang together. It needs some work to be a little more extensible and tailorable. However it should give you a feel for how Cognito Identity Pools can support the requirement for RBAC using External IDPs.
-
-### Step 1 - Get your IDP Integration Configuration OR set one up
-Get the details for your IDP. 
-
-* This pattern currently supports integrating with a IDP using SAML. So all you will need to had at this point is your
-    - SAML Metadata URL
-    - Your IDP Name
-
-* If you havent got an IDP and you want to follow along then something like Auth0 might work for you getting up and running 
-    - [Auth0 Quick Start](https://auth0.com/docs/quickstart/webapp)
-    - Make sure that your account has valid Users with proper roles defined. This should be very straight forward using the Auth0 Admin UI. 
+### 1 - Get your IDP Integration Configuration OR set one up
 
 * Open the `cdk/lib/configuration/stack-configuration.ts` set the values for the 
     - `EXTERNAL_IDENTITY_PROVIDER_NAME` and 
     - `SAML_METADATA_URL` configuration items.
 
-* More information can be found on how this works here. [Cognito User Pools with SAML IDP](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html)
+* If you havent got an IDP and you want to follow along then something like Auth0 might work for you getting up and running 
+    - [Auth0 Quick Start](https://auth0.com/docs/quickstart/webapp)
+
+If interested in the underlying configuration see
+    - [Cognito User Pools with SAML IDP](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html)
 
 * _This pattern can be easily extended to support OIDC exposed IDPs._
 
 
-### Step 2 - Configure your Cognito Identity Pool
+### 2 - Configure your Cognito Identity Pool and Attribute Mapping
 
 As users from your External IDP are federated VIA Cognito they will be stored in a Cognito User Pool. Any attributes such as groups or roles from your External IDP that you will need for later in terms of mapping to IAM roles should be configured within your User Pool. In our example I am mapping the 'roles' SAML claim into the UserPool as a UserPool Attribute.  (Note: The need for this is made clear in the roles mapping section below.)
 
 * Open the `cdk/lib/configuration/stack-configuration.ts` and scroll down to the 'USER POOL ATTRIBUTE DEFINITION CONFIGURATION'
-* You can see an example of this Attribute Mapping for an Auth0 SAML based 'roles' claim.
+* You can see an example of this Attribute Mapping within the configuration for
+    - Email
+    - Role
 * This is where you would configure the attributes to mapped from your IDP. 
-    - (TODO Mike This should be extended as an Array of Attributes)
+    - In the exported config within `stack-configuration.ts` make sure these are writeable attributes.
 
 
-### Step 3 - Configure a User Pool App Client for our Sample Front End Application
+### 3 - Configure a User Pool App Client for our Sample Front End Application
 
 This pattern comes with a sample UI Client for the purposes of demonstrating the auth flow of the pattern (_I used VUE to annoy the React folks :)_).  This Vue UI Client application will need a **'Cognito App Client'** to integrate with and will simulate a User Login and API Gateway call. 
 More Information on the purpose of this App Client can be found [here](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html). It is worth reading in terms of understanding your Client Applications ideal OIDC Flow.
@@ -61,7 +57,7 @@ More Information on the purpose of this App Client can be found [here](https://d
 * Set the standard Call Back and Log-out URLs information for your UI-Application setting the `CLIENT_CALLBACKURLS` and `CLIENT_LOGOUTURLS`.
 * Have a think about the scopes your client needs in terms of its OIDC Flow. Configure the remaining settings as required.
 
-### Step 4 - Kick the tyres on the Web Services that are part of this Stack.
+### 4 - Understand the Role Based Mapping for Access to the Sample Web Services in this Stack.
 
 * Navigate to `cdk/lib/least-privilege-webservice-stack.ts`
 
@@ -95,8 +91,9 @@ However sticking true to the principles of RBAC ensure that each role is consist
 - No single role is given more permission than the same role for another user.
 
 ---
+This role mapping approach is described here [Rule Based Role Mapping](https://docs.aws.amazon.com/cognito/latest/developerguide/role-based-access-control.html)
 
-### Step 5 - Deploy the CDK Stack.
+### 5 - Deploy the CDK Stack.
 
 Once you have made the configuration changes above run the CDK Deployment. 
 * `npm run build` (Otherwise your lambda package wont get found unfortunately)
@@ -109,7 +106,7 @@ Once you have made the configuration changes above run the CDK Deployment.
     - Region
     - httpURI
 
-### Step 6 - Update your Vue UI Client with Cognito Identity Pool Integration Configuration
+### 6 - Update your Vue UI Client with Cognito Identity Pool Integration Configuration
 
 If you have made it this far Kudos, keep going. If the CDK Stack deployed successfully you will now have output described in Step 5 to plug into your Client Configuration.
 
@@ -140,9 +137,16 @@ If you have made it this far Kudos, keep going. If the CDK Stack deployed succes
 
 * Click the login button. Hopefull you are directed to your IDP login page.
 
-Bada-Bing.
+* In my Auth0 Application I had two users setup. One user with an 'Admin' role and one user with a 'User' role.
+    - To get this setup I had to configure Auth0 with the Authorisation Extension
+    - [Auth0 Authorisation Extension](https://auth0.com/docs/extensions/authorization-extension)
+    - The user with the 'User' role will not be able to create a blog suggestion. You should see a 400 error in the console.
+
+Bada-Bing. Hopefully that was worthwhile and helped you in someway.
 
 Thanks to [CalumMcElhone](https://twitter.com/calummcelhone) and [Mark McKim](https://twitter.com/markmckim) as I extracted this pattern from work they have been doing in their domains.
+
+_Apologies, this is a fairly complex pattern that probably requires an actual workshop. If there is enough interest I will produce that sort of asset. (A promise from Michael.)_  
 
 ## Additional Useful commands
 
