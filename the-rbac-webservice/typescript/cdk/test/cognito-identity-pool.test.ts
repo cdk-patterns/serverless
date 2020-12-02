@@ -56,7 +56,8 @@ test('Verify that UserPoolIdentityProvider Resource has been Created', () => {
       "Ref": "MyTestUPIDPStackUserPoolE5D3352F"
     },
     "AttributeMapping": {
-      "custom:roles": "http://schemas.auth0.com/roles"
+      "custom:roles": "http://schemas.auth0.com/roles",
+      "Email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
     },
     "ProviderDetails": {
       "MetadataURL": "http://saml-metadataurl.com/example/url"
