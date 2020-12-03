@@ -16,7 +16,7 @@ Some Useful References:
 ## What's Included In This Pattern?
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
 
-### The Data
+### The Data
 If you want to look at the data used for this model you can look at the [jupyter notebook](/model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
 
 ### The ML Model
