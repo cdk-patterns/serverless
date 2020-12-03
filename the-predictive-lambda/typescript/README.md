@@ -41,7 +41,7 @@ Most of the logic for this lives in the model folder. There are two Dockerfiles:
 - Dockerfile - used by Lambda during the deploy
 - TrainingDockerfile - used to spin up the container to train our model
 
-I have added the trained model to version control but if you want to retrain it yourself what you have to do is:
+I have added the trained model to version control but if you want to retrain it yourself what you have to do is make sure docker is running and:
 
 ```bash
 cd model
