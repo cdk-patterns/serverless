@@ -1,5 +1,7 @@
 # The Predictive Lambda Pattern
 
+![architecture](img/arch.png)
+
 This is a pattern that uses a container inside Lambda to deploy a custom Python ML model to predict the nearest Chipotle restaurant based on your lat/long.
 
 Some Useful References:
