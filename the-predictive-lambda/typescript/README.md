@@ -20,7 +20,7 @@ This pattern uses sklearn to create a custom k nearest neighbour model to predic
 If you want to look at the data used for this model you can look at the [jupyter notebook](model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
 
 ### The ML Model
-This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). The data for this came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations) and it uses [sklearn nearest neighbors](https://scikit-learn.org/stable/modules/neighbors.html) to predict the closest Chipotle location to a given lat/long
+This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). It uses [sklearn nearest neighbors](https://scikit-learn.org/stable/modules/neighbors.html) to predict the closest Chipotle location to a given lat/long
 
 ### Two Docker Containers
 I use the Lambda image to train the ML model in one container and then I use a separate container for the deployed Lambda Function. The reason I do this is because it means that you know you have pickled your model in the same environment it will be deployed but you can use things that wont be packaged into your deployed function keeping it as lightweight as possible. You will also have a built container image containing the raw data, the training logic and the trained model. These images could be archived to have a history of your model.
