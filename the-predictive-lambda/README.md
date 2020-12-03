@@ -26,7 +26,7 @@ Some Useful References:
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
 
 ### The Data
-If you want to look at the data used for this model you can look at the [jupyter notebook](model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
+If you want to look at the data used for this model you can look at the [jupyter notebook](typescript/model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
 
 ### The ML Model
 This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). It uses [sklearn nearest neighbors](https://scikit-learn.org/stable/modules/neighbors.html) to predict the closest Chipotle location to a given lat/long
@@ -91,7 +91,7 @@ RUN pip3 install -r requirements.txt
 RUN python3 training.py
 ```
 
-If you want to look at the data inside chipotle_stores.csv you can look at the [jupyter notebook](model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
+If you want to look at the data inside chipotle_stores.csv you can look at the [jupyter notebook](typescript/model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
 
 The training logic inside training/training.py loads chipotle_stores.csv into Python, cleans it up and then trains/exports a model. The training/export logic is
 
