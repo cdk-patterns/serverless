@@ -19,7 +19,7 @@ class ThePredictiveLambdaStack(core.Stack):
                                                         memory_size=4096,
                                                         timeout=core.Duration.seconds(15))
         # defines an API Gateway Http API resource backed by our "PredictiveLambda" function.
-        api = api_gw.HttpApi(self, 'PredictiveLambda',
+        api = api_gw.HttpApi(self, 'Predictive Lambda Endpoint',
                              default_integration=integrations.LambdaProxyIntegration(handler=predictive_lambda));
 
         core.CfnOutput(self, 'HTTP API Url', value=api.url);
