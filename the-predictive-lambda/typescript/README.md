@@ -33,7 +33,7 @@ Setup as a proxy integration, all requests hit the Lambda Function
 
 ## How Do I Test This Pattern?
 
-After deployment you will have the url for an API Gateway outputted into the logs or in the CloudFormation console. Open that url in a browser but add "?lat=39.153198&long=-77.066176" to the end and you should get back a prediction.
+do "npm run deploy" from the base directory and you will have the url for an API Gateway output into the logs or in the CloudFormation console. Open that url in a browser but add "?lat=39.153198&long=-77.066176" to the end and you should get back a prediction.
 
 ## How Does It Work?
 
