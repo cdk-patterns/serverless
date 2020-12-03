@@ -16,10 +16,14 @@ export class ThePredictiveLambdaStack extends cdk.Stack {
     })
 
    // defines an API Gateway Http API resource backed by our "PredictiveLambda" function.
-   new apigw.HttpApi(this, 'Predictive Endpoint', {
+   const api = new apigw.HttpApi(this, 'Predictive Endpoint', {
      defaultIntegration: new integrations.LambdaProxyIntegration({
        handler: predictiveLambda
      })
    });
+
+   new cdk.CfnOutput(this, 'HTTP API Url', {
+    value: api.url ?? 'Something went wrong with the deploy'
+  });
   }
 }
