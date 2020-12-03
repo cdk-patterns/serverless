@@ -10,6 +10,8 @@ Some Useful References:
 | ------------- | ------------- |
 | AWS Blog | [New for AWS Lambda – Container Image Support](https://aws.amazon.com/blogs/aws/new-for-aws-lambda-container-image-support/) |
 | AWS Docs | [Lambda now supports container images](https://aws.amazon.com/about-aws/whats-new/2020/12/aws-lambda-now-supports-container-images-as-a-packaging-format/) |
+| Julian Wood | [Working with lambda layers and extensions in container images](https://aws.amazon.com/blogs/compute/working-with-lambda-layers-and-extensions-in-container-images/) |
+| Michael Hart | [Using container images with aws lambda](https://hichaelmart.medium.com/using-container-images-with-aws-lambda-7ffbd23697f1) |
 | Yan Cui | [Package your Lambda function as a container image](https://lumigo.io/blog/package-your-lambda-function-as-a-container-image/) |
 | Scikit Learn Docs | [User Guide](https://scikit-learn.org/stable/user_guide.html) |
 | AWS ECR Gallery | [Python Lambda Image](https://gallery.ecr.aws/lambda/python) |
