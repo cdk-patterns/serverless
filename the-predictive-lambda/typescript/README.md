@@ -22,10 +22,10 @@ This is a very simple model to demonstrate the concept (I didn't even check the 
 ### Two Docker Containers
 I use the Lambda image to train the ML model in one container and then I use a separate container for the deployed Lambda Function. The reason I do this is because it means that you know you have pickled your model in the same environment it will be deployed but you can use things that wont be packaged into your deployed function keeping it as lightweight as possible. You will also have a built container image containing the raw data, the training logic and the trained model. These images could be archived to have a history of your model.
 
-## A Lambda Function
+### A Lambda Function
 I have this setup with a 15 second timeout and 4GB ram to comfortably run our model
 
-## An API Gateway HTTP API
+### An API Gateway HTTP API
 Setup as a proxy integration, all requests hit the Lambda Function
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
