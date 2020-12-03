@@ -28,13 +28,16 @@ I have this setup with a 15 second timeout and 4GB ram to comfortably run our mo
 ### An API Gateway HTTP API
 Setup as a proxy integration, all requests hit the Lambda Function
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## How Do I Test This Pattern?
+
+After deployment you will have the url for an API Gateway outputted into the logs or in the CloudFormation console. Open that url in a browser but add "?lat=39.153198&long=-77.066176" to the end and you should get back a prediction.
+
 
 ## Useful commands
 
  * `npm run build`   compile typescript to js
  * `npm run watch`   watch for changes and compile
  * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `npm run deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
