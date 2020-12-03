@@ -13,7 +13,7 @@ Some Useful References:
 ## What's Included In This Pattern?
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
 
-### The ML Model
+### The ML Model
 This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). The data for this came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
 
 ### Two Docker Containers
