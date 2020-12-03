@@ -11,6 +11,7 @@ Some Useful References:
 | Yan Cui | [Package your Lambda function as a container image](https://lumigo.io/blog/package-your-lambda-function-as-a-container-image/) |
 | Scikit Learn Docs | [User Guide](https://scikit-learn.org/stable/user_guide.html) |
 | AWS ECR Gallery | [Python Lambda Image](https://gallery.ecr.aws/lambda/python) |
+| Docker Docs | [CLI Reference](https://docs.docker.com/reference/) |
 
 ## What's Included In This Pattern?
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
