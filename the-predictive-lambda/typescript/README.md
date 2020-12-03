@@ -10,6 +10,7 @@ Some Useful References:
 | AWS Docs | [Lambda now supports container images](https://aws.amazon.com/about-aws/whats-new/2020/12/aws-lambda-now-supports-container-images-as-a-packaging-format/) |
 | Yan Cui | [Package your Lambda function as a container image](https://lumigo.io/blog/package-your-lambda-function-as-a-container-image/) |
 | Scikit Learn Docs | [User Guide](https://scikit-learn.org/stable/user_guide.html) |
+| AWS ECR Gallery | [Python Lambda Image](https://gallery.ecr.aws/lambda/python) |
 
 ## What's Included In This Pattern?
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
