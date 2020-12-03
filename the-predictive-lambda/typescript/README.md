@@ -37,22 +37,115 @@ Setup as a proxy integration, all requests hit the Lambda Function
 
 do "npm run deploy" from the base directory and you will have the url for an API Gateway output into the logs or in the CloudFormation console. Open that url in a browser but add "?lat=39.153198&long=-77.066176" to the end and you should get back a prediction.
 
-## How Does It Work?
+## Deep Dive WalkThrough
 
-Most of the logic for this lives in the model folder. There are two Dockerfiles:
-- Dockerfile - used by Lambda during the deploy
-- TrainingDockerfile - used to spin up the container to train our model
+There are 3 separate processes included in this pattern
 
-I have added the trained model to version control but if you want to retrain it yourself what you have to do is make sure docker is running and:
+1. A scripted process to train and export a ML model from inside the Lambda Python image for runtime compatibility
+2. A Dockerfile to take that exported model and use it inside a containerised lambda function
+3. A CDK implementation to deploy an API Gateway and the above Lambda
+
+### Model Training - Completely Optional
+
+> I have included a pre-trained model in this pattern so you only need to do this if you want to understand how I did it or you want to try it with your own model.
+
+If you look inside the model folder there is a shell script called trainmodel.sh, running this script (making sure you have docker started) will completely retrain the model.
 
 ```bash
 cd model
 ./trainmodel.sh
 ```
 
-This uses the Lambda Python image to run the file training/training.py and then copy the chipotle.pkl file out of the container. The requirements.txt is shared between the training container and the deployed container.
+The code in this shell script looks worse than it is
 
-The actual logic that runs when we hit our url is in model/deployment/app.py, it unpickles the model, makes a prediction and returns the response as a string.
+```bash
+#Using the named TrainingDockerfile, build this image and tag it as chipotle
+docker build . -f TrainingDockerfile -t chipotle
+#We need the image id, so query docker for an image tagged with chipotle
+IMAGE_ID=$(docker images -q chipotle)
+#Start the image as a background process named training
+docker run -d --name 'training' ${IMAGE_ID} 'app.handler'
+#Copy the trained model out of the container
+docker cp training:/var/task/chipotle.pkl chipotle.pkl
+#stop the running instance and delete it
+docker kill training && docker rm training
+```
+
+The next place to look is TrainingDockerfile
+
+```docker
+# Use the python lambda image from AWS ECR
+FROM public.ecr.aws/lambda/python:3.6
+# Put these 3 files inside the container
+COPY training/training.py requirements.txt training/chipotle_stores.csv ./
+# Install python dependencies
+RUN pip3 install -r requirements.txt
+# Run the training logic
+RUN python3 training.py
+```
+
+If you want to look at the data inside chipotle_stores.csv you can look at the [jupyter notebook](model/training/Chipotle.ipynb), the raw data came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
+
+The training logic inside training/training.py loads chipotle_stores.csv into Python, cleans it up and then trains/exports a model. The training/export logic is
+
+```python
+#train model
+model = KNeighborsClassifier(n_neighbors=2, weights="distance", algorithm="auto")
+model.fit(train_set_no_labels, train_set_labels)
+
+#export model
+joblib.dump(model, 'chipotle.pkl')
+```
+
+### Containerised Lambda Function
+
+Most of the logic to make this happen is in model/Dockerfile
+
+```docker
+FROM public.ecr.aws/lambda/python:3.6
+# copy our function logic, requirements and model into the container
+COPY deployment/app.py requirements.txt chipotle.pkl ./
+# install the dependencies
+RUN pip3 install -r requirements.txt
+# the lambda handler is located inside app.py as a method called lambdaHandler
+CMD ["app.lambdaHandler"]
+```
+
+The actual lambda handler code inside deployment/app.py is the same as any other lambda function
+
+```python
+import joblib
+
+def lambdaHandler(event, context):
+    model = joblib.load('chipotle.pkl')
+
+    try:
+        latitude = event["queryStringParameters"]['lat']
+    except KeyError:
+        latitude = 0
+
+    try:
+        longitude = event["queryStringParameters"]['long']
+    except KeyError:
+        longitude = 0
+
+    prediction = model.predict([[latitude,longitude]])
+    prediction = prediction.tolist()
+    return {'body': str(prediction[0]), 'statusCode': 200}
+```
+
+### CDK Infra Logic
+
+The relevant piece of CDK is that instead of the normal way of creating our function, we use lambda.DockerImageFunction and ask CDK to build our container from the model folder
+
+```typescript
+// defines an AWS Lambda resource
+const predictiveLambda = new lambda.DockerImageFunction(this, 'PredictiveLambda', {
+    code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, '../model')),
+    memorySize:4096,
+    timeout: cdk.Duration.seconds(15)
+})
+```
 
 ## Useful commands
 
