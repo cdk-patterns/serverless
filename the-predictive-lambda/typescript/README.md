@@ -35,6 +35,22 @@ Setup as a proxy integration, all requests hit the Lambda Function
 
 After deployment you will have the url for an API Gateway outputted into the logs or in the CloudFormation console. Open that url in a browser but add "?lat=39.153198&long=-77.066176" to the end and you should get back a prediction.
 
+## How Does It Work?
+
+Most of the logic for this lives in the model folder. There are two Dockerfiles:
+- Dockerfile - used by Lambda during the deploy
+- TrainingDockerfile - used to spin up the container to train our model
+
+I have added the trained model to version control but if you want to retrain it yourself what you have to do is:
+
+```bash
+cd model
+./trainmodel.sh
+```
+
+This uses the Lambda Python image to run the file training/training.py and then copy the chipotle.pkl file out of the container. The requirements.txt is shared between the training container and the deployed container.
+
+The actual logic that runs when we hit our url is in model/deployment/app.py, it unpickles the model, makes a prediction and returns the response as a string.
 
 ## Useful commands
 
