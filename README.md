@@ -189,6 +189,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Predictive Lambda](the-predictive-lambda/README.md)
+  Deploy a custom Python ML model inside a Docker container running on AWS Lambda
+  ![Architecture](the-predictive-lambda/img/arch_with_cdkp.png)
+
+  <br /><hr /><br />
+
   #### [The RDS Proxy](the-rds-proxy/README.md)
   Use RDS Proxy to protect a MySQL RDS Instance from the massively scalable Lambda Function querying it
   ![Architecture](the-rds-proxy/img/arch_overview.png)
@@ -498,6 +504,12 @@ npx cdk deploy
   You can decouple your event driven architectures with EventBridge rules and now you can strip the custom EventBridge code from your Lambda functions with Lambda Destinations.
 
   ![Architecture](the-destined-lambda/img/arch.png)
+
+  #### [The Predictive Lambda](the-predictive-lambda/README.md)
+
+  Deploy a custom Python ML model inside a Docker container running on AWS Lambda
+  
+  ![Architecture](the-predictive-lambda/img/arch_with_cdkp.png)
 
   #### [The RDS Proxy](the-rds-proxy/README.md)
   Use RDS Proxy to protect a MySQL RDS Instance from the massively scalable Lambda Function querying it
