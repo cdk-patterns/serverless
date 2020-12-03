@@ -14,7 +14,7 @@ Some Useful References:
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
 
 ### The ML Model
-This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). The data for this came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations)
+This is a very simple model to demonstrate the concept (I didn't even check the accuracy because it doesn't change the pattern). The data for this came from [kaggle](https://www.kaggle.com/jeffreybraun/chipotle-locations) and it uses [sklearn nearest neighbors](https://scikit-learn.org/stable/modules/neighbors.html) to predict the closest Chipotle location to a given lat/long
 
 ### Two Docker Containers
 I use the Lambda image to train the ML model in one container and then I use a separate container for the deployed Lambda Function. The reason I do this is because it means that you know you have pickled your model in the same environment it will be deployed but you can use things that wont be packaged into your deployed function keeping it as lightweight as possible. You will also have a built container image containing the raw data, the training logic and the trained model. These images could be archived to have a history of your model.
