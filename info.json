@@ -48,6 +48,9 @@
         "the-lambda-trilogy": {
             "prodReady": false
         },
+        "the-predictive-lambda": {
+            "prodReady": false
+        },
         "the-rds-proxy": {
             "prodReady": false
         },
