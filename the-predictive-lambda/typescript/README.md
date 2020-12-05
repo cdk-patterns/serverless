@@ -17,6 +17,12 @@ Some Useful References:
 | AWS ECR Gallery | [Python Lambda Image](https://gallery.ecr.aws/lambda/python) |
 | Docker Docs | [CLI Reference](https://docs.docker.com/reference/) |
 
+## Desconstructing The Predictive Lambda
+If you want a walkthrough of the theory, the code and finally a demo of the deployed implementation check out:
+
+[![Alt text](https://img.youtube.com/vi/FgP6zetWSXY/0.jpg)](https://www.youtube.com/watch?v=FgP6zetWSXY)
+
+
 ## What's Included In This Pattern?
 This pattern uses sklearn to create a custom k nearest neighbour model to predict the nearest Chipotle to a given Latitude and Longitude. The model is deployed inside a container attached to AWS Lambda.
 
