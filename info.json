@@ -60,6 +60,9 @@
         "the-scalable-webhook": {
             "prodReady": false
         },
+        "the-scheduled-lambda": {
+            "prodReady": false
+        },
         "the-simple-graphql-service": {
             "prodReady": false
         },

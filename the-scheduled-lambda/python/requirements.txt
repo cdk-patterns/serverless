@@ -1,0 +1,6 @@
+-e .
+aws-cdk.core==1.77.0
+aws-cdk.aws-lambda==1.77.0
+aws-cdk.aws-events-targets==1.77.0
+aws-cdk.aws-events==1.77.0
+aws-cdk.aws-dynamodb==1.77.0

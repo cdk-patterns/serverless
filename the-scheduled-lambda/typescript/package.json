@@ -1,0 +1,32 @@
+{
+  "name": "the-scheduled-lambda",
+  "version": "0.1.0",
+  "bin": {
+    "the-scheduled-lambda": "bin/the-scheduled-lambda.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "deploy": "cdk deploy '*' --require-approval 'never'"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.77.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "14.14.9",
+    "aws-cdk": "^1.77.0",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.0",
+    "typescript": "~4.1.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-dynamodb": "1.77.0",
+    "@aws-cdk/aws-events": "1.77.0",
+    "@aws-cdk/aws-events-targets": "1.77.0",
+    "@aws-cdk/aws-lambda": "1.77.0",
+    "@aws-cdk/core": "1.77.0",
+    "source-map-support": "^0.5.19"
+  }
+}
