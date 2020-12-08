@@ -213,6 +213,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Scheduled Lambda](/the-scheduled-lambda/README.md)
+  Use EventBridge to trigger a Lambda Fuction on a schedule <br /><br />
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scheduled-lambda/img/the-scheduled-lambda.png)
+
+  <br /><hr /><br />
+
   #### [The Simple GraphQL Service](/the-simple-graphql-service/README.md)
   Simple graphQL service built with [AppSync](https://aws.amazon.com/appsync/)<br /><br />
   ![Architecture](the-simple-graphql-service/img/architecture.png)
@@ -258,6 +264,7 @@ npx cdk deploy
   * [Christian Mueller](#christian-mueller)
   * [Danilo Poccia](#danilo-poccia)
   * [Eric Johnson](#eric-johnson)
+  * [Gerald Stewart](#gerald-stewart)
   * [Gunnar Grosch](#gunnar-grosch)
   * [Heitor Lessa](#heitor-lessa)
   * [Hervé Nivon](#hervé-nivon)
@@ -365,6 +372,20 @@ npx cdk deploy
   You can integrate API Gateway directly with DynamoDB and that way your systems can be more resilient! &quot;Code is a liability&quot; so less lambda functions, less liability
 
   ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-dynamo-streamer/img/arch.jpg)
+
+  <br /><hr /><br />
+
+  ### Gerald Stewart
+  <img src="img/dev_profiles/gerald_stewart.jpg" width="120" alt="Gerald Stewart profile pic" /><br />
+
+  Software Engineer @Liberty_IT<br />
+
+  Twitter - [@GunnarGrosch](https://twitter.com/_gerald20)<br />
+
+  #### [The Scheduled Lambda](/the-scheduled-lambda/README.md)
+  Use EventBridge to trigger a Lambda Fuction on a schedule <br /><br />
+
+  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scheduled-lambda/img/the-scheduled-lambda.png)
 
   <br /><hr /><br />
 
