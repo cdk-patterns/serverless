@@ -19,7 +19,7 @@ export class TheScheduledLambdaStack extends Stack {
     // Create the Lambda function we want to run on a schedule
     const scheduledLambda = new Function(this, 'scheduledLambda', {
         runtime: Runtime.NODEJS_12_X,
-        code: Code.fromAsset('src/scheduled-lambda'),
+        code: Code.fromAsset('lambda-fns/scheduled-lambda'),
         handler: 'index.handler',
         environment: {
             TABLE_NAME: table.tableName
