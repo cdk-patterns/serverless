@@ -14,7 +14,8 @@ class TheScheduledLambdaStack(core.Stack):
 
         # DynamoDB Table
         table = dynamo_db.Table(self, "Table",
-                                partition_key=dynamo_db.Attribute(name="requestid", type=dynamo_db.AttributeType.STRING)
+                                partition_key=dynamo_db.Attribute(name="requestid", type=dynamo_db.AttributeType.STRING),
+                                removal_policy=core.RemovalPolicy.DESTROY
                                 )
 
         # Create the Lambda function we want to run on a schedule
