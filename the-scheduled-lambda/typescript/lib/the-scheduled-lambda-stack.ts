@@ -1,4 +1,4 @@
-import { Stack, Construct, StackProps } from '@aws-cdk/core';
+import { Stack, Construct, StackProps, RemovalPolicy } from '@aws-cdk/core';
 import { Function, Code, Runtime } from '@aws-cdk/aws-lambda';
 import { Table, AttributeType } from "@aws-cdk/aws-dynamodb";
 import { Schedule, Rule } from '@aws-cdk/aws-events'
@@ -14,6 +14,7 @@ export class TheScheduledLambdaStack extends Stack {
             name: 'requestid',
             type: AttributeType.STRING
         },
+        removalPolicy: RemovalPolicy.DESTROY
     });
 
     // Create the Lambda function we want to run on a schedule
