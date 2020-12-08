@@ -215,7 +215,7 @@ npx cdk deploy
 
   #### [The Scheduled Lambda](/the-scheduled-lambda/README.md)
   Use EventBridge to trigger a Lambda Fuction on a schedule <br /><br />
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scheduled-lambda/img/the-scheduled-lambda.png)
+  ![Architecture](the-scheduled-lambda/img/the-scheduled-lambda.png)
 
   <br /><hr /><br />
 
@@ -380,12 +380,12 @@ npx cdk deploy
 
   Software Engineer @Liberty_IT<br />
 
-  Twitter - [@GunnarGrosch](https://twitter.com/_gerald20)<br />
+  Twitter - [@_gerald20](https://twitter.com/_gerald20)<br />
 
   #### [The Scheduled Lambda](/the-scheduled-lambda/README.md)
   Use EventBridge to trigger a Lambda Fuction on a schedule <br /><br />
 
-  ![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-scheduled-lambda/img/the-scheduled-lambda.png)
+  ![Architecture](the-scheduled-lambda/img/the-scheduled-lambda.png)
 
   <br /><hr /><br />
 
