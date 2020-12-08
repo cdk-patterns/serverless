@@ -26,7 +26,7 @@ export class TheScheduledLambdaStack extends Stack {
         },
     });
 
-    // Allow our lambda to write to the table
+    // Allow our lambda fn to write to the table
     table.grantWriteData(scheduledLambda);
 
     // Create EventBridge rule that will execute our Lambda every 2 minutes

@@ -19,7 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_scheduled_lambda"),
 
     install_requires=[
-        "aws-cdk.core==1.77.0",
     ],
 
     python_requires=">=3.6",
