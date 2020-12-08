@@ -14,3 +14,4 @@ More information on schedule expressions for AWS EventBridge to change the run f
 ## Available Versions
 
 - [TypeScript](/typescript)
+- [Python](/python)
