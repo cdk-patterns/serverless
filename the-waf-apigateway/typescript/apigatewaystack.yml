@@ -1,0 +1,320 @@
+Resources:
+  HelloWorldHandlerServiceRole56E6BFBA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: APIGatewayStack/HelloWorldHandler/ServiceRole/Resource
+  HelloWorldHandler30C22324:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69S3BucketA4364CC3
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69S3VersionKey4A5D91B1
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69S3VersionKey4A5D91B1
+      Handler: helloworld.handler
+      Role:
+        Fn::GetAtt:
+          - HelloWorldHandlerServiceRole56E6BFBA
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - HelloWorldHandlerServiceRole56E6BFBA
+    Metadata:
+      aws:cdk:path: APIGatewayStack/HelloWorldHandler/Resource
+      aws:asset:path: asset.dbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69
+      aws:asset:property: Code
+  WafGatewayAPI5BA7C2CE:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Name: WafGatewayAPI
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Resource
+  WafGatewayAPICloudWatchRoleEE79D232:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/CloudWatchRole/Resource
+  WafGatewayAPIAccount3BD065DB:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - WafGatewayAPICloudWatchRoleEE79D232
+          - Arn
+    DependsOn:
+      - WafGatewayAPI5BA7C2CE
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Account
+  WafGatewayAPIDeploymentDDF5787C50cd54e1b820c67ddfe6e24991b1dd3f:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: WafGatewayAPI5BA7C2CE
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - WafGatewayAPIhelloworldGET802399FF
+      - WafGatewayAPIhelloworldC628BF91
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Deployment/Resource
+  WafGatewayAPIDeploymentStageprodEF5FA49F:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: WafGatewayAPI5BA7C2CE
+      DeploymentId:
+        Ref: WafGatewayAPIDeploymentDDF5787C50cd54e1b820c67ddfe6e24991b1dd3f
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+        - HttpMethod: "*"
+          ResourcePath: /*
+          ThrottlingBurstLimit: 200
+          ThrottlingRateLimit: 100
+      StageName: prod
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/DeploymentStage.prod/Resource
+  WafGatewayAPIhelloworldC628BF91:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - WafGatewayAPI5BA7C2CE
+          - RootResourceId
+      PathPart: helloworld
+      RestApiId:
+        Ref: WafGatewayAPI5BA7C2CE
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Default/helloworld/Resource
+  WafGatewayAPIhelloworldGETApiPermissionAPIGatewayStackWafGatewayAPI0F5D6A0EGEThelloworldC704FF2F:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - HelloWorldHandler30C22324
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: WafGatewayAPI5BA7C2CE
+            - /
+            - Ref: WafGatewayAPIDeploymentStageprodEF5FA49F
+            - /GET/helloworld
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Default/helloworld/GET/ApiPermission.APIGatewayStackWafGatewayAPI0F5D6A0E.GET..helloworld
+  WafGatewayAPIhelloworldGETApiPermissionTestAPIGatewayStackWafGatewayAPI0F5D6A0EGEThelloworld3D2EE2D0:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - HelloWorldHandler30C22324
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: WafGatewayAPI5BA7C2CE
+            - /test-invoke-stage/GET/helloworld
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Default/helloworld/GET/ApiPermission.Test.APIGatewayStackWafGatewayAPI0F5D6A0E.GET..helloworld
+  WafGatewayAPIhelloworldGET802399FF:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: WafGatewayAPIhelloworldC628BF91
+      RestApiId:
+        Ref: WafGatewayAPI5BA7C2CE
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: "200"
+        Type: AWS
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - HelloWorldHandler30C22324
+                  - Arn
+              - /invocations
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+          StatusCode: "200"
+    Metadata:
+      aws:cdk:path: APIGatewayStack/WafGatewayAPI/Default/helloworld/GET/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.72.0,@aws-cdk/assets=1.72.0,@aws-cdk/aws-apigateway=1.72.0,@aws-cdk/aws-applicationautoscaling=1.72.0,@aws-cdk/aws-autoscaling-common=1.72.0,@aws-cdk/aws-cloudwatch=1.72.0,@aws-cdk/aws-codeguruprofiler=1.72.0,@aws-cdk/aws-ec2=1.72.0,@aws-cdk/aws-events=1.72.0,@aws-cdk/aws-iam=1.72.0,@aws-cdk/aws-kms=1.72.0,@aws-cdk/aws-lambda=1.72.0,@aws-cdk/aws-logs=1.72.0,@aws-cdk/aws-s3=1.72.0,@aws-cdk/aws-s3-assets=1.72.0,@aws-cdk/aws-sqs=1.72.0,@aws-cdk/aws-ssm=1.72.0,@aws-cdk/aws-wafv2=1.72.0,@aws-cdk/cloud-assembly-schema=1.72.0,@aws-cdk/core=1.72.0,@aws-cdk/cx-api=1.72.0,@aws-cdk/region-info=1.72.0,jsii-runtime=node.js/v13.12.0
+    Metadata:
+      aws:cdk:path: APIGatewayStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Parameters:
+  AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69S3BucketA4364CC3:
+    Type: String
+    Description: S3 bucket for asset "dbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69"
+  AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69S3VersionKey4A5D91B1:
+    Type: String
+    Description: S3 key for asset version "dbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69"
+  AssetParametersdbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69ArtifactHash53F25514:
+    Type: String
+    Description: Artifact hash for asset "dbbf200867db4bc38eadd4ce5f5b75dce1049f40752e3c690ec4f6b17c996a69"
+Outputs:
+  WafGatewayAPIEndpoint49319801:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: WafGatewayAPI5BA7C2CE
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: WafGatewayAPIDeploymentStageprodEF5FA49F
+          - /
+  ExportsOutputRefWafGatewayAPI5BA7C2CE2FDDC930:
+    Value:
+      Ref: WafGatewayAPI5BA7C2CE
+    Export:
+      Name: APIGatewayStack:ExportsOutputRefWafGatewayAPI5BA7C2CE2FDDC930
+  ExportsOutputRefWafGatewayAPIDeploymentStageprodEF5FA49F814E26DC:
+    Value:
+      Ref: WafGatewayAPIDeploymentStageprodEF5FA49F
+    Export:
+      Name: APIGatewayStack:ExportsOutputRefWafGatewayAPIDeploymentStageprodEF5FA49F814E26DC
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+

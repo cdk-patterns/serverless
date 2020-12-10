@@ -1,1 +1,10 @@
 -e .
+aws-cdk.core==1.74.0
+aws-cdk.aws-lambda==1.74.0
+aws-cdk.aws-iam==1.74.0
+aws-cdk.aws-events==1.74.0
+aws-cdk.aws-events-targets==1.74.0
+aws-cdk.aws-sns==1.74.0
+aws-cdk.aws-sns-subscriptions==1.74.0
+aws-cdk.aws-lambda-destinations==1.74.0
+aws-cdk.aws_apigateway==1.74.0

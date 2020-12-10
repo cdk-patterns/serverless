@@ -1,1 +1,8 @@
 -e .
+aws-cdk.core==1.74.0
+aws-cdk.aws-lambda==1.74.0
+aws-cdk.aws-dynamodb==1.74.0
+aws-cdk.alexa-ask==1.74.0
+aws-cdk.aws-s3-assets==1.74.0
+aws-cdk.aws-iam==1.74.0
+

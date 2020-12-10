@@ -19,8 +19,8 @@ setuptools.setup(
     packages=setuptools.find_packages(where="s3_angular_website"),
 
     install_requires=[
-        "aws-cdk.core==1.60.0",
-        "cdk-spa-deploy==1.60.0"
+        "aws-cdk.core==1.74.0",
+        "cdk-spa-deploy==1.74.0"
     ],
 
     python_requires=">=3.6",

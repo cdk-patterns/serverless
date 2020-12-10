@@ -19,9 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_lambda_power_tuner"),
 
     install_requires=[
-        "aws-cdk.core==1.60.0",
-        "aws-cdk.aws-sam==1.60.0",
-        "aws-cdk.aws-lambda==1.60.0",
     ],
 
     python_requires=">=3.6",

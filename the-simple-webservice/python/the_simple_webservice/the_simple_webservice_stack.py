@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigatewayv2 as api_gw,
+    aws_apigatewayv2_integrations as integrations,
     aws_dynamodb as dynamo_db,
     core
 )
@@ -30,6 +31,6 @@ class TheSimpleWebserviceStack(core.Stack):
 
 
         # defines an API Gateway Http API resource backed by our "dynamoLambda" function.
-        api = api_gw.HttpApi(self, 'Endpoint', default_integration=api_gw.LambdaProxyIntegration(handler=dynamo_lambda));
+        api = api_gw.HttpApi(self, 'Endpoint', default_integration=integrations.LambdaProxyIntegration(handler=dynamo_lambda));
     
         core.CfnOutput(self, 'HTTP API Url', value=api.url);

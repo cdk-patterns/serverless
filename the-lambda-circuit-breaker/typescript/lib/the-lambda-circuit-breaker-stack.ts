@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import apigw = require('@aws-cdk/aws-apigatewayv2');
+import integrations = require('@aws-cdk/aws-apigatewayv2-integrations');
 const { execSync } = require('child_process');
 
 export class TheLambdaCircuitBreakerStack extends cdk.Stack {
@@ -32,7 +33,7 @@ export class TheLambdaCircuitBreakerStack extends cdk.Stack {
 
     // defines an API Gateway Http API resource backed by our "dynamoLambda" function.
     let api = new apigw.HttpApi(this, 'CircuitBreakerGateway', {
-      defaultIntegration: new apigw.LambdaProxyIntegration({
+      defaultIntegration: new integrations.LambdaProxyIntegration({
         handler: unreliableLambda
       })
     });

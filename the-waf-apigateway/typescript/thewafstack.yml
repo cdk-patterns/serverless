@@ -1,0 +1,155 @@
+Resources:
+  WebACL:
+    Type: 'AWS::WAFv2::WebACL'
+    Properties:
+      DefaultAction:
+        Allow: {}
+      Scope: REGIONAL
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        MetricName: webACL
+        SampledRequestsEnabled: true
+      Rules:
+        - Name: AWS-AWSManagedRulesCommonRuleSet
+          OverrideAction:
+            None: {}
+          Priority: 1
+          Statement:
+            ManagedRuleGroupStatement:
+              ExcludedRules:
+                - Name: SizeRestrictions_BODY
+              Name: AWSManagedRulesCommonRuleSet
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: awsCommonRules
+            SampledRequestsEnabled: true
+        - Name: awsAnonymousIP
+          OverrideAction:
+            None: {}
+          Priority: 2
+          Statement:
+            ManagedRuleGroupStatement:
+              ExcludedRules: []
+              Name: AWSManagedRulesAnonymousIpList
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: awsAnonymous
+            SampledRequestsEnabled: true
+        - Name: awsIPReputation
+          OverrideAction:
+            None: {}
+          Priority: 3
+          Statement:
+            ManagedRuleGroupStatement:
+              ExcludedRules: []
+              Name: AWSManagedRulesAmazonIpReputationList
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: awsReputation
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: geoblockRule
+          Priority: 4
+          Statement:
+            GeoMatchStatement:
+              CountryCodes:
+                - NZ
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: geoBlock
+            SampledRequestsEnabled: true
+    Metadata:
+      'aws:cdk:path': TheWafStack/WebACL
+  WebACLAssociation:
+    Type: 'AWS::WAFv2::WebACLAssociation'
+    Properties:
+      ResourceArn: !Join 
+        - ''
+        - - 'arn:aws:apigateway:'
+          - !Ref 'AWS::Region'
+          - '::/restapis/'
+          - !ImportValue 'APIGatewayStack:ExportsOutputRefWafGatewayAPI5BA7C2CE2FDDC930'
+          - /stages/
+          - !ImportValue >-
+            APIGatewayStack:ExportsOutputRefWafGatewayAPIDeploymentStageprodEF5FA49F814E26DC
+      WebACLArn: !GetAtt 
+        - WebACL
+        - Arn
+    Metadata:
+      'aws:cdk:path': TheWafStack/WebACLAssociation
+  CDKMetadata:
+    Type: 'AWS::CDK::Metadata'
+    Properties:
+      Modules: >-
+        aws-cdk=1.72.0,@aws-cdk/assets=1.72.0,@aws-cdk/aws-apigateway=1.72.0,@aws-cdk/aws-applicationautoscaling=1.72.0,@aws-cdk/aws-autoscaling-common=1.72.0,@aws-cdk/aws-cloudwatch=1.72.0,@aws-cdk/aws-codeguruprofiler=1.72.0,@aws-cdk/aws-ec2=1.72.0,@aws-cdk/aws-events=1.72.0,@aws-cdk/aws-iam=1.72.0,@aws-cdk/aws-kms=1.72.0,@aws-cdk/aws-lambda=1.72.0,@aws-cdk/aws-logs=1.72.0,@aws-cdk/aws-s3=1.72.0,@aws-cdk/aws-s3-assets=1.72.0,@aws-cdk/aws-sqs=1.72.0,@aws-cdk/aws-ssm=1.72.0,@aws-cdk/aws-wafv2=1.72.0,@aws-cdk/cloud-assembly-schema=1.72.0,@aws-cdk/core=1.72.0,@aws-cdk/cx-api=1.72.0,@aws-cdk/region-info=1.72.0,jsii-runtime=node.js/v13.12.0
+    Metadata:
+      'aws:cdk:path': TheWafStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Conditions:
+  CDKMetadataAvailable: !Or 
+    - !Or 
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-east-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-northeast-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-northeast-2
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-south-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-southeast-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ap-southeast-2
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - ca-central-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - cn-north-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - cn-northwest-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - eu-central-1
+    - !Or 
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - eu-north-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - eu-west-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - eu-west-2
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - eu-west-3
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - me-south-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - sa-east-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - us-east-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - us-east-2
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - us-west-1
+      - !Equals 
+        - !Ref 'AWS::Region'
+        - us-west-2

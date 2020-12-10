@@ -6,7 +6,7 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="python",
+    name="basicmq",
     version="0.0.1",
 
     description="An empty CDK Python app",
@@ -15,11 +15,10 @@ setuptools.setup(
 
     author="author",
 
-    package_dir={"": "python"},
-    packages=setuptools.find_packages(where="python"),
+    package_dir={"": "the_basic_mq"},
+    packages=setuptools.find_packages(where="the_basic_mq"),
 
     install_requires=[
-        "aws-cdk.core==1.51.0",
     ],
 
     python_requires=">=3.6",

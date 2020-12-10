@@ -48,6 +48,9 @@
         "the-lambda-trilogy": {
             "prodReady": false
         },
+        "the-predictive-lambda": {
+            "prodReady": false
+        },
         "the-rds-proxy": {
             "prodReady": false
         },
@@ -57,6 +60,9 @@
         "the-scalable-webhook": {
             "prodReady": false
         },
+        "the-scheduled-lambda": {
+            "prodReady": false
+        },
         "the-simple-graphql-service": {
             "prodReady": false
         },
@@ -64,6 +70,9 @@
             "prodReady": false
         },
         "the-state-machine": {
+            "prodReady": false
+        },
+        "the-waf-apigateway": {
             "prodReady": false
         },
         "the-xray-tracer": {

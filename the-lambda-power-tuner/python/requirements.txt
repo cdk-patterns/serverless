@@ -1,1 +1,4 @@
 -e .
+aws-cdk.core==1.74.0
+aws-cdk.aws-sam==1.74.0
+aws-cdk.aws-lambda==1.74.0

@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigatewayv2 as api_gw,
+    aws_apigatewayv2_integrations as integrations,
     aws_dynamodb as dynamo_db,
     core
 )
@@ -21,8 +22,8 @@ class TheLambdaCircuitBreakerStack(core.Stack):
 
         # install node dependencies for lambdas
         lambda_folder = os.path.dirname(os.path.realpath(__file__)) + "/../lambda_fns"
-        subprocess.check_call("npm i".split(), cwd=lambda_folder)
-        subprocess.check_call("npm run build".split(), cwd=lambda_folder)
+        subprocess.check_call("npm i".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
+        subprocess.check_call("npm run build".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
 
         # defines an AWS Lambda resource with unreliable code
         unreliable_lambda = _lambda.Function(self, "UnreliableLambdaHandler",
@@ -40,6 +41,6 @@ class TheLambdaCircuitBreakerStack(core.Stack):
 
         # defines an API Gateway Http API resource backed by our "dynamoLambda" function.
         api = api_gw.HttpApi(self, 'CircuitBreakerGateway',
-                             default_integration=api_gw.LambdaProxyIntegration(handler=unreliable_lambda));
+                             default_integration=integrations.LambdaProxyIntegration(handler=unreliable_lambda));
 
         core.CfnOutput(self, 'HTTP API Url', value=api.url);

@@ -9,7 +9,7 @@ from the_xray_tracer.the_sns_flow_stack import TheSnsFlowStack
 from the_xray_tracer.the_sqs_flow_stack import TheSqsFlowStack
 
 # install node dependencies for lambdas
-subprocess.check_call("npm i".split(), cwd="lambda_fns")
+subprocess.check_call("npm i".split(), cwd="lambda_fns", stdout=subprocess.DEVNULL)
 
 app = core.App()
 xray_tracer = TheXrayTracerStack(app, "the-xray-tracer")

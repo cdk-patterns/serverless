@@ -4,18 +4,20 @@ from aws_cdk import (
     aws_dynamodb as dynamo_db,
     core
 )
+import os
 
 
 class TheSimpleGraphqlServiceStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
+        
+        schema_location = os.path.dirname(os.path.realpath(__file__)) + "/../schema/schema.graphql"
 
         # Create a new AppSync GraphQL API
-        api = appsync.GraphQLApi(self, 'Api',
+        api = appsync.GraphqlApi(self, 'Api',
                                  name="demoapi",
                                  log_config=appsync.LogConfig(field_log_level=appsync.FieldLogLevel.ALL),
-                                 schema_definition=appsync.SchemaDefinition.FILE,
-                                 schema_definition_file="schema/schema.graphql"
+                                 schema=appsync.Schema.from_asset(schema_location)
                                  )
 
         api_key = appsync.CfnApiKey(self, 'the-simple-graphql-service-api-key',
@@ -108,7 +110,7 @@ class TheSimpleGraphqlServiceStack(core.Stack):
 
         # GraphQL API Endpoint
         core.CfnOutput(self, 'Endpoint',
-                       value=api.graph_ql_url
+                       value=api.graphql_url
                        )
 
         # API Key
