@@ -15,9 +15,31 @@ Let's party! :D
 
 ## Commands
 
-This stack uses assets (CustomResources + SdkCall) so you must run `cdk bootstrap account/region` before run `cdk deploy`.
+This stack uses assets so you must run `cdk bootstrap account/region` before run the other commands. 
 
-To deploy this stack run `cdk deploy`. After the deploy you'll see de URL of Bucket to access the website.
+Due to this CDK Pattern deploy a website with output values, it was splitted in 2 stacks.
+
+
+### First Stack
+The main stack is `the-media-live-stream` and it defines all the elements to create the LiveStream channel. The parameters below can be modified to launch this stack:
+
+
+    "id_channel": "test-channel",  # ChannelId
+    "ip_sg_input": "0.0.0.0/0",  # IP Ingress to channel
+    "stream_name": "test/channel", # Stream/Key to OBStudio
+    "hls_segment_duration_seconds": 5,
+    "hls_playlist_window_seconds": 60,
+    "hls_max_video_bits_per_second": 2147483647,
+    "hls_min_video_bits_per_second": 0,
+    "hls_stream_order": "ORIGINAL"
+
+
+Use the command `cdk deploy --outputs-file urlwebsite.json the-media-live-stream` to deploy this stack.
+
+### Second Stack
+The second stack is `the-media-live-stream-website` and it deploy the website.
+
+Use the command `cdk deploy the-media-live-stream-website` to deploy this stack.
 
 ## Manual steps
 

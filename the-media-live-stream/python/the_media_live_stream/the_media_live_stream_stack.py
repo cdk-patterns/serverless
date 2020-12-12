@@ -1,49 +1,76 @@
 from aws_cdk import (
-    core, aws_medialive as medialive, aws_ec2 as ec2
+    core, aws_medialive as medialive, aws_iam as iam, aws_mediapackage as mediapackage
 )
 
-from spa_deploy import SPADeploy
-
-from aws_cdk.custom_resources import (
-    AwsSdkCall
-)
-
-
-from the_media_live_custom_mediapackage import TheMediaPackageConstruct
+DEFAULT_CONF = {
+    "id_channel": "test-channel",
+    "ip_sg_input": "0.0.0.0/0",
+    "stream_name": "test/channel",
+    "hls_segment_duration_seconds": 5,
+    "hls_playlist_window_seconds": 60,
+    "hls_max_video_bits_per_second": 2147483647,
+    "hls_min_video_bits_per_second": 0,
+    "hls_stream_order": "ORIGINAL"
+}
 
 class TheMediaLiveStreamStack(core.Stack):
 
-    def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
-        super().__init__(scope, id, **kwargs)
+    def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         """
-        First step: Create MediaPackage
-        MediaPackage doesn't exists as CDK native resource, so we need to create as CustomResource
-        CDK CustomResources must be created as Core.Construct class
+        First step: Create MediaPackage Channel
         """
-        id_channel = "test-channel1"
-        url = TheMediaPackageConstruct(scope=self, id=id_channel, id_channel=id_channel).create_package()
+        channel = mediapackage.CfnChannel(scope=self, 
+                                          id_="media-package-channel-{0}".format(DEFAULT_CONF.get("id_channel")),
+                                          id=DEFAULT_CONF.get("id_channel"),
+                                          description="Channel {0}".format(DEFAULT_CONF.get("id_channel")))
         
         """
-        Second step: Create MediaLive SG, MediaLive Input and MediaLive Channel
-        MediaLive is Native in CDK :D
+        Second step: Add a HLS endpoint to MediaPackage Channel and output the URL of this endpoint
         """
+        hsl_endpoint_package = mediapackage.CfnOriginEndpoint.HlsPackageProperty(segment_duration_seconds=DEFAULT_CONF.get("hls_segment_duration_seconds"),
+                                                               playlist_window_seconds=DEFAULT_CONF.get("hls_playlist_window_seconds"),
+                                                               stream_selection=mediapackage.CfnOriginEndpoint.StreamSelectionProperty(
+                                                                   max_video_bits_per_second=DEFAULT_CONF.get("hls_max_video_bits_per_second"),
+                                                                   min_video_bits_per_second=DEFAULT_CONF.get("hls_min_video_bits_per_second"),
+                                                                   stream_order=DEFAULT_CONF.get("hls_stream_order")
+                                                               ))
 
+        hls_endpoint = mediapackage.CfnOriginEndpoint(scope=self, 
+                                                      id_="endpoint-{0}".format(DEFAULT_CONF.get("id_channel")),
+                                                      id=DEFAULT_CONF.get("id_channel"),
+                                                      channel_id=format(DEFAULT_CONF.get("id_channel")),
+                                                      description="Endpoin - {0}".format(DEFAULT_CONF.get("id_channel")),
+                                                      hls_package=hsl_endpoint_package)
+
+        # We need to add dependency because CFN must wait channel creation finish before starting the endpoint creation  
+        mediadep = core.ConcreteDependable()
+        mediadep.add(channel)
+        hls_endpoint.node.add_dependency(mediadep)
+
+        core.CfnOutput(scope=self, id="media-package-url-stream", value=hls_endpoint.attr_url)
+
+        """
+        Third step: Create MediaLive SG, MediaLive Input and MediaLive Channel
+        """
         """ 
         Input Security Group
         Allow 0.0.0.0/0 - Modify it if you want """
-        security_groups_input = medialive.CfnInputSecurityGroup(scope=self, id="media-live-sg-input",
-                                                                whitelist_rules=[{"cidr":"0.0.0.0/0"}])
+        security_groups_input = medialive.CfnInputSecurityGroup(scope=self, 
+                                                                id="media-live-sg-input",
+                                                                whitelist_rules=[{"cidr":DEFAULT_CONF.get("ip_sg_input")}])
 
         """ Input destination """     
-        media_live_input_destination = medialive.CfnInput.InputDestinationRequestProperty(stream_name="aaa/bbb")
+        media_live_input_destination = medialive.CfnInput.InputDestinationRequestProperty(stream_name=DEFAULT_CONF.get("stream_name"))
 
         """ Input with destinations output """
-        medialive_input = medialive.CfnInput(scope=self, id="media-input-channel", 
-                                             name="input-test1", type="RTMP_PUSH",
+        medialive_input = medialive.CfnInput(scope=self, 
+                                             id="media-input-channel", 
+                                             name="input-test1", 
+                                             type="RTMP_PUSH",
                                              input_security_groups=[security_groups_input.ref],
                                              destinations=[media_live_input_destination])
-        core.CfnOutput(scope=self, id="media-input-channel-destination", value=medialive_input.attr_destinations[0])
 
         """ Media Live Channel Block """
         media_live_channel_input_spec = medialive.CfnChannel.InputSpecificationProperty(codec="AVC",
@@ -53,7 +80,7 @@ class TheMediaLiveStreamStack(core.Stack):
         media_live_channel_input_attach = medialive.CfnChannel.InputAttachmentProperty(input_id=medialive_input.ref,
                                                                                        input_attachment_name="attach-input-test1")
         
-        media_live_channel_destination_settings = medialive.CfnChannel.MediaPackageOutputDestinationSettingsProperty(channel_id=id_channel)
+        media_live_channel_destination_settings = medialive.CfnChannel.MediaPackageOutputDestinationSettingsProperty(channel_id=DEFAULT_CONF.get("id_channel"))
         media_live_channel_destination = medialive.CfnChannel.OutputDestinationProperty(id="media-destination",
                                                                                         media_package_settings=[media_live_channel_destination_settings])
 
@@ -142,19 +169,17 @@ class TheMediaLiveStreamStack(core.Stack):
                                                                                   video_descriptions=[video1_description, video2_description],
                                                                                   output_groups=[output],
                                                                                   timecode_config=media_live_channel_timecode)
+        
+        medialive_role = iam.Role(scope=self, 
+                                  id='medialive_role',
+                                  role_name = 'medialive_role',
+                                  assumed_by=iam.ServicePrincipal('medialive.amazonaws.com'),
+                                  managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name('AWSElementalMediaLiveFullAccess')])
+
         media_live_channel = medialive.CfnChannel(scope=self, id="media-live-channel",
                                                   channel_class="SINGLE_PIPELINE", name="channel1",
                                                   input_specification=media_live_channel_input_spec,
                                                   input_attachments=[media_live_channel_input_attach],
                                                   destinations=[media_live_channel_destination],
                                                   encoder_settings=media_live_channel_encoder,
-                                                  role_arn="arn:aws:iam::200984112386:role/MediaLiveAccessRole")
-
-        """ Deploy site to S3 """
-        with open("../website/index_original.html", "rt") as index_o:
-            with open("../website/index.html", "wt") as index_f:
-                for line in index_o:
-                    index_f.write(line.replace('##URLMEDIA##', url))
-        
-        SPADeploy(scope=self, id='S3MediaLiveExample').create_basic_site(index_doc="index.html",
-                                                                      website_folder="../website")
+                                                  role_arn=medialive_role.role_arn)
