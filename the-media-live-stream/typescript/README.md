@@ -34,19 +34,11 @@ The main stack is `the-media-live-stream` and it defines all the elements to cre
     "hls_stream_order": "ORIGINAL"
 
 
-**Python**  
-Use the command `cdk deploy --outputs-file urlwebsite.json the-media-live-stream` to deploy this stack.
-
-**Typescript**  
 Use the command `cdk deploy --outputs-file urlwebsite.json TheMediaLiveStreamStack` to deploy this stack.
 
 ### Second Stack
 The second stack is `the-media-live-stream-website` and it deploy the website.
 
-**Python**  
-Use the command `cdk deploy the-media-live-stream-website` to deploy this stack.
-
-**Typescript**  
 Use the command `cdk deploy TheMediaLiveStreamWebsiteStack` to deploy this stack.
 
 ## Manual steps

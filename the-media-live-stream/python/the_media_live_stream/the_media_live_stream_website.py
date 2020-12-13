@@ -19,10 +19,10 @@ class TheMediaLiveStreamWebsiteStack(core.Stack):
                 data = json.load(json_file)
                 url = data["the-media-live-stream"]["mediapackageurlstream"]
 
-        with open("../website/index_original.html", "rt") as index_o:
-            with open("../website/index.html", "wt") as index_f:
+        with open("../python/website/index_original.html", "rt") as index_o:
+            with open("../python/website/index.html", "wt") as index_f:
                 for line in index_o:
                     index_f.write(line.replace('##URLMEDIA##', url))
         
         SPADeploy(scope=self, id='S3MediaLiveExample').create_basic_site(index_doc="index.html",
-                                                                         website_folder="../website")
+                                                                         website_folder="../python/website")

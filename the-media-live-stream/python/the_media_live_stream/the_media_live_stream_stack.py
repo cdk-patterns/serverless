@@ -41,14 +41,10 @@ class TheMediaLiveStreamStack(core.Stack):
                                                       id_="endpoint-{0}".format(DEFAULT_CONF.get("id_channel")),
                                                       id=DEFAULT_CONF.get("id_channel"),
                                                       channel_id=format(DEFAULT_CONF.get("id_channel")),
-                                                      description="Endpoin - {0}".format(DEFAULT_CONF.get("id_channel")),
+                                                      description="Endpoint - {0}".format(DEFAULT_CONF.get("id_channel")),
                                                       hls_package=hsl_endpoint_package)
 
-        # We need to add dependency because CFN must wait channel creation finish before starting the endpoint creation  
-        mediadep = core.ConcreteDependable()
-        mediadep.add(channel)
-        hls_endpoint.node.add_dependency(mediadep)
-
+        # Output the url stream to player
         core.CfnOutput(scope=self, id="media-package-url-stream", value=hls_endpoint.attr_url)
 
         """
@@ -176,10 +172,17 @@ class TheMediaLiveStreamStack(core.Stack):
                                   assumed_by=iam.ServicePrincipal('medialive.amazonaws.com'),
                                   managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name('AWSElementalMediaLiveFullAccess')])
 
-        media_live_channel = medialive.CfnChannel(scope=self, id="media-live-channel",
-                                                  channel_class="SINGLE_PIPELINE", name="channel1",
+        media_live_channel = medialive.CfnChannel(scope=self, id="media-live-channel-{0}".format(DEFAULT_CONF.get("id_channel")),
+                                                  channel_class="SINGLE_PIPELINE", name=DEFAULT_CONF.get("id_channel"),
                                                   input_specification=media_live_channel_input_spec,
                                                   input_attachments=[media_live_channel_input_attach],
                                                   destinations=[media_live_channel_destination],
                                                   encoder_settings=media_live_channel_encoder,
                                                   role_arn=medialive_role.role_arn)
+
+        
+        # We need to add dependency because CFN must wait channel creation finish before starting the endpoint creation  
+        mediadep = core.ConcreteDependable()
+        mediadep.add(channel)
+        hls_endpoint.node.add_dependency(mediadep)
+        media_live_channel.node.add_dependency(mediadep)
