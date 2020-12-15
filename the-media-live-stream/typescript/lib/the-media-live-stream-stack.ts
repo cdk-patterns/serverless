@@ -14,8 +14,6 @@ DEFAULT_CONF.set('hls_min_video_bits_per_second', 0);
 DEFAULT_CONF.set('hls_stream_order', "ORIGINAL");
 
 export class TheMediaLiveStreamStack extends cdk.Stack {
-  mediaPackageURL:string;
-
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -47,10 +45,10 @@ export class TheMediaLiveStreamStack extends cdk.Stack {
                                                             });
 
     // Output the url stream to player
-    new cdk.CfnOutput(scope=this, id="media-package-url-stream", { 
+    new cdk.CfnOutput(scope=this, id="media-package-url-stream", {
+      exportName: 'mediapackageurl',
       value: hls_endpoint.attrUrl
     });
-    this.mediaPackageURL = hls_endpoint.attrUrl;
 
     /*
     * Third step: Create MediaLive SG, MediaLive Input and MediaLive Channel
