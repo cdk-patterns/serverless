@@ -16,12 +16,6 @@ Some Useful References:
 | Yan Cui | [Unlocking New Serverless Use Caes With EFS and Lambda](https://lumigo.io/blog/unlocking-more-serverless-use-cases-with-efs-and-lambda/) |
 
 
-# Available Versions
-
-* [TypeScript](typescript)
-* [Python](python)
-* [CSharp](csharp)
-
 ## What's Included In This Pattern?
 This pattern covers the first half of Danilo Poccia's awesome [blog post](https://aws.amazon.com/blogs/aws/new-a-shared-file-system-for-your-lambda-functions/). After deployment you will have an API Gateway HTTP API where any url you hit gets directed to a Lambda Function that is integrated with EFS.
 
@@ -49,6 +43,47 @@ The Lambda Function will behave differently based on the RESTful verb you use:
 - POST - Send a message (whatever you send in the body is the message)
 - DELETE - Deletes all stored messages
 
-The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy.
+The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy
 
 Note - After deployment you may need to wait 60-90 seconds before the implementation works as expected. There are a lot of network configurations happening so you need to wait on propagation
+
+## Useful commands
+
+* `dotnet build src` compile this app
+* `cdk deploy`       deploy this stack to your default AWS account/region
+* `cdk diff`         compare deployed stack with current state
+* `cdk synth`        emits the synthesized CloudFormation template
+
+## Deploy with AWS Cloud9
+
+* Create an **Ubuntu** AWS Cloud9 EC2 development environment
+* Add the Microsoft repository
+    ```
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    ```
+    ```
+    sudo dpkg -i packages-microsoft-prod.deb
+    ```
+* Install the .NET Core SDK
+    ```
+    sudo apt-get update; \
+    sudo apt-get install -y apt-transport-https && \
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-3.1
+    ```
+* Clone the CDK Patterns repo
+    ```
+    git clone https://github.com/cdk-patterns/serverless.git
+    ```
+* Change directory
+    ```
+    cd serverless/the-efs-lambda/csharp
+    ```
+* Build the project to see if .NET Core has been setup correctly (optional)
+    ```
+    dotnet build src
+    ```
+* Deploy the stack
+    ```
+    cdk deploy
+    ```
