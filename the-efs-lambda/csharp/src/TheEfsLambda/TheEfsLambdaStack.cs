@@ -4,8 +4,6 @@ using APIGv2 = Amazon.CDK.AWS.APIGatewayv2;
 using EC2 = Amazon.CDK.AWS.EC2;
 using EFS = Amazon.CDK.AWS.EFS;
 using APIGv2Integration = Amazon.CDK.AWS.APIGatewayv2.Integrations;
-using Amazon.CDK.AWS.EFS;
-using Amazon.CDK.AWS.Lambda;
 
 namespace TheEfsLambda
 {
@@ -34,7 +32,7 @@ namespace TheEfsLambda
 
             // Create a access point to EFS
             EFS.AccessPoint access_point;
-            access_point = _filesystem.AddAccessPoint("AccessPoint", new AccessPointOptions
+            access_point = _filesystem.AddAccessPoint("AccessPoint", new EFS.AccessPointOptions
             {
                 CreateAcl = new EFS.Acl { OwnerGid = "1001", OwnerUid = "1001", Permissions = "750"},
                 Path = "/export/lambda",
@@ -42,7 +40,7 @@ namespace TheEfsLambda
             });
 
             // Create the lambda function
-            _lambda = new Lambda.Function(this, "rdsProxyHandler", new FunctionProps
+            _lambda = new Lambda.Function(this, "rdsProxyHandler", new Lambda.FunctionProps
             {
                 Runtime = Lambda.Runtime.PYTHON_3_8,
                 Code = Lambda.Code.FromAsset("lambda_fns"),
