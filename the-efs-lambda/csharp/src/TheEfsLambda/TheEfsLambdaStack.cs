@@ -31,8 +31,8 @@ namespace TheEfsLambda
             });
 
             // Create a access point to EFS
-            EFS.AccessPoint access_point;
-            access_point = _fileSystem.AddAccessPoint("AccessPoint", new EFS.AccessPointOptions
+            EFS.AccessPoint accessPoint;
+            accessPoint = _fileSystem.AddAccessPoint("AccessPoint", new EFS.AccessPointOptions
             {
                 CreateAcl = new EFS.Acl { OwnerGid = "1001", OwnerUid = "1001", Permissions = "750"},
                 Path = "/export/lambda",
@@ -46,7 +46,7 @@ namespace TheEfsLambda
                 Code = Lambda.Code.FromAsset("lambda_fns"),
                 Handler = "message_wall.lambda_handler",
                 Vpc = _vpc,
-                Filesystem = Lambda.FileSystem.FromEfsAccessPoint(access_point, "/mnt/msg")
+                Filesystem = Lambda.FileSystem.FromEfsAccessPoint(accessPoint, "/mnt/msg")
             });
 
             // Api Gateway HTTP integration
