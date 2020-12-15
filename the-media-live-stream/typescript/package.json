@@ -8,26 +8,25 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.77.0",
-    "@aws-cdk/aws-medialive": "^1.77.0",
-    "@aws-cdk/aws-mediapackage": "^1.77.0",
-    "@aws-cdk/core": "^1.77.0",
+    "@aws-cdk/assert": "1.78.0",
     "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
-    "aws-cdk": "1.77.0",
+    "@types/node": "^10.17.27",
+    "aws-cdk": "1.78.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "cdk": "^1.78.0",
-    "cdk-spa-deploy": "^1.77.0",
+    "@aws-cdk/aws-medialive": "1.78.0",
+    "@aws-cdk/aws-mediapackage": "1.78.0",
+    "@aws-cdk/core": "1.78.0",
+    "cdk-spa-deploy": "1.78.0",
     "filereader": "^0.10.3",
-    "fs": "0.0.1-security",
     "source-map-support": "^0.5.16"
   }
 }

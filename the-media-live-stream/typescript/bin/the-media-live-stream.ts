@@ -6,4 +6,4 @@ import { TheMediaLiveStreamWebsiteStack } from '../lib/the-media-live-stream-web
 
 const app = new cdk.App();
 var mediaChannel = new TheMediaLiveStreamStack(app, 'TheMediaLiveStreamStack');
-new TheMediaLiveStreamWebsiteStack(app, 'TheMediaLiveStreamWebsiteStack').addDependency(mediaChannel);
+new TheMediaLiveStreamWebsiteStack(app, 'TheMediaLiveStreamWebsiteStack', {urlStream: mediaChannel.mediaPackageURL}).addDependency(mediaChannel);
