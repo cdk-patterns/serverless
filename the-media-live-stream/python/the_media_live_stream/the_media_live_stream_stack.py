@@ -13,6 +13,9 @@ DEFAULT_CONF = {
     "hls_stream_order": "ORIGINAL"
 }
 
+INLINE_POLICY = {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents","logs:DescribeLogStreams","logs:DescribeLogGroups"],"Resource":"arn:aws:logs:*:*:*"},{"Effect":"Allow","Action":["mediaconnect:ManagedDescribeFlow","mediaconnect:ManagedAddOutput","mediaconnect:ManagedRemoveOutput"],"Resource":"*"},{"Effect":"Allow","Action":["ec2:describeSubnets","ec2:describeNetworkInterfaces","ec2:createNetworkInterface","ec2:createNetworkInterfacePermission","ec2:deleteNetworkInterface","ec2:deleteNetworkInterfacePermission","ec2:describeSecurityGroups"],"Resource":"*"},{"Effect":"Allow","Action":["mediapackage:DescribeChannel"],"Resource":"*"}]}
+
+
 class TheMediaLiveStreamStack(core.Stack):
 
     def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
@@ -166,11 +169,13 @@ class TheMediaLiveStreamStack(core.Stack):
                                                                                   output_groups=[output],
                                                                                   timecode_config=media_live_channel_timecode)
         
+        policy_document = iam.PolicyDocument.from_json(INLINE_POLICY)
         medialive_role = iam.Role(scope=self, 
                                   id='medialive_role',
                                   role_name = 'medialive_role',
                                   assumed_by=iam.ServicePrincipal('medialive.amazonaws.com'),
-                                  managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name('AWSElementalMediaLiveFullAccess')])
+                                  managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name('AWSElementalMediaLiveFullAccess')],
+                                  inline_policies={"medialivecustom": policy_document})
 
         media_live_channel = medialive.CfnChannel(scope=self, id="media-live-channel-{0}".format(DEFAULT_CONF.get("id_channel")),
                                                   channel_class="SINGLE_PIPELINE", name=DEFAULT_CONF.get("id_channel"),

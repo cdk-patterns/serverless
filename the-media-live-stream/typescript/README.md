@@ -10,6 +10,7 @@ This is an example of how to deploy a Serverless environment to stream live even
 3 - Don't forget your medialive channel opened, AWS will charge you!   
 4 - You can attach a CloudFront to the MediaPackage distribution or set S3 as backup of medialive stream. In the future I'll update this stack.  
 5 - If you have some doubts about MediaLive Services, feel free to send me a message. 
+6 - Before destroying this Stack, you must stop your LiveChannel, otherwise CloudFormation will generate an error.
 
 Let's party! :D
 

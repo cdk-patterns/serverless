@@ -13,6 +13,11 @@ This is an example of how to deploy a Serverless environment to stream live even
 
 Let's party! :D
 
+## Available Versions
+
+ * [TypeScript](typescript/)
+ * [Python](python/)
+ 
 ## Commands
 
 This stack uses assets so you must run `cdk bootstrap account/region` before run the other commands. 

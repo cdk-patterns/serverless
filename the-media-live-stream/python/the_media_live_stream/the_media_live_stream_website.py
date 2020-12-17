@@ -17,7 +17,8 @@ class TheMediaLiveStreamWebsiteStack(core.Stack):
         if os.path.isfile('urlwebsite.json') and os.access('urlwebsite.json', os.R_OK):
             with open('urlwebsite.json') as json_file:
                 data = json.load(json_file)
-                url = data["the-media-live-stream"]["mediapackageurlstream"]
+                if "the-media-live-stream" in data:
+                    url = data["the-media-live-stream"]["mediapackageurlstream"]
 
         with open("../python/website/index_original.html", "rt") as index_o:
             with open("../python/website/index.html", "wt") as index_f:
