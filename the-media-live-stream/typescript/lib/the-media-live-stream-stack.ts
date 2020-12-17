@@ -70,7 +70,7 @@ export class TheMediaLiveStreamStack extends cdk.Stack {
     */
     const medialive_input = new medialive.CfnInput(scope=this, 
                                                     id="meddia-input-channel",{
-                                                      name: "input-" +configuration["id_channel"],
+                                                      name: `input- ${configuration["id_channel"]}`,
                                                       type: "RTMP_PUSH",
                                                       inputSecurityGroups: [security_groups_input.ref],
                                                       destinations: [{streamName: configuration["stream_name"]}]
