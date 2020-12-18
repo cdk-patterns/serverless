@@ -16,7 +16,7 @@ This is an example of how to deploy a Serverless environment to stream live even
 
 This pattern uses assets, so you must run `cdk bootstrap account/region` before run the other commands. 
 
-Due to this CDK Pattern deploy a website with output values, it was splitted in 2 stacks.
+Due to this pattern creating the media package and then using the streaming url on a demo webpage, it was split into two stacks.
 
 
 ### First Stack
