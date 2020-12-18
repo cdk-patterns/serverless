@@ -9,7 +9,7 @@ This is an example of how to deploy a Serverless environment to stream live even
 2 - This CDK stack is just to demonstrate how to create a Serverless broadcast enviroment, so I wrote using a single channel and 2 high definitions. If you need to deploy it in production, I suggest that you learn more about AWS MediaLive Services here: https://www.aws.training/LearningLibrary?filters=language%3A1&filters=classification%3A75&tab=view_all  
 3 - Don't forget your medialive channel opened, AWS will charge you!   
 4 - You can attach a CloudFront to the MediaPackage distribution or set S3 as backup of medialive stream. In the future I'll update this stack.  
-5 - If you have some doubts about MediaLive Services, feel free to send me a message. 
+5 - If you have some doubts about MediaLive Services, feel free to send me a message (https://github.com/leandrodamascena). 
 6 - Before destroying this Stack, you must stop your LiveChannel, otherwise CloudFormation will generate an error.
 
 Let's party! :D
@@ -18,11 +18,15 @@ Let's party! :D
 
 This stack uses assets so you must run `cdk bootstrap account/region` before run the other commands. 
 
-Due to this CDK Pattern deploy a website with output values, it was splitted in 2 stacks.
+Due to this CDK Pattern deploy a website with output values, it was split in 2 stacks. This does not affect the deployment command however and you can still just do:
+
+```bash
+npm run deploy
+```
 
 
-### First Stack
-The main stack is `the-media-live-stream` and it defines all the elements to create the LiveStream channel. The parameters below can be modified to launch this stack:
+### TheMediaLiveStreamStack
+This defines all the elements to create the LiveStream channel. The parameters below can be modified to launch this stack:
 
 
     "id_channel": "test-channel",  # ChannelId
@@ -35,12 +39,8 @@ The main stack is `the-media-live-stream` and it defines all the elements to cre
     "hls_stream_order": "ORIGINAL"
 
 
-Use the command `cdk deploy --outputs-file urlwebsite.json TheMediaLiveStreamStack` to deploy this stack.
-
-### Second Stack
-The second stack is `the-media-live-stream-website` and it deploy the website.
-
-Use the command `cdk deploy TheMediaLiveStreamWebsiteStack` to deploy this stack.
+### TheMediaLiveStreamWebsiteStack
+This stack deploys the website that is used to test your stream
 
 ## Manual steps
 
@@ -59,3 +59,12 @@ I simulated transmitting my screen: D
 ![live2](img/live2.png)
 ![live3](img/live3.png)
 ![live4](img/live4.png)
+
+## Useful commands
+
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `npm run deploy`  deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
