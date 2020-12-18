@@ -19,11 +19,6 @@ setuptools.setup(
     packages=setuptools.find_packages(where="the_media_live_stream"),
 
     install_requires=[
-        "aws-cdk.core==1.77.0",
-        "cdk-spa-deploy==1.77.0",
-        "aws-cdk.aws-medialive==1.77.0",
-        "aws-cdk.aws-mediapackage==1.77.0",
-        "aws-cdk.aws-iam==1.77.0"
     ],
 
     python_requires=">=3.8",

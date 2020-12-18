@@ -1,14 +1,7 @@
-attrs==20.3.0
+-e .
 aws-cdk.assets==1.78.0
 aws-cdk.aws-iam==1.78.0
 aws-cdk.aws-medialive==1.78.0
 aws-cdk.aws-mediapackage==1.78.0
 aws-cdk.core==1.78.0
-cattrs==1.1.2
 cdk-spa-deploy==1.78.0
-constructs==3.2.67
-jsii==1.16.0
-publication==0.0.3
-python-dateutil==2.8.1
-six==1.15.0
-typing-extensions==3.7.4.3
