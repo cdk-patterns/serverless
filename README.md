@@ -189,6 +189,12 @@ npx cdk deploy
 
   <br /><hr /><br />
 
+  #### [The Media Live Stream](the-media-live-stream/README.md)
+  This is an example of how to deploy a Serverless environment to stream live event content.
+  ![Architecture](the-media-live-stream/img/the-media-live-stream.png)
+
+  <br /><hr /><br />
+
   #### [The Predictive Lambda](the-predictive-lambda/README.md)
   Deploy a custom Python ML model inside a Docker container running on AWS Lambda
   ![Architecture](the-predictive-lambda/img/arch_with_cdkp.png)
@@ -271,6 +277,7 @@ npx cdk deploy
   * [James Beswick](#james-beswick)
   * [Jeremy Daly](#jeremy-daly)
   * [Joppe Pelzer](#joppe-pelzer)
+  * [Leandro Damascena](#leandro-damascena)
   * [Matt Coulter](#matt-coulter)
   * [Thorsten Hoeger](#thorsten-hoeger)
   * [Vyas Sarangapani](#vyas-sarangapani)
@@ -495,6 +502,17 @@ npx cdk deploy
   Use Amazon Polly to translate text to speech from inside a Lambda Function. You can also take advantage of Amazon Translate to change the language of the spoken text
 
   ![Architecture](polly/img/overview.png)
+
+  <br /><hr /><br />
+
+  ### Leandro Damascena
+  <img src="img/dev_profiles/leandro-damascena.jpg" width="120" alt="Leandro Damascena profile pic" /><br />
+
+  Cloud Solutions Architect, Writer http://leandrodamascena.medium.com and Open-source enthusiast.<br />
+
+  #### [The Media Live Stream](the-media-live-stream/README.md)
+  This is an example of how to deploy a Serverless environment to stream live event content.
+  ![Architecture](the-media-live-stream/img/the-media-live-stream.png)
 
   <br /><hr /><br />
 
