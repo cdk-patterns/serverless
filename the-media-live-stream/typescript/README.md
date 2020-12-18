@@ -16,7 +16,7 @@ Let's party! :D
 
 ## Stacks
 
-This stack uses assets so you must run `cdk bootstrap account/region` before run the other commands. 
+This pattern uses assets, so you must run `cdk bootstrap account/region` before run the other commands. 
 
 Due to this CDK Pattern deploy a website with output values, it was split in 2 stacks. This does not affect the deployment command however and you can still just do:
 
