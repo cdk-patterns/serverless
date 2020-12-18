@@ -40,9 +40,11 @@ The second stack is `the-media-live-stream-website` and it deploy the website.
 
 Use the command `cdk deploy the-media-live-stream-website` to deploy this stack.
 
-## Manual steps
+## Manual Steps After Deployment
 
-As I said at the beginning, this Stack doesn't start your channel automatically, so go to AWS Console -> AWS Elemental MediaLive -> Inputs -> input-test1 and copy the endpoint URL. Go to OBS Studio and paste this URL (bbb is the key). In this example I used OBS Studio, but you can use any type of software that supports RMTP PUSH protocol.
+This Stack doesn't start your channel automatically due to costs, so open MediaLive in the AWS Console and click the Channels link in the sidebar. Click "test-channel" and now click the orange start button in the top right to start the channel. **Remember to stop your channel after you are done testing as it charges per second**
+
+ Now click Inputs in the sidebar and you should see "input-test-channel" in a list - copy the "Destination A" URL ignoring the "channel" at the end (if the url is rmtp://x.x.x.x/test/channel you copy rmtp://x.x.x.x/test/). Go to OBS Studio and paste this URL (channel is the key). In this example I used OBS Studio, but you can use any type of software that supports RMTP PUSH protocol.
 
 ![obs1](../img/obs1.png)
 ![obs2](../img/obs2.png)
