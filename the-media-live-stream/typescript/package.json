@@ -1,0 +1,32 @@
+{
+  "name": "the-media-live-stream",
+  "version": "0.1.0",
+  "bin": {
+    "the-media-live-stream": "bin/the-media-live-stream.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "deploy": "cdk deploy --outputs-file urlwebsite.json TheMediaLiveStreamStack && cdk deploy TheMediaLiveStreamWebsiteStack"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.78.0",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^10.17.27",
+    "aws-cdk": "1.78.0",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.2.0",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-iam": "1.78.0",
+    "@aws-cdk/aws-medialive": "1.78.0",
+    "@aws-cdk/aws-mediapackage": "1.78.0",
+    "@aws-cdk/core": "1.78.0",
+    "cdk-spa-deploy": "1.78.0",
+    "source-map-support": "^0.5.16"
+  }
+}

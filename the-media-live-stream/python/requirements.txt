@@ -1,0 +1,7 @@
+-e .
+aws-cdk.assets==1.78.0
+aws-cdk.aws-iam==1.78.0
+aws-cdk.aws-medialive==1.78.0
+aws-cdk.aws-mediapackage==1.78.0
+aws-cdk.core==1.78.0
+cdk-spa-deploy==1.78.0
