@@ -13,6 +13,7 @@ DEFAULT_CONF = {
     "hls_stream_order": "ORIGINAL"
 }
 
+# https://docs.aws.amazon.com/mediaconnect/latest/ug/security_iam_service-with-iam.html
 INLINE_POLICY = {"Version": "2012-10-17",
                  "Statement": [{"Effect": "Allow",
                                 "Action": ["logs:CreateLogGroup", "logs:CreateLogStream",

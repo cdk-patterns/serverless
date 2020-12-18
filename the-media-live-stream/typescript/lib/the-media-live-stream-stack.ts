@@ -14,6 +14,7 @@ const configuration = {
   "hls_stream_order": "ORIGINAL"
 }
 
+// https://docs.aws.amazon.com/mediaconnect/latest/ug/security_iam_service-with-iam.html
 const INLINE_POLICY = {
   "Version": "2012-10-17",
   "Statement": [{
