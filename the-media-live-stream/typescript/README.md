@@ -7,7 +7,7 @@ This is an example of how to deploy a Serverless environment to stream live even
 ## Warnings
 1. This CDK stack doesn't automatically start its medialive channel. AWS charges for a medialive "live/started" channel whether you are using it or not, so you must start manually using Console, CLI or SDK. Check prices here: https://aws.amazon.com/medialive/pricing/    
 2. This CDK stack is just to demonstrate how to create a Serverless broadcast enviroment, so I wrote using a single channel and 2 high definitions. If you need to deploy it in production, I suggest that you learn more about AWS MediaLive Services here: https://www.aws.training/LearningLibrary?filters=language%3A1&filters=classification%3A75&tab=view_all  
-3. Don't forget your medialive channel opened, AWS will charge you!   
+3. Don't forget and leave your medialive channel opened, AWS will charge you!   
 4. You can attach a CloudFront to the MediaPackage distribution or set S3 as backup of medialive stream. In the future I'll update this stack.  
 5. If you have some doubts about MediaLive Services, feel free to send me a message (https://github.com/leandrodamascena).
 6. Before destroying this Stack, you must stop your LiveChannel, otherwise CloudFormation will generate an error.
