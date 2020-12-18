@@ -14,6 +14,8 @@ const configuration = {
   "hls_stream_order": "ORIGINAL"
 }
 
+const INLINE_POLICY = {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents","logs:DescribeLogStreams","logs:DescribeLogGroups"],"Resource":"arn:aws:logs:*:*:*"},{"Effect":"Allow","Action":["mediaconnect:ManagedDescribeFlow","mediaconnect:ManagedAddOutput","mediaconnect:ManagedRemoveOutput"],"Resource":"*"},{"Effect":"Allow","Action":["ec2:describeSubnets","ec2:describeNetworkInterfaces","ec2:createNetworkInterface","ec2:createNetworkInterfacePermission","ec2:deleteNetworkInterface","ec2:deleteNetworkInterfacePermission","ec2:describeSecurityGroups"],"Resource":"*"},{"Effect":"Allow","Action":["mediapackage:DescribeChannel"],"Resource":"*"}]}
+
 export class TheMediaLiveStreamStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -84,7 +86,8 @@ export class TheMediaLiveStreamStack extends cdk.Stack {
     let iamRole = new iam.Role(scope=this, id="medialive_role", {
                       roleName: "medialive_role",
                       assumedBy: new iam.ServicePrincipal('medialive.amazonaws.com'),
-                      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AWSElementalMediaLiveFullAccess')]
+                      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AWSElementalMediaLiveFullAccess')],
+                      inlinePolicies: {"medialivecustom": iam.PolicyDocument.fromJson(INLINE_POLICY)}
                     });
 
     // Channel

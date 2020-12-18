@@ -15,7 +15,9 @@ export class TheMediaLiveStreamWebsiteStack extends cdk.Stack {
       if (exists) {
         var jsonFile = require('../urlwebsite.json');
         let jsondata = JSON.parse(JSON.stringify(jsonFile));
-        url = jsondata["TheMediaLiveStreamStack"]["mediapackageurlstream"];
+        if(jsondata.hasOwnProperty('TheMediaLiveStreamStack')){
+          url = jsondata["TheMediaLiveStreamStack"]["mediapackageurlstream"];
+        }
 
         // Writing new file
         let data = fs.readFileSync('website/index_original.html').toString('utf-8'); {
