@@ -5,11 +5,13 @@ This is an example of how to deploy a Serverless environment to stream live even
 ![architecture](img/the-media-live-stream.png)
 
 ## Warnings
-1 - This CDK stack doesn't automatically start its medialive channel. AWS charges for a medialive "live/started" channel whether you are using it or not, so you must start manually using Console, CLI or SDK. Check prices here: https://aws.amazon.com/medialive/pricing/    
-2 - This CDK stack is just to demonstrate how to create a Serverless broadcast enviroment, so I wrote using a single channel and 2 high definitions. If you need to deploy it in production, I suggest that you learn more about AWS MediaLive Services here: https://www.aws.training/LearningLibrary?filters=language%3A1&filters=classification%3A75&tab=view_all  
-3 - Don't forget your medialive channel opened, AWS will charge you!   
-4 - You can attach a CloudFront to the MediaPackage distribution or set S3 as backup of medialive stream. In the future I'll update this stack.  
-5 - If you have some doubts about MediaLive Services, feel free to send me a message. 
+## Warnings
+1. This CDK stack doesn't automatically start its medialive channel. AWS charges for a medialive "live/started" channel whether you are using it or not, so you must start manually using Console, CLI or SDK. Check prices here: https://aws.amazon.com/medialive/pricing/    
+2. This CDK stack is just to demonstrate how to create a Serverless broadcast enviroment, so I wrote using a single channel and 2 high definitions. If you need to deploy it in production, I suggest that you learn more about AWS MediaLive Services here: https://www.aws.training/LearningLibrary?filters=language%3A1&filters=classification%3A75&tab=view_all  
+3. Don't forget and leave your medialive channel opened, AWS will charge you!   
+4. You can attach a CloudFront to the MediaPackage distribution or set S3 as backup of medialive stream. In the future I'll update this stack.  
+5. If you have some doubts about MediaLive Services, feel free to send me a message (https://github.com/leandrodamascena).
+6. Before destroying this Stack, you must stop your LiveChannel, otherwise CloudFormation will generate an error.
 
 Let's party! :D
 
@@ -18,15 +20,16 @@ Let's party! :D
  * [TypeScript](typescript/)
  * [Python](python/)
  
-## Commands
+## Stacks
 
-This stack uses assets so you must run `cdk bootstrap account/region` before run the other commands. 
+This pattern uses assets so you must run `cdk bootstrap account/region` before run the other commands. 
 
-Due to this CDK Pattern deploy a website with output values, it was splitted in 2 stacks.
+Due to this pattern creating the media package and then using the streaming url on a demo webpage, it was split into two stacks.
 
+In the TypeScript version you can still just `npm run deploy` as normal but for python you will need to `cdk deploy --outputs-file urlwebsite.json the-media-live-stream` followed by `cdk deploy the-media-live-stream-website`
 
-### First Stack
-The main stack is `the-media-live-stream` and it defines all the elements to create the LiveStream channel. The parameters below can be modified to launch this stack:
+### TheMediaLiveStreamStack (ts) / the-media-live-stream (py)
+This defines all the elements to create the LiveStream channel. The parameters below can be modified to launch this stack:
 
 
     "id_channel": "test-channel",  # ChannelId
@@ -39,24 +42,14 @@ The main stack is `the-media-live-stream` and it defines all the elements to cre
     "hls_stream_order": "ORIGINAL"
 
 
-**Python**  
-Use the command `cdk deploy --outputs-file urlwebsite.json the-media-live-stream` to deploy this stack.
+### TheMediaLiveStreamWebsiteStack (ts) / the-media-live-stream-website (py)
+This stack deploys the website that is used to test your stream
 
-**Typescript**  
-Use the command `cdk deploy --outputs-file urlwebsite.json TheMediaLiveStreamStack` to deploy this stack.
+## Manual Steps After Deployment
 
-### Second Stack
-The second stack is `the-media-live-stream-website` and it deploy the website.
+This Stack doesn't start your channel automatically due to costs, so open MediaLive in the AWS Console and click the Channels link in the sidebar. Click "test-channel" and now click the orange start button in the top right to start the channel. **Remember to stop your channel after you are done testing as it charges per second**
 
-**Python**  
-Use the command `cdk deploy the-media-live-stream-website` to deploy this stack.
-
-**Typescript**  
-Use the command `cdk deploy TheMediaLiveStreamWebsiteStack` to deploy this stack.
-
-## Manual steps
-
-As I said at the beginning, this Stack doesn't start your channel automatically, so go to AWS Console -> AWS Elemental MediaLive -> Inputs -> input-test1 and copy the endpoint URL. Go to OBS Studio and paste this URL (bbb is the key). In this example I used OBS Studio, but you can use any type of software that supports RMTP PUSH protocol.
+ Now click Inputs in the sidebar and you should see "input-test-channel" in a list - copy the "Destination A" URL ignoring the "channel" at the end (if the url is rmtp://x.x.x.x/test/channel you copy rmtp://x.x.x.x/test/). Go to OBS Studio and paste this URL (channel is the key). In this example I used OBS Studio, but you can use any type of software that supports RMTP PUSH protocol.
 
 ![obs1](img/obs1.png)
 ![obs2](img/obs2.png)
