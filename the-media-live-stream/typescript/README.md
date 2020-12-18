@@ -18,7 +18,7 @@ Let's party! :D
 
 This pattern uses assets, so you must run `cdk bootstrap account/region` before run the other commands. 
 
-Due to this CDK Pattern deploy a website with output values, it was split in 2 stacks. This does not affect the deployment command however and you can still just do:
+Due to this pattern creating the media package and then using the streaming url on a demo webpage, it was split into two stacks. This does not affect the deployment command however and you can still just do:
 
 ```bash
 npm run deploy
