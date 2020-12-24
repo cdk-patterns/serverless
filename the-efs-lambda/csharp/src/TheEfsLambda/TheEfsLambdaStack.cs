@@ -17,7 +17,7 @@ namespace TheEfsLambda
 
         internal TheEfsLambdaStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
-            // EFS needs to be setup in a VPC
+            // EFS needs to be setup in a VPC with 2Azs
             _vpc = new EC2.Vpc(this, "Vpc", new EC2.VpcProps
             {
                 MaxAzs = 2
