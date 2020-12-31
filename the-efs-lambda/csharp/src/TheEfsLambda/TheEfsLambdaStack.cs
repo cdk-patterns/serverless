@@ -40,7 +40,7 @@ namespace TheEfsLambda
             });
 
             // Create the lambda function
-            _functionProxyHandler = new Lambda.Function(this, "rdsProxyHandler", new Lambda.FunctionProps
+            _functionProxyHandler = new Lambda.Function(this, "efsLambdaFunction", new Lambda.FunctionProps
             {
                 Runtime = Lambda.Runtime.PYTHON_3_8,
                 Code = Lambda.Code.FromAsset("lambda_fns"),
