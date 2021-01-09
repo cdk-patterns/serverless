@@ -32,4 +32,4 @@ Contribution Steps:
 4. Open up a pr
 
 ## Converting Lambda Fns to CDK Language
-This would be a big help and is a great way to get started contributing. When a pattern launches typically I build it in TypeScript and then port it over to Python. In order to reduce bugs at launch I typically reuse the JS Lambdda Fn in the Python version then slowly refactor over time to full Python. If you spot one of these JS functions in a Python pattern and want to convert it to Python it is small enough that you could just do it and open a Pull Request
+This would be a big help and is a great way to get started contributing. When a pattern launches typically I build it in TypeScript and then port it over to Python. In order to reduce bugs at launch I typically reuse the JS Lambda Fn in the Python version then slowly refactor over time to full Python. If you spot one of these JS functions in a Python pattern and want to convert it to Python it is small enough that you could just do it and open a Pull Request
