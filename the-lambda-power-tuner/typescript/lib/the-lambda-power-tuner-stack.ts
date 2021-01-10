@@ -25,6 +25,7 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
     })
 
     // Deploy the aws-lambda-powertuning application from the Serverless Application Repository
+    // https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning
     new sam.CfnApplication(this, 'powerTuner', {
       location: {
         applicationId: 'arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning',

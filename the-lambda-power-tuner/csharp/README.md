@@ -95,6 +95,7 @@ An example of option 3 is included in the stack but currently commented out, so 
 //lambdaResource = exampleLambda.functionArn;
 ```
 
+
 ## How To Test This Pattern
 
 After deployment, navigate to the step functions section of the AWS Console.
@@ -137,9 +138,43 @@ Then you can scroll down to the very last event and expand it to get the URL for
 
 If you want to deploy a UI to powertune your Lambda Functions rather than using the AWS Console checkout [this project](https://github.com/mattymoomoo/aws-power-tuner-ui)
 
-## Available CDK Versions
+# Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
- * [CSharp](csharp/)
- * [Java](java/)
+* `dotnet build src` compile this app
+* `cdk deploy`       deploy this stack to your default AWS account/region
+* `cdk diff`         compare deployed stack with current state
+* `cdk synth`        emits the synthesized CloudFormation template
+
+## Deploy with AWS Cloud9
+
+* Create an **Ubuntu** AWS Cloud9 EC2 development environment
+* Add the Microsoft repository
+    ```
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    ```
+    ```
+    sudo dpkg -i packages-microsoft-prod.deb
+    ```
+* Install the .NET Core SDK
+    ```
+    sudo apt-get update; \
+    sudo apt-get install -y apt-transport-https && \
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-3.1
+    ```
+* Clone the CDK Patterns repo
+    ```
+    git clone https://github.com/cdk-patterns/serverless.git
+    ```
+* Change directory
+    ```
+    cd serverless/the-scalable-webhook/csharp
+    ```
+* Build the project to see if .NET Core has been setup correctly (optional)
+    ```
+    dotnet build src
+    ```
+* Deploy the stack
+    ```
+    cdk deploy
+    ```
