@@ -15,8 +15,8 @@ class TheLambdaPowerTunerStack(core.Stack):
 
         # An example lambda that can be used to test the powertuner
         example_lambda = _lambda.Function(self, "exampleLambda",
-                                          runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
-                                          handler="index.handler", # file is "index", function is "handler"
+                                          runtime=_lambda.Runtime.NODEJS_12_X,
+                                          handler="index.handler",
                                           code=_lambda.Code.from_inline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }"),
                                           )
 

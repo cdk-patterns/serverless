@@ -26,9 +26,9 @@ public class TheLambdaPowerTunerStack extends Stack {
         
         //  An example lambda that can be used to test the powertuner
         Function functionExample = Function.Builder.create(this, "exampleLambda")
-        		.runtime(Runtime.NODEJS_12_X) // execution environment
-        		.handler("index.handler") // file is "index", function is "handler"
-        		.code(Code.fromInline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }")) // code inline
+        		.runtime(Runtime.NODEJS_12_X)
+        		.handler("index.handler")
+        		.code(Code.fromInline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }"))
         		.build();
         
         // uncomment to only allow this power tuner to manipulate this defined function

@@ -11,9 +11,9 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
 
     // A lambda function to use to test the powertuner
     let exampleLambda = new lambda.Function(this, 'lambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X, // execution environment
+      runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromInline('exports.handler = function(event, ctx, cb) { return cb(null, "hi"); }'),
-      handler: 'index.handler' // file is "index", function is "handler"
+      handler: 'index.handler'
     });
 
     // Uncomment to only allow this power tuner to manipulate this defined function

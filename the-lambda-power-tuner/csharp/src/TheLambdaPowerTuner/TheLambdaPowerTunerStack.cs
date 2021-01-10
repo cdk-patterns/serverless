@@ -18,9 +18,9 @@ namespace TheLambdaPowerTuner
             //  An example lambda that can be used to test the powertuner
             _functionExample = new Lambda.Function(this, "exampleLambda", new Lambda.FunctionProps
             {
-                Runtime = Lambda.Runtime.NODEJS_12_X, // execution environment
-                Handler = "index.handler", // file is "index", function is "handler"
-                Code = Lambda.Code.FromInline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }"), // code inline,
+                Runtime = Lambda.Runtime.NODEJS_12_X,
+                Handler = "index.handler",
+                Code = Lambda.Code.FromInline("exports.handler = function(event, ctx, cb) { return cb(null, 'hi'); }"),
             });
 
             // uncomment to only allow this power tuner to manipulate this defined function
