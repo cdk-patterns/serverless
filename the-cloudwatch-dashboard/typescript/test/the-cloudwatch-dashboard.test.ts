@@ -278,13 +278,10 @@ test('DynamoDB Errors Alarm Created', () => {
       }
     },
     {
+      "Expression": "getitem + batchgetitem + scan + query + getrecords + putitem + deleteitem + updateitem + batchwriteitem",
       "Id": "m2",
-      "MetricStat": {
-        "Metric": {
-          "MetricName": "SystemErrors",
-          "Namespace": "AWS/DynamoDB"
-        }
-      }
+      "Label": "Sum of errors across all operations",
+      "ReturnData": false
     }],
     "Threshold": 0
   }
