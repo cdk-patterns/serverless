@@ -49,7 +49,7 @@ public class TheEfsLambdaStack extends Stack {
         		.build());
         
         // Create the lambda function
-        Function functionProxyHandler = Function.Builder.create(this, "rdsProxyHandler")
+        Function efsLambda = Function.Builder.create(this, "efsLambdaFunction")
         		.runtime(Runtime.PYTHON_3_8)
         		.code(Code.fromAsset("lambda_fns"))
         		.handler("message_wall.lambda_handler")
@@ -63,7 +63,7 @@ public class TheEfsLambdaStack extends Stack {
         				LambdaProxyIntegration
         				.Builder
         				.create()
-        				.handler(functionProxyHandler)
+        				.handler(efsLambda)
         				.build())
         		.build();
         
