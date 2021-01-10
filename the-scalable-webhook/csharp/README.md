@@ -74,9 +74,43 @@ which will insert "hello from /hello" into dynamodb as a message. You can track 
 dynamo in the console and the contents of sqs in the console. You should also notice that SQS can include duplicate messages but in those instances you don't get two identical records in DynamoDB as 
 we used an id we generated in the message as the key
 
-## Available Versions
+# Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
- * [CSharp](csharp/)
- * [Java](java/)
+* `dotnet build src` compile this app
+* `cdk deploy`       deploy this stack to your default AWS account/region
+* `cdk diff`         compare deployed stack with current state
+* `cdk synth`        emits the synthesized CloudFormation template
+
+## Deploy with AWS Cloud9
+
+* Create an **Ubuntu** AWS Cloud9 EC2 development environment
+* Add the Microsoft repository
+    ```
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    ```
+    ```
+    sudo dpkg -i packages-microsoft-prod.deb
+    ```
+* Install the .NET Core SDK
+    ```
+    sudo apt-get update; \
+    sudo apt-get install -y apt-transport-https && \
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-3.1
+    ```
+* Clone the CDK Patterns repo
+    ```
+    git clone https://github.com/cdk-patterns/serverless.git
+    ```
+* Change directory
+    ```
+    cd serverless/the-scalable-webhook/csharp
+    ```
+* Build the project to see if .NET Core has been setup correctly (optional)
+    ```
+    dotnet build src
+    ```
+* Deploy the stack
+    ```
+    cdk deploy
+    ```
