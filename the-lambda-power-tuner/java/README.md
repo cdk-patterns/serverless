@@ -95,6 +95,7 @@ An example of option 3 is included in the stack but currently commented out, so 
 //lambdaResource = exampleLambda.functionArn;
 ```
 
+
 ## How To Test This Pattern
 
 After deployment, navigate to the step functions section of the AWS Console.
@@ -137,9 +138,12 @@ Then you can scroll down to the very last event and expand it to get the URL for
 
 If you want to deploy a UI to powertune your Lambda Functions rather than using the AWS Console checkout [this project](https://github.com/mattymoomoo/aws-power-tuner-ui)
 
-## Available CDK Versions
+## Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
- * [CSharp](csharp/)
- * [Java](java/)
+ * `mvn package`     compile and run tests
+ * `cdk ls`          list all stacks in the app
+ * `cdk synth`       emits the synthesized CloudFormation template
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk docs`        open CDK documentation
+
