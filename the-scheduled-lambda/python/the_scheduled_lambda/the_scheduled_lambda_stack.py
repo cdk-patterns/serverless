@@ -13,16 +13,16 @@ class TheScheduledLambdaStack(core.Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         # DynamoDB Table
-        table = dynamo_db.Table(self, "Table",
+        table = dynamo_db.Table(self, "RequestTable",
                                 partition_key=dynamo_db.Attribute(name="requestid", type=dynamo_db.AttributeType.STRING),
                                 removal_policy=core.RemovalPolicy.DESTROY
                                 )
 
         # Create the Lambda function we want to run on a schedule
         scheduled_lambda = _lambda.Function(self, 'ScheduledLambda',
-                                            runtime=_lambda.Runtime.NODEJS_12_X,
-                                            code=_lambda.Code.from_asset('lambda-fns/scheduled-lambda'),
-                                            handler='index.handler',
+                                            runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
+                                            code=_lambda.Code.from_asset('lambda_fns'), # code loaded from the "lambda_fns" directory,
+                                            handler='index.handler', # file is "index", function is "handler"
                                             environment={
                                                 "TABLE_NAME": table.table_name
                                             })
