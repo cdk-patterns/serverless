@@ -106,7 +106,7 @@ export class TheCloudwatchDashboardStack extends cdk.Stack {
       label: 'DynamoDB Errors',
       usingMetrics: {
         m1: table.metricUserErrors(),
-        m2: table.metricSystemErrors(),
+        m2: table.metricSystemErrorsForOperations(),
       },
       period: cdk.Duration.minutes(5)
     });
