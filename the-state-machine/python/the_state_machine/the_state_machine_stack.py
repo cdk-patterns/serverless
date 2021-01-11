@@ -17,17 +17,19 @@ class TheStateMachineStack(core.Stack):
 
         # The first thing we need to do is see if they are asking for pineapple on a pizza
         pineapple_check_lambda = _lambda.Function(self, "pineappleCheckLambdaHandler",
-                                                  runtime=_lambda.Runtime.NODEJS_12_X,
-                                                  handler="orderPizza.handler",
-                                                  code=_lambda.Code.from_asset("lambda_fns"),
+                                                  runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
+                                                  handler="orderPizza.handler", # file is "orderPizza", function is "handler"
+                                                  code=_lambda.Code.from_asset("lambda_fns"), # code loaded from the "lambda_fns" directory
                                                   )
 
         # Step functions are built up of steps, we need to define our first step
-        order_pizza = step_fn.Task(self, 'Order Pizza Job',
-                                   task=step_fn_tasks.InvokeFunction(pineapple_check_lambda),
-                                   input_path='$.flavour',
-                                   result_path='$.pineappleAnalysis'
-                                   )
+        # Refactored code because sfn.Task is Depecrated right now. Using StepFunctionsTaks.LambdaInvoke instead
+        # https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-stepfunctions.Task.html
+        order_pizza = step_fn_tasks.LambdaInvoke(self, 'Order Pizza Job',
+                                                 lambda_function=pineapple_check_lambda,
+                                                 input_path='$.flavour',
+                                                 result_path='$.pineappleAnalysis',
+                                                 payload_response_only=True)
 
         # Pizza Order failure step defined
         job_failed = step_fn.Fail(self, 'Sorry, We Dont add Pineapple',
@@ -47,13 +49,14 @@ class TheStateMachineStack(core.Stack):
         state_machine = step_fn.StateMachine(self, 'StateMachine', definition=definition, timeout=core.Duration.minutes(5))
 
         # Dead Letter Queue Setup
+        # https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html
         dlq = sqs.Queue(self, 'stateMachineLambdaDLQ', visibility_timeout=core.Duration.seconds(300))
 
         # defines an AWS Lambda resource to connect to our API Gateway
         state_machine_lambda = _lambda.Function(self, "stateMachineLambdaHandler",
-                                                runtime=_lambda.Runtime.NODEJS_12_X,
-                                                handler="stateMachineLambda.handler",
-                                                code=_lambda.Code.from_asset("lambda_fns"),
+                                                runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
+                                                handler="stateMachineLambda.handler", # file is "stateMachineLambda", function is "handler
+                                                code=_lambda.Code.from_asset("lambda_fns"), # code loaded from the "lambda_fns" directory
                                                 environment={
                                                     'statemachine_arn': state_machine.state_machine_arn
                                                 }
@@ -61,6 +64,7 @@ class TheStateMachineStack(core.Stack):
 
         state_machine.grant_start_execution(state_machine_lambda)
 
+        # Simple API Gateway proxy integration
         # defines an API Gateway REST API resource backed by our "sqs_publish_lambda" function.
         api_gw.LambdaRestApi(self, 'Endpoint',
                              handler=state_machine_lambda
