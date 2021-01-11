@@ -10,7 +10,7 @@ test('DynamoDB Created', () => {
     expect(stack).to(haveResourceLike('AWS::DynamoDB::Table', {
         KeySchema: [
             {
-                AttributeName: 'id',
+                AttributeName: 'requestid',
                 KeyType: 'HASH'
             }
         ]}

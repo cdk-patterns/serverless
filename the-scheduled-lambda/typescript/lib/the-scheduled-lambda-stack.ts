@@ -9,7 +9,7 @@ export class TheScheduledLambdaStack extends Stack {
         super(scope, id, props);
 
     // Create a DynamoDB table with a single attribute
-    const table = new Table(this, 'Table', {
+    const table = new Table(this, 'RequestTable', {
         partitionKey: {
             name: 'requestid',
             type: AttributeType.STRING
@@ -19,9 +19,9 @@ export class TheScheduledLambdaStack extends Stack {
 
     // Create the Lambda function we want to run on a schedule
     const scheduledLambda = new Function(this, 'scheduledLambda', {
-        runtime: Runtime.NODEJS_12_X,
-        code: Code.fromAsset('lambda-fns/scheduled-lambda'),
-        handler: 'index.handler',
+        runtime: Runtime.NODEJS_12_X, // execution environment
+        code: Code.fromAsset('lambda-fns'), // code loaded from the "lambda-fns" directory,
+        handler: 'index.handler', // file is "index", function is "handler"
         environment: {
             TABLE_NAME: table.tableName
         },

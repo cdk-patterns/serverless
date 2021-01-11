@@ -141,4 +141,5 @@ If you want to deploy a UI to powertune your Lambda Functions rather than using 
 
  * [TypeScript](typescript/)
  * [Python](python/)
-
+ * [CSharp](csharp/)
+ * [Java](java/)

@@ -26,6 +26,8 @@ class TheLambdaPowerTunerStack(core.Stack):
         # Output the Lambda function ARN in the deploy logs to ease testing
         core.CfnOutput(self, 'LambdaARN', value=example_lambda.function_arn)
 
+        # Deploy the aws-lambda-powertuning application from the Serverless Application Repository
+        # https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning
         sam.CfnApplication(self, 'powerTuner', location={
             "applicationId": "arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning",
             "semanticVersion": "3.4.0"

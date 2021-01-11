@@ -15,3 +15,5 @@ More information on schedule expressions for AWS EventBridge to change the run f
 
 - [TypeScript](typescript)
 - [Python](python)
+- [CSharp](csharp)
+- [Java](java)

@@ -1,7 +1,7 @@
 -e .
-aws-cdk.core==1.82.0
-aws-cdk.aws-lambda==1.82.0
-aws-cdk.aws-stepfunctions==1.82.0
-aws-cdk.aws-stepfunctions-tasks==1.82.0
-aws-cdk.aws-sqs==1.82.0
-aws-cdk.aws_apigateway==1.82.0
+aws-cdk.core==1.83.0
+aws-cdk.aws-lambda==1.83.0
+aws-cdk.aws-stepfunctions==1.83.0
+aws-cdk.aws-stepfunctions-tasks==1.83.0
+aws-cdk.aws-sqs==1.83.0
+aws-cdk.aws_apigateway==1.83.0

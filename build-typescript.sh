@@ -1,3 +1,4 @@
+set -e
 readarray -t arr < <(jq -r '.[] | keys | .[]' info.json);
 for i in "${arr[@]}"
 do
