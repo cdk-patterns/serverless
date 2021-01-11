@@ -13,6 +13,7 @@ test('API Gateway Proxy Created', () => {
   ));
 });
 
+
 test('State Machine Created', () => {
   const app = new cdk.App();
   // WHEN
@@ -23,10 +24,10 @@ test('State Machine Created', () => {
           "Fn::Join": [
             "",
             [
-              "{\"StartAt\":\"Order Pizza Job\",\"States\":{\"Order Pizza Job\":{\"Next\":\"With Pineapple?\",\"InputPath\":\"$.flavour\",\"Type\":\"Task\",\"Resource\":\"",
+              "{\"StartAt\":\"Order Pizza Job\",\"States\":{\"Order Pizza Job\":{\"Next\":\"With Pineapple?\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$.flavour\",\"ResultPath\":\"$.pineappleAnalysis\",\"Resource\":\"",
               {
               },
-              "\",\"ResultPath\":\"$.pineappleAnalysis\"},\"With Pineapple?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.pineappleAnalysis.containsPineapple\",\"BooleanEquals\":true,\"Next\":\"Sorry, We Dont add Pineapple\"}],\"Default\":\"Lets make your pizza\"},\"Lets make your pizza\":{\"Type\":\"Pass\",\"End\":true},\"Sorry, We Dont add Pineapple\":{\"Type\":\"Fail\",\"Error\":\"They asked for Pineapple\",\"Cause\":\"Failed To Make Pizza\"}},\"TimeoutSeconds\":300}"
+              "\"},\"With Pineapple?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.pineappleAnalysis.containsPineapple\",\"BooleanEquals\":true,\"Next\":\"Sorry, We Dont add Pineapple\"}],\"Default\":\"Lets make your pizza\"},\"Lets make your pizza\":{\"Type\":\"Pass\",\"End\":true},\"Sorry, We Dont add Pineapple\":{\"Type\":\"Fail\",\"Error\":\"They asked for Pineapple\",\"Cause\":\"Failed To Make Pizza\"}},\"TimeoutSeconds\":300}"
             ]
           ]
         }

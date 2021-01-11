@@ -15,17 +15,18 @@ export class TheStateMachineStack extends cdk.Stack {
      
     //The first thing we need to do is see if they are asking for pineapple on a pizza
     let pineappleCheckLambda = new lambda.Function(this, 'pineappleCheckLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,    // execution environment
-      code: lambda.Code.fromAsset('lambda-fns'),     // code loaded from the "lambda" directory
-      handler: 'orderPizza.handler'           // file is "orderPizza", function is "handler"
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset('lambda-fns'),
+      handler: 'orderPizza.handler'
     });
 
     // Step functions are built up of steps, we need to define our first step
-    const orderPizza = new sfn.Task(this, 'Order Pizza Job', {
-      task: new tasks.InvokeFunction(pineappleCheckLambda),
+    const orderPizza = new tasks.LambdaInvoke(this, "Order Pizza Job", {
+      lambdaFunction: pineappleCheckLambda,
       inputPath: '$.flavour',
       resultPath: '$.pineappleAnalysis',
-    });
+      payloadResponseOnly: true
+    })
 
     // Pizza Order failure step defined
     const jobFailed = new sfn.Fail(this, 'Sorry, We Dont add Pineapple', {
@@ -52,6 +53,7 @@ export class TheStateMachineStack extends cdk.Stack {
     /**
      * Dead Letter Queue Setup
      * SQS creation
+     * https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html
      */
     const dlq = new sqs.Queue(this, 'stateMachineLambdaDLQ', {
       visibilityTimeout: cdk.Duration.seconds(300)
@@ -59,9 +61,9 @@ export class TheStateMachineStack extends cdk.Stack {
 
     // defines an AWS Lambda resource to connect to our API Gateway
     const stateMachineLambda = new lambda.Function(this, 'stateMachineLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
-      handler: 'stateMachineLambda.handler',                // file is "lambda", function is "handler
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset('lambda-fns'),
+      handler: 'stateMachineLambda.handler',
       deadLetterQueue:dlq,
       environment: {
         statemachine_arn: stateMachine.stateMachineArn

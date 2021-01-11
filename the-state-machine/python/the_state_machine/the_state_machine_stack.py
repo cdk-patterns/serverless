@@ -23,11 +23,11 @@ class TheStateMachineStack(core.Stack):
                                                   )
 
         # Step functions are built up of steps, we need to define our first step
-        order_pizza = step_fn.Task(self, 'Order Pizza Job',
-                                   task=step_fn_tasks.InvokeFunction(pineapple_check_lambda),
-                                   input_path='$.flavour',
-                                   result_path='$.pineappleAnalysis'
-                                   )
+        order_pizza = step_fn_tasks.LambdaInvoke(self, 'Order Pizza Job',
+                                                 lambda_function=pineapple_check_lambda,
+                                                 input_path='$.flavour',
+                                                 result_path='$.pineappleAnalysis',
+                                                 payload_response_only=True)
 
         # Pizza Order failure step defined
         job_failed = step_fn.Fail(self, 'Sorry, We Dont add Pineapple',
@@ -47,6 +47,7 @@ class TheStateMachineStack(core.Stack):
         state_machine = step_fn.StateMachine(self, 'StateMachine', definition=definition, timeout=core.Duration.minutes(5))
 
         # Dead Letter Queue Setup
+        # https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html
         dlq = sqs.Queue(self, 'stateMachineLambdaDLQ', visibility_timeout=core.Duration.seconds(300))
 
         # defines an AWS Lambda resource to connect to our API Gateway
@@ -61,7 +62,8 @@ class TheStateMachineStack(core.Stack):
 
         state_machine.grant_start_execution(state_machine_lambda)
 
-        # defines an API Gateway REST API resource backed by our "sqs_publish_lambda" function.
+        # Simple API Gateway proxy integration
+        # defines an API Gateway REST API resource backed by our "state_machine_lambda" function.
         api_gw.LambdaRestApi(self, 'Endpoint',
                              handler=state_machine_lambda
                              )
