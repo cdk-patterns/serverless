@@ -2,7 +2,7 @@
 
 This is an example CDK stack demonstrating how to use AWS EventBridge to invoke a Lambda function on a schedule or using a cron expression. The Lambda function will then write the request ID to a DynamoDB table.
 
-![The Scheduled Lambda Architecture Diagram](./img/the-scheduled-lambda.png)
+![The Scheduled Lambda Architecture Diagram](../img/the-scheduled-lambda.png)
 
 Once deployed, this stack will product a Lambda function, DynamoDB table, and an EventBridge rule.
 

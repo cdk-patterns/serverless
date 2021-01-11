@@ -55,7 +55,7 @@ class TheBigFanStack(core.Stack):
 
         # Created status queue lambda
         sqs_created_status_subscriber = _lambda.Function(self, "SQSCreatedStatusSubscribeLambdaHandler",
-                                                         runtime=_lambda.Runtime.NODEJS_12_X,
+                                                         runtime=_lambda.Runtime.PYTHON_3_8,
                                                          handler="createdStatus.handler",
                                                          code=_lambda.Code.from_asset("lambda_fns/subscribe")
                                                          )
@@ -64,7 +64,7 @@ class TheBigFanStack(core.Stack):
 
         # Any other status queue lambda
         sqs_other_status_subscriber = _lambda.Function(self, "SQSAnyOtherStatusSubscribeLambdaHandler",
-                                                       runtime=_lambda.Runtime.NODEJS_12_X,
+                                                       runtime=_lambda.Runtime.PYTHON_3_8,
                                                        handler="anyOtherStatus.handler",
                                                        code=_lambda.Code.from_asset("lambda_fns/subscribe")
                                                        )

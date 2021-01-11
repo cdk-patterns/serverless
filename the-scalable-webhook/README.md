@@ -78,3 +78,5 @@ we used an id we generated in the message as the key
 
  * [TypeScript](typescript/)
  * [Python](python/)
+ * [CSharp](csharp/)
+ * [Java](java/)

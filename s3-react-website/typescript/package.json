@@ -6,7 +6,8 @@
     "buildwebsite": "cd website && npm i && npm run build && cd ../",
     "buildcdk": "cd cdk && npm i && npm run build && cd ../",
     "build": "npm run buildwebsite && npm run buildcdk",
-    "deploy": "npm run build && cd cdk && npm run deploy"
+    "deploy": "npm run build && cd cdk && npm run deploy",
+    "test": "echo \"no ci/cd tests setup\""
   },
   "author": "",
   "license": "ISC"
