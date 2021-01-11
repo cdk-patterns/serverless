@@ -17,14 +17,12 @@ class TheStateMachineStack(core.Stack):
 
         # The first thing we need to do is see if they are asking for pineapple on a pizza
         pineapple_check_lambda = _lambda.Function(self, "pineappleCheckLambdaHandler",
-                                                  runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
-                                                  handler="orderPizza.handler", # file is "orderPizza", function is "handler"
-                                                  code=_lambda.Code.from_asset("lambda_fns"), # code loaded from the "lambda_fns" directory
+                                                  runtime=_lambda.Runtime.NODEJS_12_X,
+                                                  handler="orderPizza.handler",
+                                                  code=_lambda.Code.from_asset("lambda_fns"),
                                                   )
 
         # Step functions are built up of steps, we need to define our first step
-        # Refactored code because sfn.Task is Depecrated right now. Using StepFunctionsTaks.LambdaInvoke instead
-        # https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-stepfunctions.Task.html
         order_pizza = step_fn_tasks.LambdaInvoke(self, 'Order Pizza Job',
                                                  lambda_function=pineapple_check_lambda,
                                                  input_path='$.flavour',
@@ -54,9 +52,9 @@ class TheStateMachineStack(core.Stack):
 
         # defines an AWS Lambda resource to connect to our API Gateway
         state_machine_lambda = _lambda.Function(self, "stateMachineLambdaHandler",
-                                                runtime=_lambda.Runtime.NODEJS_12_X, # execution environment
-                                                handler="stateMachineLambda.handler", # file is "stateMachineLambda", function is "handler
-                                                code=_lambda.Code.from_asset("lambda_fns"), # code loaded from the "lambda_fns" directory
+                                                runtime=_lambda.Runtime.NODEJS_12_X,
+                                                handler="stateMachineLambda.handler",
+                                                code=_lambda.Code.from_asset("lambda_fns"),
                                                 environment={
                                                     'statemachine_arn': state_machine.state_machine_arn
                                                 }
@@ -65,7 +63,7 @@ class TheStateMachineStack(core.Stack):
         state_machine.grant_start_execution(state_machine_lambda)
 
         # Simple API Gateway proxy integration
-        # defines an API Gateway REST API resource backed by our "sqs_publish_lambda" function.
+        # defines an API Gateway REST API resource backed by our "state_machine_lambda" function.
         api_gw.LambdaRestApi(self, 'Endpoint',
                              handler=state_machine_lambda
                              )
