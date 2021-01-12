@@ -46,11 +46,7 @@ class TheAlexaSkillStack(core.Stack):
                                       removal_policy=core.RemovalPolicy.DESTROY
                                       )
 
-        # install node dependencies for lambdas
-        lambda_folder = os.path.dirname(os.path.realpath(__file__)) + "/../lambda_fns"
-        subprocess.check_call("npm i".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
-        subprocess.check_call("npm run build".split(), cwd=lambda_folder, stdout=subprocess.DEVNULL)
-
+        # Lambda function for Alexa fulfillment
         alexa_lambda = _lambda.Function(self, "AlexaLambdaHandler",
                                         runtime=_lambda.Runtime.NODEJS_12_X,
                                         code=_lambda.Code.from_asset("lambda_fns"),
