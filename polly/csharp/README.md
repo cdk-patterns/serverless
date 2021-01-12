@@ -18,13 +18,6 @@ Some Useful References:
 | Timothy Mugayi | [Text-to-Speech: Build Apps That Talk With AWS Polly and Node.js](https://medium.com/better-programming/text-to-speech-build-apps-that-talk-with-aws-polly-and-node-js-a9cdab99af04 ) |
 | Philip Kiely | [Text-To-Speech With AWS (Part 1)](https://www.smashingmagazine.com/2019/08/text-to-speech-aws/) |
 
-# Available Versions
-
-* [TypeScript](typescript)
-* [Python](python)
-* [CSharp](csharp)
-* [Java](java)
-
 ## What is Included In This Pattern?
 
 After deployment you will have an API Gateway HTTP API configured where all traffic points to a Lambda Function that calls the Polly / Translate service.
@@ -71,3 +64,44 @@ To understand what languages are possible please refer to the [documentation](ht
 
 ### Changing the text
 If you use a tool like Postman to send text in the body of a POST request to the url it will use Polly to synthesize your text
+
+## Useful commands
+
+* `dotnet build src` compile this app
+* `cdk deploy`       deploy this stack to your default AWS account/region
+* `cdk diff`         compare deployed stack with current state
+* `cdk synth`        emits the synthesized CloudFormation template
+
+## Deploy with AWS Cloud9
+
+* Create an **Ubuntu** AWS Cloud9 EC2 development environment
+* Add the Microsoft repository
+    ```
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    ```
+    ```
+    sudo dpkg -i packages-microsoft-prod.deb
+    ```
+* Install the .NET Core SDK
+    ```
+    sudo apt-get update; \
+    sudo apt-get install -y apt-transport-https && \
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-3.1
+    ```
+* Clone the CDK Patterns repo
+    ```
+    git clone https://github.com/cdk-patterns/serverless.git
+    ```
+* Change directory
+    ```
+    cd serverless/the-efs-lambda/csharp
+    ```
+* Build the project to see if .NET Core has been setup correctly (optional)
+    ```
+    dotnet build src
+    ```
+* Deploy the stack
+    ```
+    cdk deploy
+    ```
