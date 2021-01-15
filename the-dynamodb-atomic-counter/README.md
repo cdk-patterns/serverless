@@ -2,9 +2,10 @@
 
 ![the dynamodb atomic counter](img/stack.png)
 
-This is a pattern that implements an Atomic counter using only ApiGateway and DynamoDB. In many cases, we can use UUID to identify the key, but there are situations where we need an incremental and unique number due to design. In this case, we must ensure that the number will be unique and won't be repeated, so this stack can solve this. 
+This is a Serverless pattern that implements an Atomic counter using only ApiGateway and DynamoDB. In many cases, we can use UUID to identify the key, but there are situations where we need an incremental and unique number due to software design or other needs. In this case, we must ensure that the number will be unique and won't be repeated, so this stack can solve this problem very cheaply. In addition, as this stack uses only DynamoDB and APIGateway, the response is very fast (in milliseconds).
 
-A special thanks to Vikas Solegaonkar for sharing this link [Simple Atomic Counter with DynamoDB and API Gateway](https://itnext.io/simple-atomic-counter-with-dynamodb-and-api-gateway-e72115c209ff)
+A special thanks to Vikas Solegaonkar for sharing this link [Simple Atomic Counter with DynamoDB and API Gateway](https://itnext.io/simple-atomic-counter-with-dynamodb-and-api-gateway-e72115c209ff).  
+I made changes to the original version to support multiple incremental keys, so you can use this to focus the incremental process for many systems on a single table and API.
 
 Some Useful References:
 
@@ -20,34 +21,47 @@ Some Useful References:
 * [TypeScript](typescript)
 * [Python](python)
 * [Csharp](csharp)
+* [Java](java)
 
 ## What's Included In This Pattern?
-This pattern covers the first half of Danilo Poccia's awesome [blog post](https://aws.amazon.com/blogs/aws/new-a-shared-file-system-for-your-lambda-functions/). After deployment you will have an API Gateway HTTP API where any url you hit gets directed to a Lambda Function that is integrated with EFS.
+This pattern implements an atomic counter using only DynamoDB and APIGateway.
 
-### VPC
-A VPC is bundled in this pattern because EFS requires it, this is using the default settings from CDK so if you want to put this in production you will have to review / refine this
+### DynamoDB Table
+A simple table with a hash key and an incremental field
 
-### EFS FileSystem
-A FileSystem is included in the above VPC with a removal policy of destroy. In a production system you probably would want to retain your storage on stack deletion.
-
-POSIX permissions are also setup for this File System
-
-### Lambda Function
-A simple Python lambda function that interacts with the file system - storing, retrieving and deleting messages
-
-### API Gateway HTTP API
-This is configured with the Lambda Function as the default handler for any url you hit.
+### API Gateway REST API
+This is configured with the AWS Integration method and  Request/Response integrations to transform the data.
 
 ## How Do I Test This Pattern?
 
-Our deployed Lambda Function is acting as a shared message broker. It allows you to send messages to it which it stores in EFS, then you can retrieve all messages to read them or delete all messages after you have finished reading.
+After deployment, the CDK will output a parameter like this:
 
-The Lambda Function will behave differently based on the RESTful verb you use:
+```
+TheDynamodbAtomicCounterStack.apigwcounterurl = https://q0nl7897m3.execute-api.us-east-1.amazonaws.com/prod/counter?systemKey=system-aa
+```
 
-- GET - Retrieve messages
-- POST - Send a message (whatever you send in the body is the message)
-- DELETE - Deletes all stored messages
+So, just copy this URL and call this URL using the GET method through a browser, postman, curl or other http tool.
 
-The URL for the HTTP API to use these commands will be printed in the CloudFormation stack output after you deploy.
+## Adding new keys to increment
 
-Note - After deployment you may need to wait 60-90 seconds before the implementation works as expected. There are a lot of network configurations happening so you need to wait on propagation
+If you want to add more keys to increment, it's very simple. Just use the DynamoDB console and add a new key.
+
+![the dynamodb atomic counter](img/img1.png)
+
+After that, you can call the two urls and use different incremental urls:
+```
+https://q0nl7897m3.execute-api.us-east-1.amazonaws.com/prod/counter?systemKey=system-aa
+
+https://q0nl7897m3.execute-api.us-east-1.amazonaws.com/prod/counter?systemKey=system-bb
+```
+
+## Performance and concurrency testing
+
+API Response in less than 0.080s
+
+![the dynamodb atomic counter](img/img2.png)
+
+
+Running the curl simultaneously on the same "dynamo key" and the numbers are not repeated
+
+![the dynamodb atomic counter](img/img3.png)
