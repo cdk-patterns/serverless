@@ -15,7 +15,7 @@ class PollyStack(core.Stack):
         # Lambda Function that takes in text and returns a polly voice synthesis
         polly_lambda = _lambda.Function(self, 'pollyHandler',
                                         runtime=_lambda.Runtime.PYTHON_3_8,
-                                        code=_lambda.Code.asset('lambda_fns'),
+                                        code=_lambda.Code.from_asset('lambda_fns'),
                                         handler='polly.handler')
 
         # https://docs.aws.amazon.com/polly/latest/dg/api-permissions-reference.html
