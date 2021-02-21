@@ -38,7 +38,7 @@ namespace Polly
 
             _pollyFunction.AddToRolePolicy(_pollyPolicy);
 
-            // defines an API Gateway Http API resource backed by our "efs_lambda" function.
+            // defines an API Gateway Http API resource backed by our "pollyHandler" function.
             _httpApi = new APIGatewayV2.HttpApi(this, "Polly", new APIGatewayV2.HttpApiProps
             {
                 DefaultIntegration = new APIGatewayV2Integrations.LambdaProxyIntegration(

@@ -44,7 +44,7 @@ public class PollyStack extends Stack {
         
         pollyFunction.addToRolePolicy(pollyPolicy);
         
-        // defines an API Gateway Http API resource backed by our "efs_lambda" function.
+        // defines an API Gateway Http API resource backed by our "pollyHandler" function.
         HttpApi httpApi = HttpApi.Builder.create(this, "Polly")
         		.defaultIntegration(
         				new LambdaProxyIntegration(
