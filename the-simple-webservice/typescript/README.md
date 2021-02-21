@@ -6,7 +6,7 @@ Most of this code was borrowed from https://www.cdkworkshop.com
 
 This is the most basic of implementations and would have to be hardened before production use. e.g. cognito added to the API Gateway
 
-![Architecture](https://raw.githubusercontent.com/cdk-patterns/serverless/master/the-simple-webservice/img/architecture.png)
+![Architecture](img/architecture.png)
 
 After deployment you should have a proxy api gateway where any url hits a lambda which inserts a record of the url into a dynamodb with a count of how many times that url has been visited. 
 
