@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Amazon.CDK;
 using Amazon.CDK.AWS.APIGatewayv2;
+using Amazon.CDK.AWS.APIGatewayv2.Integrations;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.Lambda;
 

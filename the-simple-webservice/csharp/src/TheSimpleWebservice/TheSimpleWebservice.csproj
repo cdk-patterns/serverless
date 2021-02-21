@@ -6,9 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.CDK" Version="1.57.0" />
-    <PackageReference Include="Amazon.CDK.AWS.APIGatewayv2" Version="1.57.0" />
-    <PackageReference Include="Amazon.CDK.AWS.DynamoDB" Version="1.57.0" />
+    <PackageReference Include="Amazon.CDK" Version="1.83.0" />
+    <PackageReference Include="Amazon.CDK.AWS.APIGatewayv2" Version="1.83.0" />
+    <PackageReference Include="Amazon.CDK.AWS.APIGatewayv2.Integrations" Version="1.83.0" />
+    <PackageReference Include="Amazon.CDK.AWS.DynamoDB" Version="1.83.0" />
   </ItemGroup>
 
 </Project>
