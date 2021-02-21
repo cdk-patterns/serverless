@@ -38,13 +38,10 @@ export class TheAlexaSkillStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
-    // Install Dependencies and Compile Lambda Function
-    execSync('cd lambda-fns && npm i && npm run build');
-
     // Lambda function for Alexa fulfillment
     const alexaLambda = new lambda.Function(this, 'AlexaLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('lambda-fns'),
+      code: lambda.Code.fromAsset('lambda-fns'),
       handler: 'lambda.handler',
       environment: {
         USERS_TABLE: usersTable.tableName

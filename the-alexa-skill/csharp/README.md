@@ -35,8 +35,6 @@ Alexa needs to associate your Amazon Developer Account with your AWS Account. Th
 ### 6. Generate a Refresh Token
 We are going to use Postman to fetch a new `OAuth 2.0` token
 
-Follow this guide : [Setup Postman `OAuth 2.0` request](https://learning.postman.com/docs/sending-requests/authorization/#oauth-20)
-
 Set the following key/values in the request:
 
 | Field            | Value                                                                                                                                 |
@@ -51,7 +49,7 @@ Set the following key/values in the request:
 |                  |                                                                                                                                       |
 ![Postman Auth](img/postman-oauth-settings.png)
 
-A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps.  Make sure you select the `refresh_token` and not the `Access Token` from the postman response (scroll down in the response!).
+A Pop-Up should show up prompting you to log into your Developer account. Log in and you will be redirected to Postman where you should have a `refresh_token` to use in the next steps
 
 ### 7. Copy Your Vendor ID
 Visit the [Customer Details Page](https://developer.amazon.com/settings/console/mycid) for your Amazon Developer Account and make a note of your "vendor ID"
@@ -84,9 +82,43 @@ You need to add your ClientID, ClientSecret, Refresh Token and VendorID to the s
 12. Go to the AWS Console and navigate to DynamoDB. Open your tables and find the one corresponding to TheAlexaSkillStack.
 13. Confirm that one item is in the table (It should have 2 attributes and a UserID). If it does then congratulations! Everything works! 
 
-## Available Versions
+# Useful commands
 
- * [TypeScript](typescript/)
- * [Python](python/)
- * [CSharp](csharp/)
- * [Java](java/)
+* `dotnet build src` compile this app
+* `cdk deploy`       deploy this stack to your default AWS account/region
+* `cdk diff`         compare deployed stack with current state
+* `cdk synth`        emits the synthesized CloudFormation template
+
+## Deploy with AWS Cloud9
+
+* Create an **Ubuntu** AWS Cloud9 EC2 development environment
+* Add the Microsoft repository
+    ```
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    ```
+    ```
+    sudo dpkg -i packages-microsoft-prod.deb
+    ```
+* Install the .NET Core SDK
+    ```
+    sudo apt-get update; \
+    sudo apt-get install -y apt-transport-https && \
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-3.1
+    ```
+* Clone the CDK Patterns repo
+    ```
+    git clone https://github.com/cdk-patterns/serverless.git
+    ```
+* Change directory
+    ```
+    cd serverless/the-scalable-webhook/csharp
+    ```
+* Build the project to see if .NET Core has been setup correctly (optional)
+    ```
+    dotnet build src
+    ```
+* Deploy the stack
+    ```
+    cdk deploy
+    ```
