@@ -20,12 +20,14 @@ class TheSimpleGraphqlServiceStack(core.Stack):
                                  schema=appsync.Schema.from_asset(schema_location)
                                  )
 
+        # Create Appsync Api Key
         api_key = appsync.CfnApiKey(self, 'the-simple-graphql-service-api-key',
                                     api_id=api.api_id
                                     )
 
         # Create new DynamoDB Table for Customer
         customer_table = dynamo_db.Table(self, "CustomerTable",
+                                         billing_mode=dynamo_db.BillingMode.PAY_PER_REQUEST,
                                          partition_key=dynamo_db.Attribute(name="id",
                                                                            type=dynamo_db.AttributeType.STRING)
                                          )

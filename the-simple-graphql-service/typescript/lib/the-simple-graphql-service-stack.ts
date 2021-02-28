@@ -19,6 +19,9 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
       schema: new Schema({ filePath: join('__dirname', '/../', 'schema/schema.graphql') }),
     });
     
+    /**
+     * Create Appsync Api Key
+     */
     const apiKey = new CfnApiKey(this, 'the-simple-graphql-service-api-key', {
       apiId: api.apiId
     });
@@ -100,7 +103,7 @@ export class TheSimpleGraphQLServiceStack extends cdk.Stack {
     // defines an AWS Lambda resource
     const loyaltyLambda = new lambda.Function(this, 'LoyaltyLambdaHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,      // execution environment
-      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda" directory
+      code: lambda.Code.fromAsset('lambda-fns'),  // code loaded from the "lambda-fns" directory
       handler: 'loyalty.handler',                // file is "loyalty", function is "handler"
     });
 
