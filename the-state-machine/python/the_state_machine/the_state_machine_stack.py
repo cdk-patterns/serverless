@@ -57,7 +57,8 @@ class TheStateMachineStack(core.Stack):
                                                 code=_lambda.Code.from_asset("lambda_fns"),
                                                 environment={
                                                     'statemachine_arn': state_machine.state_machine_arn
-                                                }
+                                                },
+                                                dead_letter_queue=dlq,
                                                 )
 
         state_machine.grant_start_execution(state_machine_lambda)
