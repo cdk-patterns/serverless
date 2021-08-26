@@ -98,31 +98,31 @@ public class TheStateMachineStack extends Stack {
         
         // We need to give our HTTP API permission to invoke our step function
         Role httpApiRole = new Role(this, "HttpApiRole", new RoleProps.Builder()
-        												.assumedBy(new ServicePrincipal("apigateway.amazonaws.com"))
-        												.inlinePolicies(Map.of("AllowSFNExec", new PolicyDocument(
-        														new PolicyDocumentProps.Builder()
-        		        										.statements(List.of(new PolicyStatement(
-        		        								        		new PolicyStatementProps.Builder()
-        		        								        		.effect(Effect.ALLOW)
-        		        								        		.resources(List.of(stateMachine.getStateMachineArn()))
-        		        								        		.actions(List.of("states:StartSyncExecution"))
-        		        								        		.build())))
-        		        										.build())))
-        												.build());
+                                                        .assumedBy(new ServicePrincipal("apigateway.amazonaws.com"))
+                                                        .inlinePolicies(Map.of("AllowSFNExec", new PolicyDocument(
+                                                                new PolicyDocumentProps.Builder()
+                                                                .statements(List.of(new PolicyStatement(
+                                                                        new PolicyStatementProps.Builder()
+                                                                        .effect(Effect.ALLOW)
+                                                                        .resources(List.of(stateMachine.getStateMachineArn()))
+                                                                        .actions(List.of("states:StartSyncExecution"))
+                                                                        .build())))
+                                                                .build())))
+                                                        .build());
         
         HttpApi api = new HttpApi(this, "TheStateMachineAPI", new HttpApiProps.Builder().createDefaultStage(true).build());
         
         CfnIntegration integration = new CfnIntegration(this, "Integration", new CfnIntegrationProps.Builder()
-        																	.apiId(api.getHttpApiId())
-        																	.integrationType("AWS_PROXY")
-        																	.connectionType("INTERNET")
-        																	.integrationSubtype("StepFunctions-StartSyncExecution")
-        																	.credentialsArn(httpApiRole.getRoleArn())
-        																	.requestParameters(Map.of("Input","$request.body",
-        																							  "StateMachineArn",stateMachine.getStateMachineArn()))
-        																	.payloadFormatVersion("1.0")
-        																	.timeoutInMillis(10000)
-        																	.build());
+                                                                            .apiId(api.getHttpApiId())
+                                                                            .integrationType("AWS_PROXY")
+                                                                            .connectionType("INTERNET")
+                                                                            .integrationSubtype("StepFunctions-StartSyncExecution")
+                                                                            .credentialsArn(httpApiRole.getRoleArn())
+                                                                            .requestParameters(Map.of("Input","$request.body",
+                                                                                                      "StateMachineArn",stateMachine.getStateMachineArn()))
+                                                                            .payloadFormatVersion("1.0")
+                                                                            .timeoutInMillis(10000)
+                                                                            .build());
         
         new CfnRoute(this, "DefaultRoute", new CfnRouteProps.Builder()
         		.apiId(api.getHttpApiId())
