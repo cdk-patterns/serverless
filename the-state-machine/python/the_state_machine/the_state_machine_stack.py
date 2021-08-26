@@ -2,8 +2,8 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_stepfunctions as step_fn,
     aws_stepfunctions_tasks as step_fn_tasks,
-    aws_sqs as sqs,
-    aws_apigateway as api_gw,
+    aws_iam as iam,
+    aws_apigatewayv2 as api_gw,
     core
 )
 
@@ -30,40 +30,51 @@ class TheStateMachineStack(core.Stack):
                                                  payload_response_only=True)
 
         # Pizza Order failure step defined
-        job_failed = step_fn.Fail(self, 'Sorry, We Dont add Pineapple',
-                                  cause='Failed To Make Pizza',
-                                  error='They asked for Pineapple')
+        pineapple_detected = step_fn.Fail(self, 'Sorry, We Dont add Pineapple',
+                                          cause='They asked for Pineapple',
+                                          error='Failed To Make Pizza')
 
         # If they didnt ask for pineapple let's cook the pizza
-        cook_pizza = step_fn.Pass(self, 'Lets make your pizza')
+        cook_pizza = step_fn.Succeed(self, 'Lets make your pizza', output_path='$.pineappleAnalysis')
 
         # If they ask for a pizza with pineapple, fail. Otherwise cook the pizza
         definition = step_fn.Chain \
             .start(order_pizza) \
-            .next(step_fn.Choice(self, 'With Pineapple?') \
-                  .when(step_fn.Condition.boolean_equals('$.pineappleAnalysis.containsPineapple', True), job_failed) \
+            .next(step_fn.Choice(self, 'With Pineapple?')
+                  .when(step_fn.Condition.boolean_equals('$.pineappleAnalysis.containsPineapple', True),
+                        pineapple_detected)
                   .otherwise(cook_pizza))
 
-        state_machine = step_fn.StateMachine(self, 'StateMachine', definition=definition, timeout=core.Duration.minutes(5))
+        state_machine = step_fn.StateMachine(self, 'StateMachine', definition=definition,
+                                             timeout=core.Duration.minutes(5),
+                                             tracing_enabled=True, state_machine_type=step_fn.StateMachineType.EXPRESS)
 
-        # Dead Letter Queue Setup
-        # https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html
-        dlq = sqs.Queue(self, 'stateMachineLambdaDLQ', visibility_timeout=core.Duration.seconds(300))
+        # HTTP API Definition
 
-        # defines an AWS Lambda resource to connect to our API Gateway
-        state_machine_lambda = _lambda.Function(self, "stateMachineLambdaHandler",
-                                                runtime=_lambda.Runtime.NODEJS_12_X,
-                                                handler="stateMachineLambda.handler",
-                                                code=_lambda.Code.from_asset("lambda_fns"),
-                                                environment={
-                                                    'statemachine_arn': state_machine.state_machine_arn
-                                                }
-                                                )
+        # Give our gateway permissions to interact with SNS
+        http_api_role = iam.Role(self, 'HttpApiRole',
+                                 assumed_by=iam.ServicePrincipal('apigateway.amazonaws.com'),
+                                 inline_policies={
+                                     "AllowSFNExec": iam.PolicyDocument(statements=[iam.PolicyStatement(
+                                         actions=["states:StartSyncExecution"],
+                                         effect=iam.Effect.ALLOW,
+                                         resources=[state_machine.state_machine_arn]
+                                     )])
+                                 })
 
-        state_machine.grant_start_execution(state_machine_lambda)
+        api = api_gw.HttpApi(self, 'the_state_machine_api', create_default_stage=True)
 
-        # Simple API Gateway proxy integration
-        # defines an API Gateway REST API resource backed by our "state_machine_lambda" function.
-        api_gw.LambdaRestApi(self, 'Endpoint',
-                             handler=state_machine_lambda
-                             )
+        # create an AWS_PROXY integration between the HTTP API and our Step Function
+        integ = api_gw.CfnIntegration(self, 'Integ', api_id=api.http_api_id, integration_type='AWS_PROXY',
+                                      connection_type='INTERNET',
+                                      integration_subtype='StepFunctions-StartSyncExecution',
+                                      credentials_arn=http_api_role.role_arn,
+                                      request_parameters={"Input": "$request.body",
+                                                          "StateMachineArn": state_machine.state_machine_arn},
+                                      payload_format_version="1.0",
+                                      timeout_in_millis=10000)
+
+        api_gw.CfnRoute(self, 'DefaultRoute', api_id=api.http_api_id, route_key=api_gw.HttpRouteKey.DEFAULT.key,
+                        target="integrations/" + integ.ref)
+
+        core.CfnOutput(self, 'HTTP API URL', value=api.url)

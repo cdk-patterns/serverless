@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>software.amazon.awscdk</groupId>
-            <artifactId>apigateway</artifactId>
+            <artifactId>apigatewayv2</artifactId>
             <version>${cdk.version}</version>
         </dependency>
         <dependency>
@@ -66,6 +66,11 @@
         <dependency>
             <groupId>software.amazon.awscdk</groupId>
             <artifactId>stepfunctions-tasks</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awscdk</groupId>
+            <artifactId>iam</artifactId>
             <version>${cdk.version}</version>
         </dependency>
 

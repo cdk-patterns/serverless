@@ -7,8 +7,17 @@ test('API Gateway Proxy Created', () => {
   // WHEN
   const stack = new TheStateMachine.TheStateMachineStack(app, 'MyTestStack');
   // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::ApiGateway::Resource", {
-    "PathPart": "{proxy+}"
+  expectCDK(stack).to(haveResourceLike("AWS::ApiGatewayV2::Integration", {
+    "IntegrationType": "AWS_PROXY",
+    "ConnectionType": "INTERNET",
+    "IntegrationSubtype": "StepFunctions-StartSyncExecution",
+    "PayloadFormatVersion": "1.0",
+    "RequestParameters": {
+        "Input": "$request.body",
+        "StateMachineArn": {
+        }
+    },
+    "TimeoutInMillis": 10000
   }
   ));
 });
@@ -20,17 +29,21 @@ test('State Machine Created', () => {
   const stack = new TheStateMachine.TheStateMachineStack(app, 'MyTestStack');
   // THEN
   expectCDK(stack).to(haveResourceLike("AWS::StepFunctions::StateMachine", {
-     "DefinitionString": {
-          "Fn::Join": [
-            "",
-            [
-              "{\"StartAt\":\"Order Pizza Job\",\"States\":{\"Order Pizza Job\":{\"Next\":\"With Pineapple?\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$.flavour\",\"ResultPath\":\"$.pineappleAnalysis\",\"Resource\":\"",
-              {
-              },
-              "\"},\"With Pineapple?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.pineappleAnalysis.containsPineapple\",\"BooleanEquals\":true,\"Next\":\"Sorry, We Dont add Pineapple\"}],\"Default\":\"Lets make your pizza\"},\"Lets make your pizza\":{\"Type\":\"Pass\",\"End\":true},\"Sorry, We Dont add Pineapple\":{\"Type\":\"Fail\",\"Error\":\"They asked for Pineapple\",\"Cause\":\"Failed To Make Pizza\"}},\"TimeoutSeconds\":300}"
-            ]
-          ]
-        }
+    "DefinitionString": {
+      "Fn::Join": [
+        "",
+        [
+          "{\"StartAt\":\"Order Pizza Job\",\"States\":{\"Order Pizza Job\":{\"Next\":\"With Pineapple?\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$.flavour\",\"ResultPath\":\"$.pineappleAnalysis\",\"Resource\":\"",
+          {
+          },
+          "\"},\"With Pineapple?\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.pineappleAnalysis.containsPineapple\",\"BooleanEquals\":true,\"Next\":\"Sorry, We Dont add Pineapple\"}],\"Default\":\"Lets make your pizza\"},\"Lets make your pizza\":{\"Type\":\"Succeed\",\"OutputPath\":\"$.pineappleAnalysis\"},\"Sorry, We Dont add Pineapple\":{\"Type\":\"Fail\",\"Error\":\"Failed To Make Pizza\",\"Cause\":\"They asked for Pineapple\"}},\"TimeoutSeconds\":300}"
+        ]
+      ]
+    },
+    "StateMachineType": "EXPRESS",
+    "TracingConfiguration": {
+      "Enabled": true
+    }
   }
   ));
 });
@@ -46,24 +59,3 @@ test('Order Pizza Lambda Created', () => {
   ));
 });
 
-test('State Machine Lambda Created', () => {
-  const app = new cdk.App();
-  // WHEN
-  const stack = new TheStateMachine.TheStateMachineStack(app, 'MyTestStack');
-  // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::Lambda::Function", {
-    "Handler": "stateMachineLambda.handler"
-  }
-  ));
-});
-
-test('DLQ Created', () => {
-  const app = new cdk.App();
-  // WHEN
-  const stack = new TheStateMachine.TheStateMachineStack(app, 'MyTestStack');
-  // THEN
-  expectCDK(stack).to(haveResourceLike("AWS::SQS::Queue", {
-    "VisibilityTimeout": 300
-  }
-  ));
-});
