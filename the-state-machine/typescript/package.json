@@ -12,23 +12,23 @@
     "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.119.0",
+    "@aws-cdk/assert": "1.121.0",
     "@types/jest": "^27.0.1",
-    "@types/node": "16.7.1",
-    "jest": "^27.0.6",
+    "@types/node": "16.7.10",
+    "jest": "^27.1.0",
     "ts-jest": "^27.0.5",
-    "aws-cdk": "1.119.0",
+    "aws-cdk": "1.121.0",
     "ts-node": "^10.2.1",
-    "typescript": "~4.3.5"
+    "typescript": "~4.4.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigatewayv2": "1.119.0",
-    "@aws-cdk/aws-iam": "1.119.0",
-    "@aws-cdk/aws-lambda": "1.119.0",
-    "@aws-cdk/aws-sqs": "1.119.0",
-    "@aws-cdk/aws-stepfunctions": "1.119.0",
-    "@aws-cdk/aws-stepfunctions-tasks": "1.119.0",
-    "@aws-cdk/core": "1.119.0",
+    "@aws-cdk/aws-apigatewayv2": "1.121.0",
+    "@aws-cdk/aws-iam": "1.121.0",
+    "@aws-cdk/aws-lambda": "1.121.0",
+    "@aws-cdk/aws-sqs": "1.121.0",
+    "@aws-cdk/aws-stepfunctions": "1.121.0",
+    "@aws-cdk/aws-stepfunctions-tasks": "1.121.0",
+    "@aws-cdk/core": "1.121.0",
     "source-map-support": "^0.5.19"
   }
 }
