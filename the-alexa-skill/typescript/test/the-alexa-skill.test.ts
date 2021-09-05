@@ -87,6 +87,7 @@ test('DynamoDB Read/Write IAM Policy Created', () => {
                     "dynamodb:Query",
                     "dynamodb:GetItem",
                     "dynamodb:Scan",
+                    "dynamodb:ConditionCheckItem",
                     "dynamodb:BatchWriteItem",
                     "dynamodb:PutItem",
                     "dynamodb:UpdateItem",
