@@ -1,14 +1,14 @@
 -e .
-aws-cdk.core==1.83.0
-aws-cdk.aws-lambda==1.83.0
-aws-cdk.aws-lambda-event-sources==1.83.0
-aws-cdk.aws-dynamodb==1.83.0
-aws-cdk.aws-s3==1.83.0
-aws-cdk.aws-sqs==1.83.0
-aws-cdk.aws-s3-notifications==1.83.0
-aws-cdk.aws-iam==1.83.0
-aws-cdk.aws-ec2==1.83.0
-aws-cdk.aws-ecs==1.83.0
-aws-cdk.aws-logs==1.83.0
-aws-cdk.aws-events==1.83.0
-aws-cdk.aws-events-targets==1.83.0
+aws-cdk.core==1.132.0
+aws-cdk.aws-lambda==1.132.0
+aws-cdk.aws-lambda-event-sources==1.132.0
+aws-cdk.aws-dynamodb==1.132.0
+aws-cdk.aws-s3==1.132.0
+aws-cdk.aws-sqs==1.132.0
+aws-cdk.aws-s3-notifications==1.132.0
+aws-cdk.aws-iam==1.132.0
+aws-cdk.aws-ec2==1.132.0
+aws-cdk.aws-ecs==1.132.0
+aws-cdk.aws-logs==1.132.0
+aws-cdk.aws-events==1.132.0
+aws-cdk.aws-events-targets==1.132.0
