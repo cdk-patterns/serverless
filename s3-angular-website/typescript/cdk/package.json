@@ -13,20 +13,18 @@
     "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.74.0",
     "@types/jest": "^26.0.15",
     "@types/node": "14.14.9",
+    "aws-cdk": "2.2.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
-    "aws-cdk": "1.74.0",
     "ts-node": "^9.0.0",
     "typescript": "~4.1.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-s3": "1.74.0",
-    "@aws-cdk/aws-s3-deployment": "1.74.0",
-    "@aws-cdk/core": "1.74.0",
-    "cdk-spa-deploy": "1.74.0",
+    "aws-cdk-lib": "2.2.0",
+    "cdk-spa-deploy": "^2.0.0-alpha.1",
+    "constructs": "^10.0.0",
     "source-map-support": "^0.5.19"
   }
 }
