@@ -244,7 +244,7 @@ npx cdk deploy
   <br /><hr /><br />
 
   #### [The WAF API Gateway](/the-waf-apigateway/README.md)
-  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Applicaiton Firewall) <br />
+  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Application Firewall) <br />
   ![Architecture](the-waf-apigateway/img/the-waf-apigateway.png)
 
   <br /><hr /><br />
@@ -304,7 +304,7 @@ npx cdk deploy
   Github - [@mrpackethead](https://github.com/mrpackethead)<br />
 
   #### [The WAF API Gateway](/the-waf-apigateway/README.md)
-  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Applicaiton Firewall) <br />
+  This is a cdk stack to deploy a simple API gateway, and attach a WAF (Web Application Firewall) <br />
   ![Architecture](the-waf-apigateway/img/the-waf-apigateway.png)
 
   <br /><hr /><br />
