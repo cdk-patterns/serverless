@@ -1,5 +1,5 @@
-import { expect as expectCDK, haveResource, haveResourceLike } from '@aws-cdk/assert';
-import * as cdk from '@aws-cdk/core';
+import { Match, Template } from "aws-cdk-lib/assertions";
+import cdk = require('aws-cdk-lib');
 import { CdkStack } from '../lib/cdk-stack';
 
 
@@ -10,23 +10,29 @@ test('Basic Site Setup', () => {
   //WHEN
   let stack = new CdkStack(app, 'CdkArticleStack');
   
+  const template = Template.fromStack(stack);
+  
   // THEN
-  expectCDK(stack).to(haveResource('AWS::S3::Bucket', {
-    WebsiteConfiguration: {
-      IndexDocument: 'index.html'
-    }
-  }));
+  template.hasResourceProperties('AWS::S3::Bucket', 
+    Match.objectLike({
+      WebsiteConfiguration: {
+        IndexDocument: 'index.html',
+      },
+    }));
   
-  expectCDK(stack).to(haveResource('Custom::CDKBucketDeployment'));
+  template.hasResource('Custom::CDKBucketDeployment', {});
   
-  expectCDK(stack).to(haveResourceLike('AWS::S3::BucketPolicy',  {
-          PolicyDocument: {
-              Statement: [
-                  {
-                      "Action": "s3:GetObject",
-                      "Effect": "Allow",
-                      "Principal": "*"
-                  }]
-          }
-  }));
+  template.hasResourceProperties('AWS::S3::BucketPolicy', 
+    Match.objectLike({
+      PolicyDocument: {
+        Statement: [
+          Match.objectLike({
+            Action: 's3:GetObject',
+            Effect: 'Allow',
+            Principal: {
+              "AWS": "*"
+            },
+          })],
+      },
+    }));
 });
