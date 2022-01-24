@@ -45,7 +45,7 @@ public class TheLambdaPowerTunerStack extends Stack {
         .location(new ApplicationLocationProperty
         		.Builder()
         		.applicationId("arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning")
-        		.semanticVersion("3.4.0")
+        		.semanticVersion("4.2.0")
         		.build())
         .parameters(Map.of(
         		"lambdaResource", lambdaResource,
