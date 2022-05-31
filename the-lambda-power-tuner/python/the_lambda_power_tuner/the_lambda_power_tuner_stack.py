@@ -30,7 +30,7 @@ class TheLambdaPowerTunerStack(core.Stack):
         # https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning
         sam.CfnApplication(self, 'powerTuner', location={
             "applicationId": "arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning",
-            "semanticVersion": "3.4.0"
+            "semanticVersion": "4.2.0"
         }, parameters={
             "lambdaResource": lambda_resource,
             "PowerValues": power_values

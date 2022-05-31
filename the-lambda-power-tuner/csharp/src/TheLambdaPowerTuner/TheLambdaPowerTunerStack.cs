@@ -39,7 +39,7 @@ namespace TheLambdaPowerTuner
                 Location = new SAM.CfnApplication.ApplicationLocationProperty
                 {
                     ApplicationId = "arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning",
-                    SemanticVersion = "3.4.0"
+                    SemanticVersion = "4.2.0"
                 },
                 Parameters = new Dictionary<string, object>
                 {

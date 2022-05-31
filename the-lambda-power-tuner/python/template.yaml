@@ -38,7 +38,7 @@ Resources:
     Properties:
       Location:
         ApplicationId: arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning
-        SemanticVersion: 3.2.4
+        SemanticVersion: 4.2.0
       Parameters:
         lambdaResource: "*"
         PowerValues: 128,256,512,1024,1536,3008

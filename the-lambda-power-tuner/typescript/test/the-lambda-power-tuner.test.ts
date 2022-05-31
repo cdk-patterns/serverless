@@ -10,7 +10,7 @@ test('SAR Application Created', () => {
   expectCDK(stack).to(haveResourceLike("AWS::Serverless::Application", {
     "Location": {
       "ApplicationId": "arn:aws:serverlessrepo:us-east-1:451282441545:applications/aws-lambda-power-tuning",
-      "SemanticVersion": "3.4.0"
+      "SemanticVersion": "4.2.0"
     }
   }));
 });
