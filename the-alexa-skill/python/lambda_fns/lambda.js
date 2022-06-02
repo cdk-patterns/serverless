@@ -1,184 +1,108 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-exports.__esModule = true;
-var ask_sdk_core_1 = require("ask-sdk-core");
-var patterns = ['The Destined Lambda', 'The S3 React Website', 'The State Machine', 'The Dynamo Streamer', 'The Lambda Trilogy', 'The Big Fan', 'The Eventbridge Circuit Breaker', 'The Scalable Webhook', 'The Cloudwatch Dashboard', 'The Saga Stepfunction', 'The S3 Angular Website', 'this pattern that you\'re testing right now: The Alexa Skill'];
-var ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
-var USERS_TABLE = process.env.USERS_TABLE || '';
+Object.defineProperty(exports, "__esModule", { value: true });
+const ask_sdk_core_1 = require("ask-sdk-core");
+const patterns = ['The Destined Lambda', 'The S3 React Website', 'The State Machine', 'The Dynamo Streamer', 'The Lambda Trilogy', 'The Big Fan', 'The Eventbridge Circuit Breaker', 'The Scalable Webhook', 'The Cloudwatch Dashboard', 'The Saga Stepfunction', 'The S3 Angular Website', 'this pattern that you\'re testing right now: The Alexa Skill'];
+const ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
+const USERS_TABLE = process.env.USERS_TABLE || '';
 function getPattern(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-var LaunchRequestHandler = {
-    canHandle: function (handlerInput) {
+const LaunchRequestHandler = {
+    canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
             handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NavigateHomeIntent';
     },
-    handle: function (handlerInput) {
-        return __awaiter(this, void 0, void 0, function () {
-            var speechText, repromptText, attributesManager;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        speechText = 'Hey, it\'s Pancakes the CDK Otter here, what would you like to know?';
-                        repromptText = 'You can ask what CDK Patterns I have, if you like!';
-                        attributesManager = handlerInput.attributesManager;
-                        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Launch Request or Navigate Home' });
-                        return [4 /*yield*/, attributesManager.savePersistentAttributes()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, handlerInput.responseBuilder
-                                .speak(speechText)
-                                .reprompt(repromptText)
-                                .withSimpleCard('Hello World', speechText)
-                                .getResponse()];
-                }
-            });
-        });
-    }
+    async handle(handlerInput) {
+        const speechText = 'Hey, it\'s Pancakes the CDK Otter here, what would you like to know?';
+        const repromptText = 'You can ask what CDK Patterns I have, if you like!';
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Launch Request or Navigate Home' });
+        await attributesManager.savePersistentAttributes();
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(repromptText)
+            .withSimpleCard('Hello World', speechText)
+            .getResponse();
+    },
 };
-var PatternListIntentHandler = {
-    canHandle: function (handlerInput) {
+const PatternListIntentHandler = {
+    canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
             handlerInput.requestEnvelope.request.intent.name === 'PatternListIntent';
     },
-    handle: function (handlerInput) {
-        return __awaiter(this, void 0, void 0, function () {
-            var attributesManager, speechText;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        attributesManager = handlerInput.attributesManager;
-                        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'PatternListIntent' });
-                        return [4 /*yield*/, attributesManager.savePersistentAttributes()];
-                    case 1:
-                        _a.sent();
-                        speechText = 'I have many patterns for you to see! For example, there is ' + patterns[getPattern(0, 3)] + ', ' + patterns[getPattern(4, 7)] + ' or ' + patterns[getPattern(8, 11)] + '!';
-                        return [2 /*return*/, handlerInput.responseBuilder
-                                .speak(speechText)
-                                .withSimpleCard('Hello World', speechText)
-                                .getResponse()];
-                }
-            });
-        });
-    }
+    async handle(handlerInput) {
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'PatternListIntent' });
+        await attributesManager.savePersistentAttributes();
+        const speechText = 'I have many patterns for you to see! For example, there is ' + patterns[getPattern(0, 3)] + ', ' + patterns[getPattern(4, 7)] + ' or ' + patterns[getPattern(8, 11)] + '!';
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .withSimpleCard('Hello World', speechText)
+            .getResponse();
+    },
 };
-var HelpIntentHandler = {
-    canHandle: function (handlerInput) {
+const HelpIntentHandler = {
+    canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
             handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent' ||
             handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.FallbackIntent';
     },
-    handle: function (handlerInput) {
-        return __awaiter(this, void 0, void 0, function () {
-            var speechText, attributesManager;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        speechText = 'You can say hello to me!';
-                        attributesManager = handlerInput.attributesManager;
-                        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Help or Fallback Intent' });
-                        return [4 /*yield*/, attributesManager.savePersistentAttributes()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, handlerInput.responseBuilder
-                                .speak(speechText)
-                                .reprompt(speechText)
-                                .withSimpleCard('Hello World', speechText)
-                                .getResponse()];
-                }
-            });
-        });
-    }
+    async handle(handlerInput) {
+        const speechText = 'You can say hello to me!';
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Help or Fallback Intent' });
+        await attributesManager.savePersistentAttributes();
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .withSimpleCard('Hello World', speechText)
+            .getResponse();
+    },
 };
-var CancelAndStopIntentHandler = {
-    canHandle: function (handlerInput) {
+const CancelAndStopIntentHandler = {
+    canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
             (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
                 handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
     },
-    handle: function (handlerInput) {
-        return __awaiter(this, void 0, void 0, function () {
-            var attributesManager, speechText;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        attributesManager = handlerInput.attributesManager;
-                        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Cancel or Stop Intent' });
-                        return [4 /*yield*/, attributesManager.savePersistentAttributes()];
-                    case 1:
-                        _a.sent();
-                        speechText = 'Goodbye!';
-                        return [2 /*return*/, handlerInput.responseBuilder
-                                .speak(speechText)
-                                .withSimpleCard('Hello World', speechText)
-                                .withShouldEndSession(true)
-                                .getResponse()];
-                }
-            });
-        });
-    }
+    async handle(handlerInput) {
+        const { attributesManager } = handlerInput;
+        attributesManager.setPersistentAttributes({ lastAccessedDate: Date.now(), lastAccessedIntent: 'Cancel or Stop Intent' });
+        await attributesManager.savePersistentAttributes();
+        const speechText = 'Goodbye!';
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .withSimpleCard('Hello World', speechText)
+            .withShouldEndSession(true)
+            .getResponse();
+    },
 };
-var SessionEndedRequestHandler = {
-    canHandle: function (handlerInput) {
+const SessionEndedRequestHandler = {
+    canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
     },
-    handle: function (handlerInput) {
-        console.log("Session ended with reason: " + handlerInput.requestEnvelope.request.reason);
+    handle(handlerInput) {
+        console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
         return handlerInput.responseBuilder.getResponse();
-    }
+    },
 };
-var ErrorHandler = {
-    canHandle: function (handlerInput, error) {
+const ErrorHandler = {
+    canHandle(handlerInput, error) {
         return true;
     },
-    handle: function (handlerInput, error) {
-        console.log("Error handled: " + error.message);
+    handle(handlerInput, error) {
+        console.log(`Error handled: ${error.message}`);
         return handlerInput.responseBuilder
             .speak('Sorry, I can\'t understand the command. Please say again.')
             .reprompt('Sorry, I can\'t understand the command. Please say again.')
             .getResponse();
-    }
+    },
 };
-var skill;
+let skill;
 function getPersistenceAdapter(tableName) {
     return new ddbAdapter.DynamoDbPersistenceAdapter({
         tableName: tableName,
@@ -190,3 +114,4 @@ exports.handler = ask_sdk_core_1.SkillBuilders.custom()
     .addRequestHandlers(LaunchRequestHandler, PatternListIntentHandler, HelpIntentHandler, CancelAndStopIntentHandler, SessionEndedRequestHandler)
     .addErrorHandlers(ErrorHandler)
     .lambda();
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibGFtYmRhLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsibGFtYmRhLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsK0NBTXNCO0FBTXRCLE1BQU0sUUFBUSxHQUFhLENBQUMscUJBQXFCLEVBQUUsc0JBQXNCLEVBQUUsbUJBQW1CLEVBQUUscUJBQXFCLEVBQUUsb0JBQW9CLEVBQUUsYUFBYSxFQUFFLGlDQUFpQyxFQUFFLHNCQUFzQixFQUFFLDBCQUEwQixFQUFFLHVCQUF1QixFQUFFLHdCQUF3QixFQUFFLDhEQUE4RCxDQUFDLENBQUM7QUFDdFcsTUFBTSxVQUFVLEdBQUcsT0FBTyxDQUFDLHNDQUFzQyxDQUFDLENBQUM7QUFDbkUsTUFBTSxXQUFXLEdBQUcsT0FBTyxDQUFDLEdBQUcsQ0FBQyxXQUFXLElBQUksRUFBRSxDQUFDO0FBQ2xELFNBQVMsVUFBVSxDQUFDLEdBQVcsRUFBRSxHQUFXO0lBQ3hDLEdBQUcsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDO0lBQ3JCLEdBQUcsR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDLEdBQUcsQ0FBQyxDQUFDO0lBQ3RCLE9BQU8sSUFBSSxDQUFDLEtBQUssQ0FBQyxJQUFJLENBQUMsTUFBTSxFQUFFLEdBQUcsQ0FBQyxHQUFHLEdBQUcsR0FBRyxHQUFHLENBQUMsQ0FBQyxHQUFHLEdBQUcsQ0FBQyxDQUFDO0FBQzdELENBQUM7QUFDRCxNQUFNLG9CQUFvQixHQUFtQjtJQUN6QyxTQUFTLENBQUMsWUFBMEI7UUFDaEMsT0FBTyxZQUFZLENBQUMsZUFBZSxDQUFDLE9BQU8sQ0FBQyxJQUFJLEtBQUssZUFBZTtZQUNwRSxZQUFZLENBQUMsZUFBZSxDQUFDLE9BQU8sQ0FBQyxJQUFJLEtBQUssZUFBZTtnQkFDN0QsWUFBWSxDQUFDLGVBQWUsQ0FBQyxPQUFPLENBQUMsTUFBTSxDQUFDLElBQUksS0FBSywyQkFBMkIsQ0FBQztJQUNyRixDQUFDO0lBQ0QsS0FBSyxDQUFDLE1B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LDhCQUErQixZQUFZLENBQUMsZUFBZSxDQUFDLE9BQStCLENBQUMsTUFBTSxFQUFFLENBQUMsQ0FBQztRQUVsSCxPQUFPLFlBQVksQ0FBQyxlQUFlLENBQUMsV0FBVyxFQUFFLENBQUM7SUFDdEQsQ0FBQztDQUNKLENBQUM7QUFDRixNQUFNLFlBQVksR0FBaUI7SUFDL0IsU0FBUyxDQUFDLFlBQTBCLEVBQUUsS0FBWTtRQUM5QyxPQUFPLElBQUksQ0FBQztJQUNoQixDQUFDO0lBQ0QsTUFBTSxDQUFDLFlBQTBCLEVBQUUsS0FBWTtRQUMzQyxPQUFPLENBQUMsR0FBRyxDQUFDLGtCQUFrQixLQUFLLENBQUMsT0FBTyxFQUFFLENBQUMsQ0FBQztRQUUvQyxPQUFPLFlBQVksQ0FBQyxlQUFlO2FBQzlCLEtBQUssQ0FBQywyREFBMkQsQ0FBQzthQUNsRSxRQUFRLENBQUMsMkRBQTJELENBQUM7YUFDckUsV0FBVyxFQUFFLENBQUM7SUFDdkIsQ0FBQztDQUNKLENBQUM7QUFDRixJQUFJLEtBQVksQ0FBQztBQUVqQixTQUFTLHFCQUFxQixDQUFDLFNBQWlCO0lBQzVDLE9BQU8sSUFBSSxVQUFVLENBQUMsMEJBQTBCLENBQUM7UUFDL0MsU0FBUyxFQUFFLFNBQVM7UUFDcEIsZ0JBQWdCLEVBQUUsUUFBUTtLQUMzQixDQUFDLENBQUM7QUFDTCxDQUFDO0FBQ0gsT0FBTyxDQUFDLE9BQU8sR0FBRyw0QkFBYSxDQUFDLE1BQU0sRUFBRTtLQUNuQyxzQkFBc0IsQ0FBQyxxQkFBcUIsQ0FBQyxXQUFXLENBQUMsQ0FBQztLQUMxRCxrQkFBa0IsQ0FDZixvQkFBb0IsRUFDcEIsd0JBQXdCLEVBQ3hCLGlCQUFpQixFQUNqQiwwQkFBMEIsRUFDMUIsMEJBQTBCLENBQzdCO0tBQ0EsZ0JBQWdCLENBQUMsWUFBWSxDQUFDO0tBQzlCLE1BQU0sRUFBRSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtcclxuICAgIEVycm9ySGFuZGxlcixcclxuICAgIEhhbmRsZXJJbnB1dCxcclxuICAgIFJlcXVlc3RIYW5kbGVyLFxyXG4gICAgU2tpbGxCdWlsZGVycyxcclxuICAgIFNraWxsLFxyXG59IGZyb20gJ2Fzay1zZGstY29yZSc7XHJcbmltcG9ydCB7XHJcbiAgICBSZXNwb25zZSxcclxuICAgIFNlc3Npb25FbmRlZFJlcXVlc3QsXHJcbiAgICBSZXF1ZXN0RW52ZWxvcGUsXHJcbn0gZnJvbSAnYXNrLXNkay1tb2RlbCc7XHJcbmNvbnN0IHBhdHRlcm5zOiBzdHJpbmdbXSA9IFsnVGhlIERlc3RpbmVkIExhbWJkYScsICdUaGUgUzMgUmVhY3QgV2Vic2l0ZScsICdUaGUgU3RhdGUgTWFjaGluZScsICdUaGUgRHluYW1vIFN0cmVhbWVyJywgJ1RoZSBMYW1iZGEgVHJpbG9neScsICdUaGUgQmlnIEZhbicsICdUaGUgRXZlbnRicmlkZ2UgQ2lyY3VpdCBCcmVha2VyJywgJ1RoZSBTY2FsYWJsZSBXZWJob29rJywgJ1RoZSBDbG91ZHdhdGNoIERhc2hib2FyZCcsICdUaGUgU2FnYSBTdGVwZnVuY3Rpb24nLCAnVGhlIFMzIEFuZ3VsYXIgV2Vic2l0ZScsICd0aGlzIHBhdHRlcm4gdGhhdCB5b3VcXCdyZSB0ZXN0aW5nIHJpZ2h0IG5vdzogVGhlIEFsZXhhIFNraWxsJ107XHJcbmNvbnN0IGRkYkFkYXB0ZXIgPSByZXF1aXJlKCdhc2stc2RrLWR5bmFtb2RiLXBlcnNpc3RlbmNlLWFkYXB0ZXInKTtcclxuY29uc3QgVVNFUlNfVEFCTEUgPSBwcm9jZXNzLmVudi5VU0VSU19UQUJMRSB8fCAnJztcclxuZnVuY3Rpb24gZ2V0UGF0dGVybihtaW46IG51bWJlciwgbWF4OiBudW1iZXIpIHtcclxuICAgIG1pbiA9IE1hdGguY2VpbChtaW4pO1xyXG4gICAgbWF4ID0gTWF0aC5mbG9vcihtYXgpO1xyXG4gICAgcmV0dXJuIE1hdGguZmxvb3IoTWF0aC5yYW5kb20oKSAqIChtYXggLSBtaW4gKyAxKSArIG1pbik7XHJcbn1cclxuY29uc3QgTGF1bmNoUmVxdWVzdEhhbmRsZXI6IFJlcXVlc3RIYW5kbGVyID0ge1xyXG4gICAgY2FuSGFuZGxlKGhhbmRsZXJJbnB1dDogSGFuZGxlcklucHV0KTogYm9vbGVhbiB7XHJcbiAgICAgICAgcmV0dXJuIGhhbmRsZXJJbnB1dC5yZXF1ZXN0RW52ZWxvcGUucmVxdWVzdC50eXBlID09PSAnTGF1bmNoUmVxdWVzdCcgfHxcclxuICAgICAgICBoYW5kbGVySW5wdXQucmVxdWVzdEVudmVsb3BlLnJlcXVlc3QudHlwZSA9PT0gJ0ludGVudFJlcXVlc3QnICYmXHJcbiAgICAgICAgaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0LmludGVudC5uYW1lID09PSAnQU1BWk9OLk5hdmlnYXRlSG9tZUludGVudCc7XHJcbiAgICB9LFxyXG4gICAgYXN5bmMgaGFuZGxlKGhhbmRsZXJJbnB1dDogSGFuZGxlcklucHV0KTogUHJvbWlzZTxSZXNwb25zZT4ge1xyXG4gICAgICAgIGNvbnN0IHNwZWVjaFRleHQgPSAnSGV5LCBpdFxcJ3MgUGFuY2FrZXMgdGhlIENESyBPdHRlciBoZXJlLCB3aGF0IHdvdWxkIHlvdSBsaWtlIHRvIGtub3c/JztcclxuICAgICAgICBjb25zdCByZXByb21wdFRleHQgPSAnWW91IGNhbiBhc2sgd2hhdCBDREsgUGF0dGVybnMgSSBoYXZlLCBpZiB5b3UgbGlrZSEnO1xyXG4gICAgICAgIGNvbnN0IHsgYXR0cmlidXRlc01hbmFnZXIgfSA9IGhhbmRsZXJJbnB1dDtcclxuICAgICAgICBhdHRyaWJ1dGVzTWFuYWdlci5zZXRQZXJzaXN0ZW50QXR0cmlidXRlcygge2xhc3RBY2Nlc3NlZERhdGU6IERhdGUubm93KCksIGxhc3RBY2Nlc3NlZEludGVudDogJ0xhdW5jaCBSZXF1ZXN0IG9yIE5hdmlnYXRlIEhvbWUnfSk7XHJcbiAgICAgICAgYXdhaXQgYXR0cmlidXRlc01hbmFnZXIuc2F2ZVBlcnNpc3RlbnRBdHRyaWJ1dGVzKCk7XHJcbiAgICAgICAgcmV0dXJuIGhhbmRsZXJJbnB1dC5yZXNwb25zZUJ1aWxkZXJcclxuICAgICAgICAgICAgLnNwZWFrKHNwZWVjaFRleHQpXHJcbiAgICAgICAgICAgIC5yZXByb21wdChyZXByb21wdFRleHQpXHJcbiAgICAgICAgICAgIC53aXRoU2ltcGxlQ2FyZCgnSGVsbG8gV29ybGQnLCBzcGVlY2hUZXh0KVxyXG4gICAgICAgICAgICAuZ2V0UmVzcG9uc2UoKTtcclxuICAgIH0sXHJcbn07XHJcbmNvbnN0IFBhdHRlcm5MaXN0SW50ZW50SGFuZGxlcjogUmVxdWVzdEhhbmRsZXIgPSB7XHJcbiAgICBjYW5IYW5kbGUoaGFuZGxlcklucHV0OiBIYW5kbGVySW5wdXQpOiBib29sZWFuIHtcclxuICAgICAgICByZXR1cm4gaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0LnR5cGUgPT09ICdJbnRlbnRSZXF1ZXN0JyAmJlxyXG4gICAgICAgICAgICBoYW5kbGVySW5wdXQucmVxdWVzdEVudmVsb3BlLnJlcXVlc3QuaW50ZW50Lm5hbWUgPT09ICdQYXR0ZXJuTGlzdEludGVudCc7XHJcbiAgICB9LFxyXG4gICAgYXN5bmMgaGFuZGxlKGhhbmRsZXJJbnB1dDogSGFuZGxlcklucHV0KTogUHJvbWlzZTxSZXNwb25zZT4ge1xyXG4gICAgICAgIGNvbnN0IHsgYXR0cmlidXRlc01hbmFnZXIgfSA9IGhhbmRsZXJJbnB1dDtcclxuICAgICAgICBhdHRyaWJ1dGVzTWFuYWdlci5zZXRQZXJzaXN0ZW50QXR0cmlidXRlcygge2xhc3RBY2Nlc3NlZERhdGU6IERhdGUubm93KCksIGxhc3RBY2Nlc3NlZEludGVudDogJ1BhdHRlcm5MaXN0SW50ZW50J30pO1xyXG4gICAgICAgIGF3YWl0IGF0dHJpYnV0ZXNNYW5hZ2VyLnNhdmVQZXJzaXN0ZW50QXR0cmlidXRlcygpO1xyXG5cclxuICAgICAgICBjb25zdCBzcGVlY2hUZXh0ID0gJ0kgaGF2ZSBtYW55IHBhdHRlcm5zIGZvciB5b3UgdG8gc2VlISBGb3IgZXhhbXBsZSwgdGhlcmUgaXMgJyArIHBhdHRlcm5zW2dldFBhdHRlcm4oMCwgMyldICsgJywgJyArIHBhdHRlcm5zW2dldFBhdHRlcm4oNCwgNyldICsgJyBvciAnICsgcGF0dGVybnNbZ2V0UGF0dGVybig4LCAxMSldICsgJyEnO1xyXG5cclxuICAgICAgICByZXR1cm4gaGFuZGxlcklucHV0LnJlc3BvbnNlQnVpbGRlclxyXG4gICAgICAgICAgICAuc3BlYWsoc3BlZWNoVGV4dClcclxuICAgICAgICAgICAgLndpdGhTaW1wbGVDYXJkKCdIZWxsbyBXb3JsZCcsIHNwZWVjaFRleHQpXHJcbiAgICAgICAgICAgIC5nZXRSZXNwb25zZSgpO1xyXG4gICAgfSxcclxufTtcclxuY29uc3QgSGVscEludGVudEhhbmRsZXI6IFJlcXVlc3RIYW5kbGVyID0ge1xyXG4gICAgY2FuSGFuZGxlKGhhbmRsZXJJbnB1dDogSGFuZGxlcklucHV0KTogYm9vbGVhbiB7XHJcbiAgICAgICAgcmV0dXJuIGhhbmRsZXJJbnB1dC5yZXF1ZXN0RW52ZWxvcGUucmVxdWVzdC50eXBlID09PSAnSW50ZW50UmVxdWVzdCcgJiZcclxuICAgICAgICAgICAgaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0LmludGVudC5uYW1lID09PSAnQU1BWk9OLkhlbHBJbnRlbnQnIHx8XHJcbiAgICAgICAgICAgIGhhbmRsZXJJbnB1dC5yZXF1ZXN0RW52ZWxvcGUucmVxdWVzdC50eXBlID09PSAnSW50ZW50UmVxdWVzdCcgJiZcclxuICAgICAgICAgICAgaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0LmludGVudC5uYW1lID09PSAnQU1BWk9OLkZhbGxiYWNrSW50ZW50JztcclxuICAgIH0sXHJcbiAgICBhc3luYyBoYW5kbGUoaGFuZGxlcklucHV0OiBIYW5kbGVySW5wdXQpOiBQcm9taXNlPFJlc3BvbnNlPiB7XHJcbiAgICAgICAgY29uc3Qgc3BlZWNoVGV4dCA9ICdZb3UgY2FuIHNheSBoZWxsbyB0byBtZSEnO1xyXG4gICAgICAgIGNvbnN0IHsgYXR0cmlidXRlc01hbmFnZXIgfSA9IGhhbmRsZXJJbnB1dDtcclxuICAgICAgICBhdHRyaWJ1dGVzTWFuYWdlci5zZXRQZXJzaXN0ZW50QXR0cmlidXRlcygge2xhc3RBY2Nlc3NlZERhdGU6IERhdGUubm93KCksIGxhc3RBY2Nlc3NlZEludGVudDogJ0hlbHAgb3IgRmFsbGJhY2sgSW50ZW50J30pO1xyXG4gICAgICAgIGF3YWl0IGF0dHJpYnV0ZXNNYW5hZ2VyLnNhdmVQZXJzaXN0ZW50QXR0cmlidXRlcygpO1xyXG5cclxuICAgICAgICByZXR1cm4gaGFuZGxlcklucHV0LnJlc3BvbnNlQnVpbGRlclxyXG4gICAgICAgICAgICAuc3BlYWsoc3BlZWNoVGV4dClcclxuICAgICAgICAgICAgLnJlcHJvbXB0KHNwZWVjaFRleHQpXHJcbiAgICAgICAgICAgIC53aXRoU2ltcGxlQ2FyZCgnSGVsbG8gV29ybGQnLCBzcGVlY2hUZXh0KVxyXG4gICAgICAgICAgICAuZ2V0UmVzcG9uc2UoKTtcclxuICAgIH0sXHJcbn07XHJcbmNvbnN0IENhbmNlbEFuZFN0b3BJbnRlbnRIYW5kbGVyOiBSZXF1ZXN0SGFuZGxlciA9IHtcclxuICAgIGNhbkhhbmRsZShoYW5kbGVySW5wdXQ6IEhhbmRsZXJJbnB1dCk6IGJvb2xlYW4ge1xyXG4gICAgICAgIHJldHVybiBoYW5kbGVySW5wdXQucmVxdWVzdEVudmVsb3BlLnJlcXVlc3QudHlwZSA9PT0gJ0ludGVudFJlcXVlc3QnICYmXHJcbiAgICAgICAgICAgIChoYW5kbGVySW5wdXQucmVxdWVzdEVudmVsb3BlLnJlcXVlc3QuaW50ZW50Lm5hbWUgPT09ICdBTUFaT04uQ2FuY2VsSW50ZW50JyB8fFxyXG4gICAgICAgICAgICAgICAgaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0LmludGVudC5uYW1lID09PSAnQU1BWk9OLlN0b3BJbnRlbnQnKTtcclxuICAgIH0sXHJcbiAgICBhc3luYyBoYW5kbGUoaGFuZGxlcklucHV0OiBIYW5kbGVySW5wdXQpOiBQcm9taXNlPFJlc3BvbnNlPiB7XHJcbiAgICAgICAgY29uc3QgeyBhdHRyaWJ1dGVzTWFuYWdlciB9ID0gaGFuZGxlcklucHV0O1xyXG4gICAgICAgIGF0dHJpYnV0ZXNNYW5hZ2VyLnNldFBlcnNpc3RlbnRBdHRyaWJ1dGVzKCB7bGFzdEFjY2Vzc2VkRGF0ZTogRGF0ZS5ub3coKSwgbGFzdEFjY2Vzc2VkSW50ZW50OiAnQ2FuY2VsIG9yIFN0b3AgSW50ZW50J30pO1xyXG4gICAgICAgIGF3YWl0IGF0dHJpYnV0ZXNNYW5hZ2VyLnNhdmVQZXJzaXN0ZW50QXR0cmlidXRlcygpO1xyXG4gICAgICAgIGNvbnN0IHNwZWVjaFRleHQgPSAnR29vZGJ5ZSEnO1xyXG5cclxuICAgICAgICByZXR1cm4gaGFuZGxlcklucHV0LnJlc3BvbnNlQnVpbGRlclxyXG4gICAgICAgICAgICAuc3BlYWsoc3BlZWNoVGV4dClcclxuICAgICAgICAgICAgLndpdGhTaW1wbGVDYXJkKCdIZWxsbyBXb3JsZCcsIHNwZWVjaFRleHQpXHJcbiAgICAgICAgICAgIC53aXRoU2hvdWxkRW5kU2Vzc2lvbih0cnVlKVxyXG4gICAgICAgICAgICAuZ2V0UmVzcG9uc2UoKTtcclxuICAgIH0sXHJcbn07XHJcbmNvbnN0IFNlc3Npb25FbmRlZFJlcXVlc3RIYW5kbGVyOiBSZXF1ZXN0SGFuZGxlciA9IHtcclxuICAgIGNhbkhhbmRsZShoYW5kbGVySW5wdXQ6IEhhbmRsZXJJbnB1dCk6IGJvb2xlYW4ge1xyXG4gICAgICAgIHJldHVybiBoYW5kbGVySW5wdXQucmVxdWVzdEVudmVsb3BlLnJlcXVlc3QudHlwZSA9PT0gJ1Nlc3Npb25FbmRlZFJlcXVlc3QnO1xyXG4gICAgfSxcclxuICAgIGhhbmRsZShoYW5kbGVySW5wdXQ6IEhhbmRsZXJJbnB1dCk6IFJlc3BvbnNlIHtcclxuICAgICAgICBjb25zb2xlLmxvZyhgU2Vzc2lvbiBlbmRlZCB3aXRoIHJlYXNvbjogJHsoaGFuZGxlcklucHV0LnJlcXVlc3RFbnZlbG9wZS5yZXF1ZXN0IGFzIFNlc3Npb25FbmRlZFJlcXVlc3QpLnJlYXNvbn1gKTtcclxuXHJcbiAgICAgICAgcmV0dXJuIGhhbmRsZXJJbnB1dC5yZXNwb25zZUJ1aWxkZXIuZ2V0UmVzcG9uc2UoKTtcclxuICAgIH0sXHJcbn07XHJcbmNvbnN0IEVycm9ySGFuZGxlcjogRXJyb3JIYW5kbGVyID0ge1xyXG4gICAgY2FuSGFuZGxlKGhhbmRsZXJJbnB1dDogSGFuZGxlcklucHV0LCBlcnJvcjogRXJyb3IpOiBib29sZWFuIHtcclxuICAgICAgICByZXR1cm4gdHJ1ZTtcclxuICAgIH0sXHJcbiAgICBoYW5kbGUoaGFuZGxlcklucHV0OiBIYW5kbGVySW5wdXQsIGVycm9yOiBFcnJvcik6IFJlc3BvbnNlIHtcclxuICAgICAgICBjb25zb2xlLmxvZyhgRXJyb3IgaGFuZGxlZDogJHtlcnJvci5tZXNzYWdlfWApO1xyXG5cclxuICAgICAgICByZXR1cm4gaGFuZGxlcklucHV0LnJlc3BvbnNlQnVpbGRlclxyXG4gICAgICAgICAgICAuc3BlYWsoJ1NvcnJ5LCBJIGNhblxcJ3QgdW5kZXJzdGFuZCB0aGUgY29tbWFuZC4gUGxlYXNlIHNheSBhZ2Fpbi4nKVxyXG4gICAgICAgICAgICAucmVwcm9tcHQoJ1NvcnJ5LCBJIGNhblxcJ3QgdW5kZXJzdGFuZCB0aGUgY29tbWFuZC4gUGxlYXNlIHNheSBhZ2Fpbi4nKVxyXG4gICAgICAgICAgICAuZ2V0UmVzcG9uc2UoKTtcclxuICAgIH0sXHJcbn07XHJcbmxldCBza2lsbDogU2tpbGw7XHJcblxyXG5mdW5jdGlvbiBnZXRQZXJzaXN0ZW5jZUFkYXB0ZXIodGFibGVOYW1lOiBzdHJpbmcpIHtcclxuICAgIHJldHVybiBuZXcgZGRiQWRhcHRlci5EeW5hbW9EYlBlcnNpc3RlbmNlQWRhcHRlcih7XHJcbiAgICAgIHRhYmxlTmFtZTogdGFibGVOYW1lLFxyXG4gICAgICBwYXJ0aXRpb25LZXlOYW1lOiBcInVzZXJJZFwiXHJcbiAgICB9KTtcclxuICB9XHJcbmV4cG9ydHMuaGFuZGxlciA9IFNraWxsQnVpbGRlcnMuY3VzdG9tKClcclxuICAgIC53aXRoUGVyc2lzdGVuY2VBZGFwdGVyKGdldFBlcnNpc3RlbmNlQWRhcHRlcihVU0VSU19UQUJMRSkpXHJcbiAgICAuYWRkUmVxdWVzdEhhbmRsZXJzKFxyXG4gICAgICAgIExhdW5jaFJlcXVlc3RIYW5kbGVyLFxyXG4gICAgICAgIFBhdHRlcm5MaXN0SW50ZW50SGFuZGxlcixcclxuICAgICAgICBIZWxwSW50ZW50SGFuZGxlcixcclxuICAgICAgICBDYW5jZWxBbmRTdG9wSW50ZW50SGFuZGxlcixcclxuICAgICAgICBTZXNzaW9uRW5kZWRSZXF1ZXN0SGFuZGxlcixcclxuICAgIClcclxuICAgIC5hZGRFcnJvckhhbmRsZXJzKEVycm9ySGFuZGxlcilcclxuICAgIC5sYW1iZGEoKTsiXX0=
