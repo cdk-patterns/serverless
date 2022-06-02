@@ -12,7 +12,7 @@ const sendRes = (status, loyaltylevel) => {
         headers: {
             "Content-Type": "application/json"
         },
-        level: body
+        level: loyaltylevel
     };
     return response;
 };
