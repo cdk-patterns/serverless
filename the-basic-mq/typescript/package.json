@@ -12,7 +12,7 @@
     "deploy": "cdk deploy '*' --require-approval 'never'"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.83.0",
+    "@aws-cdk/assert": "1.180.0",
     "@types/jest": "^26.0.20",
     "@types/node": "14.14.20",
     "aws-cdk": "1.83.0",
@@ -22,17 +22,17 @@
     "typescript": "~4.1.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-amazonmq": "1.83.0",
-    "@aws-cdk/aws-certificatemanager": "1.83.0",
-    "@aws-cdk/aws-cloudformation": "1.83.0",
-    "@aws-cdk/aws-ec2": "1.83.0",
-    "@aws-cdk/aws-elasticloadbalancingv2": "1.83.0",
-    "@aws-cdk/aws-elasticloadbalancingv2-targets": "1.83.0",
-    "@aws-cdk/aws-route53": "1.83.0",
-    "@aws-cdk/aws-route53-targets": "1.83.0",
-    "@aws-cdk/aws-secretsmanager": "1.83.0",
-    "@aws-cdk/core": "1.83.0",
-    "@aws-cdk/custom-resources": "1.83.0",
+    "@aws-cdk/aws-amazonmq": "1.180.0",
+    "@aws-cdk/aws-certificatemanager": "1.180.0",
+    "@aws-cdk/aws-cloudformation": "1.180.0",
+    "@aws-cdk/aws-ec2": "1.180.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "1.180.0",
+    "@aws-cdk/aws-elasticloadbalancingv2-targets": "1.180.0",
+    "@aws-cdk/aws-route53": "1.180.0",
+    "@aws-cdk/aws-route53-targets": "1.180.0",
+    "@aws-cdk/aws-secretsmanager": "1.180.0",
+    "@aws-cdk/core": "1.180.0",
+    "@aws-cdk/custom-resources": "1.180.0",
     "source-map-support": "^0.5.19"
   }
 }
