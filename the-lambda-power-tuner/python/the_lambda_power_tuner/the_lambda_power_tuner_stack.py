@@ -1,13 +1,14 @@
 from aws_cdk import (
+    CfnOutput,
     aws_lambda as _lambda,
     aws_sam as sam,
-    core
+    Stack
 )
+from constructs import Construct
 
+class TheLambdaPowerTunerStack(Stack):
 
-class TheLambdaPowerTunerStack(core.Stack):
-
-    def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         power_values = '128,256,512,1024,1536,3008'
@@ -24,7 +25,7 @@ class TheLambdaPowerTunerStack(core.Stack):
         # lambda_resource = example_lambda.function_arn
 
         # Output the Lambda function ARN in the deploy logs to ease testing
-        core.CfnOutput(self, 'LambdaARN', value=example_lambda.function_arn)
+        CfnOutput(self, 'LambdaARN', value=example_lambda.function_arn)
 
         # Deploy the aws-lambda-powertuning application from the Serverless Application Repository
         # https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning
@@ -35,5 +36,3 @@ class TheLambdaPowerTunerStack(core.Stack):
             "lambdaResource": lambda_resource,
             "PowerValues": power_values
         })
-
-
