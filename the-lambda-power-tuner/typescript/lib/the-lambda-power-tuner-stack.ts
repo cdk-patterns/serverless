@@ -1,9 +1,10 @@
-import * as cdk from '@aws-cdk/core';
-import sam = require('@aws-cdk/aws-sam');
-import lambda = require('@aws-cdk/aws-lambda');
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as sam from 'aws-cdk-lib/aws-sam';
 
 export class TheLambdaPowerTunerStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     let powerValues = '128,256,512,1024,1536,3008';
@@ -11,7 +12,7 @@ export class TheLambdaPowerTunerStack extends cdk.Stack {
 
     // A lambda function to use to test the powertuner
     let exampleLambda = new lambda.Function(this, 'lambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromInline('exports.handler = function(event, ctx, cb) { return cb(null, "hi"); }'),
       handler: 'index.handler'
     });
